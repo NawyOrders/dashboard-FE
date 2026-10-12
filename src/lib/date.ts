@@ -55,8 +55,3 @@ export function daysUntil(iso: string): number {
   if (!date) return Number.NaN;
   return Math.round((date.getTime() - startOfToday().getTime()) / MS_PER_DAY);
 }
-
-/** yyyy-mm-dd for <input type="date">. */
-export function isoForInput(date: Date): string {
-  return toIsoDate(date);
-}

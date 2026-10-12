@@ -16,7 +16,11 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
-export function AccountMenu() {
+export interface AccountMenuProps {
+  variant?: 'drawer' | 'rail';
+}
+
+export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
   const { user, role, setRole } = useCurrentUser();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -33,6 +37,11 @@ export function AccountMenu() {
 
   if (!user) return <div className="h-16 animate-pulse rounded-panel bg-neutral-bg" />;
 
+  function signOut() {
+    setOpen(false);
+    toast({ title: 'Signed out (demo)', variant: 'info' });
+  }
+
   return (
     <div ref={ref} className="relative border-t border-border p-3">
       <button
@@ -48,7 +57,7 @@ export function AccountMenu() {
         >
           {initials(user.name)}
         </span>
-        <span className="hidden min-w-0 xl:block">
+        <span className={cn('min-w-0', variant === 'drawer' ? 'block' : 'hidden xl:block')}>
           <span className="block truncate text-sm font-semibold text-text">{user.name}</span>
           <span className="block truncate text-2xs text-text-muted">
             {user.role === 'super_admin' ? en.app.role : 'Support'}
@@ -56,7 +65,11 @@ export function AccountMenu() {
         </span>
         <ChevronDown
           aria-hidden="true"
-          className={cn('ms-auto hidden size-4 text-text-muted xl:block', open && 'rotate-180')}
+          className={cn(
+            'ms-auto size-4 text-text-muted',
+            variant === 'drawer' ? 'block' : 'hidden xl:block',
+            open && 'rotate-180',
+          )}
         />
       </button>
 
@@ -99,16 +112,24 @@ export function AccountMenu() {
           <button
             type="button"
             role="menuitem"
-            onClick={() => {
-              setOpen(false);
-              toast({ title: 'Signed out (demo)', variant: 'info' });
-            }}
+            onClick={signOut}
             className="flex w-full items-center gap-2 rounded-pill px-3 py-2 text-sm text-text transition-colors duration-150 hover:bg-danger-bg hover:text-danger-fg"
           >
             <LogOut aria-hidden="true" className="size-4" />
             {en.common.signOut}
           </button>
         </div>
+      )}
+
+      {variant === 'drawer' && (
+        <button
+          type="button"
+          onClick={signOut}
+          className="mt-1 flex w-full items-center gap-2 rounded-panel px-3 py-2 text-sm text-text transition-colors duration-150 hover:bg-danger-bg hover:text-danger-fg"
+        >
+          <LogOut aria-hidden="true" className="size-4" />
+          {en.common.signOut}
+        </button>
       )}
     </div>
   );

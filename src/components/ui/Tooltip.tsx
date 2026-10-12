@@ -5,10 +5,12 @@ export interface TooltipProps {
   label: string;
   children: ReactNode;
   side?: 'top' | 'bottom' | 'right';
+  bubbleClassName?: string;
+  className?: string;
 }
 
 /** CSS-only tooltip triggered on hover and keyboard focus. */
-export function Tooltip({ label, children, side = 'top' }: TooltipProps) {
+export function Tooltip({ label, children, side = 'top', bubbleClassName, className }: TooltipProps) {
   const position =
     side === 'top'
       ? 'bottom-full mb-2 start-1/2 -translate-x-1/2'
@@ -17,7 +19,7 @@ export function Tooltip({ label, children, side = 'top' }: TooltipProps) {
         : 'start-full ms-2 top-1/2 -translate-y-1/2';
 
   return (
-    <span className={cn('group relative inline-flex', side === 'right' && 'w-fit')}>
+    <span className={cn('group relative inline-flex', className)}>
       {children}
       <span
         role="tooltip"
@@ -25,6 +27,7 @@ export function Tooltip({ label, children, side = 'top' }: TooltipProps) {
           'pointer-events-none absolute z-30 hidden max-w-xs whitespace-nowrap rounded-pill bg-text px-2 py-1 text-2xs text-white',
           'group-hover:block group-focus-within:block',
           position,
+          bubbleClassName,
         )}
       >
         {label}

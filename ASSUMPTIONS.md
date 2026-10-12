@@ -44,3 +44,11 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 17. No grace period and no automatic suspension on expiry; expired subscriptions stay `expired`.
 18. Notifications bell is rendered but disabled/empty.
 19. Extra branches beyond 4 show a "fee not yet defined" note with no price.
+
+## Post-review decisions
+20. The top-bar global search navigates to `/restaurants?q=…`; the restaurants directory is
+    remounted (keyed) when `q` changes so an in-page search updates the existing table.
+21. The "Demo data" badge is shown in the top bar at **all** breakpoints (not only ≥sm), so
+    the mock provider is always disclosed; the page title truncates if space is tight.
+22. `eslint.config.js` (Vite flat-config template) was removed and lint intentionally runs
+    from the classic `.eslintrc.cjs`, matching item 4 and the `--ext` flag in `npm run lint`.

@@ -6,10 +6,6 @@ export function daysRemaining(sub: Subscription): number {
   return daysUntil(sub.endDate);
 }
 
-export function isExpired(sub: Subscription): boolean {
-  return daysRemaining(sub) < 0;
-}
-
 /**
  * "Expiring soon" is display-oriented. The subscription `status` field remains the
  * authoritative label; this helper is used for the filter, the KPI and date highlighting.

@@ -42,7 +42,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
       <div className="flex min-w-0 items-center gap-2">
         <span className="truncate text-lg font-semibold text-text">{title}</span>
         {IS_MOCK_PROVIDER && (
-          <Badge tone="warning" title={en.app.demoBadgeTitle} className="hidden sm:inline-flex">
+          <Badge tone="warning" title={en.app.demoBadgeTitle} className="shrink-0">
             {en.app.demoBadge}
           </Badge>
         )}

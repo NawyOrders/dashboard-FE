@@ -1,4 +1,3 @@
-import { Card, CardHeader } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 export function TableSkeleton({ rows = 6 }: { rows?: number }) {
@@ -15,21 +14,5 @@ export function TableSkeleton({ rows = 6 }: { rows?: number }) {
         </div>
       ))}
     </div>
-  );
-}
-
-export function TableCardSkeleton() {
-  return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-40" />
-        <div className="flex gap-3">
-          <Skeleton className="h-11 w-56" />
-          <Skeleton className="h-11 w-44" />
-          <Skeleton className="h-11 w-28" />
-        </div>
-      </CardHeader>
-      <TableSkeleton />
-    </Card>
   );
 }

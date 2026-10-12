@@ -10,7 +10,7 @@ export function RestaurantsPage() {
   return (
     <div>
       <PageHeader title={en.restaurants.title} subtitle={en.restaurants.subtitle} />
-      <RestaurantsTable initialSearch={initialSearch} />
+      <RestaurantsTable key={initialSearch} initialSearch={initialSearch} />
     </div>
   );
 }

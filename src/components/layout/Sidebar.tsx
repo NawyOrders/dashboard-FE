@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Flame, LayoutDashboard, Store, CreditCard, Layers, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Store, CreditCard, Layers, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import nawyOrdersLogo from '@/assets/nawy-orders-logo.png';
 import { en } from '@/i18n/en';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { AccountMenu } from './AccountMenu';
@@ -36,7 +37,7 @@ function Logo({ variant }: { variant: SidebarVariant }) {
   return (
     <div className="flex items-center gap-3 px-5 py-6">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-avatar bg-gradient-to-br from-primary to-primary-light text-white shadow-primary">
-        <Flame aria-hidden="true" className="size-6" />
+        <img src={nawyOrdersLogo} alt="Nawy Orders" className="size-6 object-contain" />
       </span>
       <span className={cn('min-w-0', variant === 'drawer' ? 'block' : 'hidden xl:block')}>
         <span className="block text-base font-bold leading-5 text-text">Nawy Orders</span>

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { AdminUser, Role } from '@/types';
+import type { AdminUser, Role } from '@/domain/entities';
 
 export interface CurrentUserContextValue {
   user: AdminUser | null;

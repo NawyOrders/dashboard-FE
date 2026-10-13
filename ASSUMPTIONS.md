@@ -52,3 +52,40 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     the mock provider is always disclosed; the page title truncates if space is tight.
 22. `eslint.config.js` (Vite flat-config template) was removed and lint intentionally runs
     from the classic `.eslintrc.cjs`, matching item 4 and the `--ext` flag in `npm run lint`.
+
+## Architecture refactor
+23. The codebase was reorganized into clean-architecture layers
+    (`domain` → `application` → `infrastructure`/`presentation`, composed in `app`).
+    Dependencies point inward only; the mock API is an `infrastructure` adapter behind the
+    `Api` port declared in `application/dto.ts`. See `agent.md` §6.
+24. `config/features.ts` was deleted; its logic moved to `domain/rules/packages.ts`
+    (feature gating is a domain rule, not a config constant). `config/` now holds only
+    constants (`policy.ts`, `packages.ts`).
+25. IDs for created entities start at `10_000` so they can never collide with seeded ids.
+26. Time and id generation are injectable (`Clock`, `IdGenerator` ports) so use cases and
+    tests are deterministic; production uses `SystemClock` / `createSequentialIdGenerator`.
+
+## Validation rules (bugs.md)
+27. **Name allowed set** (business, restaurant, branch): letters, digits, spaces, hyphen `-`
+    and apostrophe `'` only (`/^[\p{L}\p{N} \-']+$/u`); the value must contain at least one
+    letter (so purely numeric input is rejected). Non-Latin letters are accepted via `\p{L}`.
+28. **Phone rules** (main + branch), in evaluation order:
+    - contains a letter → BUG-005 / BUG-017 message;
+    - a non-digit character other than one optional leading `+` → BUG-006 / BUG-018 message;
+    - fewer than `MIN_PHONE_DIGITS` (7) digits → BUG-008 / BUG-020 message;
+    - more than `MAX_PHONE_DIGITS` (15) digits → BUG-007 / BUG-019 message.
+29. **Email rules**, in evaluation order:
+    - not exactly one `@` → contains a symbol from the `@#$%^&` set? BUG-015 message,
+      otherwise all-digits → BUG-016 message, otherwise BUG-010 message;
+    - disallowed character in local part or domain → BUG-015 message;
+    - malformed domain (missing dot, empty label) or TLD shorter than 2 letters → BUG-011 message.
+    `'`, `-` and `.` are accepted in the local part (BUG-009).
+30. **Conflict — BUG-006 vs BUG-007/019:** both describe symbol input (e.g. `01?#@@#`).
+    The more specific "symbols are not allowed" message (BUG-006 / BUG-018) wins for
+    non-digit, non-leading-`+` characters; the pattern message (BUG-007 / BUG-019) is used
+    only for valid-looking input that is too long.
+31. All user-facing validation strings are centralized in `VALIDATION_MESSAGES` in
+    `src/domain/rules/validation.ts` and consumed by the zod schemas, so the UI never
+    re-states a message and cannot drift from the bug list.
+32. Search matching (BUG-022/023): the query is trimmed before matching and compared with
+    `String.prototype.includes` (never `RegExp`), so `'`, `&` and `-` match literally.

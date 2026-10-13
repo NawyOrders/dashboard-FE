@@ -1,4 +1,4 @@
-import type { DurationMonths, PackageCode, PackageDefinition, PackageFeatureKey } from '@/types';
+import type { PackageCode, PackageDefinition, PackageFeatureKey } from '@/domain/entities';
 
 export const PACKAGE_FEATURE_LABELS: Record<PackageFeatureKey, string> = {
   website: 'Website',
@@ -51,11 +51,3 @@ export const PACKAGES: Record<PackageCode, PackageDefinition> = {
 };
 
 export const PACKAGE_LIST: PackageDefinition[] = [PACKAGES.start, PACKAGES.growth];
-
-export function packageHasFeature(code: PackageCode, feature: PackageFeatureKey): boolean {
-  return PACKAGES[code].features.includes(feature);
-}
-
-export function getReferencePrice(code: PackageCode, duration: DurationMonths): number {
-  return PACKAGES[code].prices[duration];
-}

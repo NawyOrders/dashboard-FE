@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CurrentUserContext } from './contexts';
-import { ToastProvider } from '@/components/ui/Toast';
-import { api } from '@/services';
-import type { AdminUser, Role } from '@/types';
+import { ToastProvider } from '@/presentation/components/ui/Toast';
+import { api } from '@/app/composition';
+import type { AdminUser, Role } from '@/domain/entities';
 
 const queryClient = new QueryClient({
   defaultOptions: {

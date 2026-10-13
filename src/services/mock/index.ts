@@ -1,1 +1,0 @@
-export { mockApi } from './mockApi';

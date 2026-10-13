@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { TopBar } from '@/components/layout/TopBar';
+import { Sidebar } from '@/presentation/components/layout/Sidebar';
+import { TopBar } from '@/presentation/components/layout/TopBar';
 
 export function AppShell() {
   const [drawerOpen, setDrawerOpen] = useState(false);

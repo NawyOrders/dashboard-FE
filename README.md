@@ -25,6 +25,8 @@ Other scripts:
 npm run build      # tsc --noEmit && vite build
 npm run lint       # eslint (classic .eslintrc.cjs), zero warnings allowed
 npm run typecheck  # tsc --noEmit
+npm test           # vitest run
+npm run test:coverage  # vitest run --coverage (thresholds enforced)
 npm run preview    # serve the production build
 ```
 
@@ -43,29 +45,37 @@ The account menu contains a **role switcher (dev)** to test permissions:
 
 ## Project structure
 
+Clean architecture — dependencies point inward only
+(`presentation → application → domain`; `infrastructure` implements `application` ports).
+
 ```
 src/
-  app/            router, providers, layout shell (AppShell + top bar)
-  components/
-    layout/       Sidebar, TopBar, AccountMenu
-    shared/       cross-feature pieces (TenantLogo, StatusPill helpers, cells…)
-    ui/           design-system kit (Button, Dialog, Toast, Tabs, Table pieces…)
-  features/
-    overview/ restaurants/ restaurant-details/ create-restaurant/
-    subscriptions/ packages/ activity-logs/ settings/
-  services/
-    api.ts        the Api interface every component depends on
-    mock/         in-memory implementation + seed data
-  types/          tenant, subscription, package, activity-log, user
-  config/         policy.ts (open decisions), packages.ts, features.ts
-  hooks/          usePermission, useDebounce, TanStack Query hooks
-  i18n/           en.ts (all UI strings; structured for future Arabic/RTL)
-  lib/            date, csv, status, subscription, format helpers
+  domain/              enterprise rules — no framework, no I/O
+    entities/          tenant, subscription, package, activity-log, user (+ enums)
+    rules/             date, subscription, packages, permissions, validation
+  application/         orchestration — depends on domain only
+    dto.ts             Api contract + request/response shapes
+    ports.ts           repository / clock / id / permission interfaces
+    use-cases/         one factory per action + createBackend() composition
+  infrastructure/      adapters implementing application ports
+    repositories/      in-memory Restaurant / ActivityLog / FeatureFlag stores
+    mock/              mock API adapter (latency, cloning, ?mockError=1)
+    seed/ clock/ ids/  fictional seed data (26 tenants), SystemClock, id generator
+  presentation/        React only — depends on application contracts
+    components/        ui/ kit + layout/ shell (Sidebar, TopBar, AccountMenu)
+    features/          overview/ restaurants/ restaurant-details/ create-restaurant/
+                       subscriptions/ packages/ activity-logs/ settings/
+    hooks/ i18n/ lib/  usePermission, useDebounce, query hooks; en.ts; display helpers
+  app/                 composition root + router + providers
+    composition.ts     wires ports → use cases → mock adapter, exports `api`
+  config/              policy.ts (open decisions), packages.ts (constants only)
+  test/                vitest setup, fixtures, harness
 ```
 
-Architecture rules live in `agent.md`; the visual system in `design.md`. Decisions taken
+Architecture rules live in `agent.md` (§6); the visual system in `design.md`. Decisions taken
 where the spec was silent are listed in `ASSUMPTIONS.md` (each mirrored by a
-`// ASSUMPTION:` comment in the source).
+`// ASSUMPTION:` comment in the source). Bug resolutions and verification are in
+`QA_REPORT.md`.
 
 ## Status model (kept deliberately separate)
 
@@ -85,23 +95,20 @@ delivery state is a separate field. Publishing is never implied by the package.
 
 ## Swapping the mock API for a real one
 
-The UI depends on the single `Api` interface in `src/services/api.ts` and imports it
-through `src/services/index.ts`:
+The UI depends on the single `Api` interface in `src/application/dto.ts` and imports it
+through the composition root in `src/app/composition.ts`:
 
 ```ts
-// src/services/index.ts
-import type { Api } from './api';
-import { mockApi } from './mock';
-
-export const api: Api = mockApi;      // ← swap this
+// src/app/composition.ts
+export const api: Api = createMockApi(backend, { minDelayMs, maxDelayMs }); // ← swap this
 export const IS_MOCK_PROVIDER = true; // ← set false to hide the "Demo data" badge
 ```
 
 To connect a backend:
 
-1. Create e.g. `src/services/http/httpApi.ts`:
+1. Create e.g. `src/infrastructure/http/http-api.ts`:
    ```ts
-   import type { Api } from '../api';
+   import type { Api } from '@/application';
    export const httpApi: Api = {
      getCurrentUser: () => fetch('/api/me').then(toJson),
      listTenants: (params) => fetch(`/api/tenants?${toQuery(params)}`).then(toJson),
@@ -109,7 +116,7 @@ To connect a backend:
      // …one method per entry in the Api interface
    };
    ```
-2. Point `src/services/index.ts` at it and set `IS_MOCK_PROVIDER = false`.
+2. Point `src/app/composition.ts` at it and set `IS_MOCK_PROVIDER = false`.
 3. Ensure every method matches the `Api` signature and keeps tenant scoping (every
    tenant-scoped function takes/returns data for a single `tenantId`).
 

@@ -13,6 +13,7 @@ import type {
   SubscriptionStatus,
   Tenant,
 } from '@/domain/entities';
+import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
 
 export type TenantSort = 'newest' | 'oldest' | 'name_asc' | 'expiry_asc';
 
@@ -49,6 +50,13 @@ export interface ListActivityParams {
   to?: string;
 }
 
+/** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
+export interface OverviewAnalysis {
+  contractsPerMonth: MonthBucket[];
+  latestContracts: Tenant[];
+  endingSoon: EndingSoonEntry[];
+}
+
 /**
  * The single application contract the presentation layer depends on.
  * The infrastructure mock (or a future HTTP client) implements it; components never
@@ -59,6 +67,7 @@ export interface Api {
 
   listTenants(params?: ListTenantsParams): Promise<Tenant[]>;
   getTenant(tenantId: string): Promise<Tenant>;
+  getOverviewAnalysis(): Promise<OverviewAnalysis>;
 
   createTenant(input: CreateTenantInput, actor: AdminUser): Promise<Tenant>;
 

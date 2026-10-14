@@ -89,3 +89,22 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     re-states a message and cannot drift from the bug list.
 32. Search matching (BUG-022/023): the query is trimmed before matching and compared with
     `String.prototype.includes` (never `RegExp`), so `'`, `&` and `-` match literally.
+
+## Phase 3b — Overview analysis
+33. The Overview analysis block (contracts-per-month chart, latest contracts, ending soon) treats
+    the **subscription start date** as the "contract date". The spec did not name a separate
+    contract-signing date, so `subscription.startDate` is reused.
+34. The chart shows the last `OVERVIEW_CHART_MONTHS` (6) **calendar months including the current
+    month**, oldest → newest. Months with zero contracts are rendered as zero-height bars (never
+    hidden); exact counts appear in a tooltip and in an sr-only table for screen readers.
+35. "Latest contracts" = the `OVERVIEW_LATEST_CONTRACTS_COUNT` (8) most recent contracts, sorted by
+    contract date descending, tie-broken by Tenant ID descending.
+36. The "ending within N days" table uses its **own** constant `OVERVIEW_ENDING_WITHIN_DAYS` (14),
+    intentionally separate from `EXPIRING_SOON_DAYS` (30) which drives the KPI card and badges. It
+    is date-driven: includes `0 ≤ daysRemaining ≤ 14`, excludes already-expired contracts, sorts
+    most-urgent-first, and does not special-case `not_started`.
+37. The "Renew" action in the ending-soon table reuses the existing Edit Subscription dialog and is
+    gated by the `subscription.change` permission (no new renewal flow was invented).
+38. No sales/revenue total is displayed. `FEATURES.overviewRevenue` lives in `src/config/policy.ts`
+    and defaults to `false`; the total-sales card is hidden until revenue is approved (extends
+    item 24, which notes `config/`, and this `FEATURES` constant, only hold constants).

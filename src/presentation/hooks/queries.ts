@@ -5,6 +5,7 @@ import type { ListActivityParams, ListTenantsParams } from '@/application/dto';
 export const queryKeys = {
   tenants: (params: ListTenantsParams) => ['tenants', params] as const,
   tenant: (tenantId: string) => ['tenant', tenantId] as const,
+  overview: ['overview'] as const,
   packages: ['packages'] as const,
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
@@ -22,6 +23,13 @@ export function useTenant(tenantId: string) {
     queryKey: queryKeys.tenant(tenantId),
     queryFn: () => api.getTenant(tenantId),
     enabled: Boolean(tenantId),
+  });
+}
+
+export function useOverviewAnalysis() {
+  return useQuery({
+    queryKey: queryKeys.overview,
+    queryFn: () => api.getOverviewAnalysis(),
   });
 }
 

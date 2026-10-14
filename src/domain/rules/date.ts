@@ -55,3 +55,10 @@ export function daysUntil(iso: string): number {
   if (!date) return Number.NaN;
   return Math.round((date.getTime() - startOfToday().getTime()) / MS_PER_DAY);
 }
+
+/** Whole days from `from` to `to`, ignoring the time of day. Negative when `to` is earlier. */
+export function daysBetween(from: Date, to: Date): number {
+  const start = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+  const end = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+  return Math.round((end.getTime() - start.getTime()) / MS_PER_DAY);
+}

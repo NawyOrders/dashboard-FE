@@ -1,4 +1,10 @@
-import type { AddBranchInput, ListActivityParams, ListTenantsParams, UpdateSubscriptionInput } from '@/application/dto';
+import type {
+  AddBranchInput,
+  ListActivityParams,
+  ListTenantsParams,
+  OverviewAnalysis,
+  UpdateSubscriptionInput,
+} from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import type {
   ActivityLog,
@@ -22,12 +28,14 @@ import { makeAddBranch } from './add-branch';
 import { makeListActivity } from './list-activity';
 import { makeListPackages } from './list-packages';
 import { makeGetCurrentUser } from './get-current-user';
+import { makeGetOverviewAnalysis } from './get-overview-analysis';
 
 /** Synchronous, framework-free core. The infrastructure adapter adds I/O semantics. */
 export interface Backend {
   getCurrentUser(): AdminUser;
   listTenants(params?: ListTenantsParams): Tenant[];
   getTenant(tenantId: string): Tenant;
+  getOverviewAnalysis(): OverviewAnalysis;
   createTenant(input: CreateTenantInput, actor: AdminUser): Tenant;
   updateSubscription(tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser): Tenant;
   updateRestaurantStatus(tenantId: string, status: RestaurantStatus, actor: AdminUser): Tenant;
@@ -48,6 +56,7 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     getCurrentUser: makeGetCurrentUser(currentUser),
     listTenants: makeListTenants(deps.restaurants),
     getTenant: makeGetTenant(deps.restaurants),
+    getOverviewAnalysis: makeGetOverviewAnalysis(deps.restaurants, deps.clock),
     createTenant: makeCreateRestaurant(deps),
     updateSubscription: makeUpdateSubscription(deps),
     updateRestaurantStatus: makeUpdateRestaurantStatus(deps),

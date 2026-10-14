@@ -6,7 +6,7 @@ import { EXPIRING_SOON_DAYS } from '@/config/policy';
 import { isExpiringSoon } from '@/domain/rules/subscription';
 import { en } from '@/presentation/i18n/en';
 import { KpiCard } from './KpiCard';
-import { RestaurantsTable } from '@/presentation/features/restaurants/RestaurantsTable';
+import { OverviewAnalysis } from './OverviewAnalysis';
 
 export function OverviewPage() {
   const { data, isLoading, isError, error, refetch } = useTenants();
@@ -63,7 +63,8 @@ export function OverviewPage() {
             />
           </div>
 
-          <RestaurantsTable />
+          <OverviewAnalysis />
+
         </>
       )}
     </div>

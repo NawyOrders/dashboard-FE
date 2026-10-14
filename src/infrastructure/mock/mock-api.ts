@@ -56,6 +56,7 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     getCurrentUser: () => run(() => backend.getCurrentUser()),
     listTenants: (params?: ListTenantsParams) => run(() => backend.listTenants(params)),
     getTenant: (tenantId: string) => run(() => backend.getTenant(tenantId)),
+    getOverviewAnalysis: () => run(() => backend.getOverviewAnalysis()),
     createTenant: (input: CreateTenantInput, actor: AdminUser) =>
       run(() => backend.createTenant(input, actor)),
     updateSubscription: (tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser) =>

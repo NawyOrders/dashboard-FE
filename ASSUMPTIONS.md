@@ -157,3 +157,22 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 52. **Contrast limitation:** white text on primary `#E43820` is ≈4.30:1 — just under 4.5:1 for
     small body text, but ≥3:1 for large/bold text and UI components (buttons are 14–16px
     medium/bold). Kept per spec; logged in `QA_REPORT.md`.
+
+## AH-237 close-out (resume pass)
+53. **Page background conflict:** the resume checklist stated "Page background is #C16A12",
+    but `Nawy-Order-DESIGN.md` is not in the repository and the distilled AH-237 ticket
+    (recorded before the resume) specified `bg = #FDF8F3`, with `#C16A12` appearing only as a
+    white-text canvas in the contrast note. Conservative choice: keep `bg = #FDF8F3`. If the
+    design doc later confirms the canvas, it is a one-line change in `tokens.ts` (the base
+    layer and Tailwind classes both read from it).
+54. **Status-pill colors:** `success` (#167A3E / #E6F6EC), `warning` (#9A6200 / #FFF4D6),
+    `danger` (#B8251A / #FDE7E4) and `neutral` (#5E544D / #F3EEE9) are defined as tokens and
+    used by `Badge`/`StatusPill`; they match the values carried over from the previous theme.
+55. **`tailwind.config.ts`:** confirmed working in this setup — Tailwind auto-discovers the TS
+    config via jiti; neither `postcss.config.js` nor `vite.config.ts` references a config path,
+    and the built CSS contains the token values. No fallback to `.js` was needed.
+56. **Line endings:** `.gitattributes` with `* text=auto` added; no renormalization commit was
+    required (no files had mixed endings in the index).
+57. **Create-form brand defaults** (`CreateRestaurantPage` `#E43820` / `#FF6B63`) are tenant
+    brand-color **data** (form defaults), in the same category as the seed `PALETTE`; the
+    `BasicsStep` picker fallback/placeholder now reads `tokens.colors.primary.DEFAULT`.

@@ -8,6 +8,7 @@ import type {
 import type { Backend } from '@/application/use-cases';
 import type {
   AdminUser,
+  CreateAdminAccountInput,
   CreateTenantInput,
   PackageFeatureKey,
   RestaurantStatus,
@@ -73,6 +74,8 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     addBranch: (tenantId: string, input: AddBranchInput, actor: AdminUser) =>
       run(() => backend.addBranch(tenantId, input, actor)),
     listActivity: (params?: ListActivityParams) => run(() => backend.listActivity(params)),
-    listPackages: () => run(() => backend.listPackages()),
+    listAdminAccounts: () => run(() => backend.listAdminAccounts()),
+    createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
+      run(() => backend.createAdminAccount(input, actor)),
   };
 }

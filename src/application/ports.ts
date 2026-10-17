@@ -1,5 +1,6 @@
 import type {
   ActivityLog,
+  AdminAccount,
   AdminUser,
   FeatureFlag,
   PackageFeatureKey,
@@ -31,6 +32,12 @@ export interface FeatureFlagRepository {
   seedDefaults(tenant: Tenant): void;
 }
 
+export interface AdminAccountRepository {
+  findAll(): AdminAccount[];
+  findByEmail(email: string): AdminAccount | null;
+  save(account: AdminAccount): void;
+}
+
 /** Injectable time source so business rules and tests are deterministic. */
 export interface Clock {
   now(): Date;
@@ -54,6 +61,7 @@ export interface UseCaseDeps {
   restaurants: RestaurantRepository;
   activity: ActivityLogRepository;
   flags: FeatureFlagRepository;
+  accounts: AdminAccountRepository;
   clock: Clock;
   ids: IdGenerator;
 }

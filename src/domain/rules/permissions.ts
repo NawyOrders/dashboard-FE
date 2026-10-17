@@ -2,20 +2,42 @@ import type { Permission, Role } from '@/domain/entities';
 
 /**
  * Single source of truth for role → permission mapping (agent.md §4 rule 12).
- * Roles for V1 mock: `super_admin` (full), `support` (read-only + logged tenant access).
+ * The registry also carries display metadata used by the Accounts & Roles page.
  */
+export interface RoleDefinition {
+  label: string;
+  description: string;
+  permissions: Permission[];
+}
+
+export const ROLE_REGISTRY: Record<Role, RoleDefinition> = {
+  super_admin: {
+    label: 'Super Admin',
+    description: 'Full platform access, including account and role management.',
+    permissions: [
+      'restaurant.create',
+      'restaurant.edit',
+      'subscription.change',
+      'feature.toggle',
+      'broadcast.send',
+      'activity.view',
+      'settings.view',
+      'support.access',
+      'accounts.view',
+      'account.create',
+      'role.manage',
+    ],
+  },
+  support: {
+    label: 'Support',
+    description: 'Read-only dashboard access with logged tenant lookups.',
+    permissions: ['activity.view', 'settings.view', 'support.access', 'accounts.view'],
+  },
+};
+
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
-  super_admin: [
-    'restaurant.create',
-    'restaurant.edit',
-    'subscription.change',
-    'feature.toggle',
-    'broadcast.send',
-    'activity.view',
-    'settings.view',
-    'support.access',
-  ],
-  support: ['activity.view', 'settings.view', 'support.access'],
+  super_admin: ROLE_REGISTRY.super_admin.permissions,
+  support: ROLE_REGISTRY.support.permissions,
 };
 
 export function isAllowed(role: Role, permission: Permission): boolean {

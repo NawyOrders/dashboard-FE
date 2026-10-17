@@ -1,14 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
 import type { ListActivityParams, ListTenantsParams } from '@/application/dto';
+import type { AdminUser, CreateAdminAccountInput } from '@/domain/entities';
 
 export const queryKeys = {
   tenants: (params: ListTenantsParams) => ['tenants', params] as const,
   tenant: (tenantId: string) => ['tenant', tenantId] as const,
   overview: ['overview'] as const,
-  packages: ['packages'] as const,
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
+  adminAccounts: ['adminAccounts'] as const,
 };
 
 export function useTenants(params: ListTenantsParams = {}) {
@@ -33,18 +34,29 @@ export function useOverviewAnalysis() {
   });
 }
 
-export function usePackages() {
-  return useQuery({
-    queryKey: queryKeys.packages,
-    queryFn: () => api.listPackages(),
-    staleTime: Infinity,
-  });
-}
-
 export function useActivity(params: ListActivityParams = {}) {
   return useQuery({
     queryKey: queryKeys.activity(params),
     queryFn: () => api.listActivity(params),
+  });
+}
+
+export function useAdminAccounts() {
+  return useQuery({
+    queryKey: queryKeys.adminAccounts,
+    queryFn: () => api.listAdminAccounts(),
+  });
+}
+
+export function useCreateAdminAccount() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ input, actor }: { input: CreateAdminAccountInput; actor: AdminUser }) =>
+      api.createAdminAccount(input, actor),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.adminAccounts });
+      void queryClient.invalidateQueries({ queryKey: ['activity'] });
+    },
   });
 }
 

@@ -1,5 +1,6 @@
 import type {
   ActivityLog,
+  AdminAccount,
   AppStatus,
   ChannelStatus,
   DurationMonths,
@@ -137,6 +138,36 @@ export function buildSeedTenants(): Tenant[] {
       },
     };
   });
+}
+
+export function buildSeedAdminAccounts(): AdminAccount[] {
+  const today = startOfToday();
+  return [
+    {
+      id: 'acct_seed_1',
+      name: 'Nour Hassan',
+      email: 'nour.hassan@nawy.example.com',
+      role: 'super_admin',
+      status: 'active',
+      createdAt: addDays(today, -90).toISOString(),
+    },
+    {
+      id: 'acct_seed_2',
+      name: 'Omar Farouk',
+      email: 'omar.farouk@nawy.example.com',
+      role: 'support',
+      status: 'active',
+      createdAt: addDays(today, -45).toISOString(),
+    },
+    {
+      id: 'acct_seed_3',
+      name: 'Layla Mansour',
+      email: 'layla.mansour@nawy.example.com',
+      role: 'super_admin',
+      status: 'inactive',
+      createdAt: addDays(today, -120).toISOString(),
+    },
+  ];
 }
 
 export function buildSeedActivity(tenants: Tenant[]): ActivityLog[] {

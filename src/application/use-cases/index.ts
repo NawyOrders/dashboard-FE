@@ -8,11 +8,12 @@ import type {
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import type {
   ActivityLog,
+  AdminAccount,
   AdminUser,
   Branch,
+  CreateAdminAccountInput,
   CreateTenantInput,
   FeatureFlag,
-  PackageDefinition,
   PackageFeatureKey,
   RestaurantStatus,
   Tenant,
@@ -26,9 +27,10 @@ import { makeSetFeatureFlag } from './set-feature-flag';
 import { makeListFeatureFlags } from './list-feature-flags';
 import { makeAddBranch } from './add-branch';
 import { makeListActivity } from './list-activity';
-import { makeListPackages } from './list-packages';
 import { makeGetCurrentUser } from './get-current-user';
 import { makeGetOverviewAnalysis } from './get-overview-analysis';
+import { makeListAdminAccounts } from './list-admin-accounts';
+import { makeCreateAdminAccount } from './create-admin-account';
 
 /** Synchronous, framework-free core. The infrastructure adapter adds I/O semantics. */
 export interface Backend {
@@ -48,7 +50,8 @@ export interface Backend {
   listFeatureFlags(tenantId: string): FeatureFlag[];
   addBranch(tenantId: string, input: AddBranchInput, actor: AdminUser): Branch;
   listActivity(params?: ListActivityParams): ActivityLog[];
-  listPackages(): PackageDefinition[];
+  listAdminAccounts(): AdminAccount[];
+  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): AdminAccount;
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
@@ -64,7 +67,8 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listFeatureFlags: makeListFeatureFlags(deps),
     addBranch: makeAddBranch(deps),
     listActivity: makeListActivity(deps),
-    listPackages: makeListPackages(),
+    listAdminAccounts: makeListAdminAccounts(deps),
+    createAdminAccount: makeCreateAdminAccount(deps),
   };
 }
 

@@ -15,7 +15,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/': 'Overview',
   '/restaurants': 'Restaurants',
   '/subscriptions': 'Subscriptions',
-  '/packages': 'Packages & Features',
+  '/accounts': 'Accounts & Roles',
   '/activity': 'Activity Logs',
   '/settings': 'Platform Settings',
 };

@@ -8,7 +8,10 @@ export type Permission =
   | 'broadcast.send'
   | 'activity.view'
   | 'settings.view'
-  | 'support.access';
+  | 'support.access'
+  | 'accounts.view'
+  | 'account.create'
+  | 'role.manage';
 
 export interface AdminUser {
   id: string;

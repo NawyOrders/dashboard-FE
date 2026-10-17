@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Store, CreditCard, Layers, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Store, CreditCard, Users, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/presentation/lib/cn';
 import nawyOrdersLogo from '@/assets/nawy-orders-logo.png';
 import { en } from '@/presentation/i18n/en';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
+import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { isAllowed } from '@/domain/rules/permissions';
+import type { Permission } from '@/domain/entities';
 import { AccountMenu } from './AccountMenu';
 
 interface NavItem {
@@ -13,13 +16,14 @@ interface NavItem {
   label: string;
   icon: ReactNode;
   end?: boolean;
+  permission?: Permission;
 }
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/', label: en.nav.overview, icon: <LayoutDashboard aria-hidden="true" className="size-5" />, end: true },
   { to: '/restaurants', label: en.nav.restaurants, icon: <Store aria-hidden="true" className="size-5" /> },
   { to: '/subscriptions', label: en.nav.subscriptions, icon: <CreditCard aria-hidden="true" className="size-5" /> },
-  { to: '/packages', label: en.nav.packages, icon: <Layers aria-hidden="true" className="size-5" /> },
+  { to: '/accounts', label: en.nav.accounts, icon: <Users aria-hidden="true" className="size-5" />, permission: 'accounts.view' },
   { to: '/activity', label: en.nav.activity, icon: <ScrollText aria-hidden="true" className="size-5" /> },
   { to: '/settings', label: en.nav.settings, icon: <Settings aria-hidden="true" className="size-5" /> },
 ];
@@ -48,9 +52,12 @@ function Logo({ variant }: { variant: SidebarVariant }) {
 }
 
 function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?: () => void }) {
+  const { role } = useCurrentUser();
+  const items = NAV_ITEMS.filter((item) => !item.permission || isAllowed(role, item.permission));
+
   return (
     <nav aria-label="Main navigation" className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
-      {NAV_ITEMS.map((item) => {
+      {items.map((item) => {
         const link = (
           <NavLink
             key={item.to}

@@ -1,13 +1,14 @@
 import type {
   ActivityAction,
   ActivityLog,
+  AdminAccount,
   AdminUser,
   Branch,
+  CreateAdminAccountInput,
   CreateTenantInput,
   DurationMonths,
   FeatureFlag,
   PackageCode,
-  PackageDefinition,
   PackageFeatureKey,
   RestaurantStatus,
   SubscriptionStatus,
@@ -96,5 +97,7 @@ export interface Api {
 
   listActivity(params?: ListActivityParams): Promise<ActivityLog[]>;
 
-  listPackages(): Promise<PackageDefinition[]>;
+  listAdminAccounts(): Promise<AdminAccount[]>;
+
+  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<AdminAccount>;
 }

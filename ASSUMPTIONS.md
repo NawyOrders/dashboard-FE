@@ -108,3 +108,24 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 38. No sales/revenue total is displayed. `FEATURES.overviewRevenue` lives in `src/config/policy.ts`
     and defaults to `false`; the total-sales card is hidden until revenue is approved (extends
     item 24, which notes `config/`, and this `FEATURES` constant, only hold constants).
+
+## Update tickets (AH-236 → AH-239)
+39. **Branch base:** the repository has no `main` branch. Ticket branches are stacked starting
+    from `test-dashboard-update` (AH-236), then AH-237, AH-238, AH-239 on top.
+40. **Role registry (AH-236):** `ROLE_REGISTRY` in `src/domain/rules/permissions.ts` is the single
+    source of truth for role labels, descriptions and permissions. `super_admin` keeps account and
+    role management; `support` is read-only and additionally gets `accounts.view` (view the accounts
+    list) but **not** `account.create` / `role.manage` — the spec only required the new management
+    surface for super admins.
+41. **Activity targets (AH-236):** `ActivityTarget.tenantId` became optional because
+    `account_created` entries are not tenant-scoped; the tenant filter in `list-activity` simply
+    never matches account targets.
+42. **Packages page removed (AH-236b):** the `/packages` route, page, nav item, `usePackages`
+    hook, `listPackages` use case and `Api.listPackages` were removed per the ticket.
+    `config/packages.ts`, `domain/rules/packages.ts`, `PackageCards` and the `ManageFeaturesDialog`
+    remain — package/feature **gating** is still required by the restaurant details and edit flows.
+    The `en.packages.*` strings kept for those flows (`feature`, `priceFor`) were trimmed to the
+    keys still referenced.
+43. **Seed admin accounts (AH-236):** three fictional accounts (two `super_admin`, one `support`,
+    one inactive) are seeded so the Accounts table and search have data; emails use the reserved
+    `@example.com` domain.

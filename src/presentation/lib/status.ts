@@ -1,5 +1,12 @@
 import { en } from '@/presentation/i18n/en';
-import type { AppStatus, BranchStatus, ChannelStatus, RestaurantStatus, SubscriptionStatus } from '@/domain/entities';
+import type {
+  AdminAccountStatus,
+  AppStatus,
+  BranchStatus,
+  ChannelStatus,
+  RestaurantStatus,
+  SubscriptionStatus,
+} from '@/domain/entities';
 import type { Tone } from '@/presentation/components/ui/Badge';
 
 export interface StatusMeta {
@@ -56,4 +63,16 @@ export function appStatusMeta(status: AppStatus | null): StatusMeta {
     published: 'success',
   };
   return { label: en.status.app[value], tone: tones[value] };
+}
+
+export function adminAccountStatusMeta(status: AdminAccountStatus): StatusMeta {
+  const tones: Record<AdminAccountStatus, Tone> = {
+    active: 'success',
+    inactive: 'neutral',
+  };
+  const labels: Record<AdminAccountStatus, string> = {
+    active: en.accounts.statusActive,
+    inactive: en.accounts.statusInactive,
+  };
+  return { label: labels[status], tone: tones[status] };
 }

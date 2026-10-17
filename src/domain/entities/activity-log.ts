@@ -9,7 +9,8 @@ export type ActivityAction =
   | 'subscription_status_changed'
   | 'feature_toggled'
   | 'branch_added'
-  | 'support_access';
+  | 'support_access'
+  | 'account_created';
 
 export interface Actor {
   id: string;
@@ -18,8 +19,9 @@ export interface Actor {
 }
 
 export interface ActivityTarget {
-  type: 'tenant' | 'subscription' | 'feature' | 'branch';
-  tenantId: string;
+  type: 'tenant' | 'subscription' | 'feature' | 'branch' | 'account';
+  /** Related tenant id; absent for account-scoped targets. */
+  tenantId?: string;
   label: string;
 }
 

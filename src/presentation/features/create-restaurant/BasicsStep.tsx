@@ -1,6 +1,7 @@
 import type { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/presentation/components/ui/Input';
 import { en } from '@/presentation/i18n/en';
+import { tokens } from '@/presentation/theme/tokens';
 import type { CreateRestaurantValues } from './schema';
 
 interface ColorFieldProps {
@@ -18,7 +19,7 @@ function ColorField({ label, value, onChange, error }: ColorFieldProps) {
         <input
           type="color"
           aria-label={`${label} picker`}
-          value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : '#000000'}
+          value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : tokens.colors.primary.DEFAULT}
           onChange={(event) => onChange(event.target.value)}
           className="size-11 shrink-0 cursor-pointer rounded-panel border border-border bg-card p-1"
         />
@@ -27,11 +28,11 @@ function ColorField({ label, value, onChange, error }: ColorFieldProps) {
           aria-label={label}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="#E43820"
+          placeholder={tokens.colors.primary.DEFAULT}
           className="h-11 w-full rounded-panel border border-border bg-card px-3 font-mono text-[13px] text-text focus:border-primary focus:outline-none"
         />
       </div>
-      {error && <span className="text-2xs text-danger-fg">{error}</span>}
+      {error && <span className="text-2xs text-error">{error}</span>}
     </div>
   );
 }

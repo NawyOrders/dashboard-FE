@@ -3,12 +3,12 @@ import { Card } from '@/presentation/components/ui/Card';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { cn } from '@/presentation/lib/cn';
 
-type Tint = 'primary' | 'success' | 'info' | 'warning';
+type Tint = 'primary' | 'success' | 'neutral' | 'warning';
 
 const TINTS: Record<Tint, string> = {
   primary: 'bg-bg-2 text-primary',
   success: 'bg-success-bg text-success-fg',
-  info: 'bg-info-bg text-info-fg',
+  neutral: 'bg-neutral-bg text-neutral-fg',
   warning: 'bg-warning-bg text-warning-fg',
 };
 
@@ -30,9 +30,9 @@ export function KpiCard({ label, value, icon, tint, caption, loading }: KpiCardP
       <div className="min-w-0">
         <p className="whitespace-nowrap text-sm text-text-muted">{label}</p>
         {loading ? (
-          <Skeleton className="mt-2 h-8 w-16" />
+          <Skeleton className="mt-2 h-12 w-20" />
         ) : (
-          <p className="tabular text-[32px] font-bold leading-9 text-text">{value}</p>
+          <p className="tabular text-caption font-caption text-text">{value}</p>
         )}
         {caption && <p className="mt-0.5 text-2xs text-text-muted">{caption}</p>}
       </div>

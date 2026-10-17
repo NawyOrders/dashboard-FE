@@ -50,7 +50,7 @@ export function OverviewPage() {
               label={en.overview.kpiActiveSubs}
               value={activeSubscriptions}
               icon={<BadgeCheck aria-hidden="true" className="size-7" />}
-              tint="info"
+              tint="neutral"
               loading={isLoading}
             />
             <KpiCard

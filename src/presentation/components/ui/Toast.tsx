@@ -12,8 +12,8 @@ interface ToastItem extends ToastInput {
 
 const ICONS = {
   success: <CheckCircle2 aria-hidden="true" className="size-5 shrink-0 text-success-fg" />,
-  error: <AlertCircle aria-hidden="true" className="size-5 shrink-0 text-danger-fg" />,
-  info: <Info aria-hidden="true" className="size-5 shrink-0 text-info-fg" />,
+  error: <AlertCircle aria-hidden="true" className="size-5 shrink-0 text-error" />,
+  neutral: <Info aria-hidden="true" className="size-5 shrink-0 text-neutral-fg" />,
 } as const;
 
 export function ToastProvider({ children }: { children: ReactNode }) {

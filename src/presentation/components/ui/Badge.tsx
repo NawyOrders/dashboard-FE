@@ -1,14 +1,13 @@
 import type { HTMLAttributes } from 'react';
 import { cn } from '@/presentation/lib/cn';
 
-export type Tone = 'success' | 'warning' | 'danger' | 'neutral' | 'info' | 'primary';
+export type Tone = 'success' | 'warning' | 'danger' | 'neutral' | 'primary';
 
 const TONES: Record<Tone, string> = {
   success: 'bg-success-bg text-success-fg',
   warning: 'bg-warning-bg text-warning-fg',
   danger: 'bg-danger-bg text-danger-fg',
   neutral: 'bg-neutral-bg text-neutral-fg',
-  info: 'bg-info-bg text-info-fg',
   primary: 'bg-bg-2 text-primary-dark',
 };
 

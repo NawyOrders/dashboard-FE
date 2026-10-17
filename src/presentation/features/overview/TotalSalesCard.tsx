@@ -11,7 +11,7 @@ import { en } from '@/presentation/i18n/en';
 export function TotalSalesCard() {
   return (
     <Card className="flex items-center gap-4 p-6">
-      <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-info-bg text-info-fg">
+      <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-neutral-bg text-neutral-fg">
         <TrendingUp aria-hidden="true" className="size-7" />
       </span>
       <div className="min-w-0">

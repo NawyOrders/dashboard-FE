@@ -38,7 +38,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
             'h-11 w-full appearance-none rounded-panel border bg-card ps-3 pe-9 text-sm text-text',
             'transition-colors duration-150 focus:border-primary focus:outline-none',
             'disabled:cursor-not-allowed disabled:bg-neutral-bg disabled:text-text-muted',
-            error ? 'border-danger-fg' : 'border-border',
+            error ? 'border-error focus:border-error focus:ring-4 focus:ring-error-ring' : 'border-border hover:border-border-hover',
             className,
           )}
           {...props}
@@ -59,7 +59,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-text-muted"
         />
       </div>
-      {error && <span className="text-2xs text-danger-fg">{error}</span>}
+      {error && <span className="text-2xs text-error">{error}</span>}
     </div>
   );
 });

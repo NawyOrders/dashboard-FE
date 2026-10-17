@@ -129,3 +129,31 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 43. **Seed admin accounts (AH-236):** three fictional accounts (two `super_admin`, one `support`,
     one inactive) are seeded so the Accounts table and search have data; emails use the reserved
     `@example.com` domain.
+
+## Design tokens (AH-237)
+44. **Single source of truth:** `src/presentation/theme/tokens.ts` holds every color, radius,
+    shadow, focus-ring and typography value. `tailwind.config.ts` imports it at build time;
+    `applyTheme()` (called once in `main.tsx`) injects the same values as CSS custom properties
+    for the base layer. Hex literals in app code are otherwise banned — the only remaining ones
+    are the fallbacks mirrored in `index.css` (documented as such) and tenant brand-color
+    **data** in the seed/palette pickers (`BasicsStep` placeholder is illustrative data).
+45. **Typography:** h1 = 64px / weight 800 and KPI values = 48px / weight 500 exactly as the
+    ticket states; Alexandria (400/500/800) replaces Inter, body base is 16px. Dense UI (tables,
+    meta text, pills, form labels) keeps an auxiliary 14/12px scale — 48px captions would break
+    table density; this deviation is recorded here and in `QA_REPORT.md`, not hidden.
+46. **Page titles on small screens:** the 64px h1 renders at 40px below `md` so it wraps cleanly
+    at 390px instead of overflowing (ticket asked for layout fixes to be logged, not silent).
+47. **Radius:** card/panel = 8px, pill/avatar = 9999px (avatar/logo/severity-dot become circles).
+    Checkbox keeps a 4px control radius as a native-control exception.
+48. **Shadows:** sm (buttons, chips, icon buttons), DEFAULT = `shadow-card` (cards, dropdowns,
+    toasts), md (reserved for side panels), lg (modals), `primary` (active nav/primary buttons).
+49. **`info` tone removed:** `Badge`/`Toast`/KPI tints now use `neutral`; `submitted_to_store`
+    app status renders as `warning` (closest semantic match). Toast variant union is
+    `success | error | neutral`.
+50. **Error vs danger:** form validation uses the new `error` tokens (`#EF4444` + 15% ring);
+    `danger` tokens remain for status pills only.
+51. **Focus:** global `:focus-visible` uses a 3px `#E438201F` outline; error fields add an
+    `error-ring` 4px ring on focus.
+52. **Contrast limitation:** white text on primary `#E43820` is ≈4.30:1 — just under 4.5:1 for
+    small body text, but ≥3:1 for large/bold text and UI components (buttons are 14–16px
+    medium/bold). Kept per spec; logged in `QA_REPORT.md`.

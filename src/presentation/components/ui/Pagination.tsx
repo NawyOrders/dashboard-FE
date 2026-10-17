@@ -73,7 +73,7 @@ export function Pagination({
             aria-label="Previous page"
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
-            className="inline-flex size-9 items-center justify-center rounded-[10px] border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex size-9 items-center justify-center rounded-panel border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <ChevronLeft aria-hidden="true" className="size-4" />
           </button>
@@ -93,7 +93,7 @@ export function Pagination({
                 aria-current={item === page ? 'page' : undefined}
                 onClick={() => onPageChange(item)}
                 className={cn(
-                  'inline-flex size-9 items-center justify-center rounded-[10px] text-sm transition-colors duration-150',
+                  'inline-flex size-9 items-center justify-center rounded-panel text-sm transition-colors duration-150',
                   item === page
                     ? 'bg-primary font-semibold text-white shadow-primary'
                     : 'text-text hover:bg-bg-2',
@@ -108,7 +108,7 @@ export function Pagination({
             aria-label="Next page"
             disabled={page >= pageCount}
             onClick={() => onPageChange(page + 1)}
-            className="inline-flex size-9 items-center justify-center rounded-[10px] border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex size-9 items-center justify-center rounded-panel border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <ChevronRight aria-hidden="true" className="size-4" />
           </button>

@@ -71,7 +71,7 @@ export function RestaurantsTable({
 
   function exportRows(target: Tenant[], filename: string) {
     if (target.length === 0) {
-      toast({ title: 'Nothing to export', variant: 'info' });
+      toast({ title: 'Nothing to export', variant: 'neutral' });
       return;
     }
     downloadCsv(filename, target, CSV_COLUMNS);

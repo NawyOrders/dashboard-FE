@@ -1,4 +1,5 @@
 import { cn } from '@/presentation/lib/cn';
+import { tokens } from '@/presentation/theme/tokens';
 
 export interface TenantLogoProps {
   name: string;
@@ -18,7 +19,7 @@ function initials(name: string): string {
   return parts.map((part) => part[0] ?? '').join('').toUpperCase();
 }
 
-export function TenantLogo({ name, color = '#E43820', size = 'sm', className }: TenantLogoProps) {
+export function TenantLogo({ name, color = tokens.colors.primary.DEFAULT, size = 'sm', className }: TenantLogoProps) {
   return (
     <span
       aria-hidden="true"

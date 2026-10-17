@@ -154,7 +154,7 @@ export function SubscriptionsPage() {
                     <tr
                       key={tenant.id}
                       onClick={() => navigate(`/restaurants/${tenant.id}?tab=subscription`)}
-                      className="cursor-pointer border-b border-border transition-colors duration-150 last:border-0 hover:bg-[#FBF5EF]"
+                      className="cursor-pointer border-b border-border transition-colors duration-150 last:border-0 hover:bg-bg-2"
                     >
                       <td className="whitespace-nowrap px-6 py-4">
                         <span className="flex items-center gap-3">

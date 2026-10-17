@@ -32,13 +32,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           'h-11 w-full rounded-panel border bg-card px-3 text-sm text-text placeholder:text-text-muted',
           'transition-colors duration-150 focus:border-primary focus:outline-none',
           'disabled:cursor-not-allowed disabled:bg-neutral-bg disabled:text-text-muted',
-          error ? 'border-danger-fg' : 'border-border',
+          error ? 'border-error focus:border-error focus:ring-4 focus:ring-error-ring' : 'border-border hover:border-border-hover',
           className,
         )}
         {...props}
       />
       {error && (
-        <span id={`${inputId}-error`} className="text-2xs text-danger-fg">
+        <span id={`${inputId}-error`} className="text-2xs text-error">
           {error}
         </span>
       )}

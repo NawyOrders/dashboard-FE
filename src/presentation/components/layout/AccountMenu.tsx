@@ -39,7 +39,7 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
 
   function signOut() {
     setOpen(false);
-    toast({ title: 'Signed out (demo)', variant: 'info' });
+    toast({ title: 'Signed out (demo)', variant: 'neutral' });
   }
 
   return (

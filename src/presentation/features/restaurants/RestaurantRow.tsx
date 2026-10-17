@@ -27,8 +27,8 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
   const canEdit = usePermission('subscription.change').allowed;
   const canToggleFeature = usePermission('feature.toggle').allowed;
 
-  const stickyCell = cn('sticky z-10', selected ? 'bg-bg-2' : 'bg-card group-hover:bg-[#FBF5EF]');
-  const cell = cn('px-4 py-4 align-middle', selected ? 'bg-bg-2' : 'group-hover:bg-[#FBF5EF]');
+  const stickyCell = cn('sticky z-10', selected ? 'bg-bg-2' : 'bg-card group-hover:bg-bg-2');
+  const cell = cn('px-4 py-4 align-middle', selected ? 'bg-bg-2' : 'group-hover:bg-bg-2');
 
   const openTab = (tab: string) => navigate(`/restaurants/${tenant.id}?tab=${tab}`);
 

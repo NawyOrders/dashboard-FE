@@ -12,7 +12,7 @@ export const CurrentUserContext = createContext<CurrentUserContextValue | null>(
 export interface ToastInput {
   title: string;
   description?: string;
-  variant?: 'success' | 'error' | 'info';
+  variant?: 'success' | 'error' | 'neutral';
 }
 
 export interface ToastContextValue {

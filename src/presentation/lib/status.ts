@@ -59,7 +59,7 @@ export function appStatusMeta(status: AppStatus | null): StatusMeta {
   const tones: Record<AppStatus, Tone> = {
     not_started: 'neutral',
     in_preparation: 'warning',
-    submitted_to_store: 'info',
+    submitted_to_store: 'warning',
     published: 'success',
   };
   return { label: en.status.app[value], tone: tones[value] };

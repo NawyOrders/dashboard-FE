@@ -176,3 +176,13 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 57. **Create-form brand defaults** (`CreateRestaurantPage` `#E43820` / `#FF6B63`) are tenant
     brand-color **data** (form defaults), in the same category as the seed `PALETTE`; the
     `BasicsStep` picker fallback/placeholder now reads `tokens.colors.primary.DEFAULT`.
+
+## AH-239 sales chart
+58. **`scale()` signature:** the chart scale helper took both a `buckets` argument and an
+    `opts.buckets` field (duplicated input), which left the first parameter unused. Rather than
+    silencing lint with an `_` prefix, the redundant parameter was **removed** and the function
+    now reads `opts.buckets` — a single source of truth for the data being scaled.
+59. **Monotone cubic line (Fritsch–Carlson):** `charts/path.ts` builds the smooth line itself
+    rather than pulling a `d3-shape`-style dependency, because `agent.md` §3 restricts new
+    chart libraries; the helper is pure (numbers in, SVG path string out) and never overshoots
+    between months.

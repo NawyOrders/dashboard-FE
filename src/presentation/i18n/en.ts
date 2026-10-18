@@ -268,14 +268,12 @@ export const en = {
   },
   analytics: {
     title: 'Analytics',
-    subtitle: 'Total revenue from the demo dataset over a trailing window.',
-    periodLabel: 'Reporting window',
-    periodDays: (n: number) => `Last ${n} days`,
-    totalRevenue: 'Total revenue',
-    recordCount: (n: number) =>
-      `${n.toLocaleString('en-US')} revenue record${n === 1 ? '' : 's'} in this window`,
+    subtitle: 'Contracts and sales per month from the demo dataset.',
+    powerBiTitle: 'Power BI reports',
+    powerBiBody:
+      'Interactive Power BI reports will be embedded here once the reporting workspace is connected.',
     demoNote:
-      'Demo data — totals are computed from a fixed mock dataset, not real sales figures.',
+      'Demo data — figures are computed from a fixed mock dataset, not real sales.',
   },
   applications: {
     title: 'Restaurant Applications',

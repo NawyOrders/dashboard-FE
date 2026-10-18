@@ -77,6 +77,7 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
       run(() => backend.createAdminAccount(input, actor)),
     getTotalRevenue: (periodDays: RevenuePeriodDays) =>
       run(() => backend.getTotalRevenue(periodDays)),
+    getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     approveApplication: (tenantId: string, actor: AdminUser) =>
       run(() => backend.approveApplication(tenantId, actor)),

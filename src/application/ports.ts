@@ -7,6 +7,7 @@ import type {
   Permission,
   Role,
   RevenueRecord,
+  SalesRecord,
   Tenant,
 } from '@/domain/entities';
 
@@ -43,6 +44,10 @@ export interface RevenueRepository {
   findAll(): RevenueRecord[];
 }
 
+export interface SalesRepository {
+  findAll(): SalesRecord[];
+}
+
 /** Injectable time source so business rules and tests are deterministic. */
 export interface Clock {
   now(): Date;
@@ -68,6 +73,7 @@ export interface UseCaseDeps {
   flags: FeatureFlagRepository;
   accounts: AdminAccountRepository;
   revenue: RevenueRepository;
+  sales: SalesRepository;
   clock: Clock;
   ids: IdGenerator;
 }

@@ -105,6 +105,8 @@ export const en = {
     directorySubtitle: 'Directory & subscriptions',
     chartTitle: 'New Contracts per Month',
     chartSubtitle: (months: number) => `Last ${months} months`,
+    salesChartTitle: 'Sales per Month',
+    sales: 'Sales',
     viewAsTable: 'View as table',
     viewAsChart: 'View as chart',
     month: 'Month',

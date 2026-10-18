@@ -12,6 +12,7 @@ export const queryKeys = {
   flags: (tenantId: string) => ['flags', tenantId] as const,
   adminAccounts: ['adminAccounts'] as const,
   revenue: (periodDays: RevenuePeriodDays) => ['revenue', periodDays] as const,
+  monthlySales: ['monthlySales'] as const,
   applications: ['applications'] as const,
 };
 
@@ -75,6 +76,13 @@ export function useTotalRevenue(periodDays: RevenuePeriodDays) {
   return useQuery({
     queryKey: queryKeys.revenue(periodDays),
     queryFn: () => api.getTotalRevenue(periodDays),
+  });
+}
+
+export function useMonthlySales() {
+  return useQuery({
+    queryKey: queryKeys.monthlySales,
+    queryFn: () => api.getMonthlySales(),
   });
 }
 

@@ -186,3 +186,10 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     rather than pulling a `d3-shape`-style dependency, because `agent.md` §3 restricts new
     chart libraries; the helper is pure (numbers in, SVG path string out) and never overshoots
     between months.
+60. **Sales chart colors & empty state:** the SVG reads all colors from `theme/tokens.ts`
+    (primary line + gradient, border grid, muted axis text, card/text tooltip) rather than
+    inline hex or `var(--…)`, so the runtime theme injection and Tailwind stay the single
+    source. The chart stays a line (flat on the axis) when every month is zero and adds the
+    `en.overview.noSales` caption; zero months are still plotted as points so the series shape
+    is never hidden. Width is measured with a `ResizeObserver` so the SVG maps
+    1:1 to pixels and the stroke is not distorted by `preserveAspectRatio`. (AH-239)

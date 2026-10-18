@@ -113,6 +113,7 @@ export const en = {
     contracts: 'Contracts',
     restaurants: 'Restaurants',
     noContracts: 'None',
+    noSales: 'No sales in the last 6 months.',
     latestTitle: 'Latest Contracts',
     latestSubtitle: (count: number) => `${count} most recently signed restaurants`,
     viewAll: 'View all',

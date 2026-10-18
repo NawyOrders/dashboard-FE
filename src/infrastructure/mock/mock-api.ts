@@ -12,7 +12,6 @@ import type {
   PackageFeatureKey,
   RestaurantStatus,
 } from '@/domain/entities';
-import type { RevenuePeriodDays } from '@/domain/rules/revenue';
 
 export const CURRENT_USER: AdminUser = {
   id: 'u_1',
@@ -75,8 +74,6 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     listAdminAccounts: () => run(() => backend.listAdminAccounts()),
     createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
       run(() => backend.createAdminAccount(input, actor)),
-    getTotalRevenue: (periodDays: RevenuePeriodDays) =>
-      run(() => backend.getTotalRevenue(periodDays)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     approveApplication: (tenantId: string, actor: AdminUser) =>

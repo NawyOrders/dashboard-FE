@@ -3,7 +3,6 @@ import type {
   ListActivityParams,
   ListTenantsParams,
   OverviewAnalysis,
-  RevenueSummary,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
@@ -18,7 +17,6 @@ import type {
   RestaurantStatus,
   Tenant,
 } from '@/domain/entities';
-import type { RevenuePeriodDays } from '@/domain/rules/revenue';
 import type { SalesMonthBucket } from '@/domain/rules/sales';
 import { makeListTenants } from './list-tenants';
 import { makeGetTenant } from './get-tenant';
@@ -32,7 +30,6 @@ import { makeGetCurrentUser } from './get-current-user';
 import { makeGetOverviewAnalysis } from './get-overview-analysis';
 import { makeListAdminAccounts } from './list-admin-accounts';
 import { makeCreateAdminAccount } from './create-admin-account';
-import { makeGetTotalRevenue } from './get-total-revenue';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
 import { makeApproveApplication } from './approve-application';
@@ -56,7 +53,6 @@ export interface Backend {
   listActivity(params?: ListActivityParams): ActivityLog[];
   listAdminAccounts(): AdminAccount[];
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): AdminAccount;
-  getTotalRevenue(periodDays: RevenuePeriodDays): RevenueSummary;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
   approveApplication(tenantId: string, actor: AdminUser): Tenant;
@@ -76,7 +72,6 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listActivity: makeListActivity(deps),
     listAdminAccounts: makeListAdminAccounts(deps),
     createAdminAccount: makeCreateAdminAccount(deps),
-    getTotalRevenue: makeGetTotalRevenue(deps),
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
     approveApplication: makeApproveApplication(deps),

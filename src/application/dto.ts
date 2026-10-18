@@ -14,18 +14,9 @@ import type {
   Tenant,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
-import type { RevenuePeriodDays } from '@/domain/rules/revenue';
 import type { SalesMonthBucket } from '@/domain/rules/sales';
 
 export type TenantSort = 'newest' | 'oldest' | 'name_asc' | 'expiry_asc';
-
-export interface RevenueSummary {
-  periodDays: RevenuePeriodDays;
-  totalEgp: number;
-  recordCount: number;
-  from: string;
-  to: string;
-}
 
 export interface ListTenantsParams {
   /** Free text — matches business name, restaurant name or Tenant ID. */
@@ -108,7 +99,6 @@ export interface Api {
   listAdminAccounts(): Promise<AdminAccount[]>;
 
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<AdminAccount>;
-  getTotalRevenue(periodDays: RevenuePeriodDays): Promise<RevenueSummary>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;

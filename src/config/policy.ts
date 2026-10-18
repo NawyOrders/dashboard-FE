@@ -36,15 +36,6 @@ export const EXTRA_BRANCH_FEE_DEFINED = false;
 export const REFERENCE_PRICE_NOTE =
   'Reference price — tax inclusion and payment terms not yet confirmed';
 
-// --- Overview analysis (agent.md §4b) ---
-
-// OPEN DECISION: revenue/sales totals are out of scope until the team approves them
-// (agent.md §2 "OUT", §4 rule 11). The Overview sales card is rendered only when this is true.
-// ASSUMPTION: kept off; no placeholder total is shown while it is false.
-export const FEATURES = {
-  overviewRevenue: false,
-} as const;
-
 // OPEN DECISION: the "ending within 2 weeks" window is fixed by the design brief.
 // It is intentionally separate from EXPIRING_SOON_DAYS (which drives the KPI card and badges).
 export const OVERVIEW_ENDING_WITHIN_DAYS = 14;

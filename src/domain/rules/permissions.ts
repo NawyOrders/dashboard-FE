@@ -21,6 +21,7 @@ export const ROLE_REGISTRY: Record<Role, RoleDefinition> = {
       'feature.toggle',
       'broadcast.send',
       'activity.view',
+      'analytics.view',
       'settings.view',
       'support.access',
       'accounts.view',
@@ -31,7 +32,7 @@ export const ROLE_REGISTRY: Record<Role, RoleDefinition> = {
   support: {
     label: 'Support',
     description: 'Read-only dashboard access with logged tenant lookups.',
-    permissions: ['activity.view', 'settings.view', 'support.access', 'accounts.view'],
+    permissions: ['activity.view', 'analytics.view', 'settings.view', 'support.access', 'accounts.view'],
   },
 };
 

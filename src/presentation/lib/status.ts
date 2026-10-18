@@ -17,7 +17,9 @@ export interface StatusMeta {
 export function restaurantStatusMeta(status: RestaurantStatus): StatusMeta {
   const tones: Record<RestaurantStatus, Tone> = {
     active: 'success',
+    approved: 'success',
     pending: 'warning',
+    pending_approval: 'warning',
     inactive: 'danger',
   };
   return { label: en.status.restaurant[status], tone: tones[status] };

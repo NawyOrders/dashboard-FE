@@ -5,7 +5,12 @@ import type { DurationMonths, PackageCode } from './package';
  * Restaurant Status, Subscription Status, Website/PWA status and Mobile App status
  * must never be collapsed into a single field or badge.
  */
-export type RestaurantStatus = 'active' | 'pending' | 'inactive';
+export type RestaurantStatus =
+  | 'active'
+  | 'inactive'
+  | 'pending'
+  | 'pending_approval'
+  | 'approved';
 
 export type BranchStatus = 'active' | 'pending' | 'inactive';
 

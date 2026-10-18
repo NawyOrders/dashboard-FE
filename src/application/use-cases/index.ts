@@ -3,6 +3,7 @@ import type {
   ListActivityParams,
   ListTenantsParams,
   OverviewAnalysis,
+  RevenueSummary,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
@@ -12,15 +13,14 @@ import type {
   AdminUser,
   Branch,
   CreateAdminAccountInput,
-  CreateTenantInput,
   FeatureFlag,
   PackageFeatureKey,
   RestaurantStatus,
   Tenant,
 } from '@/domain/entities';
+import type { RevenuePeriodDays } from '@/domain/rules/revenue';
 import { makeListTenants } from './list-tenants';
 import { makeGetTenant } from './get-tenant';
-import { makeCreateRestaurant } from './create-restaurant';
 import { makeUpdateSubscription } from './update-subscription';
 import { makeUpdateRestaurantStatus } from './update-restaurant-status';
 import { makeSetFeatureFlag } from './set-feature-flag';
@@ -31,6 +31,9 @@ import { makeGetCurrentUser } from './get-current-user';
 import { makeGetOverviewAnalysis } from './get-overview-analysis';
 import { makeListAdminAccounts } from './list-admin-accounts';
 import { makeCreateAdminAccount } from './create-admin-account';
+import { makeGetTotalRevenue } from './get-total-revenue';
+import { makeListApplications } from './list-applications';
+import { makeApproveApplication } from './approve-application';
 
 /** Synchronous, framework-free core. The infrastructure adapter adds I/O semantics. */
 export interface Backend {
@@ -38,7 +41,6 @@ export interface Backend {
   listTenants(params?: ListTenantsParams): Tenant[];
   getTenant(tenantId: string): Tenant;
   getOverviewAnalysis(): OverviewAnalysis;
-  createTenant(input: CreateTenantInput, actor: AdminUser): Tenant;
   updateSubscription(tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser): Tenant;
   updateRestaurantStatus(tenantId: string, status: RestaurantStatus, actor: AdminUser): Tenant;
   setFeatureFlag(
@@ -52,6 +54,9 @@ export interface Backend {
   listActivity(params?: ListActivityParams): ActivityLog[];
   listAdminAccounts(): AdminAccount[];
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): AdminAccount;
+  getTotalRevenue(periodDays: RevenuePeriodDays): RevenueSummary;
+  listApplications(): Tenant[];
+  approveApplication(tenantId: string, actor: AdminUser): Tenant;
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
@@ -60,7 +65,6 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listTenants: makeListTenants(deps.restaurants),
     getTenant: makeGetTenant(deps.restaurants),
     getOverviewAnalysis: makeGetOverviewAnalysis(deps.restaurants, deps.clock),
-    createTenant: makeCreateRestaurant(deps),
     updateSubscription: makeUpdateSubscription(deps),
     updateRestaurantStatus: makeUpdateRestaurantStatus(deps),
     setFeatureFlag: makeSetFeatureFlag(deps),
@@ -69,6 +73,9 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listActivity: makeListActivity(deps),
     listAdminAccounts: makeListAdminAccounts(deps),
     createAdminAccount: makeCreateAdminAccount(deps),
+    getTotalRevenue: makeGetTotalRevenue(deps),
+    listApplications: makeListApplications(deps.restaurants),
+    approveApplication: makeApproveApplication(deps),
   };
 }
 

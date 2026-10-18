@@ -10,7 +10,8 @@ export type ActivityAction =
   | 'feature_toggled'
   | 'branch_added'
   | 'support_access'
-  | 'account_created';
+  | 'account_created'
+  | 'application_approved';
 
 export interface Actor {
   id: string;

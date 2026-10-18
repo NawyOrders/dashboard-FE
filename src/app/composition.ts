@@ -8,9 +8,11 @@ import { InMemoryAdminAccountRepository } from '@/infrastructure/repositories/in
 import { InMemoryActivityLogRepository } from '@/infrastructure/repositories/in-memory-activity-log-repository';
 import { InMemoryFeatureFlagRepository } from '@/infrastructure/repositories/in-memory-feature-flag-repository';
 import { InMemoryRestaurantRepository } from '@/infrastructure/repositories/in-memory-restaurant-repository';
+import { InMemoryRevenueRepository } from '@/infrastructure/repositories/in-memory-revenue-repository';
 import {
   buildSeedActivity,
   buildSeedAdminAccounts,
+  buildSeedRevenue,
   buildSeedTenants,
 } from '@/infrastructure/seed/seed';
 
@@ -24,12 +26,13 @@ function buildContainer(): Api {
   const activity = new InMemoryActivityLogRepository(clock, ids, buildSeedActivity(restaurants.findAll()));
   const flags = new InMemoryFeatureFlagRepository();
   const accounts = new InMemoryAdminAccountRepository(buildSeedAdminAccounts());
+  const revenue = new InMemoryRevenueRepository(buildSeedRevenue(restaurants.findAll()));
 
   for (const tenant of restaurants.findAll()) {
     flags.seedDefaults(tenant);
   }
 
-  const deps: UseCaseDeps = { restaurants, activity, flags, accounts, clock, ids };
+  const deps: UseCaseDeps = { restaurants, activity, flags, accounts, revenue, clock, ids };
   const currentUser: CurrentUserProvider = { get: () => CURRENT_USER };
   const backend = createBackend(deps, currentUser);
 

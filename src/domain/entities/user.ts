@@ -7,6 +7,7 @@ export type Permission =
   | 'feature.toggle'
   | 'broadcast.send'
   | 'activity.view'
+  | 'analytics.view'
   | 'settings.view'
   | 'support.access'
   | 'accounts.view'

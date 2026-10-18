@@ -6,6 +6,7 @@ import type {
   DurationMonths,
   PackageCode,
   RestaurantStatus,
+  RevenueRecord,
   SubscriptionStatus,
   Tenant,
 } from '@/domain/entities';
@@ -44,12 +45,12 @@ const DESCRIPTORS: SeedDescriptor[] = [
   { name: 'Blue Olive Bistro', slug: 'blue-olive', packageCode: 'start', durationMonths: 6, subStatus: 'active', restStatus: 'active', startOffset: -20, websiteStatus: 'ready', pwaStatus: 'in_setup', android: null, ios: null, branches: 4, colors: PALETTE[1]! },
   { name: 'Cedar & Salt', slug: 'cedar-salt', packageCode: 'start', durationMonths: 3, subStatus: 'expiring_soon', restStatus: 'active', startOffset: -75, websiteStatus: 'ready', pwaStatus: 'ready', android: null, ios: null, branches: 1, colors: PALETTE[2]! },
   { name: 'Demo Diner', slug: 'demo-diner', packageCode: 'start', durationMonths: 3, subStatus: 'expired', restStatus: 'inactive', startOffset: -120, websiteStatus: 'not_tracked', pwaStatus: null, android: null, ios: null, branches: 1, colors: PALETTE[3]! },
-  { name: "Falcon's Nest", slug: 'falcons-nest', packageCode: 'start', durationMonths: 3, subStatus: 'not_started', restStatus: 'pending', startOffset: 14, websiteStatus: null, pwaStatus: null, android: null, ios: null, branches: 0, colors: PALETTE[4]! },
+  { name: "Falcon's Nest", slug: 'falcons-nest', packageCode: 'start', durationMonths: 3, subStatus: 'not_started', restStatus: 'pending_approval', startOffset: 14, websiteStatus: null, pwaStatus: null, android: null, ios: null, branches: 0, colors: PALETTE[4]! },
   { name: 'Green Fork Kitchen', slug: 'green-fork', packageCode: 'growth', durationMonths: 12, subStatus: 'active', restStatus: 'active', startOffset: -30, websiteStatus: 'ready', pwaStatus: 'ready', android: 'in_preparation', ios: 'not_started', branches: 3, colors: PALETTE[5]! },
   { name: 'Harbor House', slug: 'harbor-house', packageCode: 'growth', durationMonths: 6, subStatus: 'active', restStatus: 'active', startOffset: -40, websiteStatus: 'ready', pwaStatus: 'ready', android: 'submitted_to_store', ios: 'in_preparation', branches: 4, colors: PALETTE[6]! },
   { name: 'Ivory Spoon', slug: 'ivory-spoon', packageCode: 'growth', durationMonths: 3, subStatus: 'expiring_soon', restStatus: 'active', startOffset: -78, websiteStatus: 'ready', pwaStatus: 'ready', android: 'published', ios: 'submitted_to_store', branches: 2, colors: PALETTE[7]! },
   { name: 'Juniper Table', slug: 'juniper-table', packageCode: 'growth', durationMonths: 3, subStatus: 'expired', restStatus: 'inactive', startOffset: -125, websiteStatus: 'ready', pwaStatus: 'in_setup', android: 'published', ios: 'published', branches: 1, colors: PALETTE[0]! },
-  { name: "Kelvin's Kitchen", slug: 'kelvins-kitchen', packageCode: 'growth', durationMonths: 6, subStatus: 'not_started', restStatus: 'pending', startOffset: 7, websiteStatus: 'in_setup', pwaStatus: 'not_tracked', android: 'not_started', ios: 'not_started', branches: 1, colors: PALETTE[1]! },
+  { name: "Kelvin's Kitchen", slug: 'kelvins-kitchen', packageCode: 'growth', durationMonths: 6, subStatus: 'not_started', restStatus: 'pending_approval', startOffset: 7, websiteStatus: 'in_setup', pwaStatus: 'not_tracked', android: 'not_started', ios: 'not_started', branches: 1, colors: PALETTE[1]! },
   { name: 'Luna Verde', slug: 'luna-verde', packageCode: 'growth', durationMonths: 12, subStatus: 'active', restStatus: 'active', startOffset: -100, websiteStatus: 'ready', pwaStatus: 'ready', android: 'published', ios: 'published', branches: 4, colors: PALETTE[2]! },
   { name: 'Maple & Main', slug: 'maple-main', packageCode: 'start', durationMonths: 12, subStatus: 'active', restStatus: 'pending', startOffset: -60, websiteStatus: 'in_setup', pwaStatus: null, android: null, ios: null, branches: 2, colors: PALETTE[3]! },
   { name: 'Nomad Noodles', slug: 'nomad-noodles', packageCode: 'start', durationMonths: 6, subStatus: 'expired', restStatus: 'inactive', startOffset: -200, websiteStatus: 'not_tracked', pwaStatus: null, android: null, ios: null, branches: 1, colors: PALETTE[4]! },
@@ -59,7 +60,7 @@ const DESCRIPTORS: SeedDescriptor[] = [
   { name: 'Rustic Root', slug: 'rustic-root', packageCode: 'start', durationMonths: 6, subStatus: 'active', restStatus: 'active', startOffset: -25, websiteStatus: 'ready', pwaStatus: 'in_setup', android: null, ios: null, branches: 3, colors: PALETTE[0]! },
   { name: 'Saffron Street', slug: 'saffron-street', packageCode: 'growth', durationMonths: 12, subStatus: 'expiring_soon', restStatus: 'active', startOffset: -350, websiteStatus: 'ready', pwaStatus: 'ready', android: 'published', ios: 'published', branches: 4, colors: PALETTE[1]! },
   { name: 'Terra Tomate', slug: 'terra-tomate', packageCode: 'start', durationMonths: 3, subStatus: 'expired', restStatus: 'inactive', startOffset: -150, websiteStatus: null, pwaStatus: 'not_tracked', android: null, ios: null, branches: 1, colors: PALETTE[2]! },
-  { name: 'Umbra Umami', slug: 'umbra-umami', packageCode: 'growth', durationMonths: 12, subStatus: 'not_started', restStatus: 'pending', startOffset: 20, websiteStatus: null, pwaStatus: null, android: 'not_started', ios: 'not_started', branches: 0, colors: PALETTE[3]! },
+  { name: 'Umbra Umami', slug: 'umbra-umami', packageCode: 'growth', durationMonths: 12, subStatus: 'not_started', restStatus: 'pending_approval', startOffset: 20, websiteStatus: null, pwaStatus: null, android: 'not_started', ios: 'not_started', branches: 0, colors: PALETTE[3]! },
   { name: 'Velvet Vine', slug: 'velvet-vine', packageCode: 'start', durationMonths: 12, subStatus: 'active', restStatus: 'active', startOffset: -80, websiteStatus: 'ready', pwaStatus: 'ready', android: null, ios: null, branches: 2, colors: PALETTE[4]! },
   { name: 'Willow & Wheat', slug: 'willow-wheat', packageCode: 'growth', durationMonths: 3, subStatus: 'active', restStatus: 'active', startOffset: -5, websiteStatus: 'ready', pwaStatus: 'in_setup', android: 'not_started', ios: 'in_preparation', branches: 2, colors: PALETTE[5]! },
   { name: 'Xenon Xpress', slug: 'xenon-xpress', packageCode: 'start', durationMonths: 3, subStatus: 'expiring_soon', restStatus: 'pending', startOffset: -70, websiteStatus: 'in_setup', pwaStatus: null, android: null, ios: null, branches: 1, colors: PALETTE[6]! },
@@ -168,6 +169,34 @@ export function buildSeedAdminAccounts(): AdminAccount[] {
       createdAt: addDays(today, -120).toISOString(),
     },
   ];
+}
+
+/**
+ * Deterministic mock revenue history: one record per active tenant per day, spread over the
+ * last 365 days with regular gaps. Amounts follow a fixed pattern — no randomness — so demo
+ * figures are stable between reloads and clearly fabricated (the Analytics page says so).
+ */
+export function buildSeedRevenue(tenants: Tenant[]): RevenueRecord[] {
+  const today = startOfToday();
+  const active = tenants.filter((t) => t.status === 'active');
+  if (active.length === 0) return [];
+
+  const records: RevenueRecord[] = [];
+  for (let dayOffset = 0; dayOffset < 365; dayOffset += 1) {
+    if (dayOffset % 5 === 0) continue; // weekly-ish gaps
+    const date = toIsoDate(addDays(today, -dayOffset));
+    for (let slot = 0; slot < 3; slot += 1) {
+      const tenant = active[(dayOffset + slot * 7) % active.length]!;
+      const amountEgp = 500 + ((dayOffset * 137 + slot * 891) % 1_500) * 10;
+      records.push({
+        id: `rev_${dayOffset}_${slot}`,
+        tenantId: tenant.id,
+        date,
+        amountEgp,
+      });
+    }
+  }
+  return records;
 }
 
 export function buildSeedActivity(tenants: Tenant[]): ActivityLog[] {

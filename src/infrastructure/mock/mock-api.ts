@@ -9,10 +9,10 @@ import type { Backend } from '@/application/use-cases';
 import type {
   AdminUser,
   CreateAdminAccountInput,
-  CreateTenantInput,
   PackageFeatureKey,
   RestaurantStatus,
 } from '@/domain/entities';
+import type { RevenuePeriodDays } from '@/domain/rules/revenue';
 
 export const CURRENT_USER: AdminUser = {
   id: 'u_1',
@@ -58,8 +58,6 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     listTenants: (params?: ListTenantsParams) => run(() => backend.listTenants(params)),
     getTenant: (tenantId: string) => run(() => backend.getTenant(tenantId)),
     getOverviewAnalysis: () => run(() => backend.getOverviewAnalysis()),
-    createTenant: (input: CreateTenantInput, actor: AdminUser) =>
-      run(() => backend.createTenant(input, actor)),
     updateSubscription: (tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser) =>
       run(() => backend.updateSubscription(tenantId, input, actor)),
     updateRestaurantStatus: (tenantId: string, status: RestaurantStatus, actor: AdminUser) =>
@@ -77,5 +75,10 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     listAdminAccounts: () => run(() => backend.listAdminAccounts()),
     createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
       run(() => backend.createAdminAccount(input, actor)),
+    getTotalRevenue: (periodDays: RevenuePeriodDays) =>
+      run(() => backend.getTotalRevenue(periodDays)),
+    listApplications: () => run(() => backend.listApplications()),
+    approveApplication: (tenantId: string, actor: AdminUser) =>
+      run(() => backend.approveApplication(tenantId, actor)),
   };
 }

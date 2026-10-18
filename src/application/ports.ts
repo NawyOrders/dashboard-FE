@@ -6,6 +6,7 @@ import type {
   PackageFeatureKey,
   Permission,
   Role,
+  RevenueRecord,
   Tenant,
 } from '@/domain/entities';
 
@@ -38,6 +39,10 @@ export interface AdminAccountRepository {
   save(account: AdminAccount): void;
 }
 
+export interface RevenueRepository {
+  findAll(): RevenueRecord[];
+}
+
 /** Injectable time source so business rules and tests are deterministic. */
 export interface Clock {
   now(): Date;
@@ -62,6 +67,7 @@ export interface UseCaseDeps {
   activity: ActivityLogRepository;
   flags: FeatureFlagRepository;
   accounts: AdminAccountRepository;
+  revenue: RevenueRepository;
   clock: Clock;
   ids: IdGenerator;
 }

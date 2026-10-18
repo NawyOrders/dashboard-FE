@@ -2,6 +2,7 @@ import type { ListTenantsParams, TenantSort } from '@/application/dto';
 import type { RestaurantRepository } from '@/application/ports';
 import type { Tenant } from '@/domain/entities';
 import { isExpiringSoon } from '@/domain/rules/subscription';
+import { isListed } from '@/domain/rules/tenants';
 
 /**
  * Normalise a search query: trim, then match case-insensitively against business name,
@@ -53,6 +54,10 @@ export function applyTenantQuery(tenants: Tenant[], params: ListTenantsParams = 
 
 export function makeListTenants(restaurants: RestaurantRepository) {
   return function listTenants(params: ListTenantsParams = {}): Tenant[] {
-    return applyTenantQuery(restaurants.findAll(), params);
+    // Pending applications are excluded from the directory; they live on /applications.
+    return applyTenantQuery(
+      restaurants.findAll().filter(isListed),
+      params,
+    );
   };
 }

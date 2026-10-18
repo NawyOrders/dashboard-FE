@@ -19,10 +19,6 @@ export const SUBSCRIPTION_START_DATE_RULE = 'manual' as const;
 export const GRACE_PERIOD_DAYS: number | null = null;
 export const AUTO_SUSPEND_ON_EXPIRY = false;
 
-// OPEN DECISION: platform notifications are not defined.
-// ASSUMPTION: the bell is rendered but disabled and empty until the feature is decided.
-export const NOTIFICATIONS_ENABLED = false;
-
 // OPEN DECISION: website/PWA/app status fields are not guaranteed in the data model.
 // ASSUMPTION: they are optional; when absent they render as "Not tracked".
 export const TREAT_NULL_CHANNEL_STATUS_AS_NOT_TRACKED = true;

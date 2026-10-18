@@ -18,9 +18,9 @@ export const en = {
   topbar: {
     searchPlaceholder: 'Search restaurants…',
     notifications: 'Notifications',
-    notificationsDisabled: 'Notifications are not enabled yet',
+    notificationsEmpty: 'No new applications',
     settings: 'Settings',
-    addRestaurant: 'Add Restaurant',
+    reviewApplications: 'Review Applications',
     noMatches: 'No restaurants found',
     suggestionsLabel: 'Search suggestions',
   },

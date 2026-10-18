@@ -1,20 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Bell, Menu, Plus, Search, Settings } from 'lucide-react';
+import { Bell, Menu, Search, Settings } from 'lucide-react';
 import { IconButton } from '@/presentation/components/ui/IconButton';
 import { Button } from '@/presentation/components/ui/Button';
-import { Badge } from '@/presentation/components/ui/Badge';
-import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { en } from '@/presentation/i18n/en';
 import { IS_MOCK_PROVIDER } from '@/app/composition';
 import { useDebounce } from '@/presentation/hooks/useDebounce';
-import { useTenants } from '@/presentation/hooks/queries';
+import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { cn } from '@/presentation/lib/cn';
+import { Badge } from '@/presentation/components/ui/Badge';
 
 const ROUTE_TITLES: Record<string, string> = {
   '/': 'Overview',
   '/restaurants': 'Restaurants',
+  '/applications': 'Applications',
   '/subscriptions': 'Subscriptions',
+  '/analytics': 'Analytics',
   '/accounts': 'Accounts & Roles',
   '/activity': 'Activity Logs',
   '/settings': 'Platform Settings',
@@ -32,11 +33,15 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [bellOpen, setBellOpen] = useState(false);
+  const bellRef = useRef<HTMLDivElement>(null);
 
   const title = ROUTE_TITLES[location.pathname] ?? 'Nawy Orders';
   const debounced = useDebounce(query.trim(), 200);
   const hasQuery = debounced.length > 0;
   const { data, isFetching } = useTenants(hasQuery ? { search: debounced } : {});
+  const { data: pendingApplications } = useApplications();
+  const pendingCount = pendingApplications?.length ?? 0;
   const matches = useMemo(
     () => (hasQuery ? (data ?? []).slice(0, MAX_SUGGESTIONS) : []),
     [data, hasQuery],
@@ -46,6 +51,22 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   useEffect(() => {
     setActiveIndex(-1);
   }, [debounced]);
+
+  useEffect(() => {
+    if (!bellOpen) return;
+    function onPointerDown(event: MouseEvent) {
+      if (!bellRef.current?.contains(event.target as Node)) setBellOpen(false);
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setBellOpen(false);
+    }
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [bellOpen]);
 
   function goToList(search: string) {
     navigate(`/restaurants?q=${encodeURIComponent(search.trim())}`);
@@ -172,27 +193,69 @@ export function TopBar({ onMenuClick }: TopBarProps) {
           )}
         </form>
 
-        <Tooltip label={en.topbar.notificationsDisabled}>
-          <IconButton label={en.topbar.notifications} disabled>
-            <Bell aria-hidden="true" className="size-5" />
+        <div ref={bellRef} className="relative">
+          <IconButton
+            label={en.topbar.notifications}
+            aria-expanded={bellOpen}
+            aria-haspopup="true"
+            onClick={() => setBellOpen((value) => !value)}
+          >
+            <span className="relative">
+              <Bell aria-hidden="true" className="size-5" />
+              {pendingCount > 0 && (
+                <span className="absolute -end-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold tabular text-white">
+                  {pendingCount}
+                </span>
+              )}
+            </span>
           </IconButton>
-        </Tooltip>
+
+          {bellOpen && (
+            <div
+              role="menu"
+              aria-label={en.topbar.notifications}
+              className="absolute end-0 top-[calc(100%+6px)] z-30 w-80 overflow-hidden rounded-panel border border-border bg-card py-1 shadow-lg"
+            >
+              <p className="px-3 py-2 text-2xs font-semibold uppercase tracking-wide text-text-muted">
+                {en.topbar.notifications}
+              </p>
+              {pendingCount === 0 ? (
+                <p className="px-3 py-2 text-sm text-text-muted">{en.topbar.notificationsEmpty}</p>
+              ) : (
+                (pendingApplications ?? []).map((application) => (
+                  <button
+                    key={application.id}
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      navigate('/applications');
+                      setBellOpen(false);
+                    }}
+                    className="flex w-full items-center justify-between gap-3 px-3 py-2 text-start text-sm text-text hover:bg-muted/60"
+                  >
+                    <span className="truncate">{application.restaurantName}</span>
+                    <span className="shrink-0 font-mono text-xs text-text-muted">
+                      {application.tenantId}
+                    </span>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
 
         <IconButton label={en.topbar.settings} onClick={() => navigate('/settings')}>
           <Settings aria-hidden="true" className="size-5" />
         </IconButton>
 
-        <Button onClick={() => navigate('/restaurants/new')} className="hidden sm:inline-flex">
-          <Plus aria-hidden="true" className="size-4" />
-          {en.topbar.addRestaurant}
+        <Button onClick={() => navigate('/applications')} className="hidden sm:inline-flex">
+          {en.topbar.reviewApplications}
+          {pendingCount > 0 && (
+            <span className="ms-1 flex size-5 items-center justify-center rounded-full bg-white/25 text-[11px] font-semibold tabular">
+              {pendingCount}
+            </span>
+          )}
         </Button>
-        <IconButton
-          label={en.topbar.addRestaurant}
-          className="text-primary sm:hidden"
-          onClick={() => navigate('/restaurants/new')}
-        >
-          <Plus aria-hidden="true" className="size-6" />
-        </IconButton>
       </div>
     </header>
   );

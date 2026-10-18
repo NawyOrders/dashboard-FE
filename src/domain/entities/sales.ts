@@ -1,5 +1,5 @@
-/** A single mock revenue entry. Dates are ISO `yyyy-mm-dd` strings. */
-export interface RevenueRecord {
+/** A single mock sales entry. Dates are ISO `yyyy-mm-dd` strings. */
+export interface SalesRecord {
   id: string;
   /** Related tenant when known; platform-level entries may omit it. */
   tenantId?: string;

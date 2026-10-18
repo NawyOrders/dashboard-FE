@@ -60,19 +60,3 @@ export interface Tenant {
   channels: WebsiteChannels;
   apps: MobileApps;
 }
-
-/** Payload used when creating a tenant through the mock API. */
-export interface CreateTenantInput {
-  businessName: string;
-  restaurantName: string;
-  contact: TenantContact;
-  logoUrl: string | null;
-  brandColors: BrandColors;
-  socialLinks: SocialLinks;
-  status: RestaurantStatus;
-  packageCode: Subscription['packageCode'];
-  durationMonths: Subscription['durationMonths'];
-  startDate: string;
-  endDate: string;
-  branches: Array<Omit<Branch, 'id' | 'tenantId'>>;
-}

@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
 import type { ListActivityParams, ListTenantsParams } from '@/application/dto';
 import type { AdminUser, CreateAdminAccountInput } from '@/domain/entities';
-import type { RevenuePeriodDays } from '@/domain/rules/revenue';
 
 export const queryKeys = {
   tenants: (params: ListTenantsParams) => ['tenants', params] as const,
@@ -11,7 +10,7 @@ export const queryKeys = {
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
   adminAccounts: ['adminAccounts'] as const,
-  revenue: (periodDays: RevenuePeriodDays) => ['revenue', periodDays] as const,
+  monthlySales: ['monthlySales'] as const,
   applications: ['applications'] as const,
 };
 
@@ -71,10 +70,10 @@ export function useFeatureFlags(tenantId: string) {
   });
 }
 
-export function useTotalRevenue(periodDays: RevenuePeriodDays) {
+export function useMonthlySales() {
   return useQuery({
-    queryKey: queryKeys.revenue(periodDays),
-    queryFn: () => api.getTotalRevenue(periodDays),
+    queryKey: queryKeys.monthlySales,
+    queryFn: () => api.getMonthlySales(),
   });
 }
 

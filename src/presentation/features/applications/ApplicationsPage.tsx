@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Check, Search } from 'lucide-react';
+import { Check, Eye, Search } from 'lucide-react';
 import { PageHeader } from '@/presentation/components/shared/PageHeader';
 import { PermissionDenied } from '@/presentation/components/shared/PermissionDenied';
 import { Button } from '@/presentation/components/ui/Button';
+import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
@@ -15,6 +16,7 @@ import { useApplications, useApproveApplication } from '@/presentation/hooks/que
 import { useToast } from '@/presentation/hooks/useToast';
 import { restaurantStatusMeta } from '@/presentation/lib/status';
 import type { Tenant } from '@/domain/entities';
+import { ApplicationDetailsPanel } from './ApplicationDetailsPanel';
 
 export function ApplicationsPage() {
   const { allowed } = usePermission('restaurant.create');
@@ -24,6 +26,8 @@ export function ApplicationsPage() {
   const approveMutation = useApproveApplication();
   const { toast } = useToast();
   const [search, setSearch] = useState('');
+  const [viewing, setViewing] = useState<Tenant | null>(null);
+  const [confirming, setConfirming] = useState<Tenant | null>(null);
 
   const rows = useMemo(() => {
     const all = applicationsQuery.data ?? [];
@@ -53,6 +57,8 @@ export function ApplicationsPage() {
       {
         onSuccess: () => {
           toast({ title: en.applications.approveSuccess, variant: 'success' });
+          setConfirming(null);
+          setViewing(null);
         },
         onError: () => {
           toast({ title: en.applications.approveError, variant: 'error' });
@@ -101,33 +107,39 @@ export function ApplicationsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-start text-2xs uppercase tracking-wide text-text-muted">
+                <th className="px-4 py-3 text-start font-medium">{en.applications.restaurant}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.tenantId}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.name}</th>
+                <th className="px-4 py-3 text-start font-medium">{en.applications.ownerEmail}</th>
+                <th className="px-4 py-3 text-start font-medium">{en.applications.phone}</th>
+                <th className="px-4 py-3 text-start font-medium">{en.applications.appliedOn}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.status}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.submitted}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.actions}</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((tenant) => (
                 <tr key={tenant.id} className="border-b border-border/60 last:border-b-0 hover:bg-bg-2/60">
-                  <td className="px-4 py-3 font-mono text-xs text-text-muted">{tenant.tenantId}</td>
                   <td className="px-4 py-3 font-medium text-text">{tenant.restaurantName}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-text-muted">{tenant.tenantId}</td>
+                  <td className="px-4 py-3 text-text-muted">{tenant.contact.email}</td>
+                  <td className="px-4 py-3 text-text-muted">{tenant.contact.phone}</td>
+                  <td className="px-4 py-3 text-text-muted">{formatDate(tenant.createdAt)}</td>
                   <td className="px-4 py-3">
                     <StatusPill meta={restaurantStatusMeta(tenant.status)} />
                   </td>
-                  <td className="px-4 py-3 text-text-muted">{formatDate(tenant.createdAt)}</td>
                   <td className="px-4 py-3">
-                    {canApprove && (
-                      <Button
-                        size="sm"
-                        onClick={() => handleApprove(tenant)}
-                        loading={approveMutation.isPending && approveMutation.variables?.tenantId === tenant.id}
-                      >
-                        <Check aria-hidden="true" className="size-4" />
-                        {en.applications.approve}
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="secondary" onClick={() => setViewing(tenant)}>
+                        <Eye aria-hidden="true" className="size-4" />
+                        {en.applications.view}
                       </Button>
-                    )}
+                      {canApprove && (
+                        <Button size="sm" onClick={() => setConfirming(tenant)}>
+                          <Check aria-hidden="true" className="size-4" />
+                          {en.applications.approve}
+                        </Button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -135,6 +147,31 @@ export function ApplicationsPage() {
           </table>
         </div>
       )}
+
+      <ApplicationDetailsPanel tenant={viewing} onClose={() => setViewing(null)} />
+
+      <ConfirmDialog
+        open={confirming !== null}
+        title={en.applications.approveConfirmTitle}
+        body={confirming ? en.applications.approveConfirmBody(confirming.restaurantName) : ''}
+        changes={
+          confirming
+            ? [
+                {
+                  label: en.applications.status,
+                  previous: en.status.restaurant.pending_approval,
+                  next: en.status.restaurant.approved,
+                },
+              ]
+            : []
+        }
+        confirmLabel={en.applications.approve}
+        loading={approveMutation.isPending}
+        onConfirm={() => {
+          if (confirming) handleApprove(confirming);
+        }}
+        onCancel={() => setConfirming(null)}
+      />
     </div>
   );
 }

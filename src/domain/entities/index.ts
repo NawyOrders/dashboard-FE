@@ -4,4 +4,4 @@ export * from './package';
 export * from './subscription';
 export * from './tenant';
 export * from './activity-log';
-export * from './revenue';
+export * from './sales';

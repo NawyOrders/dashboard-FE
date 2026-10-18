@@ -19,10 +19,6 @@ export const SUBSCRIPTION_START_DATE_RULE = 'manual' as const;
 export const GRACE_PERIOD_DAYS: number | null = null;
 export const AUTO_SUSPEND_ON_EXPIRY = false;
 
-// OPEN DECISION: platform notifications are not defined.
-// ASSUMPTION: the bell is rendered but disabled and empty until the feature is decided.
-export const NOTIFICATIONS_ENABLED = false;
-
 // OPEN DECISION: website/PWA/app status fields are not guaranteed in the data model.
 // ASSUMPTION: they are optional; when absent they render as "Not tracked".
 export const TREAT_NULL_CHANNEL_STATUS_AS_NOT_TRACKED = true;
@@ -35,15 +31,6 @@ export const EXTRA_BRANCH_FEE_DEFINED = false;
 // OPEN DECISION: reference prices are not confirmed as final commercial terms.
 export const REFERENCE_PRICE_NOTE =
   'Reference price — tax inclusion and payment terms not yet confirmed';
-
-// --- Overview analysis (agent.md §4b) ---
-
-// OPEN DECISION: revenue/sales totals are out of scope until the team approves them
-// (agent.md §2 "OUT", §4 rule 11). The Overview sales card is rendered only when this is true.
-// ASSUMPTION: kept off; no placeholder total is shown while it is false.
-export const FEATURES = {
-  overviewRevenue: false,
-} as const;
 
 // OPEN DECISION: the "ending within 2 weeks" window is fixed by the design brief.
 // It is intentionally separate from EXPIRING_SOON_DAYS (which drives the KPI card and badges).

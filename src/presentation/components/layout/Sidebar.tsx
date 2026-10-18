@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Store, CreditCard, BarChart3, Users, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Store, Inbox, CreditCard, BarChart3, Users, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/presentation/lib/cn';
 import nawyOrdersLogo from '@/assets/nawy-orders-logo.png';
@@ -22,6 +22,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { to: '/', label: en.nav.overview, icon: <LayoutDashboard aria-hidden="true" className="size-5" />, end: true },
   { to: '/restaurants', label: en.nav.restaurants, icon: <Store aria-hidden="true" className="size-5" /> },
+  { to: '/applications', label: en.nav.applications, icon: <Inbox aria-hidden="true" className="size-5" />, permission: 'restaurant.create' },
   { to: '/subscriptions', label: en.nav.subscriptions, icon: <CreditCard aria-hidden="true" className="size-5" /> },
   { to: '/analytics', label: en.nav.analytics, icon: <BarChart3 aria-hidden="true" className="size-5" />, permission: 'analytics.view' },
   { to: '/accounts', label: en.nav.accounts, icon: <Users aria-hidden="true" className="size-5" />, permission: 'accounts.view' },

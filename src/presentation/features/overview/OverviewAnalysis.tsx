@@ -1,25 +1,31 @@
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
-import { useOverviewAnalysis } from '@/presentation/hooks/queries';
-import { FEATURES } from '@/config/policy';
+import { useMonthlySales, useOverviewAnalysis } from '@/presentation/hooks/queries';
 import { ContractsPerMonthChart } from './ContractsPerMonthChart';
+import { SalesPerMonthChart } from './components/SalesPerMonthChart';
 import { LatestContractsTable } from './LatestContractsTable';
 import { EndingSoonTable } from './EndingSoonTable';
-import { TotalSalesCard } from './TotalSalesCard';
 
 /**
- * Overview analysis section (Phase 3b): contracts-per-month chart, latest contracts and
- * subscriptions ending within the configured window. The sales total card is rendered only
- * when `FEATURES.overviewRevenue` is true; while false the grid reflows and shows nothing.
+ * Overview analysis section: contracts-per-month and sales-per-month charts side by
+ * side at ≥1280px (stacked below), then the latest-contracts and
+ * subscriptions-ending-soon tables. (AH-239)
  */
 export function OverviewAnalysis() {
   const query = useOverviewAnalysis();
+  const salesQuery = useMonthlySales();
   const data = query.data;
   const loading = query.isLoading;
 
-  if (query.isError) {
+  if (query.isError || salesQuery.isError) {
     return (
       <div className="mb-6">
-        <ErrorState error={query.error} onRetry={() => query.refetch()} />
+        <ErrorState
+          error={query.error ?? salesQuery.error}
+          onRetry={() => {
+            if (query.isError) void query.refetch();
+            if (salesQuery.isError) void salesQuery.refetch();
+          }}
+        />
       </div>
     );
   }
@@ -28,10 +34,10 @@ export function OverviewAnalysis() {
     <section className="mb-6 flex flex-col gap-6" aria-label="Overview analysis">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <ContractsPerMonthChart buckets={data?.contractsPerMonth ?? []} loading={loading} />
-        <LatestContractsTable tenants={data?.latestContracts ?? []} loading={loading} />
+        <SalesPerMonthChart buckets={salesQuery.data ?? []} loading={salesQuery.isLoading} />
       </div>
 
-      {FEATURES.overviewRevenue && <TotalSalesCard />}
+      <LatestContractsTable tenants={data?.latestContracts ?? []} loading={loading} />
 
       <EndingSoonTable entries={data?.endingSoon ?? []} loading={loading} />
     </section>

@@ -6,7 +6,7 @@ import type {
   DurationMonths,
   PackageCode,
   RestaurantStatus,
-  RevenueRecord,
+  SalesRecord,
   SubscriptionStatus,
   Tenant,
 } from '@/domain/entities';
@@ -172,24 +172,25 @@ export function buildSeedAdminAccounts(): AdminAccount[] {
 }
 
 /**
- * Deterministic mock revenue history: one record per active tenant per day, spread over the
- * last 365 days with regular gaps. Amounts follow a fixed pattern — no randomness — so demo
- * figures are stable between reloads and clearly fabricated (the Analytics page says so).
+ * Deterministic mock sales history feeding the sales-per-month chart: one record per
+ * active tenant per day over the last 365 days with regular gaps. Amounts follow a
+ * fixed pattern — no randomness — so demo figures are stable between reloads and
+ * clearly fabricated (the pages say so). (AH-239)
  */
-export function buildSeedRevenue(tenants: Tenant[]): RevenueRecord[] {
+export function buildSeedSales(tenants: Tenant[]): SalesRecord[] {
   const today = startOfToday();
   const active = tenants.filter((t) => t.status === 'active');
   if (active.length === 0) return [];
 
-  const records: RevenueRecord[] = [];
+  const records: SalesRecord[] = [];
   for (let dayOffset = 0; dayOffset < 365; dayOffset += 1) {
-    if (dayOffset % 5 === 0) continue; // weekly-ish gaps
+    if (dayOffset % 4 === 0) continue; // weekly-ish gaps
     const date = toIsoDate(addDays(today, -dayOffset));
     for (let slot = 0; slot < 3; slot += 1) {
-      const tenant = active[(dayOffset + slot * 7) % active.length]!;
-      const amountEgp = 500 + ((dayOffset * 137 + slot * 891) % 1_500) * 10;
+      const tenant = active[(dayOffset + slot * 5) % active.length]!;
+      const amountEgp = 400 + ((dayOffset * 173 + slot * 613) % 1_800) * 10;
       records.push({
-        id: `rev_${dayOffset}_${slot}`,
+        id: `sal_${dayOffset}_${slot}`,
         tenantId: tenant.id,
         date,
         amountEgp,

@@ -193,3 +193,29 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     `en.overview.noSales` caption; zero months are still plotted as points so the series shape
     is never hidden. Width is measured with a `ResizeObserver` so the SVG maps
     1:1 to pixels and the stroke is not distorted by `preserveAspectRatio`. (AH-239)
+
+## AH-239 applications flow
+61. **Only Super Admin approves.** The Approve action is gated in the UI by
+    `usePermission('restaurant.edit')`, and only `super_admin` holds that permission in
+    `ROLE_REGISTRY` (Support does not). Other roles therefore see the Applications table
+    read-only (View only); `restaurant.edit` stays the single source of truth for "may mutate a
+    restaurant".
+62. **Approving does not activate the subscription.** `approveApplication` only moves
+    `status: pending_approval → approved` and appends the activity-log entry; the subscription
+    stays `not_started`. Turning the subscription on remains a separate, explicit action on the
+    restaurant details page. (Mirrors the `// ASSUMPTION:` comment in `approve-application.ts`.)
+63. **One pending-applications query backs every count.** The TopBar button badge, the
+    notifications bell, the Overview "Pending Approval" KPI and the Applications table all read
+    `useApplications()` (key `queryKeys.applications` → `api.listApplications()` →
+    `listApplications`, filtered by `isListed` = `status !== 'pending_approval'`). TanStack
+    Query dedupes them into a single request, so the four counts can never disagree.
+64. **The sales series is mock data.** `getMonthlySales` returns a deterministic seed series
+    (one record per active tenant per day over 365 days, fixed amounts, no randomness —
+    `buildSeedSales`). It feeds the sales-per-month chart only; no total is computed or shown
+    and the pages carry the "Demo data" badge. (Repeated in `get-monthly-sales.ts`.)
+65. **Removed Create-Restaurant form → pending applications.** The old manual registration
+    form's seed entries were re-modelled as pending applications: three tenants start as
+    `status: 'pending_approval'` with `subscription.status: 'not_started'`, no live channels and
+    0–1 branches (Falcon's Nest, Kelvin's Kitchen, Umbra Umami). `isListed` keeps them out of
+    the directory/Overview, so they surface only on the Applications page until an admin
+    approves them, after which they join the directory. No "create" use case exists any more.

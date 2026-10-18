@@ -1,7 +1,7 @@
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { useMonthlySales, useOverviewAnalysis } from '@/presentation/hooks/queries';
 import { ContractsPerMonthChart } from './ContractsPerMonthChart';
-import { SalesPerMonthChart } from './SalesPerMonthChart';
+import { SalesPerMonthChart } from './components/SalesPerMonthChart';
 import { LatestContractsTable } from './LatestContractsTable';
 import { EndingSoonTable } from './EndingSoonTable';
 

@@ -7,7 +7,7 @@ import { en } from '@/presentation/i18n/en';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useMonthlySales, useOverviewAnalysis } from '@/presentation/hooks/queries';
 import { ContractsPerMonthChart } from '@/presentation/features/overview/ContractsPerMonthChart';
-import { SalesPerMonthChart } from '@/presentation/features/overview/SalesPerMonthChart';
+import { SalesPerMonthChart } from '@/presentation/features/overview/components/SalesPerMonthChart';
 
 /**
  * Analytics page: the same contracts-per-month and sales-per-month charts shown on

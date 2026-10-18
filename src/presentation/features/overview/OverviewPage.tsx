@@ -1,7 +1,7 @@
-import { BadgeCheck, CheckCircle2, Clock, Store } from 'lucide-react';
+import { BadgeCheck, CheckCircle2, Clock, Hourglass, Store } from 'lucide-react';
 import { PageHeader } from '@/presentation/components/shared/PageHeader';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
-import { useTenants } from '@/presentation/hooks/queries';
+import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { EXPIRING_SOON_DAYS } from '@/config/policy';
 import { isExpiringSoon } from '@/domain/rules/subscription';
 import { en } from '@/presentation/i18n/en';
@@ -10,6 +10,7 @@ import { OverviewAnalysis } from './OverviewAnalysis';
 
 export function OverviewPage() {
   const { data, isLoading, isError, error, refetch } = useTenants();
+  const applicationsQuery = useApplications();
   const tenants = data ?? [];
 
   const total = tenants.length;
@@ -60,6 +61,14 @@ export function OverviewPage() {
               tint="warning"
               loading={isLoading}
               caption={en.overview.kpiExpiringCaption(EXPIRING_SOON_DAYS)}
+            />
+            <KpiCard
+              label={en.overview.kpiPendingApproval}
+              value={applicationsQuery.data?.length ?? 0}
+              icon={<Hourglass aria-hidden="true" className="size-7" />}
+              tint="warning"
+              loading={applicationsQuery.isLoading}
+              caption={en.overview.kpiPendingApprovalCaption}
             />
           </div>
 

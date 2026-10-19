@@ -10,12 +10,16 @@ import { ActivityLogTable } from './ActivityLogTable';
 import { useActivity } from '@/presentation/hooks/queries';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { en } from '@/presentation/i18n/en';
+import { ALL_FILTER_VALUE } from '@/config/filters';
 import type { ActivityAction } from '@/domain/entities';
 
-const ACTION_OPTIONS = (Object.keys(en.activity.actions) as ActivityAction[]).map((action) => ({
-  value: action,
-  label: en.activity.actions[action],
-}));
+const ACTION_OPTIONS = [
+  { value: ALL_FILTER_VALUE, label: en.common.all },
+  ...(Object.keys(en.activity.actions) as ActivityAction[]).map((action) => ({
+    value: action,
+    label: en.activity.actions[action],
+  })),
+];
 
 export function ActivityLogsPage() {
   const { allowed } = usePermission('activity.view');
@@ -62,10 +66,13 @@ export function ActivityLogsPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Select
               label={en.activity.filters.action}
-              placeholder={en.common.all}
-              value={action}
+              value={action || ALL_FILTER_VALUE}
               onChange={(event) => {
-                setAction(event.target.value as ActivityAction | '');
+                setAction(
+                  event.target.value === ALL_FILTER_VALUE
+                    ? ''
+                    : (event.target.value as ActivityAction),
+                );
                 setPage(1);
               }}
               options={ACTION_OPTIONS}

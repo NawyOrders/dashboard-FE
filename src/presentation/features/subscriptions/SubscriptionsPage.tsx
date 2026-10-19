@@ -18,9 +18,13 @@ import { isExpiringSoon } from '@/domain/rules/subscription';
 import { daysUntil } from '@/domain/rules/date';
 import { formatDate } from '@/domain/rules/date';
 import { en } from '@/presentation/i18n/en';
+import { ALL_FILTER_VALUE } from '@/config/filters';
 import type { PackageCode, SubscriptionStatus } from '@/domain/entities';
 
+const ALL_OPTION = { value: ALL_FILTER_VALUE, label: en.common.all };
+
 const STATUS_OPTIONS = [
+  ALL_OPTION,
   { value: 'active', label: en.status.subscription.active },
   { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
   { value: 'expired', label: en.status.subscription.expired },
@@ -28,6 +32,7 @@ const STATUS_OPTIONS = [
 ];
 
 const PACKAGE_OPTIONS = [
+  ALL_OPTION,
   { value: 'start', label: 'Start' },
   { value: 'growth', label: 'Growth' },
 ];
@@ -82,20 +87,26 @@ export function SubscriptionsPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:items-end">
             <Select
               label={en.subscriptions.filters.status}
-              placeholder={en.common.all}
-              value={status}
+              value={status || ALL_FILTER_VALUE}
               onChange={(event) => {
-                setStatus(event.target.value as SubscriptionStatus | '');
+                setStatus(
+                  event.target.value === ALL_FILTER_VALUE
+                    ? ''
+                    : (event.target.value as SubscriptionStatus),
+                );
                 setPage(1);
               }}
               options={STATUS_OPTIONS}
             />
             <Select
               label={en.subscriptions.filters.package}
-              placeholder={en.common.all}
-              value={packageCode}
+              value={packageCode || ALL_FILTER_VALUE}
               onChange={(event) => {
-                setPackageCode(event.target.value as PackageCode | '');
+                setPackageCode(
+                  event.target.value === ALL_FILTER_VALUE
+                    ? ''
+                    : (event.target.value as PackageCode),
+                );
                 setPage(1);
               }}
               options={PACKAGE_OPTIONS}

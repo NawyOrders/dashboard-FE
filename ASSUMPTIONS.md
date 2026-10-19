@@ -219,3 +219,11 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     0–1 branches (Falcon's Nest, Kelvin's Kitchen, Umbra Umami). `isListed` keeps them out of
     the directory/Overview, so they surface only on the Applications page until an admin
     approves them, after which they join the directory. No "create" use case exists any more.
+66. **SPA fallback for deep routes is a host responsibility (refresh 404).** The app uses
+    `createBrowserRouter` (history mode) with no `basename`, and `vite.config.ts` sets no `base`
+    (both default to `/`, so they match). Vite dev and `vite preview` rewrite unknown paths to
+    `index.html`, so `/applications`, `/analytics` and `/restaurants/:id` return 200 locally on
+    direct load and refresh. The repository ships **no** host configuration (`vercel.json`,
+    `netlify.toml`, `public/_redirects`, nginx/S3 rules), so a static host without an SPA rewrite
+    returns 404 when refreshing a deep route. Add the host-specific rewrite (or switch to a hash
+    router) once a target host is chosen — deliberately not guessed here.

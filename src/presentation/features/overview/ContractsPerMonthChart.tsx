@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
-import { Button } from '@/presentation/components/ui/Button';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
+import { ViewModeToggle } from '@/presentation/components/shared/ViewModeToggle';
 import { en } from '@/presentation/i18n/en';
 import { OVERVIEW_CHART_MONTHS } from '@/config/policy';
+import type { ViewMode } from '@/presentation/components/shared/ViewModeToggle';
 import type { MonthBucket } from '@/domain/rules/overview';
 
 export interface ContractsPerMonthChartProps {
@@ -32,10 +33,7 @@ function MonthTable({ buckets }: { buckets: MonthBucket[] }) {
             {en.overview.month}
           </th>
           <th scope="col" className="px-3 py-2 text-end">
-            {en.overview.contracts}
-          </th>
-          <th scope="col" className="px-3 py-2 text-start">
-            {en.overview.restaurants}
+            {en.overview.value}
           </th>
         </tr>
       </thead>
@@ -44,11 +42,6 @@ function MonthTable({ buckets }: { buckets: MonthBucket[] }) {
           <tr key={bucket.key} className="border-b border-border last:border-0">
             <td className="whitespace-nowrap px-3 py-2 text-text-muted">{bucket.label}</td>
             <td className="tabular px-3 py-2 text-end text-text">{bucket.count}</td>
-            <td className="px-3 py-2 text-text-muted">
-              {bucket.restaurantNames.length > 0
-                ? bucket.restaurantNames.join(', ')
-                : en.overview.noContracts}
-            </td>
           </tr>
         ))}
       </tbody>
@@ -81,7 +74,7 @@ function MonthBar({ bucket, max }: { bucket: MonthBucket; max: number }) {
 }
 
 export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthChartProps) {
-  const [asTable, setAsTable] = useState(false);
+  const [view, setView] = useState<ViewMode>('chart');
   const max = Math.max(1, ...buckets.map((bucket) => bucket.count));
 
   return (
@@ -93,14 +86,13 @@ export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthCh
             {en.overview.chartSubtitle(OVERVIEW_CHART_MONTHS)}
           </p>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          aria-pressed={asTable}
-          onClick={() => setAsTable((value) => !value)}
-        >
-          {asTable ? en.overview.viewAsChart : en.overview.viewAsTable}
-        </Button>
+        <ViewModeToggle
+          value={view}
+          onChange={setView}
+          label={en.overview.viewModeLabel}
+          chartLabel={en.overview.viewChart}
+          tableLabel={en.overview.viewTable}
+        />
       </CardHeader>
 
       <CardBody className="flex-1">
@@ -110,7 +102,7 @@ export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthCh
               <Skeleton key={index} className="h-32 flex-1" />
             ))}
           </div>
-        ) : asTable ? (
+        ) : view === 'table' ? (
           <MonthTable buckets={buckets} />
         ) : (
           <>

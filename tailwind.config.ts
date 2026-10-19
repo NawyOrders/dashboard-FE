@@ -8,6 +8,9 @@ import { tokens } from './src/presentation/theme/tokens';
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
+    boxShadow: {
+      none: 'none',
+    },
     extend: {
       colors: {
         bg: {
@@ -51,13 +54,6 @@ export default {
         panel: tokens.radius.panel,
         pill: tokens.radius.pill,
         avatar: tokens.radius.avatar,
-      },
-      boxShadow: {
-        DEFAULT: tokens.shadow.DEFAULT,
-        card: tokens.shadow.DEFAULT,
-        md: tokens.shadow.md,
-        lg: tokens.shadow.lg,
-        primary: tokens.shadow.primary,
       },
       ringColor: {
         focus: tokens.focus.ring,

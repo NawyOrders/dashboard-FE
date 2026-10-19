@@ -51,12 +51,6 @@ export const tokens = {
     pill: '9999px',
     avatar: '9999px',
   },
-  shadow: {
-    DEFAULT: '0 1px 3px rgba(26, 15, 10, 0.06), 0 4px 14px rgba(26, 15, 10, 0.05)',
-    md: '0 4px 14px rgba(26, 15, 10, 0.08)',
-    lg: '0 16px 40px rgba(26, 15, 10, 0.14)',
-    primary: '0 6px 16px rgba(228, 56, 32, 0.25)',
-  },
   spacing: {
     sidebar: '280px',
   },

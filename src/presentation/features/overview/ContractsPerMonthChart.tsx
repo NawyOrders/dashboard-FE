@@ -4,6 +4,7 @@ import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { ViewModeToggle } from '@/presentation/components/shared/ViewModeToggle';
 import { en } from '@/presentation/i18n/en';
+import { useMediaQuery } from '@/presentation/hooks/useMediaQuery';
 import { OVERVIEW_CHART_MONTHS } from '@/config/policy';
 import type { ViewMode } from '@/presentation/components/shared/ViewModeToggle';
 import type { MonthBucket } from '@/domain/rules/overview';
@@ -25,27 +26,29 @@ function monthTooltip(bucket: MonthBucket): string {
 
 function MonthTable({ buckets }: { buckets: MonthBucket[] }) {
   return (
-    <table className="w-full border-collapse text-sm">
-      <caption className="sr-only">{en.overview.chartTitle}</caption>
-      <thead>
-        <tr className="border-b border-border text-2xs font-medium text-text-muted">
-          <th scope="col" className="px-3 py-2 text-start">
-            {en.overview.month}
-          </th>
-          <th scope="col" className="px-3 py-2 text-end">
-            {en.overview.value}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {buckets.map((bucket) => (
-          <tr key={bucket.key} className="border-b border-border last:border-0">
-            <td className="whitespace-nowrap px-3 py-2 text-text-muted">{bucket.label}</td>
-            <td className="tabular px-3 py-2 text-end text-text">{bucket.count}</td>
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse text-sm">
+        <caption className="sr-only">{en.overview.chartTitle}</caption>
+        <thead>
+          <tr className="border-b border-border text-2xs font-medium text-text-muted">
+            <th scope="col" className="px-3 py-2 text-start">
+              {en.overview.month}
+            </th>
+            <th scope="col" className="px-3 py-2 text-end">
+              {en.overview.value}
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {buckets.map((bucket) => (
+            <tr key={bucket.key} className="border-b border-border last:border-0">
+              <td className="whitespace-nowrap px-3 py-2 text-text-muted">{bucket.label}</td>
+              <td className="tabular px-3 py-2 text-end text-text">{bucket.count}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -75,6 +78,8 @@ function MonthBar({ bucket, max }: { bucket: MonthBucket; max: number }) {
 
 export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthChartProps) {
   const [view, setView] = useState<ViewMode>('chart');
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const showChart = isDesktop && view === 'chart';
   const max = Math.max(1, ...buckets.map((bucket) => bucket.count));
 
   return (
@@ -86,13 +91,15 @@ export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthCh
             {en.overview.chartSubtitle(OVERVIEW_CHART_MONTHS)}
           </p>
         </div>
-        <ViewModeToggle
-          value={view}
-          onChange={setView}
-          label={en.overview.viewModeLabel}
-          chartLabel={en.overview.viewChart}
-          tableLabel={en.overview.viewTable}
-        />
+        {isDesktop && (
+          <ViewModeToggle
+            value={view}
+            onChange={setView}
+            label={en.overview.viewModeLabel}
+            chartLabel={en.overview.viewChart}
+            tableLabel={en.overview.viewTable}
+          />
+        )}
       </CardHeader>
 
       <CardBody className="flex-1">
@@ -102,9 +109,7 @@ export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthCh
               <Skeleton key={index} className="h-32 flex-1" />
             ))}
           </div>
-        ) : view === 'table' ? (
-          <MonthTable buckets={buckets} />
-        ) : (
+        ) : showChart ? (
           <>
             <div className="flex h-56 items-stretch gap-3">
               {buckets.map((bucket) => (
@@ -115,6 +120,8 @@ export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthCh
               <MonthTable buckets={buckets} />
             </div>
           </>
+        ) : (
+          <MonthTable buckets={buckets} />
         )}
       </CardBody>
     </Card>

@@ -160,7 +160,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
               id="topbar-search-listbox"
               role="listbox"
               aria-label={en.topbar.suggestionsLabel}
-              className="absolute inset-x-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-panel border border-border bg-card py-1 shadow-lg"
+              className="absolute inset-x-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-panel border border-border bg-card py-1"
             >
               {matches.length === 0 ? (
                 <p className="px-3 py-2 text-sm text-text-muted">
@@ -214,7 +214,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             <div
               role="menu"
               aria-label={en.topbar.notifications}
-              className="absolute end-0 top-[calc(100%+6px)] z-30 w-80 overflow-hidden rounded-panel border border-border bg-card py-1 shadow-lg"
+              className="absolute end-0 top-[calc(100%+6px)] z-30 w-80 overflow-hidden rounded-panel border border-border bg-card py-1"
             >
               <p className="px-3 py-2 text-2xs font-semibold uppercase tracking-wide text-text-muted">
                 {en.topbar.notifications}

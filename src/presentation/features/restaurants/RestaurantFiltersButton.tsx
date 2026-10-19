@@ -71,7 +71,7 @@ export function RestaurantFiltersButton({
         <div
           role="dialog"
           aria-label={en.restaurants.filter}
-          className="absolute end-0 z-30 mt-2 w-80 rounded-card border border-border bg-card p-5 shadow-card"
+          className="absolute end-0 z-30 mt-2 w-80 rounded-card border border-border bg-card p-5"
         >
           <div className="flex flex-col gap-4">
             <Select

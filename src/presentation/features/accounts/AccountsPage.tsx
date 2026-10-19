@@ -64,7 +64,7 @@ export function AccountsPage() {
         }
       />
 
-      <div className="rounded-card border border-border bg-card shadow-card">
+      <div className="rounded-card border border-border bg-card">
         <div className="flex flex-wrap items-center gap-3 border-b border-border p-5">
           <div className="relative min-w-[200px] flex-1">
             <Search

@@ -81,7 +81,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         aria-labelledby={labelId}
         tabIndex={-1}
         className={cn(
-          'relative z-10 w-full overflow-hidden rounded-card bg-card text-text shadow-lg',
+          'relative z-10 w-full overflow-hidden rounded-card border border-border bg-card text-text',
           'max-h-[90vh] overflow-y-auto outline-none',
           SIZES[size],
         )}

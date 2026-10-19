@@ -6,7 +6,7 @@ export function SettingsPage() {
   return (
     <div>
       <PageHeader title={en.settings.title} subtitle={en.settings.subtitle} />
-      <div className="rounded-card border border-border bg-card shadow-card">
+      <div className="rounded-card border border-border bg-card">
         <EmptyState title={en.settings.emptyTitle} description={en.settings.emptyBody} />
       </div>
     </div>

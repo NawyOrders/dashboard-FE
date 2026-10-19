@@ -103,7 +103,7 @@ export function ApplicationsPage() {
           <EmptyState title={en.applications.tableEmpty} />
         </div>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card shadow-card">
+          <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-start text-2xs uppercase tracking-wide text-text-muted">

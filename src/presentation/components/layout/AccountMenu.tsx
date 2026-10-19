@@ -76,7 +76,7 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
       {open && (
         <div
           role="menu"
-          className="absolute bottom-full start-2 z-20 mb-2 w-72 rounded-card border border-border bg-card p-2 shadow-card"
+          className="absolute bottom-full start-2 z-20 mb-2 w-72 rounded-card border border-border bg-card p-2"
         >
           <div className="border-b border-border p-3">
             <p className="truncate text-sm font-semibold text-text">{user.name}</p>

@@ -25,7 +25,7 @@ export function Switch({ checked, onCheckedChange, disabled, label }: SwitchProp
       <span
         aria-hidden="true"
         className={cn(
-          'inline-block size-5 transform rounded-full bg-white shadow transition-transform duration-150',
+          'inline-block size-5 transform rounded-full bg-white transition-transform duration-150',
           checked ? 'translate-x-[22px]' : 'translate-x-0.5',
         )}
       />

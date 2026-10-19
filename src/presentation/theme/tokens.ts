@@ -52,7 +52,6 @@ export const tokens = {
     avatar: '9999px',
   },
   shadow: {
-    sm: '0 1px 2px rgba(26, 15, 10, 0.05)',
     DEFAULT: '0 1px 3px rgba(26, 15, 10, 0.06), 0 4px 14px rgba(26, 15, 10, 0.05)',
     md: '0 4px 14px rgba(26, 15, 10, 0.08)',
     lg: '0 16px 40px rgba(26, 15, 10, 0.14)',

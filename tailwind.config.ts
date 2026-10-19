@@ -53,7 +53,6 @@ export default {
         avatar: tokens.radius.avatar,
       },
       boxShadow: {
-        sm: tokens.shadow.sm,
         DEFAULT: tokens.shadow.DEFAULT,
         card: tokens.shadow.DEFAULT,
         md: tokens.shadow.md,

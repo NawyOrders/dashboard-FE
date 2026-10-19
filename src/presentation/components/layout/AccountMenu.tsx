@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LogOut, ShieldCheck } from 'lucide-react';
+import { ChevronDown, LogOut } from 'lucide-react';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
-import type { Role } from '@/domain/entities';
 
 function initials(name: string): string {
   return name
@@ -21,7 +20,7 @@ export interface AccountMenuProps {
 }
 
 export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
-  const { user, role, setRole } = useCurrentUser();
+  const { user } = useCurrentUser();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -81,32 +80,6 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
           <div className="border-b border-border p-3">
             <p className="truncate text-sm font-semibold text-text">{user.name}</p>
             <p className="truncate text-2xs text-text-muted">{user.email}</p>
-          </div>
-
-          <div className="p-3">
-            <p className="mb-2 flex items-center gap-1.5 text-2xs font-medium text-text-muted">
-              <ShieldCheck aria-hidden="true" className="size-3.5" />
-              {en.permissions.switchRole}
-            </p>
-            <div role="group" aria-label={en.permissions.switchRole} className="flex gap-1">
-              {(['super_admin', 'support'] as Role[]).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={role === option}
-                  onClick={() => setRole(option)}
-                  className={cn(
-                    'flex-1 rounded-pill px-2 py-1.5 text-2xs font-medium transition-colors duration-150',
-                    role === option
-                      ? 'bg-primary text-white'
-                      : 'bg-neutral-bg text-text-muted hover:text-text',
-                  )}
-                >
-                  {option === 'super_admin' ? 'Super Admin' : 'Support'}
-                </button>
-              ))}
-            </div>
           </div>
 
           <button

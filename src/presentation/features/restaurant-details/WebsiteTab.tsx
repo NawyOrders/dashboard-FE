@@ -57,7 +57,7 @@ export function WebsiteTab({ tenant }: { tenant: Tenant }) {
                   className="size-6 rounded-[8px] border border-border"
                   style={{ backgroundColor: tenant.brandColors.primary }}
                 />
-                <span className="font-mono text-[13px] text-text-muted">
+                <span className="font-mono text-mono text-text-muted">
                   {tenant.brandColors.primary.toUpperCase()}
                 </span>
               </span>
@@ -68,7 +68,7 @@ export function WebsiteTab({ tenant }: { tenant: Tenant }) {
                   className="size-6 rounded-[8px] border border-border"
                   style={{ backgroundColor: tenant.brandColors.secondary }}
                 />
-                <span className="font-mono text-[13px] text-text-muted">
+                <span className="font-mono text-mono text-text-muted">
                   {tenant.brandColors.secondary.toUpperCase()}
                 </span>
               </span>

@@ -203,7 +203,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             <span className="relative">
               <Bell aria-hidden="true" className="size-5" />
               {pendingCount > 0 && (
-                <span className="absolute -end-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold tabular text-white">
+                <span className="absolute -end-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-micro font-semibold tabular text-white">
                   {pendingCount}
                 </span>
               )}
@@ -251,7 +251,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         <Button onClick={() => navigate('/applications')} className="hidden sm:inline-flex">
           {en.topbar.reviewApplications}
           {pendingCount > 0 && (
-            <span className="ms-1 flex size-5 items-center justify-center rounded-full bg-white/25 text-[11px] font-semibold tabular">
+            <span className="ms-1 flex size-5 items-center justify-center rounded-full bg-white/25 text-badge font-semibold tabular">
               {pendingCount}
             </span>
           )}

@@ -60,7 +60,7 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
         </div>
       </td>
       <td className={cn(cell, 'whitespace-nowrap')}>
-        <span className="font-mono text-[13px] text-text-muted">{tenant.tenantId}</span>
+        <span className="font-mono text-mono text-text-muted">{tenant.tenantId}</span>
       </td>
       <td className={cn(cell, 'whitespace-nowrap')}>
         <PackagePill code={tenant.subscription.packageCode} />

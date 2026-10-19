@@ -172,7 +172,7 @@ export function SubscriptionsPage() {
                           <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} />
                           <span>
                             <span className="block font-semibold text-text">{tenant.restaurantName}</span>
-                            <span className="block font-mono text-[13px] text-text-muted">{tenant.tenantId}</span>
+                            <span className="block font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                           </span>
                         </span>
                       </td>

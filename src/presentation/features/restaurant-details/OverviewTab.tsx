@@ -16,7 +16,7 @@ function ColorSwatch({ color }: { color: string }) {
   return (
     <span className="inline-flex items-center gap-2">
       <span className="size-6 rounded-[8px] border border-border" style={{ backgroundColor: color }} />
-      <span className="font-mono text-[13px] text-text-muted">{color.toUpperCase()}</span>
+      <span className="font-mono text-mono text-text-muted">{color.toUpperCase()}</span>
     </span>
   );
 }

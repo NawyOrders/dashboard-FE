@@ -27,6 +27,7 @@ const AXIS_TEXT_COLOR = tokens.colors.text.muted;
 const TOOLTIP_BG = tokens.colors.card;
 const TOOLTIP_BORDER = tokens.colors.border.DEFAULT;
 const TOOLTIP_TEXT = tokens.colors.text.DEFAULT;
+const AXIS_FONT_SIZE = Number.parseInt(tokens.typography.fontSize.chart, 10);
 
 const axisFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -78,7 +79,7 @@ function ChartAxes({ points, ticks, max, width }: ChartAxesProps) {
               strokeWidth={1}
               strokeDasharray="4 4"
             />
-            <text x={PADDING.left - 8} y={y + 4} textAnchor="end" fontSize={12} fill={AXIS_TEXT_COLOR}>
+            <text x={PADDING.left - 8} y={y + 4} textAnchor="end" fontSize={AXIS_FONT_SIZE} fill={AXIS_TEXT_COLOR}>
               {axisFormatter.format(tick)}
             </text>
           </g>
@@ -90,7 +91,7 @@ function ChartAxes({ points, ticks, max, width }: ChartAxesProps) {
           x={point.x}
           y={HEIGHT - 8}
           textAnchor="middle"
-          fontSize={12}
+          fontSize={AXIS_FONT_SIZE}
           fill={AXIS_TEXT_COLOR}
         >
           {point.bucket.label}
@@ -209,10 +210,10 @@ function ChartTooltip({ point, width }: ChartTooltipProps) {
         fill={TOOLTIP_BG}
         stroke={TOOLTIP_BORDER}
       />
-      <text x={0} y={-TOOLTIP_HEIGHT + 4} textAnchor="middle" fontSize={12} fill={AXIS_TEXT_COLOR}>
+      <text x={0} y={-TOOLTIP_HEIGHT + 4} textAnchor="middle" fontSize={AXIS_FONT_SIZE} fill={AXIS_TEXT_COLOR}>
         {point.bucket.label}
       </text>
-      <text x={0} y={-12} textAnchor="middle" fontSize={13} fontWeight={600} fill={TOOLTIP_TEXT}>
+      <text x={0} y={-12} textAnchor="middle" fontSize={AXIS_FONT_SIZE} fontWeight={600} fill={TOOLTIP_TEXT}>
         {formatEgp(point.bucket.totalEgp)}
       </text>
     </g>

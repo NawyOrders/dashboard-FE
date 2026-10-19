@@ -227,3 +227,14 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     `netlify.toml`, `public/_redirects`, nginx/S3 rules), so a static host without an SPA rewrite
     returns 404 when refreshing a deep route. Add the host-specific rewrite (or switch to a hash
     router) once a target host is chosen — deliberately not guessed here.
+67. **The whole type scale is now token-driven and 2px smaller (floor 12px).** The design
+    token scale previously only defined `h1` 64, `caption` 48, `body` 16 and `dense` 14/12,
+    while components used Tailwind's default `text-xs/sm/base/lg/xl/2xl` sizes and a few
+    hard-coded `text-[40px]/[13px]/[11px]/[10px]` and SVG `fontSize` values. `AH-239` moves
+    every used size into `tokens.ts` (`h1` 62, `caption` 46, `2xs/xs/sm` 12, `base` 14,
+    `lg` 16, `xl` 18, `2xl` 22, plus `title` 38 for the mobile page title, `mono` 12,
+    `badge` 11, `micro` 10 and `chart` 12) and maps them in `tailwind.config.ts`. Line-heights
+    are stored as unitless ratios so the proportion is preserved at any size, and no value
+    drops below the 12px floor. The global body size reads the `base` token through the
+    `--font-body` CSS variable injected by `applyTheme`, so `tokens.ts` stays the single
+    source. Hard-coded component sizes were replaced with the matching token names.

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { AppShell } from './layout/AppShell';
+import { AuthGuard } from './AuthGuard';
 import { OverviewPage } from '@/presentation/features/overview/OverviewPage';
 import { RestaurantsPage } from '@/presentation/features/restaurants/RestaurantsPage';
 import { RestaurantDetailsPage } from '@/presentation/features/restaurant-details/RestaurantDetailsPage';
@@ -9,11 +10,17 @@ import { AnalyticsPage } from '@/presentation/features/analytics/AnalyticsPage';
 import { AccountsPage } from '@/presentation/features/accounts/AccountsPage';
 import { ActivityLogsPage } from '@/presentation/features/activity-logs/ActivityLogsPage';
 import { SettingsPage } from '@/presentation/features/settings/SettingsPage';
+import { LoginPage } from '@/presentation/features/auth/LoginPage';
 
 export const router = createBrowserRouter([
+  { path: '/login', element: <LoginPage /> },
   {
     path: '/',
-    element: <AppShell />,
+    element: (
+      <AuthGuard>
+        <AppShell />
+      </AuthGuard>
+    ),
     children: [
       { index: true, element: <OverviewPage /> },
       { path: 'restaurants', element: <RestaurantsPage /> },

@@ -33,6 +33,7 @@ import { makeCreateAdminAccount } from './create-admin-account';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
 import { makeApproveApplication } from './approve-application';
+import { makeSignIn } from './sign-in';
 
 /** Synchronous, framework-free core. The infrastructure adapter adds I/O semantics. */
 export interface Backend {
@@ -56,9 +57,11 @@ export interface Backend {
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
   approveApplication(tenantId: string, actor: AdminUser): Tenant;
+  signIn(email: string, password: string): AdminUser;
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
+  const signIn = deps.auth ? makeSignIn({ auth: deps.auth, ids: deps.ids }) : makeSignIn({ auth: { findByCredentials: () => null }, ids: deps.ids });
   return {
     getCurrentUser: makeGetCurrentUser(currentUser),
     listTenants: makeListTenants(deps.restaurants),
@@ -75,6 +78,7 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
     approveApplication: makeApproveApplication(deps),
+    signIn: (email: string, password: string) => signIn({ email, password }),
   };
 }
 

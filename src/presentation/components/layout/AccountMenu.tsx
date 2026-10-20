@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronDown, LogOut } from 'lucide-react';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { useAuth } from '@/presentation/hooks/useAuth';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
@@ -21,6 +23,8 @@ export interface AccountMenuProps {
 
 export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
   const { user } = useCurrentUser();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -36,9 +40,15 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
 
   if (!user) return <div className="h-16 animate-pulse rounded-panel bg-neutral-bg" />;
 
-  function signOut() {
+  function handleSignOut() {
+    signOut();
     setOpen(false);
-    toast({ title: 'Signed out (demo)', variant: 'neutral' });
+    try {
+      navigate('/login', { replace: true });
+    } catch {
+      // ignore
+    }
+    toast({ title: en.common.signOut, variant: 'neutral' });
   }
 
   return (
@@ -85,7 +95,7 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
           <button
             type="button"
             role="menuitem"
-            onClick={signOut}
+            onClick={handleSignOut}
             className="flex w-full items-center gap-2 rounded-pill px-3 py-2 text-sm text-text transition-colors duration-150 hover:bg-danger-bg hover:text-danger-fg"
           >
             <LogOut aria-hidden="true" className="size-4" />
@@ -97,7 +107,7 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
       {variant === 'drawer' && (
         <button
           type="button"
-          onClick={signOut}
+          onClick={handleSignOut}
           className="mt-1 flex w-full items-center gap-2 rounded-panel px-3 py-2 text-sm text-text transition-colors duration-150 hover:bg-danger-bg hover:text-danger-fg"
         >
           <LogOut aria-hidden="true" className="size-4" />

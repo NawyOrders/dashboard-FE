@@ -20,3 +20,12 @@ export interface ToastContextValue {
 }
 
 export const ToastContext = createContext<ToastContextValue | null>(null);
+
+export interface AuthContextValue {
+  user: AdminUser | null;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => void;
+}
+
+export const AuthContext = createContext<AuthContextValue | null>(null);
+

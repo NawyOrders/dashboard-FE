@@ -102,4 +102,5 @@ export interface Api {
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;
+  signIn?(email: string, password: string): Promise<AdminUser>;
 }

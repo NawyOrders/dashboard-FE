@@ -61,7 +61,7 @@ export interface Backend {
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
-  const signIn = deps.auth ? makeSignIn({ auth: deps.auth, ids: deps.ids }) : makeSignIn({ auth: { findByCredentials: () => null } as any, ids: deps.ids });
+  const signIn = deps.auth ? makeSignIn({ auth: deps.auth, ids: deps.ids }) : makeSignIn({ auth: { findByCredentials: () => null }, ids: deps.ids });
   return {
     getCurrentUser: makeGetCurrentUser(currentUser),
     listTenants: makeListTenants(deps.restaurants),

@@ -39,6 +39,17 @@ export interface AdminAccountRepository {
   save(account: AdminAccount): void;
 }
 
+export interface AuthAccount {
+  email: string;
+  password: string;
+  name: string;
+  role: Role;
+}
+
+export interface AuthRepository {
+  findByCredentials(email: string, password: string): AuthAccount | null;
+}
+
 export interface SalesRepository {
   findAll(): SalesRecord[];
 }
@@ -70,6 +81,7 @@ export interface UseCaseDeps {
   sales: SalesRepository;
   clock: Clock;
   ids: IdGenerator;
+  auth?: AuthRepository;
 }
 
 export type { FeatureFlag, PackageFeatureKey };

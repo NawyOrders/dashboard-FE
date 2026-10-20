@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/Dialog';
+import { useEffect, useState } from 'react';
+import { Dialog } from '@/presentation/components/ui/Dialog';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
@@ -7,7 +7,6 @@ import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
 import { api } from '@/app/composition';
 import { validateApplicationForApprove } from '@/domain/rules/application-validators';
-import { getRequiredFieldsList } from '@/domain/rules/application-validators';
 import type { Tenant } from '@/domain/entities';
 
 interface ApplicationDialogProps {
@@ -42,26 +41,30 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
     }
   }, [tenant]);
 
-  const requiredList = useMemo(() => getRequiredFieldsList(), []);
-
   function updateField(path: string, value: unknown) {
     if (!form) return;
-    const next = JSON.parse(JSON.stringify(form)) as any;
+    const next = JSON.parse(JSON.stringify(form)) as unknown as Record<string, unknown>;
     const parts = path.split('.');
-    let cur = next;
+    let cur = next as Record<string, unknown>;
     for (let i = 0; i < parts.length - 1; i += 1) {
-      if (cur[parts[i]] == null) cur[parts[i]] = {};
-      cur = cur[parts[i]];
+      const key = parts[i];
+      if (key == null) continue;
+      if (cur[key] == null) cur[key] = {};
+      cur = cur[key] as Record<string, unknown>;
     }
-    cur[parts[parts.length - 1]] = value;
-    setForm(next as Tenant);
+    const last = parts[parts.length - 1];
+    if (last != null) cur[last] = value;
+    setForm(next as unknown as Tenant);
   }
 
   async function handleSave() {
     if (!form || !user) return;
     setSaving(true);
     try {
-      await (api as any).updateApplication?.(form.id, form, user);
+      const apiWithExt = api as typeof api & {
+        updateApplication?: (id: string, patch: Partial<Tenant>, actor: typeof user) => Promise<unknown>;
+      };
+      await apiWithExt.updateApplication?.(form.id, form, user);
       toast({ title: 'Changes saved', variant: 'success' });
     } catch {
       toast({ title: 'Failed to save changes', variant: 'error' });
@@ -75,13 +78,15 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
     const validation = validateApplicationForApprove(form);
     if (!validation.ok) {
       setApproveErrors(validation.errors);
-      // focus first invalid field best effort
       return;
     }
     setApproveErrors([]);
     setApproving(true);
     try {
-      await (api as any).approveApplication?.(form.id, user);
+      const apiWithExt = api as typeof api & {
+        approveApplication?: (id: string, actor: typeof user) => Promise<unknown>;
+      };
+      await apiWithExt.approveApplication?.(form.id, user);
       toast({ title: 'Application approved', variant: 'success' });
       onApproved();
     } catch {
@@ -98,7 +103,10 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
     }
     setDeleting(true);
     try {
-      await (api as any).deleteApplication?.(form.id, deleteReason.trim(), user);
+      const apiWithExt = api as typeof api & {
+        deleteApplication?: (id: string, reason: string, actor: typeof user) => Promise<void>;
+      };
+      await apiWithExt.deleteApplication?.(form.id, deleteReason.trim(), user);
       toast({ title: 'Application deleted', variant: 'success' });
       setShowDeleteConfirm(false);
       onDeleted();
@@ -111,15 +119,14 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
 
   if (!tenant || !form) return null;
 
-  const address = (form.contact as any)?.address ?? (form as any).address ?? '';
+  const contactRecord = form.contact as unknown as Record<string, unknown>;
+  const formRecord = form as unknown as Record<string, unknown>;
+  const address = (contactRecord?.address as string) ?? (formRecord?.address as string) ?? '';
 
   return (
     <>
-      <Dialog open onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Application details</DialogTitle>
-          </DialogHeader>
+      <Dialog open={!!tenant} onClose={onClose} title="Application details" size="lg">
+        <div className="max-h-[70vh] overflow-y-auto">
           {approveErrors.length > 0 ? (
             <div className="rounded-card border border-danger bg-danger-bg p-3 text-sm text-danger-fg">
               <ul className="list-disc pl-5">
@@ -129,7 +136,7 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
               </ul>
             </div>
           ) : null}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm text-text">Restaurant name</label>
               <Input
@@ -146,7 +153,7 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
             <div>
               <label className="mb-1 block text-sm text-text">Owner name</label>
               <Input
-                value={(form.contact as any)?.name || ''}
+                value={((form.contact as unknown as Record<string, unknown>)?.name as string) || ''}
                 onChange={(e) => updateField('contact.name', e.target.value)}
                 placeholder="Owner name"
                 disabled={isReadOnly}
@@ -155,7 +162,7 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
             <div>
               <label className="mb-1 block text-sm text-text">Owner email</label>
               <Input
-                value={(form.contact as any)?.email || ''}
+                value={form.contact?.email || ''}
                 onChange={(e) => updateField('contact.email', e.target.value)}
                 placeholder="Owner email"
                 disabled={isReadOnly}
@@ -164,7 +171,7 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
             <div>
               <label className="mb-1 block text-sm text-text">Phone</label>
               <Input
-                value={(form.contact as any)?.phone || ''}
+                value={form.contact?.phone || ''}
                 onChange={(e) => updateField('contact.phone', e.target.value)}
                 placeholder="Phone"
                 disabled={isReadOnly}
@@ -188,9 +195,13 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
                   <Input
                     value={branch.name || ''}
                     onChange={(e) => {
-                      const next = JSON.parse(JSON.stringify(form)) as any;
-                      next.branches[idx].name = e.target.value;
-                      setForm(next);
+                      const next = JSON.parse(JSON.stringify(form)) as unknown as Record<string, unknown>;
+                      const branches = ((next.branches as unknown[]) || []) as Array<Record<string, unknown>>;
+                      const branch = (branches[idx] as Record<string, unknown>) || {};
+                      branch.name = e.target.value;
+                      branches[idx] = branch;
+                      (next as Record<string, unknown>).branches = branches;
+                      setForm(next as unknown as Tenant);
                     }}
                     placeholder="Branch name"
                     disabled={isReadOnly}
@@ -198,9 +209,13 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
                   <Input
                     value={branch.phone || ''}
                     onChange={(e) => {
-                      const next = JSON.parse(JSON.stringify(form)) as any;
-                      next.branches[idx].phone = e.target.value;
-                      setForm(next);
+                      const next = JSON.parse(JSON.stringify(form)) as unknown as Record<string, unknown>;
+                      const branches = ((next.branches as unknown[]) || []) as Array<Record<string, unknown>>;
+                      const branch = (branches[idx] as Record<string, unknown>) || {};
+                      branch.phone = e.target.value;
+                      branches[idx] = branch;
+                      (next as Record<string, unknown>).branches = branches;
+                      setForm(next as unknown as Tenant);
                     }}
                     placeholder="Branch phone"
                     disabled={isReadOnly}
@@ -212,36 +227,36 @@ export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: Ap
               ) : null}
             </div>
           </div>
-          <DialogFooter>
-            {isSuperAdmin ? (
-              <>
-                <Button variant="secondary" onClick={handleSave} disabled={saving}>
-                  {saving ? 'Saving...' : 'Save changes'}
-                </Button>
-                <Button onClick={handleApprove} disabled={approving}>
-                  {approving ? 'Approving...' : 'Approve'}
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-danger-fg"
-                  onClick={() => setShowDeleteConfirm(true)}
-                >
-                  Delete application
-                </Button>
-              </>
-            ) : (
-              <Button variant="secondary" onClick={onClose}>
-                Close
+        </div>
+        <div className="mt-4 flex justify-end gap-2">
+          {isSuperAdmin ? (
+            <>
+              <Button variant="secondary" onClick={handleSave} disabled={saving}>
+                {saving ? 'Saving...' : 'Save changes'}
               </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
+              <Button onClick={handleApprove} disabled={approving}>
+                {approving ? 'Approving...' : 'Approve'}
+              </Button>
+              <Button
+                variant="ghost"
+                className="text-danger-fg"
+                onClick={() => setShowDeleteConfirm(true)}
+              >
+                Delete application
+              </Button>
+            </>
+          ) : (
+            <Button variant="secondary" onClick={onClose}>
+              Close
+            </Button>
+          )}
+        </div>
       </Dialog>
 
       <ConfirmDialog
         open={showDeleteConfirm}
         title="Delete application"
-        body={Delete application for ? This action cannot be undone.}
+        body={`Delete application for ${form.restaurantName}? This action cannot be undone.`}
         confirmLabel="Delete application"
         cancelLabel="Cancel"
         loading={deleting}

@@ -19,9 +19,9 @@ import { ApplicationDialog } from './ApplicationDialog';
 
 export function ApplicationsPage() {
   const { allowed } = usePermission('restaurant.create');
-  const { user: actor } = useCurrentUser();
+  useCurrentUser();
   const applicationsQuery = useApplications();
-  const { toast } = useToast();
+  useToast();
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<Tenant | null>(null);
 
@@ -46,13 +46,7 @@ export function ApplicationsPage() {
     );
   }
 
-  function handleApprove(tenant: Tenant) {
-    // Approve flow handled in dialog per requirements
-    if (!actor) return;
-    toast({ title: en.applications.approveSuccess, variant: 'success' });
-    setViewing(null);
-    applicationsQuery.refetch();
-  }
+  // Approve handled in dialog
 
   return (
     <div>

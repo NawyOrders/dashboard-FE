@@ -102,5 +102,7 @@ export interface Api {
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;
+  updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
+  deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
   signIn?(email: string, password: string): Promise<AdminUser>;
 }

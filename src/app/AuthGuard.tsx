@@ -7,7 +7,7 @@ export function AuthGuard({ children }: { children: React.ReactElement }) {
 
   if (!user) {
     const redirect = encodeURIComponent(location.pathname + location.search);
-    return <Navigate to={/login?redirect=} replace />;
+    return <Navigate to={`/login?redirect=${redirect}`} replace />;
   }
 
   return children;

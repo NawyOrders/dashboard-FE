@@ -15,10 +15,12 @@ export interface ConfirmDialogProps {
   body?: ReactNode;
   changes?: Change[];
   confirmLabel?: string;
+  cancelLabel?: string;
   tone?: 'primary' | 'danger';
   loading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  children?: ReactNode;
 }
 
 /**
@@ -31,10 +33,12 @@ export function ConfirmDialog({
   body,
   changes = [],
   confirmLabel = en.confirm.confirmAction,
+  cancelLabel = en.common.cancel,
   tone = 'primary',
   loading = false,
   onConfirm,
   onCancel,
+  children,
 }: ConfirmDialogProps) {
   return (
     <Dialog
@@ -45,7 +49,7 @@ export function ConfirmDialog({
       footer={
         <>
           <Button variant="secondary" onClick={onCancel} disabled={loading}>
-            {en.common.cancel}
+            {cancelLabel}
           </Button>
           <Button variant={tone} onClick={onConfirm} loading={loading}>
             {confirmLabel}
@@ -54,7 +58,7 @@ export function ConfirmDialog({
       }
     >
       <div className="flex flex-col gap-4">
-        {body && <p className="text-sm text-text">{body}</p>}
+        {typeof body === 'string' ? <p className="text-sm text-text">{body}</p> : body}
         {changes.length > 0 && (
           <ul className="flex flex-col gap-2">
             {changes.map((change, index) => (
@@ -74,6 +78,7 @@ export function ConfirmDialog({
             ))}
           </ul>
         )}
+        {children}
       </div>
     </Dialog>
   );

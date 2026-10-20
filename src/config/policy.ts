@@ -41,3 +41,12 @@ export const OVERVIEW_LATEST_CONTRACTS_COUNT = 8;
 
 // Number of calendar months (including the current one) shown in the contracts chart.
 export const OVERVIEW_CHART_MONTHS = 6;
+
+export const APPLICATION_REQUIRED_FIELDS: Array<{ key: string; label: string }> = [
+  { key: 'restaurantName', label: 'Restaurant name' },
+  { key: 'contact.name', label: 'Owner name' },
+  { key: 'contact.email', label: 'Owner email' },
+  { key: 'contact.phone', label: 'Phone' },
+  { key: 'contact.address', label: 'Address' },
+  { key: 'branches', label: 'At least one branch with name and phone' },
+];

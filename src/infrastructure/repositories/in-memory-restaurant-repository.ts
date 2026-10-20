@@ -27,4 +27,16 @@ export class InMemoryRestaurantRepository implements RestaurantRepository {
     if (index >= 0) this.tenants[index] = clone(tenant);
     else this.tenants.push(clone(tenant));
   }
+
+  delete(tenantId: string): void {
+    this.tenants = this.tenants.filter((t) => t.id !== tenantId);
+  }
+
+  removeById(tenantId: string): void {
+    this.delete(tenantId);
+  }
+
+  remove(tenantId: string): void {
+    this.delete(tenantId);
+  }
 }

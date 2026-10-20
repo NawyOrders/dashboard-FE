@@ -78,6 +78,10 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     listApplications: () => run(() => backend.listApplications()),
     approveApplication: (tenantId: string, actor: AdminUser) =>
       run(() => backend.approveApplication(tenantId, actor)),
+    updateApplication: (tenantId: string, patch: Partial<import('@/domain/entities').Tenant>, actor: AdminUser) =>
+      run(() => backend.updateApplication(tenantId, patch, actor)),
+    deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
+      run(() => backend.deleteApplication(tenantId, reason, actor)),
     signIn: (email: string, password: string) => run(() => backend.signIn?.(email, password) as AdminUser),
   };
 }

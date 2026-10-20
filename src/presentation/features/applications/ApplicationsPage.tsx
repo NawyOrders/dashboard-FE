@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Check, Eye, Search } from 'lucide-react';
+import { Eye, Search } from 'lucide-react';
 import { PageHeader } from '@/presentation/components/shared/PageHeader';
 import { PermissionDenied } from '@/presentation/components/shared/PermissionDenied';
 import { Button } from '@/presentation/components/ui/Button';
-import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
@@ -12,22 +11,19 @@ import { en } from '@/presentation/i18n/en';
 import { formatDate } from '@/domain/rules/date';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
-import { useApplications, useApproveApplication } from '@/presentation/hooks/queries';
+import { useApplications } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { restaurantStatusMeta } from '@/presentation/lib/status';
 import type { Tenant } from '@/domain/entities';
-import { ApplicationDetailsPanel } from './ApplicationDetailsPanel';
+import { ApplicationDialog } from './ApplicationDialog';
 
 export function ApplicationsPage() {
   const { allowed } = usePermission('restaurant.create');
-  const canApprove = usePermission('restaurant.edit').allowed;
   const { user: actor } = useCurrentUser();
   const applicationsQuery = useApplications();
-  const approveMutation = useApproveApplication();
   const { toast } = useToast();
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<Tenant | null>(null);
-  const [confirming, setConfirming] = useState<Tenant | null>(null);
 
   const rows = useMemo(() => {
     const all = applicationsQuery.data ?? [];
@@ -51,20 +47,11 @@ export function ApplicationsPage() {
   }
 
   function handleApprove(tenant: Tenant) {
+    // Approve flow handled in dialog per requirements
     if (!actor) return;
-    approveMutation.mutate(
-      { tenantId: tenant.id, actor },
-      {
-        onSuccess: () => {
-          toast({ title: en.applications.approveSuccess, variant: 'success' });
-          setConfirming(null);
-          setViewing(null);
-        },
-        onError: () => {
-          toast({ title: en.applications.approveError, variant: 'error' });
-        },
-      },
-    );
+    toast({ title: en.applications.approveSuccess, variant: 'success' });
+    setViewing(null);
+    applicationsQuery.refetch();
   }
 
   return (
@@ -133,12 +120,6 @@ export function ApplicationsPage() {
                         <Eye aria-hidden="true" className="size-4" />
                         {en.applications.view}
                       </Button>
-                      {canApprove && (
-                        <Button size="sm" onClick={() => setConfirming(tenant)}>
-                          <Check aria-hidden="true" className="size-4" />
-                          {en.applications.approve}
-                        </Button>
-                      )}
                     </div>
                   </td>
                 </tr>
@@ -148,29 +129,17 @@ export function ApplicationsPage() {
         </div>
       )}
 
-      <ApplicationDetailsPanel tenant={viewing} onClose={() => setViewing(null)} />
-
-      <ConfirmDialog
-        open={confirming !== null}
-        title={en.applications.approveConfirmTitle}
-        body={confirming ? en.applications.approveConfirmBody(confirming.restaurantName) : ''}
-        changes={
-          confirming
-            ? [
-                {
-                  label: en.applications.status,
-                  previous: en.status.restaurant.pending_approval,
-                  next: en.status.restaurant.approved,
-                },
-              ]
-            : []
-        }
-        confirmLabel={en.applications.approve}
-        loading={approveMutation.isPending}
-        onConfirm={() => {
-          if (confirming) handleApprove(confirming);
+      <ApplicationDialog
+        tenant={viewing}
+        onClose={() => setViewing(null)}
+        onApproved={() => {
+          setViewing(null);
+          applicationsQuery.refetch();
         }}
-        onCancel={() => setConfirming(null)}
+        onDeleted={() => {
+          setViewing(null);
+          applicationsQuery.refetch();
+        }}
       />
     </div>
   );

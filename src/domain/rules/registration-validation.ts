@@ -1,5 +1,5 @@
 import type { Branch, Tenant } from '@/domain/entities';
-import type { RegistrationField, RegistrationSchema } from '@/domain/entities/registration-schema';
+import type { RegistrationField, RegistrationSchema } from '@/domain/rules/registration-schema';
 import { SELECT_OPTIONS } from '@/config/cities';
 import { validateEmail } from '@/domain/rules/validation';
 import { readBranchField, readSchemaField } from '@/domain/rules/registration-mapping';
@@ -56,7 +56,7 @@ export function validateRegistrationForApprove(
     for (const section of step.sections ?? []) {
       // A read-only section cannot be fixed by the reviewer, so it is not validated.
       if (section.editable === false) continue;
-      for (const field of section.fields) {
+      for (const field of section.fields ?? []) {
         checkField(field, readSchemaField(tenant, field.key), problems, 'field');
       }
     }

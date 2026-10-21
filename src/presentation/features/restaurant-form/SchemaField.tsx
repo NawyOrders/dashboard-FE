@@ -1,7 +1,7 @@
 import { Input } from '@/presentation/components/ui/Input';
 import { Select } from '@/presentation/components/ui/Select';
 import { SELECT_OPTIONS } from '@/config/cities';
-import type { RegistrationField } from '@/domain/entities/registration-schema';
+import type { RegistrationField } from '@/domain/rules/registration-schema';
 import { ImageUploadField } from './ImageUploadField';
 import { TextareaField } from './TextareaField';
 

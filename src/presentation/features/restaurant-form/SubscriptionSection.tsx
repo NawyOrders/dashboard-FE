@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react';
 import { PACKAGE_LIST } from '@/config/packages';
 import type { PackageCode } from '@/domain/entities';
-import type { BillingCycle, RegistrationStep } from '@/domain/entities/registration-schema';
+import type { BillingCycle, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 

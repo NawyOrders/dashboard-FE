@@ -1,5 +1,5 @@
 import type { PackageCode } from '@/domain/entities';
-import type { BillingCycle, RegistrationSection, RegistrationStep } from '@/domain/entities/registration-schema';
+import type { BillingCycle, RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { BranchesSection } from './BranchesSection';
 import { SchemaField } from './SchemaField';
@@ -45,7 +45,7 @@ function ReadOnlySection({
         {sectionTitle(section, step)}
       </h4>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {section.fields.map((field) => {
+        {section.fields?.map((field) => {
           const value = values[field.key] ?? '';
           if (field.type === 'image') {
             return (
@@ -125,7 +125,7 @@ export function RestaurantForm({
                   {sectionTitle(section, step)}
                 </h4>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {section.fields.map((field) => (
+                  {section.fields?.map((field) => (
                     <SchemaField
                       key={field.key}
                       id={`rf-field-${field.key}`}

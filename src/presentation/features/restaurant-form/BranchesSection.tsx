@@ -4,7 +4,7 @@ import type {
   RegistrationField,
   RegistrationMapConfig,
   RegistrationStep,
-} from '@/domain/entities/registration-schema';
+} from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 import { BranchMapPicker } from './BranchMapPicker';

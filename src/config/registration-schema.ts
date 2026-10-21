@@ -1,6 +1,8 @@
 import rawRegistrationSchema from '@/config/restaurant-registration-fields.json';
-import { parseRegistrationSchema } from '@/domain/rules/registration-schema';
-import type { RegistrationSchema } from '@/domain/entities/registration-schema';
+import {
+  parseRegistrationSchema,
+  type RegistrationSchema,
+} from '@/domain/rules/registration-schema';
 
 /**
  * The owner-supplied JSON is the single source of truth for the registration form

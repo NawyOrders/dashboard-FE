@@ -4,7 +4,7 @@ import type {
   RegistrationField,
   RegistrationSchema,
   RegistrationStep,
-} from '@/domain/entities/registration-schema';
+} from '@/domain/rules/registration-schema';
 import {
   NUMERIC_BRANCH_FIELDS,
   SCHEMA_BRANCH_FIELD_TO_PATH,
@@ -69,7 +69,7 @@ export function buildFormValues(
   const fields: Record<string, string> = {};
   for (const step of stepsWithSections(schema)) {
     for (const section of step.sections ?? []) {
-      for (const field of section.fields) {
+      for (const field of section.fields ?? []) {
         fields[field.key] = readSchemaField(tenant, field.key);
       }
     }
@@ -164,7 +164,7 @@ export function requiredFields(schema: RegistrationSchema): RegistrationField[] 
   const required: RegistrationField[] = [];
   for (const step of schema.steps) {
     for (const section of step.sections ?? []) {
-      for (const field of section.fields) {
+      for (const field of section.fields ?? []) {
         if (field.required) required.push(field);
       }
     }

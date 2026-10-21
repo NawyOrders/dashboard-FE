@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from '@/config/map';
-import type { RegistrationMapConfig } from '@/domain/entities/registration-schema';
+import type { RegistrationMapConfig } from '@/domain/rules/registration-schema';
 
 export interface BranchMapPickerProps {
   /** Coordinates of the branch, `null` while nothing is picked yet. */

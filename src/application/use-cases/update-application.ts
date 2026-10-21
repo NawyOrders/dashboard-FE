@@ -1,6 +1,6 @@
 import type { UseCaseDeps } from '@/application/ports';
 import type { AdminUser, Branch, Tenant } from '@/domain/entities';
-import type { RegistrationField } from '@/domain/entities/registration-schema';
+import type { RegistrationField } from '@/domain/rules/registration-schema';
 import { requireRegistrationSchema } from '@/config/registration-schema';
 import { readBranchField, readSchemaField } from '@/domain/rules/registration-mapping';
 
@@ -83,7 +83,7 @@ function collectChanges(before: Tenant, after: Tenant): FieldChange[] {
 
   for (const step of schema.steps) {
     for (const section of step.sections ?? []) {
-      for (const field of section.fields) {
+      for (const field of section.fields ?? []) {
         const previous = readSchemaField(before, field.key);
         const next = readSchemaField(after, field.key);
         if (previous !== next) {

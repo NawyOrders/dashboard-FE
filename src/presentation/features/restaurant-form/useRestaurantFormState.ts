@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { requireRegistrationSchema } from '@/config/registration-schema';
 import { PACKAGES } from '@/config/packages';
 import type { PackageCode, Tenant } from '@/domain/entities';
-import type { BillingCycle } from '@/domain/entities/registration-schema';
+import type { BillingCycle } from '@/domain/rules/registration-schema';
 import {
   buildFormValues,
   emptyBranch,

@@ -179,6 +179,7 @@ export const en = {
       website: 'Website & PWA',
       apps: 'Mobile Apps',
       branches: 'Branches',
+      registration: 'Registration',
       activity: 'Activity Logs',
     },
     brand: 'Brand',

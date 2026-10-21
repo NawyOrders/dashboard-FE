@@ -13,11 +13,12 @@ import { SubscriptionTab } from './SubscriptionTab';
 import { WebsiteTab } from './WebsiteTab';
 import { AppsTab } from './AppsTab';
 import { BranchesTab } from './BranchesTab';
+import { RegistrationTab } from './RegistrationTab';
 import { EditSubscriptionDialog } from './EditSubscriptionDialog';
 import { ManageFeaturesDialog } from './ManageFeaturesDialog';
 import { ActivityLogTable } from '@/presentation/features/activity-logs/ActivityLogTable';
 
-const TAB_KEYS = ['overview', 'subscription', 'website', 'apps', 'branches', 'activity'] as const;
+const TAB_KEYS = ['overview', 'subscription', 'website', 'apps', 'branches', 'registration', 'activity'] as const;
 type TabKey = (typeof TAB_KEYS)[number];
 
 const TAB_ITEMS = [
@@ -26,6 +27,7 @@ const TAB_ITEMS = [
   { key: 'website', label: en.details.tabs.website },
   { key: 'apps', label: en.details.tabs.apps },
   { key: 'branches', label: en.details.tabs.branches },
+  { key: 'registration', label: en.details.tabs.registration },
   { key: 'activity', label: en.details.tabs.activity },
 ];
 
@@ -104,6 +106,13 @@ export function RestaurantDetailsPage() {
         {tab === 'website' && <WebsiteTab tenant={data} />}
         {tab === 'apps' && <AppsTab tenant={data} />}
         {tab === 'branches' && <BranchesTab tenant={data} />}
+        {tab === 'registration' && (
+          <RegistrationTab
+            key={data.id}
+            tenant={data}
+            onSaved={() => void tenant.refetch()}
+          />
+        )}
         {tab === 'activity' && <ActivityTab tenantId={data.id} />}
       </TabPanel>
 

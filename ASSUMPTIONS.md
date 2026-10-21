@@ -278,3 +278,28 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 75. **Read-only sections render values as text.** The `logo` and `brand_colors` sections are
     marked `editable: false` in the JSON, so they are shown as plain values (logo tile, colour
     swatches) instead of inputs; they are still part of the form and are never hidden.
+
+76. **Saving the form logs one entry per changed field.** `updateApplication` compares the stored
+    tenant with the saved one field by field (using the JSON field labels) and writes one
+    `restaurant_details_changed` entry per changed field, with the previous and new value.
+    Branches that were added or removed get one entry of their own. Nothing is logged when
+    nothing changed, and no entry is written for the billing cycle because it is not persisted.
+77. **Approve stores the form first.** Since the reviewer approves what is on screen, `Approve`
+    calls `updateApplication` with the current form values and then `approveApplication`. This
+    keeps the stored tenant and the approved data identical.
+78. **Labels from the JSON win over the English UI strings.** Where the JSON supplies a label
+    (`addButtonLabel`, `removeLabel`, the billing-cycle labels) that Arabic label is used as
+    given, because the JSON is the single source of truth for the form. Layout headings that the
+    JSON does not carry use `en.ts`.
+79. **Branch cards fold and the map mounts on demand.** The JSON `map.behavior` asks for the map
+    to load only while its branch is open, so each branch card is collapsible and the Leaflet
+    map is created only when the card is open. A branch with a validation problem is opened
+    automatically so the field can be focused.
+80. **The same form is reused on the restaurant details page.** Approved restaurants get a
+    `Registration` tab that renders the same schema-driven form; saving there uses the same
+    `updateApplication` use case and activity log. It is read-only for Support.
+81. **Seed data carries the new registration fields.** The demo tenants were extended (owner
+    name, city, description, branch opening hours and coordinates; cover and menu images stay
+    empty) so the form can be exercised end to end. Seeded phone numbers keep their display
+    format and do not satisfy the JSON phone pattern, so approving a seed application also
+    demonstrates the inline validation until the phone is corrected.

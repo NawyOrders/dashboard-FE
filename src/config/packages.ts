@@ -40,6 +40,8 @@ export const PACKAGES: Record<PackageCode, PackageDefinition> = {
     tagline: 'Website, PWA and admin panel for up to 4 branches.',
     features: START_FEATURES,
     prices: { 3: 9000, 6: 17000, 12: 32000 },
+    // NW-246: confirmed by the owner — a Start application may declare 1 to 2 branches.
+    branchLimits: { min: 1, max: 2 },
   },
   growth: {
     code: 'growth',
@@ -47,6 +49,8 @@ export const PACKAGES: Record<PackageCode, PackageDefinition> = {
     tagline: 'Everything in Start plus branded Android and iOS apps.',
     features: GROWTH_FEATURES,
     prices: { 3: 18000, 6: 34000, 12: 64000 },
+    // NW-246: confirmed by the owner — a Growth application may declare 1 to 4 branches.
+    branchLimits: { min: 1, max: 4 },
   },
 };
 

@@ -233,8 +233,48 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     hard-coded `text-[40px]/[13px]/[11px]/[10px]` and SVG `fontSize` values. `AH-239` moves
     every used size into `tokens.ts` (`h1` 62, `caption` 46, `2xs/xs/sm` 12, `base` 14,
     `lg` 16, `xl` 18, `2xl` 22, plus `title` 38 for the mobile page title, `mono` 12,
-    `badge` 11, `micro` 10 and `chart` 12) and maps them in `tailwind.config.ts`. Line-heights
+    `badge` 11, `micro` 10 and `chart` 12) and maps them in     `tailwind.config.ts`. Line-heights
     are stored as unitless ratios so the proportion is preserved at any size, and no value
     drops below the 12px floor. The global body size reads the `base` token through the
     `--font-body` CSS variable injected by `applyTheme`, so `tokens.ts` stays the single
     source. Hard-coded component sizes were replaced with the matching token names.
+
+## NW-246 schema-driven registration form
+68. **Branch limits per package (confirmed by the owner, not an assumption).** `Start` allows
+    1–2 branches and `Growth` allows 1–4, stored in `config/packages.ts`
+    (`PackageDefinition.branchLimits`) and enforced by the registration-form repeater and by
+    the approve validation. The `limits` block of
+    `src/config/restaurant-registration-fields.json` (`minBranches: 1`, `maxBranches: 2`) is
+    **not** used for the maximum, because the limits differ per package. These limits are the
+    registration-form limits and are independent from the platform-wide included-branch count
+    (`INCLUDED_BRANCHES = 4`, `config/policy.ts`) that the restaurants table still shows.
+69. **Leaflet is a new runtime dependency.** `leaflet` 1.9.4 (dependency) and `@types/leaflet`
+    1.9.22 (dev dependency) render the branch map picker. Tiles come from OpenStreetMap using
+    the `tileUrl`/`attribution` values in the registration-fields JSON; no API key is required.
+    The marker is a `divIcon` styled with the design tokens, so no marker image asset and no
+    hex value is needed.
+70. **Uploaded images are stored as data URLs in the mock.** The JSON marks both image-upload
+    fields with `saveBehavior: "local preview only until upload endpoint exists"`, so the file
+    upload goes through the `FileUploadRepository` port and the mock adapter returns a
+    `data:` URL that is written into `coverImageUrl` / `menuImageUrl`. No binary is persisted
+    and the payload stays inside the in-memory mock.
+71. **City options come from a static list.** The JSON field `city` declares
+    `options: "backend list (ASSUMPTION)"` and gives no values, so `config/cities.ts` holds a
+    fixed list of Egyptian cities (starting with the JSON example "الاسكندرية") until the
+    backend provides one.
+72. **The map opens on a default position.** With no coordinates yet, the picker centres on
+    `config/map.ts` (`DEFAULT_MAP_CENTER` = Cairo, zoom 12) and shows no marker until the
+    owner picks a point. The JSON does not define a default centre.
+73. **Monthly / yearly prices are derived from the reference price table.** The JSON package
+    shape asks for `monthlyPrice`/`yearlyPrice`, but the dashboard only had reference prices
+    per duration (Start 9,000 / 17,000 / 32,000 EGP for 3 / 6 / 12 months, Growth 18,000 /
+    34,000 / 64,000). Monthly is the 3-month price divided by three (Start 3,000, Growth 6,000)
+    and yearly is the 12-month reference price (Start 32,000, Growth 64,000). They stay
+    reference prices and are not confirmed commercial terms.
+74. **The billing cycle toggle is display-only.** `Monthly` / `Yearly` selects which price the
+    package cards show, as the JSON describes. The persisted subscription keeps the existing
+    `durationMonths` (3 / 6 / 12) model — a monthly/yearly cycle and a 3/6/12-month duration
+    are different concepts and are not merged. The cycle is therefore not written on save.
+75. **Read-only sections render values as text.** The `logo` and `brand_colors` sections are
+    marked `editable: false` in the JSON, so they are shown as plain values (logo tile, colour
+    swatches) instead of inputs; they are still part of the form and are never hidden.

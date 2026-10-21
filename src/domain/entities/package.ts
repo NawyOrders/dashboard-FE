@@ -21,6 +21,12 @@ export interface PackageDefinition {
   features: PackageFeatureKey[];
   /** Reference prices in EGP. Not final commercial terms. */
   prices: Record<DurationMonths, number>;
+  /**
+   * Branch count a restaurant application may declare per package (NW-246, confirmed
+   * by the owner). This is the registration-form limit and is independent from the
+   * platform-wide included-branch count (`INCLUDED_BRANCHES` in `config/policy.ts`).
+   */
+  branchLimits: { min: number; max: number };
 }
 
 export interface FeatureFlag {

@@ -33,13 +33,19 @@ const START_FEATURES: PackageFeatureKey[] = [
 
 const GROWTH_FEATURES: PackageFeatureKey[] = [...START_FEATURES, 'android_app', 'ios_app'];
 
+const START_PRICES = { 3: 9000, 6: 17000, 12: 32000 };
+const GROWTH_PRICES = { 3: 18000, 6: 34000, 12: 64000 };
+
 export const PACKAGES: Record<PackageCode, PackageDefinition> = {
   start: {
     code: 'start',
     name: 'Start',
     tagline: 'Website, PWA and admin panel for up to 4 branches.',
     features: START_FEATURES,
-    prices: { 3: 9000, 6: 17000, 12: 32000 },
+    prices: START_PRICES,
+    // NW-246: the monthly price is the 3-month price divided by 3, the yearly price is
+    // the 12-month price.
+    billingPrices: { monthly: START_PRICES[3] / 3, yearly: START_PRICES[12] },
     // NW-246: confirmed by the owner — a Start application may declare 1 to 2 branches.
     branchLimits: { min: 1, max: 2 },
   },
@@ -48,7 +54,8 @@ export const PACKAGES: Record<PackageCode, PackageDefinition> = {
     name: 'Growth',
     tagline: 'Everything in Start plus branded Android and iOS apps.',
     features: GROWTH_FEATURES,
-    prices: { 3: 18000, 6: 34000, 12: 64000 },
+    prices: GROWTH_PRICES,
+    billingPrices: { monthly: GROWTH_PRICES[3] / 3, yearly: GROWTH_PRICES[12] },
     // NW-246: confirmed by the owner — a Growth application may declare 1 to 4 branches.
     branchLimits: { min: 1, max: 4 },
   },

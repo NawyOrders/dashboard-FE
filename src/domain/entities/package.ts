@@ -22,6 +22,11 @@ export interface PackageDefinition {
   /** Reference prices in EGP. Not final commercial terms. */
   prices: Record<DurationMonths, number>;
   /**
+   * Price per billing cycle in EGP, derived from `prices` (NW-246). The registration
+   * form shows the price of the selected billing cycle.
+   */
+  billingPrices: { monthly: number; yearly: number };
+  /**
    * Branch count a restaurant application may declare per package (NW-246, confirmed
    * by the owner). This is the registration-form limit and is independent from the
    * platform-wide included-branch count (`INCLUDED_BRANCHES` in `config/policy.ts`).

@@ -11,7 +11,8 @@ export type ActivityAction =
   | 'branch_added'
   | 'support_access'
   | 'account_created'
-  | 'application_approved';
+  | 'application_approved'
+  | 'restaurant_details_changed';
 
 export interface Actor {
   id: string;

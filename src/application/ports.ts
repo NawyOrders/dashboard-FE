@@ -54,6 +54,15 @@ export interface SalesRepository {
   findAll(): SalesRecord[];
 }
 
+/**
+ * Image uploads (NW-246). The registration form stores uploaded images through this
+ * port; the mock adapter keeps them as data URLs until a real upload endpoint exists.
+ */
+export interface FileUploadRepository {
+  /** Returns the stored reference (a data URL in the mock adapter). */
+  uploadImage(file: File): Promise<string>;
+}
+
 /** Injectable time source so business rules and tests are deterministic. */
 export interface Clock {
   now(): Date;

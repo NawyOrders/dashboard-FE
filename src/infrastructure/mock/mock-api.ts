@@ -6,6 +6,7 @@ import type {
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { Backend } from '@/application/use-cases';
+import type { FileUploadRepository } from '@/application/ports';
 import type {
   AdminUser,
   CreateAdminAccountInput,
@@ -39,7 +40,11 @@ function forcedErrorActive(): boolean {
  * characteristics of a real API — latency, cloning and a forced-error switch
  * (`?mockError=1`). Swap this adapter for an HTTP client without touching the app.
  */
-export function createMockApi(backend: Backend, options: MockApiOptions = {}): Api {
+export function createMockApi(
+  backend: Backend,
+  options: MockApiOptions = {},
+  uploads: FileUploadRepository,
+): Api {
   const minDelayMs = options.minDelayMs ?? 300;
   const maxDelayMs = options.maxDelayMs ?? 600;
 
@@ -82,6 +87,7 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
       run(() => backend.updateApplication(tenantId, patch, actor)),
     deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
       run(() => backend.deleteApplication(tenantId, reason, actor)),
+    uploadImage: (file: File) => uploads.uploadImage(file),
     signIn: (email: string, password: string) => run(() => backend.signIn?.(email, password) as AdminUser),
   };
 }

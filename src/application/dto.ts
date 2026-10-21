@@ -104,5 +104,7 @@ export interface Api {
   approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
+  /** Stores an uploaded image and returns its reference (NW-246). */
+  uploadImage(file: File): Promise<string>;
   signIn?(email: string, password: string): Promise<AdminUser>;
 }

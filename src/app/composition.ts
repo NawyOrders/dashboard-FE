@@ -10,6 +10,7 @@ import { InMemoryAuthRepository } from '@/infrastructure/repositories/in-memory-
 import { InMemoryFeatureFlagRepository } from '@/infrastructure/repositories/in-memory-feature-flag-repository';
 import { InMemoryRestaurantRepository } from '@/infrastructure/repositories/in-memory-restaurant-repository';
 import { InMemorySalesRepository } from '@/infrastructure/repositories/in-memory-sales-repository';
+import { MockFileUploadRepository } from '@/infrastructure/repositories/mock-file-upload-repository';
 import {
   buildSeedActivity,
   buildSeedAdminAccounts,
@@ -42,7 +43,7 @@ function buildContainer(): Api {
   const currentUser: CurrentUserProvider = { get: () => CURRENT_USER };
   const backend = createBackend(deps, currentUser);
 
-  return createMockApi(backend);
+  return createMockApi(backend, {}, new MockFileUploadRepository());
 }
 
 export const api: Api = buildContainer();

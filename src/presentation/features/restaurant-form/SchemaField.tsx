@@ -70,6 +70,7 @@ export function SchemaField({ field, value, onChange, disabled, error, id }: Sch
     return (
       <Select
         id={id}
+        label={field.label}
         value={value}
         options={options}
         disabled={disabled}

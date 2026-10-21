@@ -50,6 +50,7 @@ function problemMessage(problem: RegistrationProblem): string {
 
 /** DOM id of the field a problem belongs to. */
 function problemFieldId(problem: RegistrationProblem): string {
+  if (problem.fieldKey === 'branches') return FORM_GROUP_IDS.branches;
   if (problem.scope === 'branch' && problem.branchId) {
     return `rf-branch-${problem.branchId}-${problem.fieldKey}`;
   }

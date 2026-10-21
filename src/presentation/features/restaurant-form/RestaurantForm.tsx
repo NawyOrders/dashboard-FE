@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import type { PackageCode } from '@/domain/entities';
 import type { BillingCycle, RegistrationSection, RegistrationStep } from '@/domain/entities/registration-schema';
 import { en } from '@/presentation/i18n/en';
@@ -6,7 +5,7 @@ import { BranchesSection } from './BranchesSection';
 import { SchemaField } from './SchemaField';
 import { SubscriptionSection } from './SubscriptionSection';
 import { FORM_GROUP_IDS } from './form-groups';
-import type { BranchFormValue, RestaurantFormValues } from './form-model';
+import type { RestaurantFormValues } from './form-model';
 
 export interface RestaurantFormProps {
   steps: RegistrationStep[];
@@ -23,8 +22,6 @@ export interface RestaurantFormProps {
   errors?: Record<string, string>;
   /** Validation messages keyed by `${branchId}.${fieldKey}`. */
   branchErrors?: Record<string, string>;
-  /** Extra content rendered under every branch, e.g. the map picker. */
-  renderBranchExtra?: (branch: BranchFormValue) => ReactNode;
 }
 
 function sectionTitle(section: RegistrationSection, step: RegistrationStep): string {
@@ -110,7 +107,6 @@ export function RestaurantForm({
   disabled,
   errors,
   branchErrors,
-  renderBranchExtra,
 }: RestaurantFormProps) {
   const detailsSteps = steps.filter((step) => step.sections && step.sections.length > 0);
   const branchesStep = steps.find((step) => step.repeatable === true);
@@ -159,7 +155,6 @@ export function RestaurantForm({
             onFieldChange={onBranchFieldChange}
             onAdd={onAddBranch}
             onRemove={onRemoveBranch}
-            renderBranchExtra={renderBranchExtra}
           />
         </div>
       ) : null}

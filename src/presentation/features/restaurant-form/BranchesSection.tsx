@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Plus, Trash2 } from 'lucide-react';
-import type { ReactNode } from 'react';
 import type {
   RegistrationField,
   RegistrationMapConfig,
@@ -23,8 +22,6 @@ export interface BranchesSectionProps {
   disabled?: boolean;
   /** Validation messages keyed by `${branchId}.${fieldKey}`. */
   errors?: Record<string, string>;
-  /** Extra content rendered under the branch grid, e.g. the map picker. */
-  renderBranchExtra?: (branch: BranchFormValue) => ReactNode;
 }
 
 function toCoordinate(value: string | undefined): number | null {
@@ -50,17 +47,21 @@ export function BranchesSection({
   onRemove,
   disabled,
   errors,
-  renderBranchExtra,
 }: BranchesSectionProps) {
   const [openBranchIds, setOpenBranchIds] = useState<string[]>(() =>
     branches.slice(0, 1).map((branch) => branch.id),
   );
+  const knownBranchIds = useRef(branches.map((branch) => branch.id));
 
+  // Close the cards that were removed and open the ones that were just added.
   useEffect(() => {
     setOpenBranchIds((current) => {
-      const known = current.filter((id) => branches.some((branch) => branch.id === id));
-      const firstOpen = known.length > 0 ? known : branches.slice(0, 1).map((branch) => branch.id);
-      return firstOpen;
+      const ids = branches.map((branch) => branch.id);
+      const added = ids.filter((id) => !knownBranchIds.current.includes(id));
+      knownBranchIds.current = ids;
+      const kept = current.filter((id) => ids.includes(id));
+      if (added.length === 0 && kept.length === current.length) return current;
+      return [...kept, ...added];
     });
   }, [branches]);
 
@@ -166,8 +167,6 @@ export function BranchesSection({
                       disabled={disabled}
                     />
                   ) : null}
-
-                  {renderBranchExtra?.(branch)}
                 </>
               ) : null}
             </article>

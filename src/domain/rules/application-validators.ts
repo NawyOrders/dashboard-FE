@@ -1,43 +1,29 @@
-import { APPLICATION_REQUIRED_FIELDS } from '@/config/policy';
-import { validateEmail, validateName, validatePhone } from '@/domain/rules/validation';
+import { PACKAGES } from '@/config/packages';
+import { requireRegistrationSchema } from '@/config/registration-schema';
 import type { Tenant } from '@/domain/entities';
+import type { RegistrationProblem } from '@/domain/rules/registration-validation';
+import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
 
-export function validateApplicationForApprove(tenant: Tenant): { ok: boolean; errors: string[] } {
-  const errors: string[] = [];
-  const restaurantName = (tenant.restaurantName || '').trim();
-  if (!restaurantName) errors.push('Missing: Restaurant name');
+/**
+ * Approve validation for a restaurant application (NW-246).
+ *
+ * The rules live in `domain/rules/registration-validation.ts` and are driven by the
+ * registration JSON; this module only formats the result for the callers that still
+ * expect a list of messages.
+ */
 
-  const ownerName = (((tenant.contact as unknown as Record<string, unknown>)?.name as string) || '').trim();
-  if (!ownerName) errors.push('Missing: Owner name');
-  else {
-    const res = validateName(ownerName, 'branch');
-    if (res) errors.push('Invalid: Owner name');
-  }
-
-  const ownerEmail = (tenant.contact?.email || '').trim();
-  if (!ownerEmail) errors.push('Missing: Owner email');
-  else {
-    const res = validateEmail(ownerEmail);
-    if (res) errors.push('Invalid: Owner email');
-  }
-
-  const phone = (tenant.contact?.phone || '').trim();
-  if (!phone) errors.push('Missing: Phone');
-  else {
-    const res = validatePhone(phone, 'phone');
-    if (res) errors.push('Invalid: Phone');
-  }
-
-  const address = ((((tenant.contact as unknown as Record<string, unknown>)?.address as string)) || ((tenant as unknown as Record<string, unknown>)?.address as string) || '').trim();
-  if (!address) errors.push('Missing: Address');
-
-  const branches = tenant.branches || [];
-  const hasValidBranch = branches.some((b) => ((b.name || '').trim() && (b.phone || '').trim()));
-  if (!hasValidBranch) errors.push('Missing: At least one branch with name and phone');
-
-  return { ok: errors.length === 0, errors };
+function describe(problem: RegistrationProblem): string {
+  const prefix = problem.reason === 'required' ? 'Missing' : 'Invalid';
+  const scope =
+    problem.scope === 'branch' && problem.branchIndex !== undefined
+      ? ` (branch ${problem.branchIndex + 1})`
+      : '';
+  return `${prefix}: ${problem.label}${scope}`;
 }
 
-export function getRequiredFieldsList() {
-  return APPLICATION_REQUIRED_FIELDS;
+export function validateApplicationForApprove(tenant: Tenant): { ok: boolean; errors: string[] } {
+  const schema = requireRegistrationSchema();
+  const limits = PACKAGES[tenant.subscription.packageCode].branchLimits;
+  const result = validateRegistrationForApprove(tenant, schema, limits);
+  return { ok: result.ok, errors: result.problems.map(describe) };
 }

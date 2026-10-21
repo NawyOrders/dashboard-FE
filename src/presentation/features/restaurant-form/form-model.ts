@@ -5,6 +5,13 @@ import type {
   RegistrationSchema,
   RegistrationStep,
 } from '@/domain/entities/registration-schema';
+import {
+  NUMERIC_BRANCH_FIELDS,
+  SCHEMA_BRANCH_FIELD_TO_PATH,
+  SCHEMA_FIELD_TO_TENANT_PATH,
+  readBranchField,
+  readSchemaField,
+} from '@/domain/rules/registration-mapping';
 
 /**
  * Value model of the schema-driven registration form (NW-246).
@@ -25,42 +32,6 @@ export interface RestaurantFormValues {
   branches: BranchFormValue[];
   packageCode: PackageCode;
   billingCycle: BillingCycle;
-}
-
-/** JSON field key → path on the tenant. */
-export const SCHEMA_FIELD_TO_TENANT_PATH: Record<string, string> = {
-  name: 'restaurantName',
-  ownerName: 'contact.name',
-  email: 'contact.email',
-  phone: 'contact.phone',
-  city: 'contact.city',
-  description: 'description',
-  coverImageUrl: 'coverImageUrl',
-  logoUrl: 'logoUrl',
-  primaryColor: 'brandColors.primary',
-  backgroundColor: 'brandColors.secondary',
-};
-
-/** JSON `itemFields` key → path on the branch. */
-export const SCHEMA_BRANCH_FIELD_TO_PATH: Record<string, string> = {
-  name: 'name',
-  address: 'address',
-  phone: 'phone',
-  openTime: 'openTime',
-  closeTime: 'closeTime',
-  menuImageUrl: 'menuImageUrl',
-  latitude: 'latitude',
-  longitude: 'longitude',
-};
-
-/** Branch fields stored as numbers. */
-export const NUMERIC_BRANCH_FIELDS = new Set(['latitude', 'longitude']);
-
-export function getPath(source: unknown, path: string): unknown {
-  return path.split('.').reduce<unknown>((current, key) => {
-    if (current === null || current === undefined) return undefined;
-    return (current as Record<string, unknown>)[key];
-  }, source);
 }
 
 function setPath(target: Record<string, unknown>, path: string, value: unknown): void {
@@ -89,24 +60,6 @@ export function subscriptionStep(schema: RegistrationSchema): RegistrationStep |
   return schema.steps.find((step) => step.billingCycle !== undefined) ?? null;
 }
 
-/** Reads a top-level JSON field value from the tenant. */
-export function readSchemaField(tenant: Tenant, key: string): string {
-  const path = SCHEMA_FIELD_TO_TENANT_PATH[key];
-  if (!path) return '';
-  const value = getPath(tenant, path);
-  if (value === null || value === undefined) return '';
-  return String(value);
-}
-
-/** Reads a branch `itemFields` value from a branch. */
-export function readBranchField(branch: Tenant['branches'][number], key: string): string {
-  const path = SCHEMA_BRANCH_FIELD_TO_PATH[key];
-  if (!path) return '';
-  const value = getPath(branch, path);
-  if (value === null || value === undefined) return '';
-  return String(value);
-}
-
 /** Builds the initial form values from a tenant (empty fields stay empty strings). */
 export function buildFormValues(
   schema: RegistrationSchema,
@@ -122,9 +75,9 @@ export function buildFormValues(
     }
   }
 
+  const itemFields = repeatableStep(schema)?.itemFields ?? [];
   const branches: BranchFormValue[] = (tenant.branches ?? []).map((branch, index) => {
     const branchFields: Record<string, string> = {};
-    const itemFields = repeatableStep(schema)?.itemFields ?? [];
     for (const field of itemFields) {
       branchFields[field.key] = readBranchField(branch, field.key);
     }

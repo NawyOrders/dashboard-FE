@@ -134,6 +134,9 @@ export function ApplicationsPage() {
           setViewing(null);
           applicationsQuery.refetch();
         }}
+        onSaved={() => {
+          applicationsQuery.refetch();
+        }}
       />
     </div>
   );

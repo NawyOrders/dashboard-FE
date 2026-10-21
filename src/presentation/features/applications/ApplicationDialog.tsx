@@ -1,277 +1,348 @@
-import { useEffect, useState } from 'react';
-import { Dialog } from '@/presentation/components/ui/Dialog';
+import { useMemo, useState } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
-import { Input } from '@/presentation/components/ui/Input';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
+import { Dialog } from '@/presentation/components/ui/Dialog';
+import { Input } from '@/presentation/components/ui/Input';
+import { PackagePill } from '@/presentation/components/shared/PackagePill';
+import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
-import { api } from '@/app/composition';
-import { validateApplicationForApprove } from '@/domain/rules/application-validators';
+import { en } from '@/presentation/i18n/en';
+import { cn } from '@/presentation/lib/cn';
 import type { Tenant } from '@/domain/entities';
+import type { RegistrationProblem } from '@/domain/rules/registration-validation';
+import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
+import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
+import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
+import { toTenantPatch } from '@/presentation/features/restaurant-form/form-model';
+import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
 
 interface ApplicationDialogProps {
   tenant: Tenant | null;
   onClose: () => void;
   onApproved: () => void;
   onDeleted: () => void;
+  onSaved: () => void;
 }
 
-export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted }: ApplicationDialogProps) {
+function problemMessage(problem: RegistrationProblem): string {
+  switch (problem.reason) {
+    case 'required':
+      return en.registration.requiredField;
+    case 'maxLength':
+      return en.registration.tooLong(problem.maxLength ?? 0);
+    case 'range':
+      return en.registration.outOfRange(problem.min ?? 0, problem.max ?? 0);
+    case 'email':
+      return en.registration.invalidEmail;
+    case 'pattern':
+      return en.registration.invalidPhone;
+    case 'option':
+      return en.registration.invalidOption;
+    case 'branchCount':
+      return en.registration.branchCount(problem.min ?? 0, problem.max ?? 0);
+    default:
+      return en.registration.invalidValue;
+  }
+}
+
+/** DOM id of the field a problem belongs to. */
+function problemFieldId(problem: RegistrationProblem): string {
+  if (problem.scope === 'branch' && problem.branchId) {
+    return `rf-branch-${problem.branchId}-${problem.fieldKey}`;
+  }
+  return `rf-field-${problem.fieldKey}`;
+}
+
+export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted, onSaved }: ApplicationDialogProps) {
+  if (!tenant) return null;
+  return (
+    <ApplicationDialogContent
+      tenant={tenant}
+      onClose={onClose}
+      onApproved={onApproved}
+      onDeleted={onDeleted}
+      onSaved={onSaved}
+    />
+  );
+}
+
+function ApplicationDialogContent({
+  tenant,
+  onClose,
+  onApproved,
+  onDeleted,
+  onSaved,
+}: ApplicationDialogProps & { tenant: Tenant }) {
   const { user } = useCurrentUser();
   const { toast } = useToast();
   const isSuperAdmin = user?.role === 'super_admin';
-  const isReadOnly = !isSuperAdmin;
 
-  const [form, setForm] = useState<Tenant | null>(null);
-  const [approveErrors, setApproveErrors] = useState<string[]>([]);
+  const {
+    schema,
+    values,
+    setField,
+    setBranchField,
+    addBranch,
+    removeBranch,
+    setPackageCode,
+    setBillingCycle,
+    reset,
+    branchLimits,
+  } = useRestaurantFormState(tenant);
+
+  const [problems, setProblems] = useState<RegistrationProblem[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteReason, setDeleteReason] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [approving, setApproving] = useState(false);
 
-  useEffect(() => {
-    if (tenant) {
-      setForm(JSON.parse(JSON.stringify(tenant)) as Tenant);
-      setApproveErrors([]);
-      setDeleteReason('');
-      setShowDeleteConfirm(false);
-    } else {
-      setForm(null);
+  const fieldErrors = useMemo(() => {
+    const errors: Record<string, string> = {};
+    for (const problem of problems) {
+      if (problem.scope !== 'field') continue;
+      errors[problem.fieldKey] = problemMessage(problem);
     }
-  }, [tenant]);
+    return errors;
+  }, [problems]);
 
-  function updateField(path: string, value: unknown) {
-    if (!form) return;
-    const next = JSON.parse(JSON.stringify(form)) as unknown as Record<string, unknown>;
-    const parts = path.split('.');
-    let cur = next as Record<string, unknown>;
-    for (let i = 0; i < parts.length - 1; i += 1) {
-      const key = parts[i];
-      if (key == null) continue;
-      if (cur[key] == null) cur[key] = {};
-      cur = cur[key] as Record<string, unknown>;
+  const branchErrors = useMemo(() => {
+    const errors: Record<string, string> = {};
+    for (const problem of problems) {
+      if (problem.scope !== 'branch' || !problem.branchId) continue;
+      errors[`${problem.branchId}.${problem.fieldKey}`] = problemMessage(problem);
     }
-    const last = parts[parts.length - 1];
-    if (last != null) cur[last] = value;
-    setForm(next as unknown as Tenant);
+    return errors;
+  }, [problems]);
+
+  function focusField(problem: RegistrationProblem) {
+    const element = document.getElementById(problemFieldId(problem));
+    if (!element) return;
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    element.focus({ preventScroll: true });
+  }
+
+  function scrollToGroup(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function handleSave() {
-    if (!form || !user) return;
+    if (!user) return;
     setSaving(true);
     try {
-      const apiWithExt = api as typeof api & {
-        updateApplication?: (id: string, patch: Partial<Tenant>, actor: typeof user) => Promise<unknown>;
-      };
-      await apiWithExt.updateApplication?.(form.id, form, user);
-      toast({ title: 'Changes saved', variant: 'success' });
+      await api.updateApplication(tenant.id, toTenantPatch(values, tenant), user);
+      toast({ title: en.applications.changesSaved, variant: 'success' });
+      onSaved();
     } catch {
-      toast({ title: 'Failed to save changes', variant: 'error' });
+      toast({ title: en.applications.saveFailed, variant: 'error' });
     } finally {
       setSaving(false);
     }
   }
 
+  function handleDiscard() {
+    reset();
+    setProblems([]);
+    toast({ title: en.applications.discarded, variant: 'neutral' });
+  }
+
   async function handleApprove() {
-    if (!form || !user) return;
-    const validation = validateApplicationForApprove(form);
-    if (!validation.ok) {
-      setApproveErrors(validation.errors);
+    if (!user) return;
+    const result = validateRegistrationForApprove(
+      { ...tenant, ...toTenantPatch(values, tenant) } as Tenant,
+      schema,
+      branchLimits,
+    );
+    if (!result.ok) {
+      setProblems(result.problems);
+      const first = result.problems[0];
+      if (first) {
+        window.setTimeout(() => focusField(first), 0);
+      }
       return;
     }
-    setApproveErrors([]);
+    setProblems([]);
     setApproving(true);
     try {
-      const apiWithExt = api as typeof api & {
-        approveApplication?: (id: string, actor: typeof user) => Promise<unknown>;
-      };
-      await apiWithExt.approveApplication?.(form.id, user);
-      toast({ title: 'Application approved', variant: 'success' });
+      // The approval is based on what the reviewer sees, so the form is stored first.
+      await api.updateApplication(tenant.id, toTenantPatch(values, tenant), user);
+      await api.approveApplication(tenant.id, user);
+      toast({ title: en.applications.approveSuccess, variant: 'success' });
       onApproved();
     } catch {
-      toast({ title: 'Failed to approve', variant: 'error' });
+      toast({ title: en.applications.approveError, variant: 'error' });
     } finally {
       setApproving(false);
     }
   }
 
   async function handleDelete() {
-    if (!form || !user) return;
-    if (deleteReason.trim().length < 5) {
-      return;
-    }
+    if (!user) return;
+    if (deleteReason.trim().length < 5) return;
     setDeleting(true);
     try {
-      const apiWithExt = api as typeof api & {
-        deleteApplication?: (id: string, reason: string, actor: typeof user) => Promise<void>;
-      };
-      await apiWithExt.deleteApplication?.(form.id, deleteReason.trim(), user);
-      toast({ title: 'Application deleted', variant: 'success' });
+      await api.deleteApplication(tenant.id, deleteReason.trim(), user);
+      toast({ title: en.applications.deleted, variant: 'success' });
       setShowDeleteConfirm(false);
       onDeleted();
     } catch {
-      toast({ title: 'Failed to delete', variant: 'error' });
+      toast({ title: en.applications.deleteFailed, variant: 'error' });
     } finally {
       setDeleting(false);
     }
   }
 
-  if (!tenant || !form) return null;
-
-  const contactRecord = form.contact as unknown as Record<string, unknown>;
-  const formRecord = form as unknown as Record<string, unknown>;
-  const address = (contactRecord?.address as string) ?? (formRecord?.address as string) ?? '';
+  const links = [
+    { id: FORM_GROUP_IDS.details, label: en.registration.groups.details },
+    { id: FORM_GROUP_IDS.branches, label: en.registration.groups.branches },
+    { id: FORM_GROUP_IDS.subscription, label: en.registration.groups.subscription },
+  ];
 
   return (
     <>
-      <Dialog open={!!tenant} onClose={onClose} title="Application details" size="lg">
-        <div className="max-h-[70vh] overflow-y-auto">
-          {approveErrors.length > 0 ? (
-            <div className="rounded-card border border-danger bg-danger-bg p-3 text-sm text-danger-fg">
-              <ul className="list-disc pl-5">
-                {approveErrors.map((e, idx) => (
-                  <li key={idx}>{e}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm text-text">Restaurant name</label>
-              <Input
-                value={form.restaurantName || ''}
-                onChange={(e) => updateField('restaurantName', e.target.value)}
-                placeholder="Restaurant name"
-                disabled={isReadOnly}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-text">Tenant ID</label>
-              <Input value={form.tenantId || ''} disabled readOnly />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-text">Owner name</label>
-              <Input
-                value={((form.contact as unknown as Record<string, unknown>)?.name as string) || ''}
-                onChange={(e) => updateField('contact.name', e.target.value)}
-                placeholder="Owner name"
-                disabled={isReadOnly}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-text">Owner email</label>
-              <Input
-                value={form.contact?.email || ''}
-                onChange={(e) => updateField('contact.email', e.target.value)}
-                placeholder="Owner email"
-                disabled={isReadOnly}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-text">Phone</label>
-              <Input
-                value={form.contact?.phone || ''}
-                onChange={(e) => updateField('contact.phone', e.target.value)}
-                placeholder="Phone"
-                disabled={isReadOnly}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-text">Address</label>
-              <Input
-                value={address}
-                onChange={(e) => {
-                  updateField('contact.address', e.target.value);
-                }}
-                placeholder="Address"
-                disabled={isReadOnly}
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="mb-1 block text-sm text-text">Branch details</label>
-              {(form.branches || []).map((branch, idx) => (
-                <div key={branch.id || idx} className="mb-2 grid grid-cols-1 gap-2 md:grid-cols-2">
-                  <Input
-                    value={branch.name || ''}
-                    onChange={(e) => {
-                      const next = JSON.parse(JSON.stringify(form)) as unknown as Record<string, unknown>;
-                      const branches = ((next.branches as unknown[]) || []) as Array<Record<string, unknown>>;
-                      const branch = (branches[idx] as Record<string, unknown>) || {};
-                      branch.name = e.target.value;
-                      branches[idx] = branch;
-                      (next as Record<string, unknown>).branches = branches;
-                      setForm(next as unknown as Tenant);
-                    }}
-                    placeholder="Branch name"
-                    disabled={isReadOnly}
-                  />
-                  <Input
-                    value={branch.phone || ''}
-                    onChange={(e) => {
-                      const next = JSON.parse(JSON.stringify(form)) as unknown as Record<string, unknown>;
-                      const branches = ((next.branches as unknown[]) || []) as Array<Record<string, unknown>>;
-                      const branch = (branches[idx] as Record<string, unknown>) || {};
-                      branch.phone = e.target.value;
-                      branches[idx] = branch;
-                      (next as Record<string, unknown>).branches = branches;
-                      setForm(next as unknown as Tenant);
-                    }}
-                    placeholder="Branch phone"
-                    disabled={isReadOnly}
-                  />
-                </div>
-              ))}
-              {(form.branches || []).length === 0 ? (
-                <Input value="" placeholder="Branch name and phone required" disabled={isReadOnly} />
-              ) : null}
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 flex justify-end gap-2">
-          {isSuperAdmin ? (
-            <>
-              <Button variant="secondary" onClick={handleSave} disabled={saving}>
-                {saving ? 'Saving...' : 'Save changes'}
-              </Button>
-              <Button onClick={handleApprove} disabled={approving}>
-                {approving ? 'Approving...' : 'Approve'}
-              </Button>
+      <Dialog
+        open
+        onClose={onClose}
+        title={en.applications.viewTitle}
+        size="full"
+        footer={
+          <>
+            {isSuperAdmin ? (
               <Button
                 variant="ghost"
-                className="text-danger-fg"
+                className="me-auto text-danger-fg"
                 onClick={() => setShowDeleteConfirm(true)}
               >
-                Delete application
+                {en.applications.delete}
               </Button>
-            </>
-          ) : (
-            <Button variant="secondary" onClick={onClose}>
-              Close
-            </Button>
-          )}
+            ) : null}
+            {isSuperAdmin ? (
+              <>
+                <Button variant="secondary" onClick={handleDiscard} disabled={saving || approving}>
+                  {en.applications.discard}
+                </Button>
+                <Button variant="secondary" onClick={handleSave} disabled={saving || approving}>
+                  {saving ? en.applications.saving : en.applications.saveChanges}
+                </Button>
+                <Button onClick={handleApprove} disabled={approving || saving}>
+                  {approving ? en.applications.approving : en.applications.approve}
+                </Button>
+              </>
+            ) : (
+              <Button variant="secondary" onClick={onClose}>
+                {en.common.close}
+              </Button>
+            )}
+          </>
+        }
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[18rem_minmax(0,1fr)]">
+          <aside className="flex flex-col gap-4 md:sticky md:top-0 md:self-start">
+            <div className="flex flex-col items-start gap-3 rounded-card border border-border bg-bg-2/50 p-4">
+              {tenant.logoUrl ? (
+                <img
+                  src={tenant.logoUrl}
+                  alt=""
+                  className="size-16 rounded-card border border-border object-cover"
+                />
+              ) : (
+                <TenantLogo name={tenant.restaurantName} size="lg" />
+              )}
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-semibold text-text">{tenant.restaurantName}</span>
+                <span className="text-2xs text-text-muted">{tenant.contact.email}</span>
+                <span className="font-mono text-2xs text-text-muted">{tenant.tenantId}</span>
+              </div>
+              <PackagePill code={tenant.subscription.packageCode} />
+            </div>
+
+            <nav className="flex flex-col gap-1" aria-label={en.applications.viewTitle}>
+              {links.map((link) => (
+                <button
+                  key={link.id}
+                  type="button"
+                  onClick={() => scrollToGroup(link.id)}
+                  className={cn(
+                    'rounded-panel px-3 py-2 text-start text-2xs font-medium text-text-muted',
+                    'transition-colors duration-150 hover:bg-bg-2 hover:text-text',
+                  )}
+                >
+                  {link.label}
+                </button>
+              ))}
+            </nav>
+          </aside>
+
+          <div className="flex flex-col gap-6">
+            {problems.length > 0 ? (
+              <div className="flex flex-col gap-2 rounded-card border border-danger bg-danger-bg p-4">
+                <span className="flex items-center gap-2 text-sm font-semibold text-danger-fg">
+                  <AlertTriangle aria-hidden="true" className="size-4" />
+                  {en.applications.validationTitle}
+                </span>
+                <span className="text-2xs text-danger-fg">{en.applications.validationHint}</span>
+                <ul className="flex flex-col gap-1">
+                  {problems.map((problem, index) => (
+                    <li key={`${problem.fieldKey}-${problem.branchId ?? ''}-${index}`}>
+                      <button
+                        type="button"
+                        onClick={() => focusField(problem)}
+                        className="text-start text-2xs text-danger-fg underline underline-offset-2 hover:text-text"
+                      >
+                        {problem.scope === 'branch' && problem.branchIndex !== undefined
+                          ? `${problem.label} — ${en.registration.groups.branches} ${problem.branchIndex + 1}`
+                          : problem.label}
+                        : {problemMessage(problem)}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            <RestaurantForm
+              steps={schema.steps}
+              values={values}
+              branchLimits={branchLimits}
+              disabled={!isSuperAdmin}
+              errors={fieldErrors}
+              branchErrors={branchErrors}
+              onFieldChange={setField}
+              onBranchFieldChange={setBranchField}
+              onAddBranch={addBranch}
+              onRemoveBranch={removeBranch}
+              onPackageChange={setPackageCode}
+              onCycleChange={setBillingCycle}
+            />
+          </div>
         </div>
       </Dialog>
 
       <ConfirmDialog
         open={showDeleteConfirm}
-        title="Delete application"
-        body={`Delete application for ${form.restaurantName}? This action cannot be undone.`}
-        confirmLabel="Delete application"
-        cancelLabel="Cancel"
+        title={en.applications.deleteTitle}
+        body={en.applications.deleteBody(tenant.restaurantName)}
+        confirmLabel={en.applications.delete}
+        cancelLabel={en.common.cancel}
         loading={deleting}
         onCancel={() => setShowDeleteConfirm(false)}
         onConfirm={handleDelete}
       >
         <div className="mt-3">
-          <label className="mb-1 block text-sm text-text">Reason (required, at least 5 characters)</label>
+          <label htmlFor="delete-reason" className="mb-1 block text-2xs font-medium text-text">
+            {en.applications.deleteReason}
+          </label>
           <Input
+            id="delete-reason"
             value={deleteReason}
-            onChange={(e) => setDeleteReason(e.target.value)}
-            placeholder="Enter reason"
+            onChange={(event) => setDeleteReason(event.target.value)}
+            placeholder={en.applications.deleteReasonPlaceholder}
           />
           {deleteReason.trim().length > 0 && deleteReason.trim().length < 5 ? (
-            <p className="mt-1 text-xs text-error">Reason must be at least 5 characters</p>
+            <p className="mt-1 text-2xs text-error">{en.applications.deleteReasonTooShort}</p>
           ) : null}
         </div>
       </ConfirmDialog>

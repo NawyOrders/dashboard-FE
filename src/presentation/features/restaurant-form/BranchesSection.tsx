@@ -64,6 +64,18 @@ export function BranchesSection({
     });
   }, [branches]);
 
+  // A branch with a problem is opened, so the field can be focused and fixed.
+  useEffect(() => {
+    if (!errors) return;
+    const withProblems = branches
+      .filter((branch) => Object.keys(errors).some((key) => key.startsWith(`${branch.id}.`)))
+      .map((branch) => branch.id);
+    if (withProblems.length === 0) return;
+    setOpenBranchIds((current) =>
+      withProblems.every((id) => current.includes(id)) ? current : [...current, ...withProblems],
+    );
+  }, [errors, branches]);
+
   const atMax = branches.length >= limits.max;
   const atMin = branches.length <= limits.min;
   const mapConfig: RegistrationMapConfig | undefined = step.map;

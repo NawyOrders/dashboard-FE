@@ -10,6 +10,7 @@ import type {
   SubscriptionStatus,
   Tenant,
 } from '@/domain/entities';
+import { CITY_OPTIONS } from '@/config/cities';
 import { addDays, addMonths, startOfToday, toIsoDate } from '@/domain/rules/date';
 
 interface SeedDescriptor {
@@ -72,6 +73,20 @@ const DESCRIPTORS: SeedDescriptor[] = [
 const STREETS = ['Corniche Street', 'Nile Avenue', 'Palm Boulevard', 'Market Road', 'Garden Lane'];
 const AREAS = ['New Cairo', 'Zamalek', 'Maadi', 'Heliopolis', 'Sheikh Zayed', 'Nasr City'];
 
+const OWNER_NAMES = [
+  'Nour Hassan',
+  'Omar Farouk',
+  'Layla Mansour',
+  'Youssef Adel',
+  'Mariam Samir',
+  'Karim Nabil',
+  'Salma Tarek',
+  'Ahmed Rami',
+];
+
+/** Cairo centre; every seeded branch gets a small offset so the map marker is visible. */
+const CAIRO = { lat: 30.0444, lng: 31.2357 };
+
 function buildBranches(index: number, count: number, tenantId: string, baseName: string): Tenant['branches'] {
   return Array.from({ length: count }, (_, b) => {
     const status: Tenant['branches'][number]['status'] = b === 0 ? 'active' : b % 3 === 0 ? 'pending' : 'active';
@@ -82,6 +97,12 @@ function buildBranches(index: number, count: number, tenantId: string, baseName:
       address: `${10 + b * 7} ${STREETS[b % STREETS.length]}, ${AREAS[(index + b) % AREAS.length]}`,
       phone: `+20 100 ${String(200 + index).padStart(3, '0')} ${String(10 + b).padStart(4, '0')}`,
       status,
+      // NW-246: registration-form fields.
+      openTime: '10:00',
+      closeTime: '23:00',
+      menuImageUrl: null,
+      latitude: Number((CAIRO.lat + index * 0.012 + b * 0.004).toFixed(6)),
+      longitude: Number((CAIRO.lng + index * 0.009 + b * 0.003).toFixed(6)),
     };
   });
 }
@@ -104,8 +125,12 @@ export function buildSeedTenants(): Tenant[] {
       contact: {
         phone: `+20 100 ${String(100 + index).padStart(3, '0')} 0000`,
         email: `ops.${d.slug}@example.com`,
+        name: OWNER_NAMES[index % OWNER_NAMES.length],
+        city: CITY_OPTIONS[index % CITY_OPTIONS.length],
       },
       logoUrl: null,
+      description: `${d.name} — demo restaurant registered by the owner.`,
+      coverImageUrl: null,
       brandColors: { primary: d.colors[0], secondary: d.colors[1] },
       socialLinks: {
         website: `https://${d.slug}.example.com`,

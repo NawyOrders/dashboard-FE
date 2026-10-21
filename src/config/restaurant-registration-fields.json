@@ -1,0 +1,311 @@
+{
+  "$comment": "Single source of truth for the restaurant registration wizard and its live storefront preview. Form and preview are generated from this file. Items marked ASSUMPTION are not yet confirmed.",
+  "version": "0.2",
+  "page": {
+    "title": "تسجيل مطعم جديد",
+    "titleEn": "New restaurant registration",
+    "previewPageType": "customer-storefront",
+    "previewLabel": "معاينة مباشرة",
+    "previewNote": "يتم تحديث المعاينة تلقائياً أثناء تعبئة البيانات. Preview, not published.",
+    "layout": "wizard",
+    "wizardStepCount": 4
+  },
+  "limits": {
+    "maxBranches": 2,
+    "minBranches": 1
+  },
+  "steps": [
+    {
+      "id": "basic_info",
+      "order": 1,
+      "title": "البيانات الأساسية",
+      "titleEn": "Basic info",
+      "subtitle": "أدخل المعلومات الأساسية الخاصة بالمطعم للبدء",
+      "sections": [
+        {
+          "id": "logo",
+          "editable": false,
+          "fields": [
+            {
+              "key": "logoUrl",
+              "label": "اللوجو",
+              "type": "image",
+              "editable": false,
+              "source": "previousPage:mainInfo (Tenant.logoUrl)",
+              "previewTarget": "storefront.header.logo",
+              "fallback": "neutral placeholder badge with first letter of name"
+            }
+          ]
+        },
+        {
+          "id": "owner_and_restaurant",
+          "editable": true,
+          "fields": [
+            {
+              "key": "name",
+              "label": "اسم المطعم",
+              "type": "text",
+              "required": true,
+              "maxLength": 60,
+              "placeholder": "مثال: مطعم كذا",
+              "previewTarget": "storefront.header.title",
+              "fallback": "اسم المطعم"
+            },
+            {
+              "key": "ownerName",
+              "label": "اسم المالك",
+              "type": "text",
+              "required": true,
+              "maxLength": 80,
+              "placeholder": "الاسم الكامل",
+              "previewTarget": null,
+              "note": "internal, not customer-facing"
+            },
+            {
+              "key": "email",
+              "label": "البريد الإلكتروني",
+              "type": "email",
+              "required": true,
+              "placeholder": "example@email.com",
+              "previewTarget": null,
+              "note": "internal, not customer-facing"
+            },
+            {
+              "key": "phone",
+              "label": "رقم الجوال",
+              "type": "tel",
+              "required": true,
+              "placeholder": "20XXXXXXXXXX",
+              "pattern": "^20\\d{10}$",
+              "previewTarget": null,
+              "note": "ASSUMPTION: Egyptian mobile with 20 prefix, from Figma placeholder"
+            },
+            {
+              "key": "city",
+              "label": "المدينة",
+              "type": "select",
+              "required": true,
+              "options": "backend list (ASSUMPTION)",
+              "example": "الاسكندرية",
+              "previewTarget": "storefront.header.city",
+              "fallback": "hidden"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "identity",
+      "order": 2,
+      "title": "هوية المطعم",
+      "titleEn": "Restaurant identity",
+      "subtitle": "اختر اللون الذي يعبر عن علامتك التجارية",
+      "sections": [
+        {
+          "id": "description_and_cover",
+          "editable": true,
+          "fields": [
+            {
+              "key": "description",
+              "label": "وصف المطعم",
+              "type": "textarea",
+              "required": false,
+              "maxLength": 200,
+              "previewTarget": "storefront.header.description",
+              "fallback": "hidden when empty"
+            },
+            {
+              "key": "coverImageUrl",
+              "label": "صورة الغلاف",
+              "type": "image-upload",
+              "required": false,
+              "previewTarget": "storefront.hero.cover",
+              "fallback": "neutral cover area",
+              "saveBehavior": "local preview only until upload endpoint exists"
+            }
+          ]
+        },
+        {
+          "id": "brand_colors",
+          "editable": false,
+          "source": "backend (future)",
+          "fields": [
+            {
+              "key": "primaryColor",
+              "label": "اللون الأساسي",
+              "type": "color",
+              "editable": false,
+              "previewTarget": "storefront.theme.primary",
+              "fallbackToken": "design-system primary"
+            },
+            {
+              "key": "backgroundColor",
+              "label": "لون الخلفية",
+              "type": "color",
+              "editable": false,
+              "previewTarget": "storefront.theme.background",
+              "fallbackToken": "design-system background"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "branches",
+      "order": 3,
+      "title": "الفروع",
+      "titleEn": "Branches",
+      "subtitle": "أضف فروع مطعمك ومواقعها ومواعيد العمل ليظهر للعملاء على الخريطة.",
+      "repeatable": true,
+      "minItems": 1,
+      "maxItems": 2,
+      "addButtonLabel": "اضافة فرع جديد",
+      "removeLabel": "حذف الفرع",
+      "previewTarget": "storefront.branches",
+      "itemFields": [
+        {
+          "key": "name",
+          "label": "اسم الفرع",
+          "type": "text",
+          "required": true,
+          "maxLength": 60,
+          "placeholder": "فرع اسكندرية - سموحة"
+        },
+        {
+          "key": "address",
+          "label": "العنوان بالتفصيل",
+          "type": "text",
+          "required": true,
+          "maxLength": 200,
+          "placeholder": "شارع حسن علام, سموحة"
+        },
+        {
+          "key": "openTime",
+          "label": "يفتح",
+          "type": "time",
+          "required": true,
+          "example": "10:00"
+        },
+        {
+          "key": "closeTime",
+          "label": "يغلق",
+          "type": "time",
+          "required": true,
+          "example": "23:00"
+        },
+        {
+          "key": "phone",
+          "label": "هاتف الفرع",
+          "type": "tel",
+          "required": false,
+          "note": "ASSUMPTION: optional, per branch"
+        },
+        {
+          "key": "menuImageUrl",
+          "label": "القائمة",
+          "type": "image-upload",
+          "required": false,
+          "previewTarget": "storefront.branch.menu",
+          "saveBehavior": "local preview only until upload endpoint exists"
+        },
+        {
+          "key": "latitude",
+          "label": "خط العرض",
+          "type": "number",
+          "required": true,
+          "readOnlyInput": true,
+          "source": "mapPicker",
+          "range": [
+            -90,
+            90
+          ]
+        },
+        {
+          "key": "longitude",
+          "label": "خط الطول",
+          "type": "number",
+          "required": true,
+          "readOnlyInput": true,
+          "source": "mapPicker",
+          "range": [
+            -180,
+            180
+          ]
+        }
+      ],
+      "map": {
+        "library": "leaflet",
+        "tileProvider": "OpenStreetMap",
+        "tileUrl": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "attribution": "&copy; OpenStreetMap contributors",
+        "apiKeyRequired": false,
+        "behavior": "Owner clicks or drags a marker; coordinates saved as numbers. Map loads only when its branch card is open."
+      }
+    },
+    {
+      "id": "subscription",
+      "order": 4,
+      "title": "الباقة",
+      "titleEn": "Package",
+      "subtitle": "اختر الباقة المناسبة لمطعمك",
+      "billingCycle": {
+        "options": [
+          "monthly",
+          "yearly"
+        ],
+        "default": "monthly",
+        "control": "segmented-toggle",
+        "labels": {
+          "monthly": "شهري",
+          "yearly": "سنوي"
+        }
+      },
+      "packages": {
+        "source": "backend",
+        "itemShape": {
+          "id": "string",
+          "name": "string",
+          "monthlyPrice": "number",
+          "yearlyPrice": "number",
+          "currency": "string",
+          "features": "string[]"
+        },
+        "display": "Price for selected cycle in form and preview. Toggle updates all packages.",
+        "currency": "EGP (ASSUMPTION: backend returns it)"
+      },
+      "previewTarget": "storefront.packages",
+      "submitLabel": "اتمام التسجيل"
+    }
+  ],
+  "navigation": {
+    "buttons": {
+      "next": "التالي",
+      "back": "رجوع"
+    },
+    "rule": "Next validates the current step. Submit only on step 4. Edits kept when going back."
+  },
+  "previewRules": {
+    "source": "local form state, no request per keystroke",
+    "everyCustomerFacingFieldMustAppear": true,
+    "internalFieldsHaveNullPreviewTarget": true,
+    "emptyValues": "show fallback, never break layout",
+    "longText": "truncate or wrap, never overflow the frame",
+    "frame": "phone-sized viewport, visible label 'Preview, not published'",
+    "sharedComponents": "same storefront components used by the published page"
+  },
+  "outOfScope": [
+    "Figma API or Figma-to-code conversion",
+    "Drag-and-drop page builder",
+    "Profile page (only customer storefront)",
+    "Editing brand colors (backend later)",
+    "Editing logo (comes from Main info page)",
+    "Commercial registration number",
+    "Custom package",
+    "Upload endpoints (images stay local until backend provides them)"
+  ],
+  "openQuestions": [
+    "Packages endpoint path and response shape.",
+    "City options source (backend list or static).",
+    "Confirm the phone pattern (20 + 10 digits)."
+  ]
+}

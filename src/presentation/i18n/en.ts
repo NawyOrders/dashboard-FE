@@ -366,6 +366,13 @@ export const en = {
     restaurantRole: 'Role',
     selectRestaurant: 'Select a restaurant',
     requiredRestaurant: 'Select a restaurant',
+    actions: 'Actions',
+    resetPassword: 'Reset password',
+    resetTenantPasswordTitle: 'Reset tenant password',
+    resetTenantPasswordBody: (label: string) =>
+      `Set a new password for ${label}. The current password stops working immediately.`,
+    resetTenantPasswordAction: 'Reset password',
+    tenantPasswordReset: 'Tenant password reset',
   },
   subscriptions: {
     title: 'Subscriptions',

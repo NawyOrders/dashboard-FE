@@ -10,6 +10,7 @@ import { en } from '@/presentation/i18n/en';
 import { formatDate } from '@/domain/rules/date';
 import { tenantRoleLabel } from '@/config/restaurant-roles';
 import { CreateTenantAccountDialog } from './CreateTenantAccountDialog';
+import { ResetTenantPasswordDialog } from './ResetTenantPasswordDialog';
 
 /**
  * NW-247: the accounts of the restaurants. They are listed with their restaurant, their
@@ -18,8 +19,10 @@ import { CreateTenantAccountDialog } from './CreateTenantAccountDialog';
  */
 export function TenantAccountsSection() {
   const canCreate = usePermission('tenantAccount.create').allowed;
+  const canResetPassword = usePermission('tenantAccount.resetPassword').allowed;
   const accountsQuery = useTenantAccounts();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [resetTarget, setResetTarget] = useState<{ id: string; label: string } | null>(null);
 
   const rows = accountsQuery.data ?? [];
 
@@ -69,6 +72,11 @@ export function TenantAccountsSection() {
                   <th scope="col" className="whitespace-nowrap px-5 py-3 text-start">
                     {en.accounts.createdAt}
                   </th>
+                  {canResetPassword ? (
+                    <th scope="col" className="whitespace-nowrap px-5 py-3 text-start">
+                      {en.accounts.actions}
+                    </th>
+                  ) : null}
                 </tr>
               </thead>
               <tbody>
@@ -85,6 +93,22 @@ export function TenantAccountsSection() {
                     <td className="whitespace-nowrap px-5 py-4 text-text-muted">
                       {formatDate(account.createdAt)}
                     </td>
+                    {canResetPassword ? (
+                      <td className="whitespace-nowrap px-5 py-4">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() =>
+                            setResetTarget({
+                              id: account.id,
+                              label: `${account.email} — ${account.restaurantName}`,
+                            })
+                          }
+                        >
+                          {en.accounts.resetPassword}
+                        </Button>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>
@@ -96,6 +120,14 @@ export function TenantAccountsSection() {
       {canCreate && (
         <CreateTenantAccountDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
       )}
+
+      {canResetPassword ? (
+        <ResetTenantPasswordDialog
+          accountId={resetTarget?.id ?? null}
+          accountLabel={resetTarget?.label ?? null}
+          onClose={() => setResetTarget(null)}
+        />
+      ) : null}
     </section>
   );
 }

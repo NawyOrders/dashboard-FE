@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
 import type { ListActivityParams, ListTenantsParams } from '@/application/dto';
 import type { AdminUser, CreateAdminAccountInput } from '@/domain/entities';
-import type { CreateTenantAccountInput } from '@/application/dto';
+import type { CreateTenantAccountInput, ResetTenantAccountPasswordInput } from '@/application/dto';
 
 export const queryKeys = {
   tenants: (params: ListTenantsParams) => ['tenants', params] as const,
@@ -83,6 +83,24 @@ export function useCreateTenantAccount() {
       input: CreateTenantAccountInput;
       actor: AdminUser;
     }) => api.createTenantAccount(input, actor),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.tenantAccounts });
+      void queryClient.invalidateQueries({ queryKey: ['activity'] });
+    },
+  });
+}
+
+/** NW-247: reset the password of a tenant account. */
+export function useResetTenantAccountPassword() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      input,
+      actor,
+    }: {
+      input: ResetTenantAccountPasswordInput;
+      actor: AdminUser;
+    }) => api.resetTenantAccountPassword(input, actor),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.tenantAccounts });
       void queryClient.invalidateQueries({ queryKey: ['activity'] });

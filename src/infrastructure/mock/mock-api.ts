@@ -5,6 +5,7 @@ import type {
   CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
+  ResetTenantAccountPasswordInput,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { Backend } from '@/application/use-cases';
@@ -88,6 +89,10 @@ export function createMockApi(
     listTenantAccounts: () => run(() => backend.listTenantAccounts()),
     createTenantAccount: (input: CreateTenantAccountInput, actor: AdminUser) =>
       run(() => backend.createTenantAccount(input, actor)),
+    resetTenantAccountPassword: (
+      input: ResetTenantAccountPasswordInput,
+      actor: AdminUser,
+    ) => run(() => backend.resetTenantAccountPassword(input, actor)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>

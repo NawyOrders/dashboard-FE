@@ -5,6 +5,7 @@ import type {
   ListActivityParams,
   ListTenantsParams,
   OverviewAnalysis,
+  ResetTenantAccountPasswordInput,
   TenantAccountView,
   UpdateSubscriptionInput,
 } from '@/application/dto';
@@ -36,6 +37,7 @@ import { makeCreateAdminAccount } from './create-admin-account';
 import { makeChangeOwnPassword } from './change-own-password';
 import { makeListTenantAccounts } from './list-tenant-accounts';
 import { makeCreateTenantAccount } from './create-tenant-account';
+import { makeResetTenantAccountPassword } from './reset-tenant-account-password';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
 import { makeApproveApplication } from './approve-application';
@@ -71,6 +73,10 @@ export interface Backend {
     input: CreateTenantAccountInput,
     actor: AdminUser,
   ): Promise<TenantAccountView>;
+  resetTenantAccountPassword(
+    input: ResetTenantAccountPasswordInput,
+    actor: AdminUser,
+  ): Promise<void>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
   approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
@@ -97,6 +103,7 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     changeOwnPassword: makeChangeOwnPassword(deps),
     listTenantAccounts: makeListTenantAccounts(deps),
     createTenantAccount: makeCreateTenantAccount(deps),
+    resetTenantAccountPassword: makeResetTenantAccountPassword(deps),
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
     approveApplication: makeApproveApplication(deps),

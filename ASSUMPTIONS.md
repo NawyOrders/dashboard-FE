@@ -368,3 +368,8 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     password policy are checked by the use case as well, not only by the form.
     ASSUMPTION: a tenant account has no name field in the form, so the account is stored
     with the restaurant name and the role as its display name.
+94. **A Super Admin resets the password of a tenant account from the accounts page.** The
+    action needs the permission `tenantAccount.resetPassword`; the dialog asks for the new
+    password and its repetition. The old password stops working as soon as the reset is
+    saved — only the hash is replaced in the account store. The activity log records
+    `account.password_reset` with the actor and the account — never with a password value.

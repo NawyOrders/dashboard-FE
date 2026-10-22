@@ -80,6 +80,12 @@ export interface CreateTenantAccountInput {
   password: string;
 }
 
+/** NW-247: a Super Admin resets the password of a tenant account. */
+export interface ResetTenantAccountPasswordInput {
+  accountId: string;
+  newPassword: string;
+}
+
 /** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
 export interface OverviewAnalysis {
   contractsPerMonth: MonthBucket[];
@@ -139,6 +145,12 @@ export interface Api {
     input: CreateTenantAccountInput,
     actor: AdminUser,
   ): Promise<TenantAccountView>;
+
+  /** NW-247: reset the password of a tenant account. */
+  resetTenantAccountPassword(
+    input: ResetTenantAccountPasswordInput,
+    actor: AdminUser,
+  ): Promise<void>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(

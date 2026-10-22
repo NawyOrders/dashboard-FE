@@ -348,6 +348,12 @@ export const en = {
     requiredName: 'Name is required',
     requiredEmail: 'Email is required',
     invalidEmail: 'Enter a valid email address',
+    password: 'Password',
+    confirmPassword: 'Confirm password',
+    passwordHint: 'At least 8 characters, with a letter and a digit.',
+    requiredPassword: 'Password is required',
+    requiredConfirmPassword: 'Repeat the password',
+    passwordMismatch: 'The two passwords do not match',
   },
   subscriptions: {
     title: 'Subscriptions',

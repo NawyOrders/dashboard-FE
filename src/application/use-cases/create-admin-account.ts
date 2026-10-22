@@ -1,10 +1,18 @@
 import type { UseCaseDeps } from '@/application/ports';
 import type { AdminUser, CreateAdminAccountInput, InternalAccount } from '@/domain/entities';
+import { validatePassword } from '@/domain/rules/password';
 
 export class DuplicateAccountEmailError extends Error {
   constructor(email: string) {
     super(`An account with the email ${email} already exists.`);
     this.name = 'DuplicateAccountEmailError';
+  }
+}
+
+export class InvalidPasswordError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidPasswordError';
   }
 }
 
@@ -18,6 +26,11 @@ export function makeCreateAdminAccount(deps: UseCaseDeps) {
 
     if (await auth.findByEmail(email)) {
       throw new DuplicateAccountEmailError(email);
+    }
+
+    const policyError = validatePassword(input.password);
+    if (policyError) {
+      throw new InvalidPasswordError(policyError);
     }
 
     const account = await auth.createAccount({

@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Dialog } from '@/presentation/components/ui/Dialog';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
+import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { Select } from '@/presentation/components/ui/Select';
 import { en } from '@/presentation/i18n/en';
 import { validateEmail, validateName } from '@/domain/rules/validation';
+import { validatePassword } from '@/domain/rules/password';
 import { ROLE_REGISTRY } from '@/domain/rules/permissions';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useCreateAdminAccount } from '@/presentation/hooks/queries';
@@ -29,7 +31,14 @@ export function CreateAccountDialog({ open, onClose }: CreateAccountDialogProps)
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<Role>('support');
-  const [touched, setTouched] = useState({ name: false, email: false });
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
 
   const nameError = !touched.name
     ? undefined
@@ -43,21 +52,42 @@ export function CreateAccountDialog({ open, onClose }: CreateAccountDialogProps)
       ? en.accounts.requiredEmail
       : (validateEmail(email) ?? undefined);
 
+  const passwordError = !touched.password
+    ? undefined
+    : password.length === 0
+      ? en.accounts.requiredPassword
+      : (validatePassword(password) ?? undefined);
+
+  const confirmPasswordError = !touched.confirmPassword
+    ? undefined
+    : confirmPassword.length === 0
+      ? en.accounts.requiredConfirmPassword
+      : password !== confirmPassword
+        ? en.accounts.passwordMismatch
+        : undefined;
+
   function reset() {
     setName('');
     setEmail('');
     setRole('support');
-    setTouched({ name: false, email: false });
+    setPassword('');
+    setConfirmPassword('');
+    setTouched({ name: false, email: false, password: false, confirmPassword: false });
   }
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setTouched({ name: true, email: true });
+    setTouched({ name: true, email: true, password: true, confirmPassword: true });
     if (name.trim().length === 0 || validateName(name, 'business')) return;
     if (email.trim().length === 0 || validateEmail(email)) return;
+    if (password.length === 0 || validatePassword(password)) return;
+    if (password !== confirmPassword) return;
 
     createAccount.mutate(
-      { input: { name: name.trim(), email: email.trim(), role }, actor: user! },
+      {
+        input: { name: name.trim(), email: email.trim(), role, password },
+        actor: user!,
+      },
       {
         onSuccess: () => {
           toast({ title: en.accounts.createSuccess, variant: 'success' });
@@ -111,6 +141,23 @@ export function CreateAccountDialog({ open, onClose }: CreateAccountDialogProps)
           value={role}
           onChange={(event) => setRole(event.target.value as Role)}
           options={ROLE_OPTIONS}
+        />
+        <PasswordInput
+          label={en.accounts.password}
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+          error={passwordError}
+          hint={en.accounts.passwordHint}
+          autoComplete="new-password"
+        />
+        <PasswordInput
+          label={en.accounts.confirmPassword}
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          onBlur={() => setTouched((t) => ({ ...t, confirmPassword: true }))}
+          error={confirmPasswordError}
+          autoComplete="new-password"
         />
       </form>
     </Dialog>

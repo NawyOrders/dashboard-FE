@@ -47,8 +47,8 @@ export interface CreateAdminAccountInput {
   email: string;
   role: Role;
   /**
-   * NW-247: the password of the new dashboard account. The account cannot sign in
-   * without one; the create-user form requires it from Step 7 on.
+   * NW-247: the password of the new dashboard account. It is required — an account
+   * without a password could never sign in.
    */
-  password?: string;
+  password: string;
 }

@@ -355,3 +355,7 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     inline error. The new password follows the policy of item 89 and must be repeated. The
     activity log records `account.password_changed` with the actor — never with a password
     value.
+92. **A new dashboard account is created with a password.** The create-account form asks
+    for the password and its repetition; the password is required and follows the policy of
+    item 89. The account can sign in right after it is created. The activity log records
+    `account_created` with the email and the role — never with a password value.

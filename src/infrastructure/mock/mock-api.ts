@@ -81,8 +81,8 @@ export function createMockApi(
       run(() => backend.createAdminAccount(input, actor)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
-    approveApplication: (tenantId: string, actor: AdminUser) =>
-      run(() => backend.approveApplication(tenantId, actor)),
+    approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
+      run(() => backend.approveApplication(tenantId, adminPassword, actor)),
     updateApplication: (tenantId: string, patch: Partial<import('@/domain/entities').Tenant>, actor: AdminUser) =>
       run(() => backend.updateApplication(tenantId, patch, actor)),
     deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>

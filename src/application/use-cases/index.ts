@@ -61,7 +61,7 @@ export interface Backend {
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
-  approveApplication(tenantId: string, actor: AdminUser): Tenant;
+  approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Tenant;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): void;
   signIn(email: string, password: string): Promise<AdminUser>;

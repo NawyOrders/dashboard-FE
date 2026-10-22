@@ -5,6 +5,7 @@ import { Button } from '@/presentation/components/ui/Button';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
 import { Dialog } from '@/presentation/components/ui/Dialog';
 import { Input } from '@/presentation/components/ui/Input';
+import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
@@ -28,6 +29,7 @@ interface ApplicationDialogProps {
 }
 
 function problemMessage(problem: RegistrationProblem): string {
+  if (problem.message) return problem.message;
   switch (problem.reason) {
     case 'required':
       return en.registration.requiredField;
@@ -99,6 +101,7 @@ function ApplicationDialogContent({
   } = useRestaurantFormState(tenant);
 
   const [problems, setProblems] = useState<RegistrationProblem[]>([]);
+  const [adminPassword, setAdminPassword] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteReason, setDeleteReason] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -160,6 +163,7 @@ function ApplicationDialogContent({
       { ...tenant, ...toTenantPatch(values, tenant) } as Tenant,
       schema,
       branchLimits,
+      { label: en.applications.adminPasswordLabel, value: adminPassword },
     );
     if (!result.ok) {
       setProblems(result.problems);
@@ -174,8 +178,13 @@ function ApplicationDialogContent({
     try {
       // The approval is based on what the reviewer sees, so the form is stored first.
       await api.updateApplication(tenant.id, toTenantPatch(values, tenant), user);
-      await api.approveApplication(tenant.id, user);
-      toast({ title: en.applications.approveSuccess, variant: 'success' });
+      await api.approveApplication(tenant.id, adminPassword, user);
+      setAdminPassword('');
+      toast({
+        title: en.applications.approveSuccess,
+        description: en.applications.adminPasswordCreated,
+        variant: 'success',
+      });
       onApproved();
     } catch {
       toast({ title: en.applications.approveError, variant: 'error' });
@@ -307,6 +316,19 @@ function ApplicationDialogContent({
                 </ul>
               </div>
             ) : null}
+
+            <div className="rounded-card border border-border bg-card p-4">
+              <PasswordInput
+                id="rf-field-adminPassword"
+                label={en.applications.adminPasswordLabel}
+                value={adminPassword}
+                onChange={(event) => setAdminPassword(event.target.value)}
+                error={fieldErrors.adminPassword}
+                hint={en.applications.adminPasswordHint}
+                disabled={!isSuperAdmin}
+                autoComplete="new-password"
+              />
+            </div>
 
             <RestaurantForm
               steps={schema.steps}

@@ -87,8 +87,15 @@ export function useApplications() {
 export function useApproveApplication() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ tenantId, actor }: { tenantId: string; actor: AdminUser }) =>
-      api.approveApplication(tenantId, actor),
+    mutationFn: ({
+      tenantId,
+      adminPassword,
+      actor,
+    }: {
+      tenantId: string;
+      adminPassword: string;
+      actor: AdminUser;
+    }) => api.approveApplication(tenantId, adminPassword, actor),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
       void queryClient.invalidateQueries({ queryKey: ['tenants'] });

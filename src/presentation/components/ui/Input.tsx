@@ -1,15 +1,17 @@
 import { forwardRef, useId } from 'react';
-import type { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/presentation/lib/cn';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   hint?: string;
+  /** Rendered inside the field, at its end (e.g. the show/hide button of a password). */
+  trailing?: ReactNode;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, error, hint, id, className, ...props },
+  { label, error, hint, trailing, id, className, ...props },
   ref,
 ) {
   const generatedId = useId();
@@ -23,20 +25,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           {label}
         </label>
       )}
-      <input
-        ref={ref}
-        id={inputId}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy}
-        className={cn(
-          'h-11 w-full rounded-panel border bg-card px-3 text-sm text-text placeholder:text-text-muted',
-          'transition-colors duration-150 focus:border-primary focus:outline-none',
-          'disabled:cursor-not-allowed disabled:bg-neutral-bg disabled:text-text-muted',
-          error ? 'border-error focus:border-error focus:ring-4 focus:ring-error-ring' : 'border-border hover:border-border-hover',
-          className,
-        )}
-        {...props}
-      />
+      <div className="relative">
+        <input
+          ref={ref}
+          id={inputId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+          className={cn(
+            'h-11 w-full rounded-panel border bg-card px-3 text-sm text-text placeholder:text-text-muted',
+            'transition-colors duration-150 focus:border-primary focus:outline-none',
+            'disabled:cursor-not-allowed disabled:bg-neutral-bg disabled:text-text-muted',
+            error ? 'border-error focus:border-error focus:ring-4 focus:ring-error-ring' : 'border-border hover:border-border-hover',
+            trailing ? 'pe-10' : null,
+            className,
+          )}
+          {...props}
+        />
+        {trailing ? (
+          <div className="absolute end-1 top-1/2 -translate-y-1/2">{trailing}</div>
+        ) : null}
+      </div>
       {error && (
         <span id={`${inputId}-error`} className="text-2xs text-error">
           {error}

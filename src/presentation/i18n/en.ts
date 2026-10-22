@@ -55,6 +55,8 @@ export const en = {
     backToList: 'Back to list',
     somethingWentWrong: 'Something went wrong',
     errorTitle: 'Could not load data',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
     itemsSelected: (n: number) => `${n} item${n === 1 ? '' : 's'} selected`,
     showingRange: (from: number, to: number, total: number) =>
       `Showing ${from} to ${to} of ${total} entries`,
@@ -282,6 +284,10 @@ export const en = {
     deleteFailed: 'Failed to delete',
     validationTitle: 'The application is not complete yet',
     validationHint: 'Fix these fields before approving the application:',
+    adminPasswordLabel: 'Restaurant admin password',
+    adminPasswordHint:
+      'Approving creates the admin account of this restaurant with this password.',
+    adminPasswordCreated: 'Restaurant admin account created',
   },
   registration: {
     groups: {

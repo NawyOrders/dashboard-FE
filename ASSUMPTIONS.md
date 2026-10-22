@@ -339,3 +339,14 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     owner file `restaurant-roles.mock.ts` and keeps its `// MOCK: replace with owner-defined
     roles.` marker. `admin` is not offered in the role select: the admin account of a
     restaurant is created when the application is approved.
+89. **One password policy for the whole product.** `src/domain/rules/password.ts` requires
+    at least 8 characters, at least one letter and at least one digit. The same rule is
+    used for the restaurant admin password (set while approving an application), for the
+    password of a dashboard user and for the password of a tenant account.
+    ASSUMPTION: the owner did not define a password policy — 8 characters with a letter
+    and a digit is the platform default used here.
+90. **Approving an application creates the admin account of the restaurant.** The password
+    is entered in the application view dialog and checked like every other required field:
+    an empty value blocks the approval and is listed in the inline summary. The account
+    gets the restaurant role `admin`, which is never offered in the role select. The
+    activity log records `account_created` for it — without the password value.

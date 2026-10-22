@@ -2,6 +2,7 @@ import type { Branch, Tenant } from '@/domain/entities';
 import type { RegistrationField, RegistrationSchema } from '@/domain/rules/registration-schema';
 import { SELECT_OPTIONS } from '@/config/cities';
 import { validateEmail } from '@/domain/rules/validation';
+import { validatePassword } from '@/domain/rules/password';
 import { readBranchField, readSchemaField } from '@/domain/rules/registration-mapping';
 
 export type RegistrationProblemReason =
@@ -13,6 +14,7 @@ export type RegistrationProblemReason =
   | 'range'
   | 'option'
   | 'digits'
+  | 'password'
   | 'branchCount';
 
 /**
@@ -30,6 +32,8 @@ export interface RegistrationProblem {
   minLength?: number;
   min?: number;
   max?: number;
+  /** The exact message to show, when the reason alone is not specific enough. */
+  message?: string;
 }
 
 export interface RegistrationValidationResult {
@@ -43,15 +47,26 @@ export interface RegistrationBranchLimits {
 }
 
 /**
+ * The password of the restaurant admin account. NW-247: approving an application
+ * creates that account, so the password is checked like every other required field.
+ */
+export interface ApproveAdminPassword {
+  label: string;
+  value: string;
+}
+
+/**
  * Approve validation driven by the registration schema (NW-246).
  *
  * Every required flag, pattern, maximum length and value range comes from the JSON; the
- * branch count is checked against the limits of the selected package.
+ * branch count is checked against the limits of the selected package. NW-247: the
+ * password of the restaurant admin account is checked the same way.
  */
 export function validateRegistrationForApprove(
   tenant: Tenant,
   schema: RegistrationSchema,
   limits: RegistrationBranchLimits,
+  adminPassword?: ApproveAdminPassword,
 ): RegistrationValidationResult {
   const problems: RegistrationProblem[] = [];
 
@@ -81,6 +96,29 @@ export function validateRegistrationForApprove(
           checkField(field, readBranchField(branch, field.key), problems, 'branch', branch, index);
         }
       });
+    }
+  }
+
+  if (adminPassword) {
+    const password = adminPassword.value;
+    if (password.trim() === '') {
+      problems.push({
+        fieldKey: 'adminPassword',
+        label: adminPassword.label,
+        scope: 'field',
+        reason: 'required',
+      });
+    } else {
+      const message = validatePassword(password);
+      if (message) {
+        problems.push({
+          fieldKey: 'adminPassword',
+          label: adminPassword.label,
+          scope: 'field',
+          reason: 'password',
+          message,
+        });
+      }
     }
   }
 

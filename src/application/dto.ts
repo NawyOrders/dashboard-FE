@@ -101,7 +101,11 @@ export interface Api {
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
-  approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;
+  approveApplication(
+    tenantId: string,
+    adminPassword: string,
+    actor: AdminUser,
+  ): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
   /** Stores an uploaded image and returns its reference (NW-246). */

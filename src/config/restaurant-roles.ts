@@ -1,4 +1,4 @@
-import type { RestaurantRole } from '@/domain/entities';
+import type { RestaurantRole, TenantRole } from '@/domain/entities';
 
 // MOCK: replace with owner-defined roles.
 // `admin` is intentionally NOT in this list. It is created automatically on application approval.
@@ -18,4 +18,10 @@ export const SELECTABLE_RESTAURANT_ROLE_IDS = RESTAURANT_ROLES.map(
 
 export function restaurantRoleLabel(roleId: RestaurantRole): string {
   return RESTAURANT_ROLES.find((role) => role.id === roleId)?.label ?? roleId;
+}
+
+/** The label of any restaurant role, including the `admin` role of an approved restaurant. */
+export function tenantRoleLabel(roleId: TenantRole): string {
+  if (roleId === 'admin') return 'Admin';
+  return restaurantRoleLabel(roleId);
 }

@@ -1,7 +1,7 @@
 import type {
   AuthRepository,
-  CreateInternalAccountInput,
-  CreateTenantAccountInput,
+  NewInternalAccount,
+  NewTenantAccount,
 } from '@/application/ports';
 import type {
   Account,
@@ -115,10 +115,10 @@ export class InMemoryAuthRepository implements AuthRepository {
     return clone(account);
   }
 
-  async createAccount(input: CreateInternalAccountInput): Promise<InternalAccount>;
-  async createAccount(input: CreateTenantAccountInput): Promise<TenantAccount>;
+  async createAccount(input: NewInternalAccount): Promise<InternalAccount>;
+  async createAccount(input: NewTenantAccount): Promise<TenantAccount>;
   async createAccount(
-    input: CreateInternalAccountInput | CreateTenantAccountInput,
+    input: NewInternalAccount | NewTenantAccount,
   ): Promise<InternalAccount | TenantAccount> {
     await this.ready;
     const account: Account =

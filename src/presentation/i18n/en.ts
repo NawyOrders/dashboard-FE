@@ -354,6 +354,18 @@ export const en = {
     requiredPassword: 'Password is required',
     requiredConfirmPassword: 'Repeat the password',
     passwordMismatch: 'The two passwords do not match',
+    tenantAccountsTitle: 'Tenant accounts',
+    tenantAccountsSubtitle:
+      'The accounts of the restaurants. They sign in to the restaurant app, never to this dashboard.',
+    tenantAccountsEmpty: 'No tenant accounts yet.',
+    createTenantAccount: 'Create tenant account',
+    createTenantAccountTitle: 'Create tenant account',
+    createTenantAccountSubtitle: 'Add an account to a restaurant and give it a role.',
+    tenantAccountCreated: 'Tenant account created',
+    restaurant: 'Restaurant',
+    restaurantRole: 'Role',
+    selectRestaurant: 'Select a restaurant',
+    requiredRestaurant: 'Select a restaurant',
   },
   subscriptions: {
     title: 'Subscriptions',

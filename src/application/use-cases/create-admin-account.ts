@@ -1,6 +1,7 @@
 import type { UseCaseDeps } from '@/application/ports';
 import type { AdminUser, CreateAdminAccountInput, InternalAccount } from '@/domain/entities';
 import { validatePassword } from '@/domain/rules/password';
+import { validateEmail } from '@/domain/rules/validation';
 
 export class DuplicateAccountEmailError extends Error {
   constructor(email: string) {
@@ -16,6 +17,13 @@ export class InvalidPasswordError extends Error {
   }
 }
 
+export class InvalidAccountEmailError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidAccountEmailError';
+  }
+}
+
 export function makeCreateAdminAccount(deps: UseCaseDeps) {
   return async function createAdminAccount(
     input: CreateAdminAccountInput,
@@ -23,7 +31,10 @@ export function makeCreateAdminAccount(deps: UseCaseDeps) {
   ): Promise<InternalAccount> {
     const { auth, activity, clock, ids } = deps;
     const email = input.email.trim().toLowerCase();
-
+    const emailError = validateEmail(email);
+    if (emailError) {
+      throw new InvalidAccountEmailError(emailError);
+    }
     if (await auth.findByEmail(email)) {
       throw new DuplicateAccountEmailError(email);
     }

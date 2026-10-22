@@ -359,3 +359,12 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     for the password and its repetition; the password is required and follows the policy of
     item 89. The account can sign in right after it is created. The activity log records
     `account_created` with the email and the role — never with a password value.
+93. **The tenant accounts live in a section of the accounts page.** Every row shows the
+    restaurant, the role, the email and the date the account was created. A Super Admin
+    creates an account for one restaurant with the permission `tenantAccount.create`;
+    the Support role keeps read-only access to the list. The role select offers the roles
+    of `src/config/restaurant-roles.ts` only — `admin` is never in it, because that
+    account is created when the application is approved. The email format and the
+    password policy are checked by the use case as well, not only by the form.
+    ASSUMPTION: a tenant account has no name field in the form, so the account is stored
+    with the restaurant name and the role as its display name.

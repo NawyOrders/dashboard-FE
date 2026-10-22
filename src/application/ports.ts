@@ -37,7 +37,7 @@ export interface FeatureFlagRepository {
   seedDefaults(tenant: Tenant): void;
 }
 
-export interface CreateInternalAccountInput {
+export interface NewInternalAccount {
   id: string;
   email: string;
   name: string;
@@ -52,7 +52,7 @@ export interface CreateInternalAccountInput {
   createdAt?: string;
 }
 
-export interface CreateTenantAccountInput {
+export interface NewTenantAccount {
   id: string;
   email: string;
   name: string;
@@ -77,8 +77,8 @@ export interface AuthRepository {
    * the adapter answers null for it, exactly as it does for a wrong password.
    */
   findByCredentials(email: string, password: string): Promise<InternalAccount | null>;
-  createAccount(input: CreateInternalAccountInput): Promise<InternalAccount>;
-  createAccount(input: CreateTenantAccountInput): Promise<TenantAccount>;
+  createAccount(input: NewInternalAccount): Promise<InternalAccount>;
+  createAccount(input: NewTenantAccount): Promise<TenantAccount>;
   /** Replaces the stored password of an account. */
   updatePassword(accountId: string, password: string): Promise<void>;
 }

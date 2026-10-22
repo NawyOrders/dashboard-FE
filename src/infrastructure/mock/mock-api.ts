@@ -2,6 +2,7 @@ import type {
   AddBranchInput,
   Api,
   ChangeOwnPasswordInput,
+  CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
   UpdateSubscriptionInput,
@@ -84,6 +85,9 @@ export function createMockApi(
       run(() => backend.createAdminAccount(input, actor)),
     changeOwnPassword: (input: ChangeOwnPasswordInput, actor: AdminUser) =>
       run(() => backend.changeOwnPassword(input, actor)),
+    listTenantAccounts: () => run(() => backend.listTenantAccounts()),
+    createTenantAccount: (input: CreateTenantAccountInput, actor: AdminUser) =>
+      run(() => backend.createTenantAccount(input, actor)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>

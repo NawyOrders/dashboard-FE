@@ -1,9 +1,11 @@
 import type {
   AddBranchInput,
   ChangeOwnPasswordInput,
+  CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
   OverviewAnalysis,
+  TenantAccountView,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
@@ -32,6 +34,8 @@ import { makeGetOverviewAnalysis } from './get-overview-analysis';
 import { makeListAdminAccounts } from './list-admin-accounts';
 import { makeCreateAdminAccount } from './create-admin-account';
 import { makeChangeOwnPassword } from './change-own-password';
+import { makeListTenantAccounts } from './list-tenant-accounts';
+import { makeCreateTenantAccount } from './create-tenant-account';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
 import { makeApproveApplication } from './approve-application';
@@ -62,6 +66,11 @@ export interface Backend {
   listAdminAccounts(): Promise<InternalAccount[]>;
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
   changeOwnPassword(input: ChangeOwnPasswordInput, actor: AdminUser): Promise<void>;
+  listTenantAccounts(): Promise<TenantAccountView[]>;
+  createTenantAccount(
+    input: CreateTenantAccountInput,
+    actor: AdminUser,
+  ): Promise<TenantAccountView>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
   approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
@@ -86,6 +95,8 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listAdminAccounts: makeListAdminAccounts(deps),
     createAdminAccount: makeCreateAdminAccount(deps),
     changeOwnPassword: makeChangeOwnPassword(deps),
+    listTenantAccounts: makeListTenantAccounts(deps),
+    createTenantAccount: makeCreateTenantAccount(deps),
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
     approveApplication: makeApproveApplication(deps),

@@ -16,6 +16,7 @@ import { adminAccountStatusMeta } from '@/presentation/lib/status';
 import type { InternalAccount } from '@/domain/entities';
 import { CreateAccountDialog } from './CreateAccountDialog';
 import { RolesSection } from './RolesSection';
+import { TenantAccountsSection } from './TenantAccountsSection';
 
 function roleLabel(role: InternalAccount['role']): string {
   return ROLE_REGISTRY[role].label;
@@ -127,6 +128,8 @@ export function AccountsPage() {
           </div>
         )}
       </div>
+
+      <TenantAccountsSection />
 
       <RolesSection />
 

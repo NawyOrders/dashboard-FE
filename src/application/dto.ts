@@ -9,9 +9,11 @@ import type {
   InternalAccount,
   PackageCode,
   PackageFeatureKey,
+  RestaurantRole,
   RestaurantStatus,
   SubscriptionStatus,
   Tenant,
+  TenantRole,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
 import type { SalesMonthBucket } from '@/domain/rules/sales';
@@ -55,6 +57,27 @@ export interface ListActivityParams {
 export interface ChangeOwnPasswordInput {
   currentPassword: string;
   newPassword: string;
+}
+
+/** NW-247: a tenant account as the accounts page shows it. */
+export interface TenantAccountView {
+  id: string;
+  email: string;
+  name: string;
+  /** The restaurant the account belongs to. */
+  tenantId: string;
+  restaurantName: string;
+  restaurantRole: TenantRole;
+  createdAt: string;
+}
+
+/** NW-247: the fields of the "create tenant account" form. */
+export interface CreateTenantAccountInput {
+  tenantId: string;
+  /** The role inside the restaurant. `admin` is not selectable. */
+  restaurantRole: RestaurantRole;
+  email: string;
+  password: string;
 }
 
 /** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
@@ -108,6 +131,14 @@ export interface Api {
 
   /** NW-247: the signed-in user changes their own password. */
   changeOwnPassword(input: ChangeOwnPasswordInput, actor: AdminUser): Promise<void>;
+
+  /** NW-247: the tenant accounts of the restaurants. */
+  listTenantAccounts(): Promise<TenantAccountView[]>;
+
+  createTenantAccount(
+    input: CreateTenantAccountInput,
+    actor: AdminUser,
+  ): Promise<TenantAccountView>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(

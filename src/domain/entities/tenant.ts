@@ -76,4 +76,6 @@ export interface Tenant {
   description?: string | null;
   /** Cover image (registration form: `coverImageUrl`). */
   coverImageUrl?: string | null;
+  /** Commercial register number (registration form: `commercialRegisterNumber`). */
+  commercialRegisterNumber?: string | null;
 }

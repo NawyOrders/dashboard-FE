@@ -16,6 +16,7 @@ export const SCHEMA_FIELD_TO_TENANT_PATH: Record<string, string> = {
   city: 'contact.city',
   description: 'description',
   coverImageUrl: 'coverImageUrl',
+  commercialRegisterNumber: 'commercialRegisterNumber',
   logoUrl: 'logoUrl',
   primaryColor: 'brandColors.primary',
   backgroundColor: 'brandColors.secondary',

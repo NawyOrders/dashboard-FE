@@ -1,4 +1,5 @@
 import rawRegistrationSchema from '@/config/restaurant-registration-fields.json';
+import { withDashboardFields } from '@/config/dashboard-registration-fields';
 import {
   parseRegistrationSchema,
   type RegistrationSchema,
@@ -8,6 +9,9 @@ import {
  * The owner-supplied JSON is the single source of truth for the registration form
  * (NW-246). It is validated once at startup; an invalid file stops the app from
  * rendering (see `src/main.tsx`) instead of producing a half-empty form.
+ *
+ * NW-247 adds the dashboard-only fields (commercial register number) to the parsed
+ * schema, so the JSON file itself stays untouched.
  */
 
 const parsed = parseRegistrationSchema(rawRegistrationSchema);
@@ -16,7 +20,9 @@ const parsed = parseRegistrationSchema(rawRegistrationSchema);
 export const REGISTRATION_SCHEMA_ISSUES: string[] = parsed.ok ? [] : parsed.issues;
 
 /** The validated schema, or `null` when the JSON file is malformed. */
-export const REGISTRATION_SCHEMA: RegistrationSchema | null = parsed.ok ? parsed.schema : null;
+export const REGISTRATION_SCHEMA: RegistrationSchema | null = parsed.ok
+  ? withDashboardFields(parsed.schema)
+  : null;
 
 /**
  * Accessor for code that can only run once the schema has been validated.

@@ -306,3 +306,18 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     empty) so the form can be exercised end to end. Seeded phone numbers keep their display
     format and do not satisfy the JSON phone pattern, so approving a seed application also
     demonstrates the inline validation until the phone is corrected.
+
+## NW-247 — commercial register, accounts and passwords
+82. **Commercial register number (ASSUMPTION: verify with official source before production).**
+    The number is optional and, when filled, must be digits only and exactly
+    `commercialRegisterMinLength` … `commercialRegisterMaxLength` (15 … 15) characters long.
+    Both lengths live in `src/config/validation.ts` and carry the `// ASSUMPTION:` marker.
+83. **The commercial register number is added to the schema at load time.** The owner file
+    `src/config/restaurant-registration-fields.json` describes the customer-facing
+    registration wizard and must not be edited, so the dashboard-only field is declared in
+    `src/config/dashboard-registration-fields.ts` and merged into the parsed schema
+    (`withDashboardFields`). The form, the validation and the activity log keep working with
+    one schema; no field is hard-coded in a component.
+84. **The demo data never exceeds the branch limit.** With the limit of 2 for every package
+    (item 68), the seeded restaurants were reduced to at most 2 branches, so no demo record
+    contradicts the owner decision.

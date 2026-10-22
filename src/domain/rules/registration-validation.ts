@@ -9,8 +9,10 @@ export type RegistrationProblemReason =
   | 'pattern'
   | 'email'
   | 'maxLength'
+  | 'minLength'
   | 'range'
   | 'option'
+  | 'digits'
   | 'branchCount';
 
 /**
@@ -25,6 +27,7 @@ export interface RegistrationProblem {
   branchIndex?: number;
   reason: RegistrationProblemReason;
   maxLength?: number;
+  minLength?: number;
   min?: number;
   max?: number;
 }
@@ -107,8 +110,18 @@ function checkField(
   }
   if (value === '') return;
 
+  if (field.minLength && value.length < field.minLength) {
+    problems.push({ ...base, reason: 'minLength', minLength: field.minLength });
+    return;
+  }
+
   if (field.maxLength && value.length > field.maxLength) {
     problems.push({ ...base, reason: 'maxLength', maxLength: field.maxLength });
+    return;
+  }
+
+  if (field.type === 'digits' && !/^\d+$/.test(value)) {
+    problems.push({ ...base, reason: 'digits' });
     return;
   }
 

@@ -308,6 +308,8 @@ export const en = {
     invalidOption: 'Choose one of the available options',
     branchCount: (min: number, max: number) => `Add between ${min} and ${max} branches`,
     tooLong: (max: number) => `Use at most ${max} characters`,
+    tooShort: (min: number) => `Use at least ${min} characters`,
+    digitsOnly: 'Digits only, please.',
     outOfRange: (min: number, max: number) => `Enter a number between ${min} and ${max}`,
     monthly: 'Monthly',
     yearly: 'Yearly',

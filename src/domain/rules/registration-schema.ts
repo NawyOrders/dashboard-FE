@@ -20,6 +20,7 @@ const FIELD_TYPES = [
   'image-upload',
   'image',
   'color',
+  'digits',
 ] as const;
 
 const fieldTypeSchema = z.enum(FIELD_TYPES);
@@ -29,6 +30,7 @@ const fieldSchema = z.object({
   label: z.string().min(1),
   type: fieldTypeSchema,
   required: z.boolean().optional(),
+  minLength: z.number().int().positive().optional(),
   maxLength: z.number().int().positive().optional(),
   placeholder: z.string().optional(),
   pattern: z.string().optional(),

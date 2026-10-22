@@ -21,6 +21,7 @@ const INPUT_TYPES: Record<string, string> = {
   tel: 'tel',
   number: 'number',
   time: 'time',
+  digits: 'text',
 };
 
 function FieldLabel({ field, htmlFor }: { field: RegistrationField; htmlFor: string }) {
@@ -133,6 +134,7 @@ export function SchemaField({ field, value, onChange, disabled, error, id }: Sch
       <Input
         id={id}
         type={inputType}
+        inputMode={field.type === 'digits' ? 'numeric' : undefined}
         value={value}
         disabled={disabled}
         readOnly={field.readOnlyInput === true}

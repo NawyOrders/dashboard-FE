@@ -33,6 +33,10 @@ function problemMessage(problem: RegistrationProblem): string {
       return en.registration.requiredField;
     case 'maxLength':
       return en.registration.tooLong(problem.maxLength ?? 0);
+    case 'minLength':
+      return en.registration.tooShort(problem.minLength ?? 0);
+    case 'digits':
+      return en.registration.digitsOnly;
     case 'range':
       return en.registration.outOfRange(problem.min ?? 0, problem.max ?? 0);
     case 'email':

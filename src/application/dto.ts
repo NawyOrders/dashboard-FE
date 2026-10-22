@@ -1,12 +1,12 @@
 import type {
   ActivityAction,
   ActivityLog,
-  AdminAccount,
   AdminUser,
   Branch,
   CreateAdminAccountInput,
   DurationMonths,
   FeatureFlag,
+  InternalAccount,
   PackageCode,
   PackageFeatureKey,
   RestaurantStatus,
@@ -96,9 +96,9 @@ export interface Api {
 
   listActivity(params?: ListActivityParams): Promise<ActivityLog[]>;
 
-  listAdminAccounts(): Promise<AdminAccount[]>;
+  listAdminAccounts(): Promise<InternalAccount[]>;
 
-  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<AdminAccount>;
+  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;

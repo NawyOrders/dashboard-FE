@@ -12,9 +12,11 @@ export interface SignInDeps {
 }
 
 export function makeSignIn(deps: SignInDeps) {
-  return (input: SignInInput): AdminUser => {
-    const account = deps.auth.findByCredentials(input.email, input.password);
+  return async (input: SignInInput): Promise<AdminUser> => {
+    const account = await deps.auth.findByCredentials(input.email, input.password);
     if (!account) {
+      // NW-247: a tenant account gets exactly the same generic error as a wrong
+      // password — the dashboard never reveals that the account exists.
       throw new Error('Invalid email or password');
     }
     const id = deps.ids?.next('user') ?? `user_${Date.now()}`;

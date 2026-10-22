@@ -1,6 +1,5 @@
 import type {
   ActivityLog,
-  AdminAccount,
   AppStatus,
   ChannelStatus,
   DurationMonths,
@@ -9,7 +8,9 @@ import type {
   SalesRecord,
   SubscriptionStatus,
   Tenant,
+  TenantRole,
 } from '@/domain/entities';
+import type { SeedAuthAccount } from '@/infrastructure/repositories/in-memory-auth-repository';
 import { CITY_OPTIONS } from '@/config/cities';
 import { addDays, addMonths, startOfToday, toIsoDate } from '@/domain/rules/date';
 
@@ -170,34 +171,87 @@ export function buildSeedTenants(): Tenant[] {
   });
 }
 
-export function buildSeedAdminAccounts(): AdminAccount[] {
+/**
+ * NW-247: the dashboard accounts. Internal accounts live in the same store as the
+ * tenant accounts; only these sign in to the dashboard.
+ */
+export function buildSeedAccounts(): SeedAuthAccount[] {
   const today = startOfToday();
   return [
     {
       id: 'acct_seed_1',
       name: 'Nour Hassan',
       email: 'nour.hassan@nawy.example.com',
+      accountType: 'internal',
       role: 'super_admin',
       status: 'active',
+      password: 'NourPass123!',
       createdAt: addDays(today, -90).toISOString(),
     },
     {
       id: 'acct_seed_2',
       name: 'Omar Farouk',
       email: 'omar.farouk@nawy.example.com',
+      accountType: 'internal',
       role: 'support',
       status: 'active',
+      password: 'OmarPass123!',
       createdAt: addDays(today, -45).toISOString(),
     },
     {
       id: 'acct_seed_3',
       name: 'Layla Mansour',
       email: 'layla.mansour@nawy.example.com',
+      accountType: 'internal',
       role: 'super_admin',
       status: 'inactive',
       createdAt: addDays(today, -120).toISOString(),
     },
+    {
+      id: 'acct_seed_4',
+      name: 'Super Admin',
+      email: 'superadmin@nawyorders.com',
+      accountType: 'internal',
+      role: 'super_admin',
+      status: 'active',
+      password: 'SuperPass123!',
+      createdAt: addDays(today, -200).toISOString(),
+    },
+    {
+      id: 'acct_seed_5',
+      name: 'Support User',
+      email: 'support@nawyorders.com',
+      accountType: 'internal',
+      role: 'support',
+      status: 'active',
+      password: 'SupportPass123!',
+      createdAt: addDays(today, -200).toISOString(),
+    },
   ];
+}
+
+/**
+ * NW-247: demo tenant accounts of the seeded restaurants. They are listed on the
+ * Accounts page and can be reset from there, but they never sign in to the dashboard.
+ */
+export function buildSeedTenantAccounts(tenants: Tenant[]): SeedAuthAccount[] {
+  const today = startOfToday();
+  const hosts = tenants.filter((tenant) => tenant.status === 'active').slice(0, 2);
+  const roles: TenantRole[] = ['manager', 'waiter'];
+  return hosts.map((tenant, index) => {
+    const role = roles[index] ?? 'waiter';
+    return {
+      id: `tacct_seed_${index + 1}`,
+      name: index === 0 ? (tenant.contact.name ?? `${tenant.restaurantName} manager`) : `Demo ${role}`,
+      email: `${role}@${tenant.tenantId.toLowerCase()}.example.com`,
+      accountType: 'tenant',
+      tenantId: tenant.id,
+      restaurantRole: role,
+      status: 'active',
+      password: 'TenantPass123!',
+      createdAt: addDays(today, -30 + index).toISOString(),
+    };
+  });
 }
 
 /**

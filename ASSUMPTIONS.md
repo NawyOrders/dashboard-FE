@@ -321,3 +321,21 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 84. **The demo data never exceeds the branch limit.** With the limit of 2 for every package
     (item 68), the seeded restaurants were reduced to at most 2 branches, so no demo record
     contradicts the owner decision.
+85. **One account model for internal and tenant accounts.** `src/domain/entities/account.ts`
+    holds a single `Account` type with `accountType: 'internal' | 'tenant'`; internal accounts
+    carry the dashboard `role`, tenant accounts carry `tenantId` and the restaurant role.
+    Both live in one account store, so a tenant account can never be mistaken for a
+    dashboard user.
+86. **A tenant account never signs in to this dashboard.** The account store answers `null`
+    for a tenant account in `findByCredentials`, exactly as it does for a wrong password, so
+    the sign-in screen shows the same generic "Invalid email or password" error and never
+    reveals that the account exists. An inactive account is rejected the same way.
+87. **Passwords are stored as a hash only.** The mock account store hashes a password with
+    SHA-256 (`src/infrastructure/security/password-hasher.ts`) and keeps only the hash; the
+    plain password never reaches the store, an activity log or the console.
+    ASSUMPTION: SHA-256 without a per-account salt is enough for this mock — a real backend
+    must use a slow key-derivation function (argon2 / bcrypt / scrypt) with a unique salt.
+88. **The restaurant roles are still a mock.** `src/config/restaurant-roles.ts` copies the
+    owner file `restaurant-roles.mock.ts` and keeps its `// MOCK: replace with owner-defined
+    roles.` marker. `admin` is not offered in the role select: the admin account of a
+    restaurant is created when the application is approved.

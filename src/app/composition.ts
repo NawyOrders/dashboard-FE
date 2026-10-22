@@ -1,10 +1,9 @@
 import type { Api } from '@/application/dto';
-import type { AuthAccount, CurrentUserProvider, UseCaseDeps } from '@/application/ports';
+import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import { createBackend } from '@/application/use-cases';
 import { SystemClock } from '@/infrastructure/clock/system-clock';
 import { createSequentialIdGenerator } from '@/infrastructure/ids/sequential-id-generator';
 import { CURRENT_USER, createMockApi } from '@/infrastructure/mock/mock-api';
-import { InMemoryAdminAccountRepository } from '@/infrastructure/repositories/in-memory-admin-account-repository';
 import { InMemoryActivityLogRepository } from '@/infrastructure/repositories/in-memory-activity-log-repository';
 import { InMemoryAuthRepository } from '@/infrastructure/repositories/in-memory-auth-repository';
 import { InMemoryFeatureFlagRepository } from '@/infrastructure/repositories/in-memory-feature-flag-repository';
@@ -12,9 +11,10 @@ import { InMemoryRestaurantRepository } from '@/infrastructure/repositories/in-m
 import { InMemorySalesRepository } from '@/infrastructure/repositories/in-memory-sales-repository';
 import { MockFileUploadRepository } from '@/infrastructure/repositories/mock-file-upload-repository';
 import {
+  buildSeedAccounts,
   buildSeedActivity,
-  buildSeedAdminAccounts,
   buildSeedSales,
+  buildSeedTenantAccounts,
   buildSeedTenants,
 } from '@/infrastructure/seed/seed';
 
@@ -27,19 +27,19 @@ function buildContainer(): Api {
   const restaurants = new InMemoryRestaurantRepository(buildSeedTenants());
   const activity = new InMemoryActivityLogRepository(clock, ids, buildSeedActivity(restaurants.findAll()));
   const flags = new InMemoryFeatureFlagRepository();
-  const accounts = new InMemoryAdminAccountRepository(buildSeedAdminAccounts());
   const sales = new InMemorySalesRepository(buildSeedSales(restaurants.findAll()));
-  const authSeed: AuthAccount[] = [
-    { email: 'superadmin@nawyorders.com', password: 'SuperPass123!', name: 'Super Admin', role: 'super_admin' },
-    { email: 'support@nawyorders.com', password: 'SupportPass123!', name: 'Support User', role: 'support' },
-  ];
-  const auth = new InMemoryAuthRepository(authSeed);
+  // NW-247: internal and tenant accounts share one store; only internal accounts
+  // sign in to this dashboard.
+  const auth = new InMemoryAuthRepository([
+    ...buildSeedAccounts(),
+    ...buildSeedTenantAccounts(restaurants.findAll()),
+  ]);
 
   for (const tenant of restaurants.findAll()) {
     flags.seedDefaults(tenant);
   }
 
-  const deps: UseCaseDeps = { restaurants, activity, flags, accounts, sales, clock, ids, auth };
+  const deps: UseCaseDeps = { restaurants, activity, flags, sales, clock, ids, auth };
   const currentUser: CurrentUserProvider = { get: () => CURRENT_USER };
   const backend = createBackend(deps, currentUser);
 

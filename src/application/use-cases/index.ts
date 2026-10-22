@@ -8,11 +8,11 @@ import type {
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import type {
   ActivityLog,
-  AdminAccount,
   AdminUser,
   Branch,
   CreateAdminAccountInput,
   FeatureFlag,
+  InternalAccount,
   PackageFeatureKey,
   RestaurantStatus,
   Tenant,
@@ -37,7 +37,10 @@ import { makeUpdateApplication } from './update-application';
 import { makeDeleteApplication } from './delete-application';
 import { makeSignIn } from './sign-in';
 
-/** Synchronous, framework-free core. The infrastructure adapter adds I/O semantics. */
+/**
+ * Framework-free core. The infrastructure adapter adds I/O semantics. The account
+ * functions are asynchronous because the account store hashes passwords (NW-247).
+ */
 export interface Backend {
   getCurrentUser(): AdminUser;
   listTenants(params?: ListTenantsParams): Tenant[];
@@ -54,18 +57,18 @@ export interface Backend {
   listFeatureFlags(tenantId: string): FeatureFlag[];
   addBranch(tenantId: string, input: AddBranchInput, actor: AdminUser): Branch;
   listActivity(params?: ListActivityParams): ActivityLog[];
-  listAdminAccounts(): AdminAccount[];
-  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): AdminAccount;
+  listAdminAccounts(): Promise<InternalAccount[]>;
+  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
   approveApplication(tenantId: string, actor: AdminUser): Tenant;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Tenant;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): void;
-  signIn(email: string, password: string): AdminUser;
+  signIn(email: string, password: string): Promise<AdminUser>;
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
-  const signIn = deps.auth ? makeSignIn({ auth: deps.auth, ids: deps.ids }) : makeSignIn({ auth: { findByCredentials: () => null }, ids: deps.ids });
+  const signIn = makeSignIn({ auth: deps.auth, ids: deps.ids });
   return {
     getCurrentUser: makeGetCurrentUser(currentUser),
     listTenants: makeListTenants(deps.restaurants),

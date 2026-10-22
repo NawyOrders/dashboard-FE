@@ -1,6 +1,6 @@
 import { en } from '@/presentation/i18n/en';
 import type {
-  AdminAccountStatus,
+  AccountStatus,
   AppStatus,
   BranchStatus,
   ChannelStatus,
@@ -67,12 +67,12 @@ export function appStatusMeta(status: AppStatus | null): StatusMeta {
   return { label: en.status.app[value], tone: tones[value] };
 }
 
-export function adminAccountStatusMeta(status: AdminAccountStatus): StatusMeta {
-  const tones: Record<AdminAccountStatus, Tone> = {
+export function adminAccountStatusMeta(status: AccountStatus): StatusMeta {
+  const tones: Record<AccountStatus, Tone> = {
     active: 'success',
     inactive: 'neutral',
   };
-  const labels: Record<AdminAccountStatus, string> = {
+  const labels: Record<AccountStatus, string> = {
     active: en.accounts.statusActive,
     inactive: en.accounts.statusInactive,
   };

@@ -48,13 +48,13 @@ export function createMockApi(
   const minDelayMs = options.minDelayMs ?? 300;
   const maxDelayMs = options.maxDelayMs ?? 600;
 
-  async function run<T>(fn: () => T): Promise<T> {
+  async function run<T>(fn: () => T | Promise<T>): Promise<T> {
     const ms = minDelayMs + Math.random() * Math.max(0, maxDelayMs - minDelayMs);
     await new Promise((resolve) => setTimeout(resolve, ms));
     if (forcedErrorActive()) {
       throw new Error('Simulated API error (mockError=1)');
     }
-    return clone(fn());
+    return clone(await fn());
   }
 
   return {
@@ -88,6 +88,6 @@ export function createMockApi(
     deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
       run(() => backend.deleteApplication(tenantId, reason, actor)),
     uploadImage: (file: File) => uploads.uploadImage(file),
-    signIn: (email: string, password: string) => run(() => backend.signIn?.(email, password) as AdminUser),
+    signIn: (email: string, password: string) => run(() => backend.signIn(email, password)),
   };
 }

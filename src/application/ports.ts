@@ -1,13 +1,17 @@
 import type {
+  Account,
+  AccountStatus,
   ActivityLog,
-  AdminAccount,
   AdminUser,
   FeatureFlag,
+  InternalAccount,
   PackageFeatureKey,
   Permission,
   Role,
   SalesRecord,
   Tenant,
+  TenantAccount,
+  TenantRole,
 } from '@/domain/entities';
 
 /**
@@ -33,21 +37,50 @@ export interface FeatureFlagRepository {
   seedDefaults(tenant: Tenant): void;
 }
 
-export interface AdminAccountRepository {
-  findAll(): AdminAccount[];
-  findByEmail(email: string): AdminAccount | null;
-  save(account: AdminAccount): void;
-}
-
-export interface AuthAccount {
+export interface CreateInternalAccountInput {
+  id: string;
   email: string;
-  password: string;
   name: string;
+  accountType: 'internal';
   role: Role;
+  /**
+   * The plain password. The adapter stores a hash only — the password itself never
+   * reaches the store, an activity log or the console.
+   */
+  password?: string;
+  status?: AccountStatus;
+  createdAt?: string;
 }
 
+export interface CreateTenantAccountInput {
+  id: string;
+  email: string;
+  name: string;
+  accountType: 'tenant';
+  tenantId: string;
+  restaurantRole: TenantRole;
+  password?: string;
+  status?: AccountStatus;
+  createdAt?: string;
+}
+
+/**
+ * Account store (NW-247). Internal dashboard accounts and tenant restaurant accounts
+ * live in the same store, separated by `accountType`.
+ */
 export interface AuthRepository {
-  findByCredentials(email: string, password: string): AuthAccount | null;
+  findAll(): Promise<Account[]>;
+  findById(accountId: string): Promise<Account | null>;
+  findByEmail(email: string): Promise<Account | null>;
+  /**
+   * Verifies the credentials. A tenant account never authenticates on this dashboard:
+   * the adapter answers null for it, exactly as it does for a wrong password.
+   */
+  findByCredentials(email: string, password: string): Promise<InternalAccount | null>;
+  createAccount(input: CreateInternalAccountInput): Promise<InternalAccount>;
+  createAccount(input: CreateTenantAccountInput): Promise<TenantAccount>;
+  /** Replaces the stored password of an account. */
+  updatePassword(accountId: string, password: string): Promise<void>;
 }
 
 export interface SalesRepository {
@@ -86,11 +119,10 @@ export interface UseCaseDeps {
   restaurants: RestaurantRepository;
   activity: ActivityLogRepository;
   flags: FeatureFlagRepository;
-  accounts: AdminAccountRepository;
   sales: SalesRepository;
   clock: Clock;
   ids: IdGenerator;
-  auth?: AuthRepository;
+  auth: AuthRepository;
 }
 
 export type { FeatureFlag, PackageFeatureKey };

@@ -1,5 +1,5 @@
 import type { UseCaseDeps } from '@/application/ports';
-import type { AdminAccount, AdminUser, CreateAdminAccountInput } from '@/domain/entities';
+import type { AdminUser, CreateAdminAccountInput, InternalAccount } from '@/domain/entities';
 
 export class DuplicateAccountEmailError extends Error {
   constructor(email: string) {
@@ -9,27 +9,27 @@ export class DuplicateAccountEmailError extends Error {
 }
 
 export function makeCreateAdminAccount(deps: UseCaseDeps) {
-  return function createAdminAccount(
+  return async function createAdminAccount(
     input: CreateAdminAccountInput,
     actor: AdminUser,
-  ): AdminAccount {
-    const { accounts, activity, clock, ids } = deps;
+  ): Promise<InternalAccount> {
+    const { auth, activity, clock, ids } = deps;
     const email = input.email.trim().toLowerCase();
 
-    if (accounts.findByEmail(email)) {
+    if (await auth.findByEmail(email)) {
       throw new DuplicateAccountEmailError(email);
     }
 
-    const account: AdminAccount = {
+    const account = await auth.createAccount({
       id: ids.next('acct'),
       name: input.name.trim(),
       email,
+      accountType: 'internal',
       role: input.role,
-      status: 'active',
+      password: input.password,
       createdAt: clock.nowIso(),
-    };
+    });
 
-    accounts.save(account);
     activity.append({
       actor,
       action: 'account_created',

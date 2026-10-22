@@ -13,11 +13,11 @@ import { ROLE_REGISTRY } from '@/domain/rules/permissions';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useAdminAccounts } from '@/presentation/hooks/queries';
 import { adminAccountStatusMeta } from '@/presentation/lib/status';
-import type { AdminAccount } from '@/domain/entities';
+import type { InternalAccount } from '@/domain/entities';
 import { CreateAccountDialog } from './CreateAccountDialog';
 import { RolesSection } from './RolesSection';
 
-function roleLabel(role: AdminAccount['role']): string {
+function roleLabel(role: InternalAccount['role']): string {
   return ROLE_REGISTRY[role].label;
 }
 

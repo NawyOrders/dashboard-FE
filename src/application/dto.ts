@@ -51,6 +51,12 @@ export interface ListActivityParams {
   to?: string;
 }
 
+/** NW-247: the password of the signed-in user is changed with these two values. */
+export interface ChangeOwnPasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
 /** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
 export interface OverviewAnalysis {
   contractsPerMonth: MonthBucket[];
@@ -99,6 +105,9 @@ export interface Api {
   listAdminAccounts(): Promise<InternalAccount[]>;
 
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
+
+  /** NW-247: the signed-in user changes their own password. */
+  changeOwnPassword(input: ChangeOwnPasswordInput, actor: AdminUser): Promise<void>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
   approveApplication(

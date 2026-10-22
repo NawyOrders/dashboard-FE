@@ -11,6 +11,8 @@ export type ActivityAction =
   | 'branch_added'
   | 'support_access'
   | 'account_created'
+  | 'account.password_changed'
+  | 'account.password_reset'
   | 'application_approved'
   | 'restaurant_details_changed';
 

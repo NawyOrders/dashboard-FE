@@ -350,3 +350,8 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     an empty value blocks the approval and is listed in the inline summary. The account
     gets the restaurant role `admin`, which is never offered in the role select. The
     activity log records `account_created` for it — without the password value.
+91. **A user changes their own password in the platform settings.** The current password is
+    verified against the signed-in account first: a wrong one changes nothing and shows an
+    inline error. The new password follows the policy of item 89 and must be repeated. The
+    activity log records `account.password_changed` with the actor — never with a password
+    value.

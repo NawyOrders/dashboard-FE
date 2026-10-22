@@ -1,5 +1,6 @@
 import type {
   AddBranchInput,
+  ChangeOwnPasswordInput,
   ListActivityParams,
   ListTenantsParams,
   OverviewAnalysis,
@@ -30,6 +31,7 @@ import { makeGetCurrentUser } from './get-current-user';
 import { makeGetOverviewAnalysis } from './get-overview-analysis';
 import { makeListAdminAccounts } from './list-admin-accounts';
 import { makeCreateAdminAccount } from './create-admin-account';
+import { makeChangeOwnPassword } from './change-own-password';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
 import { makeApproveApplication } from './approve-application';
@@ -59,6 +61,7 @@ export interface Backend {
   listActivity(params?: ListActivityParams): ActivityLog[];
   listAdminAccounts(): Promise<InternalAccount[]>;
   createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
+  changeOwnPassword(input: ChangeOwnPasswordInput, actor: AdminUser): Promise<void>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
   approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
@@ -82,6 +85,7 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listActivity: makeListActivity(deps),
     listAdminAccounts: makeListAdminAccounts(deps),
     createAdminAccount: makeCreateAdminAccount(deps),
+    changeOwnPassword: makeChangeOwnPassword(deps),
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
     approveApplication: makeApproveApplication(deps),

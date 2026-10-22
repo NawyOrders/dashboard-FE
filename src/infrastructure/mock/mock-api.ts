@@ -1,6 +1,7 @@
 import type {
   AddBranchInput,
   Api,
+  ChangeOwnPasswordInput,
   ListActivityParams,
   ListTenantsParams,
   UpdateSubscriptionInput,
@@ -27,6 +28,8 @@ export interface MockApiOptions {
 }
 
 function clone<T>(value: T): T {
+  // A call without a result (e.g. a password change) returns nothing to copy.
+  if (value === undefined || value === null) return value;
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
@@ -79,6 +82,8 @@ export function createMockApi(
     listAdminAccounts: () => run(() => backend.listAdminAccounts()),
     createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
       run(() => backend.createAdminAccount(input, actor)),
+    changeOwnPassword: (input: ChangeOwnPasswordInput, actor: AdminUser) =>
+      run(() => backend.changeOwnPassword(input, actor)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>

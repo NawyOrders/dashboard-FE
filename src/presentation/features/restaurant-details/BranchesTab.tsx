@@ -13,6 +13,7 @@ import { useToast } from '@/presentation/hooks/useToast';
 import { queryKeys } from '@/presentation/hooks/queries';
 import { api } from '@/app/composition';
 import { INCLUDED_BRANCHES } from '@/config/policy';
+import { PACKAGES } from '@/config/packages';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
 import { BranchDialog } from './BranchDialog';
@@ -68,7 +69,7 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
       <CardBody className="pt-0">
         {overIncluded && (
           <p className="mb-4 rounded-panel bg-warning-bg px-4 py-3 text-2xs text-warning-fg">
-            {en.details.extraBranchNote}
+            {en.create.branches.limitNote(PACKAGES[tenant.subscription.packageCode].branchLimits.max)}
           </p>
         )}
 

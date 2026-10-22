@@ -206,7 +206,7 @@ export const en = {
     storeLink: 'Store link',
     statusStepper: 'Delivery status',
     branchesIncluded: (included: number) => `${included} branches included`,
-    extraBranchNote: 'Additional branches require a fee (not yet defined).',
+    branchLimitNote: (max: number) => `This package allows up to ${max} branches.`,
     noBranches: 'No branches added yet.',
     subscriptionPackage: 'Package',
     subscriptionDuration: 'Duration',
@@ -229,7 +229,7 @@ export const en = {
       addBranch: 'Add branch',
       removeBranch: 'Remove',
       included: (used: number, included: number) => `${used} of ${included} included`,
-      limitNote: 'Additional branches require a fee (not yet defined).',
+      limitNote: (max: number) => `This package allows up to ${max} branches.`,
     },
   },
   analytics: {

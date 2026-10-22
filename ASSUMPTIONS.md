@@ -43,7 +43,9 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 16. Subscription start date is chosen manually; no automatic rule.
 17. No grace period and no automatic suspension on expiry; expired subscriptions stay `expired`.
 18. Notifications bell is rendered but disabled/empty.
-19. Extra branches beyond 4 show a "fee not yet defined" note with no price.
+19. ~~Extra branches beyond 4 show a "fee not yet defined" note with no price.~~ Superseded by
+    NW-247: the branch limit is 2 for every package (owner decision), so no branch is ever
+    "beyond the limit" and **no fee text is shown anywhere**.
 
 ## Post-review decisions
 20. The top-bar global search navigates to `/restaurants?q=…`; the restaurants directory is
@@ -240,14 +242,15 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     source. Hard-coded component sizes were replaced with the matching token names.
 
 ## NW-246 schema-driven registration form
-68. **Branch limits per package (confirmed by the owner, not an assumption).** `Start` allows
-    1–2 branches and `Growth` allows 1–4, stored in `config/packages.ts`
+68. **Branch limits per package (confirmed by the owner, not an assumption).** ~~`Start` allows
+    1–2 branches and `Growth` allows 1–4~~ **NW-247: the limit is 2 for EVERY package**
+    (`Start` and `Growth` both declare 1–2), stored in `config/packages.ts`
     (`PackageDefinition.branchLimits`) and enforced by the registration-form repeater and by
     the approve validation. The `limits` block of
     `src/config/restaurant-registration-fields.json` (`minBranches: 1`, `maxBranches: 2`) is
-    **not** used for the maximum, because the limits differ per package. These limits are the
-    registration-form limits and are independent from the platform-wide included-branch count
-    (`INCLUDED_BRANCHES = 4`, `config/policy.ts`) that the restaurants table still shows.
+    **not** used for the maximum, because the limits are owned by the package configuration.
+    The platform-wide included-branch count (`INCLUDED_BRANCHES`, `config/policy.ts`) is now
+    derived from those package limits, so the two can never drift apart.
 69. **Leaflet is a new runtime dependency.** `leaflet` 1.9.4 (dependency) and `@types/leaflet`
     1.9.22 (dev dependency) render the branch map picker. Tiles come from OpenStreetMap using
     the `tileUrl`/`attribution` values in the registration-fields JSON; no API key is required.

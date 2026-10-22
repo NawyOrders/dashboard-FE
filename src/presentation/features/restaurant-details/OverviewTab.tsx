@@ -160,7 +160,9 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
             />
           </div>
           {current.branches.length > INCLUDED_BRANCHES && (
-            <p className="mt-2 text-2xs text-warning-fg">{en.details.extraBranchNote}</p>
+            <p className="mt-2 text-2xs text-warning-fg">
+              {en.create.branches.limitNote(PACKAGES[current.subscription.packageCode].branchLimits.max)}
+            </p>
           )}
         </CardBody>
       </Card>

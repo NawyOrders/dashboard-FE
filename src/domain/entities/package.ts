@@ -28,8 +28,9 @@ export interface PackageDefinition {
   billingPrices: { monthly: number; yearly: number };
   /**
    * Branch count a restaurant application may declare per package (NW-246, confirmed
-   * by the owner). This is the registration-form limit and is independent from the
-   * platform-wide included-branch count (`INCLUDED_BRANCHES` in `config/policy.ts`).
+   * by the owner; NW-247 sets the same limit of 2 for every package). The platform-wide
+   * included-branch count (`INCLUDED_BRANCHES` in `config/policy.ts`) is derived from
+   * these limits, so the two can never disagree.
    */
   branchLimits: { min: number; max: number };
 }

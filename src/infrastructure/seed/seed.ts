@@ -131,6 +131,10 @@ export function buildSeedTenants(): Tenant[] {
       logoUrl: null,
       description: `${d.name} — demo restaurant registered by the owner.`,
       coverImageUrl: null,
+      // NW-247: every seeded restaurant carries the same registration field keys; a
+      // restaurant without a commercial register number keeps the key empty.
+      commercialRegisterNumber:
+        index % 3 === 0 ? `1234567890${String(index).padStart(5, '0')}` : null,
       brandColors: { primary: d.colors[0], secondary: d.colors[1] },
       socialLinks: {
         website: `https://${d.slug}.example.com`,

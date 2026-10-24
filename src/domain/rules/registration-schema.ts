@@ -166,6 +166,7 @@ export const registrationSchemaSchema = z.object({
 });
 
 export type RegistrationFieldType = z.infer<typeof fieldTypeSchema>;
+/** @deprecated kept for compatibility; the subscription uses durations in months. */
 export type BillingCycle = z.infer<typeof billingCycleEnumSchema>;
 export type RegistrationField = z.infer<typeof fieldSchema>;
 export type RegistrationSection = z.infer<typeof sectionSchema>;

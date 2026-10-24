@@ -5,6 +5,7 @@ import type { DurationMonths, PackageCode, PackageFeatureKey } from '@/domain/en
  * Features that can be toggled on a tenant.
  * The UI must never allow enabling Android/iOS for a Start tenant; that is enforced here
  * and mirrored in the UI (disabled toggle). See agent.md §4 rule 5.
+ * Feature lists come from config/packages.ts only.
  */
 export const TOGGLEABLE_FEATURES: PackageFeatureKey[] = [
   'website',
@@ -14,7 +15,7 @@ export const TOGGLEABLE_FEATURES: PackageFeatureKey[] = [
   'ios_app',
 ];
 
-export const GROWTH_ONLY_FEATURES: PackageFeatureKey[] = ['android_app', 'ios_app'];
+export const GROWTH_ONLY_FEATURES: PackageFeatureKey[] = ['ai'];
 
 export function packageHasFeature(code: PackageCode, feature: PackageFeatureKey): boolean {
   return PACKAGES[code].features.includes(feature);

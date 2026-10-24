@@ -12,7 +12,8 @@ export type PackageFeatureKey =
   | 'ios_app'
   | 'branches_up_to_4'
   | 'unlimited_orders'
-  | 'no_commission';
+  | 'no_commission'
+  | 'ai';
 
 export interface PackageDefinition {
   code: PackageCode;

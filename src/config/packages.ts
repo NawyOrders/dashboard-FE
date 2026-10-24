@@ -1,5 +1,12 @@
 import type { PackageCode, PackageDefinition, PackageFeatureKey } from '@/domain/entities';
 
+// OPEN: update restaurant-registration-fields.json subscription.billingCycle to match owner packages.
+// The JSON still describes a monthly/yearly cycle; the owner's 3/6/12-month prices below are the
+// source of truth and are not written back to that file.
+
+// ASSUMPTION: EGP, owner to confirm.
+export const PACKAGE_CURRENCY = 'EGP';
+
 export const PACKAGE_FEATURE_LABELS: Record<PackageFeatureKey, string> = {
   website: 'Website',
   pwa: 'Progressive Web App (PWA)',
@@ -33,8 +40,8 @@ const START_FEATURES: PackageFeatureKey[] = [
 
 const GROWTH_FEATURES: PackageFeatureKey[] = [...START_FEATURES, 'android_app', 'ios_app'];
 
-const START_PRICES = { 3: 9000, 6: 17000, 12: 32000 };
-const GROWTH_PRICES = { 3: 18000, 6: 34000, 12: 64000 };
+const START_PRICES = { 3: 15000, 6: 32000, 12: 60000 };
+const GROWTH_PRICES = { 3: 17000, 6: 34000, 12: 62000 };
 
 export const PACKAGES: Record<PackageCode, PackageDefinition> = {
   start: {

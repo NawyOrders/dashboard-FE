@@ -12,6 +12,8 @@ import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
+import { paymentStatusMeta } from '@/presentation/lib/status';
+import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import type { Tenant } from '@/domain/entities';
 import type { RegistrationProblem } from '@/domain/rules/registration-validation';
 import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
@@ -270,9 +272,11 @@ function ApplicationDialogContent({
                 <span className="text-2xs text-text-muted">{tenant.contact.email}</span>
                 <span className="font-mono text-2xs text-text-muted">{tenant.tenantId}</span>
               </div>
-              <PackagePill code={tenant.subscription.packageCode} />
+              <div className="flex flex-wrap items-center gap-2">
+                <PackagePill code={tenant.subscription.packageCode} />
+                {tenant.paymentStatus ? <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} /> : null}
+              </div>
             </div>
-
             <nav className="flex flex-col gap-1" aria-label={en.applications.viewTitle}>
               {links.map((link) => (
                 <button

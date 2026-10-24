@@ -6,7 +6,7 @@ import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { CopyableId } from '@/presentation/components/shared/CopyableId';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
-import { restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
+import { paymentStatusMeta, restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
@@ -42,6 +42,7 @@ export function DetailsHeader({ tenant, onEditSubscription, onManageFeatures }: 
               <PackagePill code={tenant.subscription.packageCode} />
               <StatusPill meta={restaurantStatusMeta(tenant.status)} />
               <StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />
+              {tenant.paymentStatus ? <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} /> : null}
             </div>
           </div>
         </div>

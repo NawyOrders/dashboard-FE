@@ -56,6 +56,8 @@ export interface MobileApps {
   iosStoreUrl: string | null;
 }
 
+export type PaymentStatus = 'paid' | 'unpaid';
+
 export interface Tenant {
   id: string;
   /** Human-readable tenant identifier shown in the UI (monospace). */
@@ -78,4 +80,6 @@ export interface Tenant {
   coverImageUrl?: string | null;
   /** Commercial register number (registration form: `commercialRegisterNumber`). */
   commercialRegisterNumber?: string | null;
+  // OPEN: payment status source, backend.
+  paymentStatus?: PaymentStatus;
 }

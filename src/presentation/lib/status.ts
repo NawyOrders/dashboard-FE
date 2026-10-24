@@ -4,6 +4,7 @@ import type {
   AppStatus,
   BranchStatus,
   ChannelStatus,
+  PaymentStatus,
   RestaurantStatus,
   SubscriptionStatus,
 } from '@/domain/entities';
@@ -77,4 +78,11 @@ export function adminAccountStatusMeta(status: AccountStatus): StatusMeta {
     inactive: en.accounts.statusInactive,
   };
   return { label: labels[status], tone: tones[status] };
+}
+
+export function paymentStatusMeta(status: PaymentStatus): StatusMeta {
+  if (status === 'paid') {
+    return { label: 'Payment completed', tone: 'success' };
+  }
+  return { label: 'Payment not completed', tone: 'warning' };
 }

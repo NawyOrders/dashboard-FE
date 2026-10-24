@@ -167,6 +167,8 @@ export function buildSeedTenants(): Tenant[] {
         androidStoreUrl: d.android === 'published' ? `https://play.google.com/store/apps/details?id=com.${d.slug}` : null,
         iosStoreUrl: d.ios === 'published' ? `https://apps.apple.com/app/${d.slug}/id000000000` : null,
       },
+      // OPEN: payment status source, backend.
+      paymentStatus: index % 2 === 0 ? 'paid' : 'unpaid',
     };
   });
 }

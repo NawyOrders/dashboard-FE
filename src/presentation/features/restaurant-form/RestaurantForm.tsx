@@ -103,7 +103,7 @@ export function RestaurantForm({
   onAddBranch,
   onRemoveBranch,
   onPackageChange,
-  onCycleChange,
+  onDurationChange,
   disabled,
   errors,
   branchErrors,

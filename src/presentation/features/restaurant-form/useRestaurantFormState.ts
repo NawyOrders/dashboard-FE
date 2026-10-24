@@ -1,28 +1,26 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { requireRegistrationSchema } from '@/config/registration-schema';
 import { PACKAGES } from '@/config/packages';
-import type { PackageCode, Tenant } from '@/domain/entities';
-import type { BillingCycle } from '@/domain/rules/registration-schema';
+import type { DurationMonths, PackageCode, Tenant } from '@/domain/entities';
+import { DURATIONS } from '@/domain/entities';
 import {
   buildFormValues,
   emptyBranch,
   repeatableStep,
-  subscriptionStep,
 } from './form-model';
 import type { RestaurantFormValues } from './form-model';
 
 /**
- * State of the schema-driven registration form (NW-246).
+ * State of the schema-driven registration form.
  *
- * The form is driven by the JSON schema: the branch repeater, the package selection and
- * the billing cycle all come from the schema and the package configuration.
+ * The form is driven by the JSON schema; the subscription uses package and duration
+ * from the owner's package configuration.
  */
 export function useRestaurantFormState(tenant: Tenant) {
   const schema = requireRegistrationSchema();
-  const defaultCycle: BillingCycle = subscriptionStep(schema)?.billingCycle?.default ?? 'monthly';
 
   const [values, setValues] = useState<RestaurantFormValues>(() =>
-    buildFormValues(schema, tenant, defaultCycle),
+    buildFormValues(schema, tenant),
   );
   const branchCounter = useRef(values.branches.length);
 
@@ -60,13 +58,14 @@ export function useRestaurantFormState(tenant: Tenant) {
     setValues((current) => ({ ...current, packageCode }));
   }, []);
 
-  const setBillingCycle = useCallback((billingCycle: BillingCycle) => {
-    setValues((current) => ({ ...current, billingCycle }));
+  const setDurationMonths = useCallback((durationMonths: DurationMonths) => {
+    if (!DURATIONS.includes(durationMonths)) return;
+    setValues((current) => ({ ...current, durationMonths }));
   }, []);
 
   const reset = useCallback(() => {
-    setValues(buildFormValues(schema, tenant, defaultCycle));
-  }, [schema, tenant, defaultCycle]);
+    setValues(buildFormValues(schema, tenant));
+  }, [schema, tenant]);
 
   const branchLimits = useMemo(
     () => PACKAGES[values.packageCode].branchLimits,
@@ -83,7 +82,7 @@ export function useRestaurantFormState(tenant: Tenant) {
     addBranch,
     removeBranch,
     setPackageCode,
-    setBillingCycle,
+    setDurationMonths,
     reset,
     branchLimits,
     itemFields,

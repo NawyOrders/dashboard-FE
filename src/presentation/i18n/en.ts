@@ -319,6 +319,8 @@ export const en = {
     outOfRange: (min: number, max: number) => `Enter a number between ${min} and ${max}`,
     monthly: 'Monthly',
     yearly: 'Yearly',
+    duration: 'Duration',
+    durationNote: 'Total for the selected duration',
     price: (amount: number) => `${amount.toLocaleString('en-EG')} EGP`,
     perMonth: 'per month',
     perYear: 'per year',

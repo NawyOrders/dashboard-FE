@@ -95,7 +95,7 @@ function ApplicationDialogContent({
     addBranch,
     removeBranch,
     setPackageCode,
-    setBillingCycle,
+    setDurationMonths,
     reset,
     branchLimits,
   } = useRestaurantFormState(tenant);
@@ -342,7 +342,7 @@ function ApplicationDialogContent({
               onAddBranch={addBranch}
               onRemoveBranch={removeBranch}
               onPackageChange={setPackageCode}
-              onCycleChange={setBillingCycle}
+              onDurationChange={setDurationMonths}
             />
           </div>
         </div>

@@ -32,7 +32,7 @@ export const INCLUDED_BRANCHES = Math.max(...PACKAGE_LIST.map((item) => item.bra
 
 // OPEN DECISION: reference prices are not confirmed as final commercial terms.
 export const REFERENCE_PRICE_NOTE =
-  'Reference price — tax inclusion and payment terms not yet confirmed';
+  'Reference price. Tax and payment terms not yet confirmed.';
 
 // OPEN DECISION: the "ending within 2 weeks" window is fixed by the design brief.
 // It is intentionally separate from EXPIRING_SOON_DAYS (which drives the KPI card and badges).

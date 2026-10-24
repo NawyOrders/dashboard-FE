@@ -1,5 +1,5 @@
-import type { PackageCode } from '@/domain/entities';
-import type { BillingCycle, RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
+import type { DurationMonths, PackageCode } from '@/domain/entities';
+import type { RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { BranchesSection } from './BranchesSection';
 import { SchemaField } from './SchemaField';
@@ -16,7 +16,7 @@ export interface RestaurantFormProps {
   onAddBranch: () => void;
   onRemoveBranch: (branchId: string) => void;
   onPackageChange: (code: PackageCode) => void;
-  onCycleChange: (cycle: BillingCycle) => void;
+  onDurationChange: (duration: DurationMonths) => void;
   disabled?: boolean;
   /** Validation messages keyed by the JSON field key. */
   errors?: Record<string, string>;
@@ -164,10 +164,10 @@ export function RestaurantForm({
           <SubscriptionSection
             step={subscriptionStep}
             packageCode={values.packageCode}
-            billingCycle={values.billingCycle}
+            durationMonths={values.durationMonths}
             disabled={disabled}
             onPackageChange={onPackageChange}
-            onCycleChange={onCycleChange}
+            onDurationChange={onDurationChange}
           />
         </div>
       ) : null}

@@ -32,7 +32,7 @@ export function RegistrationTab({ tenant, onSaved }: RegistrationTabProps) {
     addBranch,
     removeBranch,
     setPackageCode,
-    setBillingCycle,
+    setDurationMonths,
     reset,
     branchLimits,
   } = useRestaurantFormState(tenant);
@@ -84,7 +84,7 @@ export function RegistrationTab({ tenant, onSaved }: RegistrationTabProps) {
         onAddBranch={addBranch}
         onRemoveBranch={removeBranch}
         onPackageChange={setPackageCode}
-        onCycleChange={setBillingCycle}
+        onDurationChange={setDurationMonths}
       />
     </Card>
   );

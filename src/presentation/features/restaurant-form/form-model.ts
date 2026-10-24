@@ -1,10 +1,5 @@
-import type { PackageCode, Tenant } from '@/domain/entities';
-import type {
-  BillingCycle,
-  RegistrationField,
-  RegistrationSchema,
-  RegistrationStep,
-} from '@/domain/rules/registration-schema';
+import type { DurationMonths, PackageCode, Tenant } from '@/domain/entities';
+import type { RegistrationField, RegistrationSchema, RegistrationStep } from '@/domain/rules/registration-schema';
 import {
   NUMERIC_BRANCH_FIELDS,
   SCHEMA_BRANCH_FIELD_TO_PATH,
@@ -14,10 +9,11 @@ import {
 } from '@/domain/rules/registration-mapping';
 
 /**
- * Value model of the schema-driven registration form (NW-246).
+ * Value model of the schema-driven registration form.
  *
  * Every value the JSON describes is kept in a flat map keyed by the JSON field key, so
- * the renderer stays generic. `toTenantPatch` maps those values back onto the tenant.
+ * the renderer stays generic. The subscription uses package and duration from the
+ * owner's package configuration.
  */
 
 export interface BranchFormValue {
@@ -31,7 +27,7 @@ export interface RestaurantFormValues {
   fields: Record<string, string>;
   branches: BranchFormValue[];
   packageCode: PackageCode;
-  billingCycle: BillingCycle;
+  durationMonths: DurationMonths;
 }
 
 function setPath(target: Record<string, unknown>, path: string, value: unknown): void {
@@ -61,11 +57,7 @@ export function subscriptionStep(schema: RegistrationSchema): RegistrationStep |
 }
 
 /** Builds the initial form values from a tenant (empty fields stay empty strings). */
-export function buildFormValues(
-  schema: RegistrationSchema,
-  tenant: Tenant,
-  billingDefault: BillingCycle = 'monthly',
-): RestaurantFormValues {
+export function buildFormValues(schema: RegistrationSchema, tenant: Tenant): RestaurantFormValues {
   const fields: Record<string, string> = {};
   for (const step of stepsWithSections(schema)) {
     for (const section of step.sections ?? []) {
@@ -88,7 +80,7 @@ export function buildFormValues(
     fields,
     branches,
     packageCode: tenant.subscription.packageCode,
-    billingCycle: billingDefault,
+    durationMonths: tenant.subscription.durationMonths,
   };
 }
 
@@ -107,10 +99,7 @@ export function emptyBranch(schema: RegistrationSchema, id: string): BranchFormV
  * objects are rebuilt in full (contact, subscription) so a shallow merge cannot drop
  * data that the form does not show.
  */
-export function toTenantPatch(
-  values: RestaurantFormValues,
-  tenant: Tenant,
-): Partial<Tenant> {
+export function toTenantPatch(values: RestaurantFormValues, tenant: Tenant): Partial<Tenant> {
   const patch: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(values.fields)) {
@@ -136,7 +125,11 @@ export function toTenantPatch(
   });
 
   patch.branches = branches;
-  patch.subscription = { ...tenant.subscription, packageCode: values.packageCode };
+  patch.subscription = {
+    ...tenant.subscription,
+    packageCode: values.packageCode,
+    durationMonths: values.durationMonths,
+  };
 
   // Keep the parts of the nested objects the form does not show.
   if (patch.contact) {

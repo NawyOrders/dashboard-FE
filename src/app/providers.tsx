@@ -4,7 +4,18 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthContext, CurrentUserContext } from './contexts';
 import { ToastProvider } from '@/presentation/components/ui/Toast';
 import { api } from '@/app/composition';
-import type { AdminUser, Role } from '@/domain/entities';
+import type { AdminUser, PlatformLoginResult, Role } from '@/domain/entities';
+import { adminUserFromPlatformLogin } from '@/domain/rules/platform-auth';
+
+const TOKEN_STORAGE_KEY = 'nawy_platform_tokens';
+
+interface StoredPlatformTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresAtUtc: string;
+  refreshTokenExpiresAtUtc: string;
+  tokenType: 'Bearer';
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,22 +37,34 @@ function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  async function signIn(email: string, password: string) {
-    const apiWithAuth = api as typeof api & { signIn?: (e: string, p: string) => Promise<AdminUser> };
-    const signedIn = await apiWithAuth.signIn?.(email, password);
-    if (!signedIn) throw new Error('Invalid email or password');
-    setUser(signedIn);
+  async function signIn(email: string, password: string): Promise<PlatformLoginResult> {
+    const result = await api.signIn(email, password);
+    if (!result.ok) return result;
+
+    const user = adminUserFromPlatformLogin(result.session);
+    setUser(user);
+    const tokens: StoredPlatformTokens = {
+      accessToken: result.session.accessToken,
+      refreshToken: result.session.refreshToken,
+      expiresAtUtc: result.session.expiresAtUtc,
+      refreshTokenExpiresAtUtc: result.session.refreshTokenExpiresAtUtc,
+      tokenType: result.session.tokenType,
+    };
     try {
-      sessionStorage.setItem('nawy_session', JSON.stringify(signedIn));
+      // OPEN: token storage is sessionStorage (owner-confirmed temporary), see agent.md section 19.
+      sessionStorage.setItem('nawy_session', JSON.stringify(user));
+      sessionStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(tokens));
     } catch {
       // ignore
     }
+    return result;
   }
 
   function signOut() {
     setUser(null);
     try {
       sessionStorage.removeItem('nawy_session');
+      sessionStorage.removeItem(TOKEN_STORAGE_KEY);
     } catch {
       // ignore
     }

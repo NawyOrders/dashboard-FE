@@ -39,7 +39,7 @@ async function buildContainer(): Promise<Api> {
   const activity = new StaticActivityLogRepository(clock, ids, data.activityLogs);
   const flags = new StaticFeatureFlagRepository();
   const sales = new StaticSalesRepository(data.sales);
-  const auth = new StaticAuthRepository(data.accounts, data.loginFixtures);
+  const auth = new StaticAuthRepository(clock, data.accounts, data.loginFixtures);
 
   for (const tenant of restaurants.findAll()) {
     flags.seedDefaults(tenant);

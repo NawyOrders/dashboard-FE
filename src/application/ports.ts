@@ -7,6 +7,8 @@ import type {
   InternalAccount,
   PackageFeatureKey,
   Permission,
+  PlatformLoginRequest,
+  PlatformLoginResult,
   Role,
   SalesRecord,
   Tenant,
@@ -73,9 +75,11 @@ export interface AuthRepository {
   findById(accountId: string): Promise<Account | null>;
   findByEmail(email: string): Promise<Account | null>;
   /**
-   * Verifies the credentials. A tenant account never authenticates on this dashboard:
-   * the adapter answers null for it, exactly as it does for a wrong password.
+   * Platform sign-in (agent.md section 18). Failures are returned as values, never
+   * thrown. A tenant account always gets `Auth.InvalidCredentials`.
    */
+  signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult>;
+  /** Verifies credentials for password-change flows; `null` means no/internal failure. */
   findByCredentials(email: string, password: string): Promise<InternalAccount | null>;
   createAccount(input: NewInternalAccount): Promise<InternalAccount>;
   createAccount(input: NewTenantAccount): Promise<TenantAccount>;

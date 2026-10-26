@@ -3,6 +3,8 @@ import type {
   Account,
   ActivityLog,
   PackageDefinition,
+  PlatformLoginResponse,
+  PlatformRole,
   SalesRecord,
   Tenant,
 } from '@/domain/entities';
@@ -218,3 +220,18 @@ export const loginFixturesSchema = z.object({
 });
 
 export type LoginFixture = z.infer<typeof loginFixtureSchema>;
+
+export const platformRoleSchema: z.ZodType<PlatformRole> = z.enum(['SuperAdmin', 'Support']);
+
+/** Validates the static adapter's platform-login response at the infrastructure boundary. */
+export const platformLoginResponseSchema: z.ZodType<PlatformLoginResponse> = z.object({
+  userId: z.string().min(1),
+  email: z.string().email(),
+  fullName: z.string().min(1),
+  roles: z.array(platformRoleSchema).min(1),
+  accessToken: z.string().min(1),
+  refreshToken: z.string().min(1),
+  expiresAtUtc: z.string().datetime(),
+  refreshTokenExpiresAtUtc: z.string().datetime(),
+  tokenType: z.literal('Bearer'),
+});

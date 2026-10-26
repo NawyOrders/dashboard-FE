@@ -1,5 +1,6 @@
 import type {
   AuthRepository,
+  Clock,
   NewInternalAccount,
   NewTenantAccount,
 } from '@/application/ports';
@@ -7,11 +8,22 @@ import type {
   Account,
   AccountStatus,
   InternalAccount,
+  PlatformLoginRequest,
+  PlatformLoginResult,
+  PlatformLoginResponse,
+  PlatformRole,
   Role,
   TenantAccount,
 } from '@/domain/entities';
+import {
+  PLATFORM_AUTH_ERROR_CODE,
+  platformAuthError,
+} from '@/domain/rules/platform-auth';
 import { hashPassword } from '@/infrastructure/security/password-hasher';
-import type { LoginFixture } from './static-schemas';
+import {
+  platformLoginResponseSchema,
+  type LoginFixture,
+} from './static-schemas';
 
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
@@ -29,8 +41,20 @@ interface CredentialRecord {
   roles: string[];
 }
 
-function platformRoleName(role: Role): string {
+function platformRoleName(role: Role): PlatformRole {
   return role === 'super_admin' ? 'SuperAdmin' : 'Support';
+}
+
+function platformRoles(roles: string[]): PlatformRole[] {
+  return roles.filter((role): role is PlatformRole => role === 'SuperAdmin' || role === 'Support');
+}
+
+function issueToken(prefix: string): string {
+  const random =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  return `${prefix}_${random}`;
 }
 
 /**
@@ -45,7 +69,11 @@ export class StaticAuthRepository implements AuthRepository {
   private credentials = new Map<string, CredentialRecord>();
   private ready: Promise<void>;
 
-  constructor(seed: Account[] = [], fixtures: LoginFixture[] = []) {
+  constructor(
+    private readonly clock: Clock,
+    seed: Account[] = [],
+    fixtures: LoginFixture[] = [],
+  ) {
     this.accounts = clone(seed);
     this.ready = Promise.all(
       fixtures.map(async (fixture) => {
@@ -78,6 +106,65 @@ export class StaticAuthRepository implements AuthRepository {
       (account) => account.email === normalizeEmail(email),
     );
     return found ? clone(found) : null;
+  }
+
+  async signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult> {
+    await this.ready;
+    const normalized = normalizeEmail(input.email);
+    const account = this.accounts.find((candidate) => candidate.email === normalized);
+    const credential = this.credentials.get(normalized);
+    if (!account || !credential || account.accountType !== 'internal') {
+      return {
+        ok: false,
+        error: platformAuthError(PLATFORM_AUTH_ERROR_CODE.invalidCredentials),
+      };
+    }
+
+    const candidate = await hashPassword(input.password);
+    if (candidate !== credential.passwordHash) {
+      return {
+        ok: false,
+        error: platformAuthError(PLATFORM_AUTH_ERROR_CODE.invalidCredentials),
+      };
+    }
+
+    if (credential.isLockedOut) {
+      return {
+        ok: false,
+        error: platformAuthError(PLATFORM_AUTH_ERROR_CODE.accountLockedOut),
+      };
+    }
+
+    if (!credential.isActive || account.status !== 'active') {
+      return {
+        ok: false,
+        error: platformAuthError(PLATFORM_AUTH_ERROR_CODE.inactiveAccount),
+      };
+    }
+
+    const roles = platformRoles(credential.roles);
+    if (roles.length === 0) {
+      return {
+        ok: false,
+        error: platformAuthError(PLATFORM_AUTH_ERROR_CODE.invalidCredentials),
+      };
+    }
+
+    const now = this.clock.now();
+    const accessExpiresAt = new Date(now.getTime() + 15 * 60_000);
+    const refreshExpiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60_000);
+    const session = platformLoginResponseSchema.parse({
+      userId: account.id,
+      email: account.email,
+      fullName: account.name,
+      roles,
+      accessToken: issueToken('static_access'),
+      refreshToken: issueToken('static_refresh'),
+      expiresAtUtc: accessExpiresAt.toISOString(),
+      refreshTokenExpiresAtUtc: refreshExpiresAt.toISOString(),
+      tokenType: 'Bearer',
+    } satisfies PlatformLoginResponse);
+    return { ok: true, session };
   }
 
   async findByCredentials(email: string, password: string): Promise<InternalAccount | null> {

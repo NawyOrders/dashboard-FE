@@ -18,6 +18,8 @@ import type {
   FeatureFlag,
   InternalAccount,
   PackageFeatureKey,
+  PlatformLoginRequest,
+  PlatformLoginResult,
   RestaurantStatus,
   Tenant,
 } from '@/domain/entities';
@@ -82,11 +84,11 @@ export interface Backend {
   approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Tenant;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): void;
-  signIn(email: string, password: string): Promise<AdminUser>;
+  signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult>;
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
-  const signIn = makeSignIn({ auth: deps.auth, ids: deps.ids });
+  const signIn = makeSignIn({ auth: deps.auth });
   return {
     getCurrentUser: makeGetCurrentUser(currentUser),
     listTenants: makeListTenants(deps.restaurants),
@@ -109,7 +111,7 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     approveApplication: makeApproveApplication(deps),
     updateApplication: makeUpdateApplication(deps),
     deleteApplication: makeDeleteApplication(deps),
-    signIn: (email: string, password: string) => signIn({ email, password }),
+    signIn: (input: PlatformLoginRequest) => signIn(input),
   };
 }
 

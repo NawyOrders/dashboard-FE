@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { signInSchema, type SignInFormValues } from '@/domain/rules/auth-schema';
+import { platformAuthErrorMessage } from '@/domain/rules/platform-auth';
 import { useAuth } from '@/presentation/hooks/useAuth';
 
 export function LoginPage() {
@@ -25,11 +26,15 @@ export function LoginPage() {
   async function onSubmit(values: SignInFormValues) {
     setFormError(null);
     try {
-      await signIn(values.email, values.password);
+      const result = await signIn(values.email, values.password);
+      if (!result.ok) {
+        setFormError(platformAuthErrorMessage(result.error.extensions.code));
+        return;
+      }
       const redirect = searchParams.get('redirect') || '/';
       navigate(redirect, { replace: true });
-    } catch (err) {
-      setFormError('Invalid email or password');
+    } catch {
+      setFormError(platformAuthErrorMessage(undefined));
     }
   }
 
@@ -37,7 +42,7 @@ export function LoginPage() {
     <div className="min-h-screen bg-bg flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-card border border-border bg-card p-6 shadow-none">
         <div className="mb-6 text-center">
-          <h1 className="text-xl font-semibold text-text">Nawy Orders — Super Admin</h1>
+          <h1 className="text-xl font-semibold text-text">Nawy Orders ï¿½ Super Admin</h1>
           <p className="mt-1 text-sm text-text-muted">Sign in to continue</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

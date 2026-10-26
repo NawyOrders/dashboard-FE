@@ -96,6 +96,7 @@ export function createStaticApi(
     deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
       run(() => backend.deleteApplication(tenantId, reason, actor)),
     uploadImage: (file: File) => uploads.uploadImage(file),
-    signIn: (email: string, password: string) => run(() => backend.signIn(email, password)),
+    signIn: (email: string, password: string) =>
+      run(() => backend.signIn({ email, password })),
   };
 }

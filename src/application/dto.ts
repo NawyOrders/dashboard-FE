@@ -9,6 +9,7 @@ import type {
   InternalAccount,
   PackageCode,
   PackageFeatureKey,
+  PlatformLoginResult,
   RestaurantRole,
   RestaurantStatus,
   SubscriptionStatus,
@@ -162,5 +163,5 @@ export interface Api {
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
   /** Stores an uploaded image and returns its reference (NW-246). */
   uploadImage(file: File): Promise<string>;
-  signIn?(email: string, password: string): Promise<AdminUser>;
+  signIn(email: string, password: string): Promise<PlatformLoginResult>;
 }

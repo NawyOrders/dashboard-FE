@@ -3,6 +3,7 @@ import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
 import { Card } from '@/presentation/components/ui/Card';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
@@ -36,6 +37,8 @@ export function RegistrationTab({ tenant, onSaved }: RegistrationTabProps) {
     reset,
     branchLimits,
   } = useRestaurantFormState(tenant);
+
+  const offers = useOffers();
 
   const [saving, setSaving] = useState(false);
 
@@ -80,6 +83,7 @@ export function RegistrationTab({ tenant, onSaved }: RegistrationTabProps) {
         branchLimits={branchLimits}
         paymentStatus={tenant.paymentStatus}
         disabled={!isSuperAdmin}
+        offers={offers.data}
         onFieldChange={setField}
         onBranchFieldChange={setBranchField}
         onAddBranch={addBranch}

@@ -1,5 +1,10 @@
 import { PACKAGES } from '@/config/packages';
-import type { DurationMonths, PackageCode, PackageFeatureKey } from '@/domain/entities';
+import type {
+  DurationMonths,
+  PackageCode,
+  PackageFeatureKey,
+  SubscriptionOffer,
+} from '@/domain/entities';
 
 /**
  * Features that can be toggled on a tenant.
@@ -42,4 +47,33 @@ export function canEnableFeature(
 
 export function getReferencePrice(code: PackageCode, duration: DurationMonths): number {
   return PACKAGES[code].prices[duration];
+}
+
+/** OPEN: `GET /offers` returns the raw package code (`Start`/`Growth`), not the dashboard code. */
+export function packageCodeOfOffer(offer: SubscriptionOffer): PackageCode {
+  return (offer.packageCode ?? '').toLowerCase().includes('growth') ? 'growth' : 'start';
+}
+
+/** OPEN: the form supports 3/6/12 months; an unexpected offer duration falls back to 3. */
+export function durationOfOffer(offer: SubscriptionOffer): DurationMonths {
+  return offer.durationMonths === 6 || offer.durationMonths === 12 ? offer.durationMonths : 3;
+}
+
+/** Price from `GET /offers` for the given package and duration, or null when absent. */
+export function priceFromOffers(
+  offers: SubscriptionOffer[] | undefined,
+  code: PackageCode,
+  duration: DurationMonths,
+): number | null {
+  const match = offers?.find(
+    (offer) => packageCodeOfOffer(offer) === code && durationOfOffer(offer) === duration,
+  );
+  return match ? match.price : null;
+}
+
+/** Durations the backend currently offers, sorted; empty when offers are unavailable. */
+export function durationsFromOffers(offers: SubscriptionOffer[]): DurationMonths[] {
+  const durations = new Set<DurationMonths>();
+  for (const offer of offers) durations.add(durationOfOffer(offer));
+  return [...durations].sort((a, b) => a - b);
 }

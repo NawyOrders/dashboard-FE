@@ -1,7 +1,18 @@
 import { Check } from 'lucide-react';
-import { PACKAGE_FEATURE_LABELS, PACKAGE_LIST } from '@/config/packages';
+import { PACKAGE_FEATURE_LABELS, PACKAGE_LIST, PACKAGES } from '@/config/packages';
 import { REFERENCE_PRICE_NOTE } from '@/config/policy';
-import type { DurationMonths, PackageCode, PaymentStatus } from '@/domain/entities';
+import type {
+  DurationMonths,
+  PackageCode,
+  PaymentStatus,
+  SubscriptionOffer,
+} from '@/domain/entities';
+import {
+  durationsFromOffers,
+  getReferencePrice,
+  packageCodeOfOffer,
+  priceFromOffers,
+} from '@/domain/rules/packages';
 import type { RegistrationStep } from '@/domain/rules/registration-schema';
 import { DurationSegmented } from '@/presentation/components/shared/DurationSegmented';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -15,17 +26,72 @@ export interface SubscriptionSectionProps {
   packageCode: PackageCode;
   durationMonths: DurationMonths;
   paymentStatus?: PaymentStatus;
-  onPackageChange: (code: PackageCode) => void;
-  onDurationChange: (duration: DurationMonths) => void;
+  onPackageChange?: (code: PackageCode) => void;
+  onDurationChange?: (duration: DurationMonths) => void;
   disabled?: boolean;
+  /** Offers from `GET /offers`; they drive the selectable packages, durations and prices. */
+  offers?: SubscriptionOffer[];
+  /** View dialog: the submitted subscription is shown, never edited. */
+  readOnly?: boolean;
+  /** Price the request was submitted with (`agreedPrice` from the onboarding list). */
+  submittedPrice?: number | null;
+}
+
+function ReadOnlySubscription({
+  step,
+  packageCode,
+  durationMonths,
+  paymentStatus,
+  offers,
+  submittedPrice,
+}: Pick<
+  SubscriptionSectionProps,
+  'step' | 'packageCode' | 'durationMonths' | 'paymentStatus' | 'offers' | 'submittedPrice'
+>) {
+  const price =
+    submittedPrice ??
+    priceFromOffers(offers, packageCode, durationMonths) ??
+    getReferencePrice(packageCode, durationMonths);
+
+  const fields = [
+    { label: en.details.subscriptionPackage, value: PACKAGES[packageCode].name },
+    { label: en.registration.duration, value: en.registration.months(durationMonths) },
+    { label: en.registration.price, value: formatEgp(price) },
+  ];
+
+  return (
+    <section className="flex flex-col gap-4" aria-label={step.titleEn}>
+      <header className="flex flex-col gap-0.5">
+        <h3 className="text-sm font-semibold text-text">{step.titleEn}</h3>
+        <p className="text-2xs text-text-muted">{step.subtitle}</p>
+      </header>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {fields.map((field) => (
+          <div key={field.label} className="flex flex-col gap-1">
+            <span className="text-2xs font-medium text-text">{field.label}</span>
+            <span className="text-sm text-text">{field.value}</span>
+          </div>
+        ))}
+      </div>
+
+      {paymentStatus ? (
+        <div className="flex flex-col gap-2">
+          <span className="text-2xs font-medium text-text">{en.registration.paymentStatus}</span>
+          <StatusPill meta={paymentStatusMeta(paymentStatus)} />
+        </div>
+      ) : null}
+    </section>
+  );
 }
 
 /**
  * Subscription section of the registration form.
  *
- * The JSON billing cycle is overridden by the owner's packages: the selector offers the
- * 3/6/12-month durations from `config/packages.ts`, and the price follows the selected
- * package and duration.
+ * The JSON billing cycle is overridden by the offers returned from `GET /offers`: the
+ * selector only offers the packages and durations the backend accepts, and the price
+ * follows the selected offer. In the view dialog the submitted package, duration and
+ * price are read-only.
  */
 export function SubscriptionSection({
   step,
@@ -35,7 +101,32 @@ export function SubscriptionSection({
   onPackageChange,
   onDurationChange,
   disabled,
+  offers,
+  readOnly,
+  submittedPrice,
 }: SubscriptionSectionProps) {
+  if (readOnly) {
+    return (
+      <ReadOnlySubscription
+        step={step}
+        packageCode={packageCode}
+        durationMonths={durationMonths}
+        paymentStatus={paymentStatus}
+        offers={offers}
+        submittedPrice={submittedPrice}
+      />
+    );
+  }
+
+  const hasOffers = offers !== undefined && offers.length > 0;
+  const offeredPackages = hasOffers
+    ? PACKAGE_LIST.filter((pkg) => offers.some((offer) => packageCodeOfOffer(offer) === pkg.code))
+    : [];
+  const packageOptions = offeredPackages.length > 0 ? offeredPackages : PACKAGE_LIST;
+  const durationOptions = hasOffers ? durationsFromOffers(offers) : undefined;
+  const priceFor = (code: PackageCode, duration: DurationMonths) =>
+    priceFromOffers(offers, code, duration) ?? getReferencePrice(code, duration);
+
   return (
     <section className="flex flex-col gap-4" aria-label={step.titleEn}>
       <header className="flex flex-col gap-0.5">
@@ -46,7 +137,12 @@ export function SubscriptionSection({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
           <span className="text-2xs font-medium text-text">{en.registration.duration}</span>
-          <DurationSegmented value={durationMonths} onChange={onDurationChange} disabled={disabled} />
+          <DurationSegmented
+            value={durationMonths}
+            options={durationOptions}
+            onChange={(duration) => onDurationChange?.(duration)}
+            disabled={disabled}
+          />
         </div>
         {paymentStatus ? (
           <div className="flex flex-col gap-2">
@@ -61,9 +157,9 @@ export function SubscriptionSection({
         aria-label={en.registration.groups.subscription}
         className="grid grid-cols-1 gap-3 sm:grid-cols-2"
       >
-        {PACKAGE_LIST.map((pkg) => {
+        {packageOptions.map((pkg) => {
           const selected = pkg.code === packageCode;
-          const price = pkg.prices[durationMonths];
+          const price = priceFor(pkg.code, durationMonths);
           return (
             <button
               key={pkg.code}
@@ -71,7 +167,7 @@ export function SubscriptionSection({
               role="radio"
               aria-checked={selected}
               disabled={disabled}
-              onClick={() => onPackageChange(pkg.code)}
+              onClick={() => onPackageChange?.(pkg.code)}
               className={cn(
                 'flex flex-col gap-2 rounded-panel border p-4 text-start transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60',
                 selected ? 'border-primary bg-bg-2/60' : 'border-border hover:border-primary-light',

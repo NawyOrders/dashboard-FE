@@ -14,6 +14,7 @@ export const queryKeys = {
   tenantAccounts: ['tenantAccounts'] as const,
   monthlySales: ['monthlySales'] as const,
   applications: ['applications'] as const,
+  offers: ['offers'] as const,
 };
 
 export function useTenants(params: ListTenantsParams = {}) {
@@ -127,6 +128,14 @@ export function useApplications() {
   return useQuery({
     queryKey: queryKeys.applications,
     queryFn: () => api.listApplications(),
+  });
+}
+
+/** `GET /offers` — the package/duration/price combinations the backend accepts. */
+export function useOffers() {
+  return useQuery({
+    queryKey: queryKeys.offers,
+    queryFn: () => api.listOffers(),
   });
 }
 

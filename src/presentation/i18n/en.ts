@@ -322,6 +322,8 @@ export const en = {
     outOfRange: (min: number, max: number) => `Enter a number between ${min} and ${max}`,
     duration: 'Duration',
     durationNote: 'Total for the selected duration',
+    months: (n: number) => `${n} months`,
+    price: 'Price',
     paymentStatus: 'Payment status',
     branchRange: (min: number, max: number) => `${min}–${max} branches`,
     packageBranchRange: (min: number, max: number) => `${min}–${max} branches per package`,

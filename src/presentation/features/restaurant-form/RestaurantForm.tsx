@@ -1,5 +1,10 @@
 import { Fragment } from 'react';
-import type { DurationMonths, PackageCode, PaymentStatus } from '@/domain/entities';
+import type {
+  DurationMonths,
+  PackageCode,
+  PaymentStatus,
+  SubscriptionOffer,
+} from '@/domain/entities';
 import type { RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { BranchesSection } from './BranchesSection';
@@ -18,9 +23,15 @@ export interface RestaurantFormProps {
   onBranchFieldChange: (branchId: string, key: string, value: string) => void;
   onAddBranch: () => void;
   onRemoveBranch: (branchId: string) => void;
-  onPackageChange: (code: PackageCode) => void;
-  onDurationChange: (duration: DurationMonths) => void;
+  onPackageChange?: (code: PackageCode) => void;
+  onDurationChange?: (duration: DurationMonths) => void;
   disabled?: boolean;
+  /** Offers from `GET /offers`; package availability, durations and prices come from them. */
+  offers?: SubscriptionOffer[];
+  /** View dialog: the submitted subscription is shown read-only. */
+  subscriptionReadOnly?: boolean;
+  /** Price the request was submitted with (`agreedPrice` from the onboarding list). */
+  submittedPrice?: number | null;
   /** Validation messages keyed by the JSON field key. */
   errors?: Record<string, string>;
   /** Validation messages keyed by `${branchId}.${fieldKey}`. */
@@ -109,6 +120,9 @@ export function RestaurantForm({
   onPackageChange,
   onDurationChange,
   disabled,
+  offers,
+  subscriptionReadOnly,
+  submittedPrice,
   errors,
   branchErrors,
 }: RestaurantFormProps) {
@@ -184,6 +198,9 @@ export function RestaurantForm({
             durationMonths={values.durationMonths}
             paymentStatus={paymentStatus}
             disabled={disabled}
+            offers={offers}
+            readOnly={subscriptionReadOnly}
+            submittedPrice={submittedPrice}
             onPackageChange={onPackageChange}
             onDurationChange={onDurationChange}
           />

@@ -6,16 +6,23 @@ export interface DurationSegmentedProps {
   value: DurationMonths;
   onChange: (value: DurationMonths) => void;
   disabled?: boolean;
+  /** Durations to offer; defaults to the configured 3/6/12 months. */
+  options?: DurationMonths[];
 }
 
-export function DurationSegmented({ value, onChange, disabled }: DurationSegmentedProps) {
+export function DurationSegmented({
+  value,
+  onChange,
+  disabled,
+  options = PACKAGE_DURATIONS,
+}: DurationSegmentedProps) {
   return (
     <div
       role="radiogroup"
       aria-label="Duration"
       className="inline-flex rounded-panel border border-border bg-card p-1"
     >
-      {PACKAGE_DURATIONS.map((months) => {
+      {options.map((months) => {
         const selected = months === value;
         return (
           <button

@@ -1,7 +1,6 @@
+import { durationOfOffer, packageCodeOfOffer } from '@/domain/rules/packages';
 import type {
-  DurationMonths,
   OnboardingRequestListItem,
-  PackageCode,
   SubscriptionOffer,
   Tenant,
 } from '@/domain/entities';
@@ -17,16 +16,6 @@ import type {
 // reviews pending requests, so every listed request is treated as pending approval.
 function restaurantStatusFromOnboarding(): Tenant['status'] {
   return 'pending_approval';
-}
-
-/** OPEN: `Start`/`Growth` is the documented package value; anything else defaults to Start. */
-export function packageCodeFromOffer(value: string | null): PackageCode {
-  return (value ?? '').toLowerCase().includes('growth') ? 'growth' : 'start';
-}
-
-/** OPEN: the form supports 3/6/12 months; an unexpected backend duration falls back to 3. */
-export function durationFromOffer(months: number): DurationMonths {
-  return months === 6 || months === 12 ? months : 3;
 }
 
 function toDateOnly(value: string): string {
@@ -65,7 +54,7 @@ export function mapOnboardingRequestToTenant(
   offers: SubscriptionOffer[],
 ): Tenant {
   const offer = findOfferForRequest(item, offers);
-  const durationMonths = offer ? durationFromOffer(offer.durationMonths) : 3;
+  const durationMonths = offer ? durationOfOffer(offer) : 3;
   const startDate = toDateOnly(item.submittedAtUtc);
   const restaurantName = item.restaurantNameEn ?? item.restaurantNameAr ?? '';
   const branchCount = Math.max(0, item.branchCount);
@@ -98,7 +87,7 @@ export function mapOnboardingRequestToTenant(
     subscription: {
       id: `onboarding-${item.requestId}`,
       tenantId: item.requestId,
-      packageCode: offer ? packageCodeFromOffer(offer.packageCode) : 'start',
+      packageCode: offer ? packageCodeOfOffer(offer) : 'start',
       durationMonths,
       status: 'not_started',
       startDate,

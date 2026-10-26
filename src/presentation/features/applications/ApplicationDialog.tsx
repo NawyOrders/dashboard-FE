@@ -10,6 +10,7 @@ import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
@@ -98,11 +99,11 @@ function ApplicationDialogContent({
     setBranchField,
     addBranch,
     removeBranch,
-    setPackageCode,
-    setDurationMonths,
     reset,
     branchLimits,
   } = useRestaurantFormState(tenant);
+
+  const offers = useOffers();
 
   const [problems, setProblems] = useState<RegistrationProblem[]>([]);
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
@@ -400,16 +401,17 @@ function ApplicationDialogContent({
               steps={schema.steps}
               values={values}
               branchLimits={branchLimits}
-              paymentStatus={tenant.paymentStatus}
+              paymentStatus={paid ? 'paid' : 'unpaid'}
               disabled={!isSuperAdmin}
+              offers={offers.data}
+              subscriptionReadOnly
+              submittedPrice={tenant.agreedPrice}
               errors={fieldErrors}
               branchErrors={branchErrors}
               onFieldChange={setField}
               onBranchFieldChange={setBranchField}
               onAddBranch={addBranch}
               onRemoveBranch={removeBranch}
-              onPackageChange={setPackageCode}
-              onDurationChange={setDurationMonths}
             />
           </div>
         </div>

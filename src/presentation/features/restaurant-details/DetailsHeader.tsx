@@ -36,6 +36,11 @@ export function DetailsHeader({ tenant, onEditSubscription, onManageFeatures }: 
           <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} size="lg" />
           <div className="min-w-0">
             <h1 className="text-2xl font-semibold text-text">{tenant.restaurantName}</h1>
+            {tenant.restaurantNameAr ? (
+              <p dir="rtl" className="mt-0.5 text-sm text-text-muted">
+                {tenant.restaurantNameAr}
+              </p>
+            ) : null}
             <p className="mt-0.5 text-sm text-text-muted">{tenant.businessName}</p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <CopyableId value={tenant.tenantId} />

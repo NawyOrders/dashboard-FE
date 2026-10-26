@@ -58,7 +58,10 @@ export function subscriptionStep(schema: RegistrationSchema): RegistrationStep |
 
 /** Builds the initial form values from a tenant (empty fields stay empty strings). */
 export function buildFormValues(schema: RegistrationSchema, tenant: Tenant): RestaurantFormValues {
-  const fields: Record<string, string> = {};
+  const fields: Record<string, string> = {
+    // Not part of the JSON schema: both restaurant names are required by the backend.
+    nameAr: readSchemaField(tenant, 'nameAr'),
+  };
   for (const step of stepsWithSections(schema)) {
     for (const section of step.sections ?? []) {
       for (const field of section.fields ?? []) {
@@ -85,6 +88,16 @@ export function buildFormValues(schema: RegistrationSchema, tenant: Tenant): Res
 }
 
 /** An empty branch row with every `itemFields` key present. */
+/** Arabic name field shown next to the JSON `name` field (agent.md section 21). */
+export const RESTAURANT_NAME_AR_FIELD: RegistrationField = {
+  key: 'nameAr',
+  label: 'Arabic restaurant name',
+  type: 'text',
+  required: true,
+  maxLength: 60,
+  placeholder: 'اسم المطعم بالعربية',
+};
+
 export function emptyBranch(schema: RegistrationSchema, id: string): BranchFormValue {
   const fields: Record<string, string> = {};
   for (const field of repeatableStep(schema)?.itemFields ?? []) {

@@ -10,6 +10,8 @@ import type { Branch, Tenant } from '@/domain/entities';
 /** JSON field key → path on the tenant. */
 export const SCHEMA_FIELD_TO_TENANT_PATH: Record<string, string> = {
   name: 'restaurantName',
+  // The JSON predates bilingual names; the Arabic name is an extra form field.
+  nameAr: 'restaurantNameAr',
   ownerName: 'contact.name',
   email: 'contact.email',
   phone: 'contact.phone',

@@ -8,12 +8,12 @@ import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { en } from '@/presentation/i18n/en';
-import { formatDate } from '@/domain/rules/date';
+import { formatDateTime } from '@/domain/rules/date';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useApplications } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
-import { restaurantStatusMeta } from '@/presentation/lib/status';
+import { paymentStatusMeta, restaurantStatusMeta } from '@/presentation/lib/status';
 import type { Tenant } from '@/domain/entities';
 import { ApplicationDialog } from './ApplicationDialog';
 
@@ -32,6 +32,7 @@ export function ApplicationsPage() {
     return all.filter(
       (tenant) =>
         tenant.restaurantName.toLowerCase().includes(needle) ||
+        (tenant.restaurantNameAr ?? '').toLowerCase().includes(needle) ||
         tenant.businessName.toLowerCase().includes(needle) ||
         tenant.tenantId.toLowerCase().includes(needle),
     );
@@ -92,7 +93,9 @@ export function ApplicationsPage() {
                 <th className="px-4 py-3 text-start font-medium">{en.applications.tenantId}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.ownerEmail}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.phone}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.appliedOn}</th>
+                <th className="px-4 py-3 text-start font-medium">{en.applications.branchCount}</th>
+                <th className="px-4 py-3 text-start font-medium">{en.applications.payment}</th>
+                <th className="px-4 py-3 text-start font-medium">{en.applications.submittedAt}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.status}</th>
                 <th className="px-4 py-3 text-start font-medium">{en.applications.actions}</th>
               </tr>
@@ -100,11 +103,28 @@ export function ApplicationsPage() {
             <tbody>
               {rows.map((tenant) => (
                 <tr key={tenant.id} className="border-b border-border/60 last:border-b-0 hover:bg-bg-2/60">
-                  <td className="px-4 py-3 font-medium text-text">{tenant.restaurantName}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col">
+                      <span className="font-medium text-text">{tenant.restaurantName}</span>
+                      <span dir="rtl" className="text-2xs text-text-muted">
+                        {tenant.restaurantNameAr || en.common.notAvailable}
+                      </span>
+                    </div>
+                  </td>
                   <td className="px-4 py-3 font-mono text-xs text-text-muted">{tenant.tenantId}</td>
                   <td className="px-4 py-3 text-text-muted">{tenant.contact.email}</td>
                   <td className="px-4 py-3 text-text-muted">{tenant.contact.phone}</td>
-                  <td className="px-4 py-3 text-text-muted">{formatDate(tenant.createdAt)}</td>
+                  <td className="px-4 py-3 text-text-muted">{tenant.branches.length}</td>
+                  <td className="px-4 py-3">
+                    {tenant.paymentStatus ? (
+                      <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} />
+                    ) : (
+                      en.common.notAvailable
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-text-muted">
+                    {formatDateTime(tenant.submittedAtUtc ?? tenant.createdAt)}
+                  </td>
                   <td className="px-4 py-3">
                     <StatusPill meta={restaurantStatusMeta(tenant.status)} />
                   </td>

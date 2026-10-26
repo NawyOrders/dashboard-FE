@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import type { DurationMonths, PackageCode, PaymentStatus } from '@/domain/entities';
 import type { RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
@@ -5,6 +6,7 @@ import { BranchesSection } from './BranchesSection';
 import { SchemaField } from './SchemaField';
 import { SubscriptionSection } from './SubscriptionSection';
 import { FORM_GROUP_IDS } from './form-groups';
+import { RESTAURANT_NAME_AR_FIELD } from './form-model';
 import type { RestaurantFormValues } from './form-model';
 
 export interface RestaurantFormProps {
@@ -128,15 +130,28 @@ export function RestaurantForm({
                 </h4>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {section.fields?.map((field) => (
-                    <SchemaField
-                      key={field.key}
-                      id={`rf-field-${field.key}`}
-                      field={field}
-                      value={values.fields[field.key] ?? ''}
-                      disabled={disabled}
-                      error={errors?.[field.key]}
-                      onChange={(value) => onFieldChange(field.key, value)}
-                    />
+                    <Fragment key={field.key}>
+                      <SchemaField
+                        id={`rf-field-${field.key}`}
+                        field={field}
+                        value={values.fields[field.key] ?? ''}
+                        disabled={disabled}
+                        error={errors?.[field.key]}
+                        onChange={(value) => onFieldChange(field.key, value)}
+                      />
+                      {field.key === 'name' ? (
+                        <SchemaField
+                          id={`rf-field-${RESTAURANT_NAME_AR_FIELD.key}`}
+                          field={RESTAURANT_NAME_AR_FIELD}
+                          value={values.fields[RESTAURANT_NAME_AR_FIELD.key] ?? ''}
+                          disabled={disabled}
+                          error={errors?.[RESTAURANT_NAME_AR_FIELD.key]}
+                          onChange={(value) =>
+                            onFieldChange(RESTAURANT_NAME_AR_FIELD.key, value)
+                          }
+                        />
+                      ) : null}
+                    </Fragment>
                   ))}
                 </div>
               </section>

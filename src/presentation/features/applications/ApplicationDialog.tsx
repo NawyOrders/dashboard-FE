@@ -11,6 +11,7 @@ import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
+import { formatDateTime } from '@/domain/rules/date';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -269,8 +270,20 @@ function ApplicationDialogContent({
               )}
               <div className="flex flex-col gap-1">
                 <span className="text-sm font-semibold text-text">{tenant.restaurantName}</span>
+                {tenant.restaurantNameAr ? (
+                  <span dir="rtl" className="text-2xs text-text-muted">
+                    {tenant.restaurantNameAr}
+                  </span>
+                ) : null}
                 <span className="text-2xs text-text-muted">{tenant.contact.email}</span>
                 <span className="font-mono text-2xs text-text-muted">{tenant.tenantId}</span>
+                <span className="text-2xs text-text-muted">
+                  {en.applications.branchCount}: {tenant.branches.length}
+                </span>
+                <span className="text-2xs text-text-muted">
+                  {en.applications.submittedAt}:{' '}
+                  {formatDateTime(tenant.submittedAtUtc ?? tenant.createdAt)}
+                </span>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <PackagePill code={tenant.subscription.packageCode} />

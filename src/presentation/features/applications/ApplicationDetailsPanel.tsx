@@ -4,8 +4,8 @@ import { Dialog } from '@/presentation/components/ui/Dialog';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { en } from '@/presentation/i18n/en';
-import { formatDate } from '@/domain/rules/date';
-import { restaurantStatusMeta } from '@/presentation/lib/status';
+import { formatDate, formatDateTime } from '@/domain/rules/date';
+import { paymentStatusMeta, restaurantStatusMeta } from '@/presentation/lib/status';
 import type { Tenant } from '@/domain/entities';
 
 function useIsWideScreen() {
@@ -54,15 +54,29 @@ export function ApplicationDetailsPanel({
   const details = (
     <dl className="flex flex-col gap-4">
       <Field label={en.applications.restaurant}>{tenant.restaurantName}</Field>
+      <Field label={en.applications.restaurantNameAr}>
+        <span dir="rtl">{tenant.restaurantNameAr || en.common.notAvailable}</span>
+      </Field>
       <Field label={en.applications.businessName}>{tenant.businessName}</Field>
       <Field label={en.applications.tenantId}>
         <span className="font-mono text-xs">{tenant.tenantId}</span>
       </Field>
       <Field label={en.applications.ownerEmail}>{tenant.contact.email}</Field>
       <Field label={en.applications.phone}>{tenant.contact.phone}</Field>
+      <Field label={en.applications.branchCount}>{tenant.branches.length}</Field>
+      <Field label={en.applications.submittedAt}>
+        {formatDateTime(tenant.submittedAtUtc ?? tenant.createdAt)}
+      </Field>
       <Field label={en.applications.appliedOn}>{formatDate(tenant.createdAt)}</Field>
       <Field label={en.applications.package}>
         <PackagePill code={tenant.subscription.packageCode} />
+      </Field>
+      <Field label={en.applications.payment}>
+        {tenant.paymentStatus ? (
+          <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} />
+        ) : (
+          en.common.notAvailable
+        )}
       </Field>
       <Field label={en.applications.subscriptionDates}>
         {formatDate(tenant.subscription.startDate)} – {formatDate(tenant.subscription.endDate)}

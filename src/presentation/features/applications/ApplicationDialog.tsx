@@ -384,6 +384,7 @@ function ApplicationDialogContent({
               </div>
             ) : null}
 
+            {/* OPEN: not in submit DTO, backend to confirm. */}
             <div className="rounded-card border border-border bg-card p-4">
               <PasswordInput
                 id="rf-field-adminPassword"

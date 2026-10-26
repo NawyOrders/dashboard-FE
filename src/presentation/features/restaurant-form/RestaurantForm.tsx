@@ -43,6 +43,13 @@ function sectionTitle(section: RegistrationSection, step: RegistrationStep): str
   return known ?? step.titleEn;
 }
 
+// OPEN: cover image cancelled, confirm and update JSON.
+const HIDDEN_FIELD_KEYS = new Set(['coverImageUrl']);
+
+function visibleFields(section: RegistrationSection) {
+  return (section.fields ?? []).filter((field) => !HIDDEN_FIELD_KEYS.has(field.key));
+}
+
 /** Values of a read-only section (`editable: false`) rendered as text. */
 function ReadOnlySection({
   section,
@@ -59,7 +66,7 @@ function ReadOnlySection({
         {sectionTitle(section, step)}
       </h4>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {section.fields?.map((field) => {
+        {visibleFields(section).map((field) => {
           const value = values[field.key] ?? '';
           if (field.type === 'image') {
             return (
@@ -143,7 +150,7 @@ export function RestaurantForm({
                   {sectionTitle(section, step)}
                 </h4>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {section.fields?.map((field) => (
+                  {visibleFields(section).map((field) => (
                     <Fragment key={field.key}>
                       <SchemaField
                         id={`rf-field-${field.key}`}

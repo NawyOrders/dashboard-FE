@@ -59,16 +59,26 @@ export function durationOfOffer(offer: SubscriptionOffer): DurationMonths {
   return offer.durationMonths === 6 || offer.durationMonths === 12 ? offer.durationMonths : 3;
 }
 
+/** The offer a package/duration selection maps to, or null when the backend does not sell it. */
+export function offerForSelection(
+  offers: SubscriptionOffer[] | undefined,
+  code: PackageCode,
+  duration: DurationMonths,
+): SubscriptionOffer | null {
+  return (
+    offers?.find(
+      (offer) => packageCodeOfOffer(offer) === code && durationOfOffer(offer) === duration,
+    ) ?? null
+  );
+}
+
 /** Price from `GET /offers` for the given package and duration, or null when absent. */
 export function priceFromOffers(
   offers: SubscriptionOffer[] | undefined,
   code: PackageCode,
   duration: DurationMonths,
 ): number | null {
-  const match = offers?.find(
-    (offer) => packageCodeOfOffer(offer) === code && durationOfOffer(offer) === duration,
-  );
-  return match ? match.price : null;
+  return offerForSelection(offers, code, duration)?.price ?? null;
 }
 
 /** Durations the backend currently offers, sorted; empty when offers are unavailable. */

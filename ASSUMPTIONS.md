@@ -378,3 +378,9 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     password reset and password changes update the in-memory cache only; a page refresh
     restores the fixture values. The files under `public/` are demo data and contain
     fictional names, addresses, contact details and credentials only.
+96. **Demo login credentials are fixtures only.** The static adapter reads
+    `public/mock/auth/login-fixtures.json`; for example
+    `superadmin@example.com` / `SuperDemo123!` and `support@example.com` /
+    `SupportDemo123!`. These passwords are fictional, hashed in memory, and must never be
+    reused in a real environment. Sign-out clears both `nawy_session` and
+    `nawy_platform_tokens` from `sessionStorage`.

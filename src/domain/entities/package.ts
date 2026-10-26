@@ -10,7 +10,7 @@ export type PackageFeatureKey =
   | 'admin_panel'
   | 'android_app'
   | 'ios_app'
-  | 'branches_up_to_4'
+  | 'branches_up_to_2'
   | 'unlimited_orders'
   | 'no_commission'
   | 'ai';

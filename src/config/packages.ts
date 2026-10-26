@@ -17,7 +17,7 @@ export const PACKAGE_FEATURE_LABELS: Record<PackageFeatureKey, string> = {
   admin_panel: 'Restaurant Admin Panel',
   android_app: 'Android App',
   ios_app: 'iOS App',
-  branches_up_to_4: 'Branches (up to 2)',
+  branches_up_to_2: 'Branches (up to 2)',
   unlimited_orders: 'Unlimited orders',
   no_commission: 'No commission',
   ai: 'AI',
@@ -29,7 +29,7 @@ export const PACKAGE_FEATURE_ORDER: PackageFeatureKey[] = [
   'admin_panel',
   'android_app',
   'ios_app',
-  'branches_up_to_4',
+  'branches_up_to_2',
   'unlimited_orders',
   'no_commission',
 ];
@@ -43,7 +43,7 @@ const START_FEATURES: PackageFeatureKey[] = [
   'admin_panel',
   'android_app',
   'ios_app',
-  'branches_up_to_4',
+  'branches_up_to_2',
   'unlimited_orders',
   'no_commission',
 ];
@@ -57,7 +57,7 @@ export const PACKAGES: Record<PackageCode, PackageDefinition> = {
   start: {
     code: 'start',
     name: 'Start',
-    tagline: 'Website, PWA and admin panel for up to 2 branches.',
+    tagline: 'Website, PWA, admin panel and mobile apps for up to 2 branches.',
     features: START_FEATURES,
     prices: START_PRICES,
     // NW-246: confirmed by the owner — a Start application may declare 1 to 2 branches.
@@ -66,11 +66,11 @@ export const PACKAGES: Record<PackageCode, PackageDefinition> = {
   growth: {
     code: 'growth',
     name: 'Growth',
-    tagline: 'Everything in Start plus branded Android and iOS apps.',
+    tagline: 'Everything in Start plus AI.',
     features: GROWTH_FEATURES,
     prices: GROWTH_PRICES,
-    // NW-247: confirmed by the owner — the branch limit is 2 for EVERY package, so the
-    // former Growth limit of 4 is gone. No extra-branch fee exists and none is shown.
+    // NW-247: confirmed by the owner — the branch limit is 2 for EVERY package.
+    // No extra-branch fee exists and none is shown.
     branchLimits: { min: 1, max: 2 },
   },
 };

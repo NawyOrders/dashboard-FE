@@ -1,0 +1,1705 @@
+[
+  {
+    "id": "t_1",
+    "tenantId": "NWY-1001",
+    "businessName": "Acme Grill Demo Co.",
+    "restaurantName": "Acme Grill",
+    "contact": {
+      "phone": "+00 000 001 0000",
+      "email": "ops.acme-grill@example.com",
+      "name": "Demo Owner 1",
+      "city": "Demo City 1"
+    },
+    "logoUrl": null,
+    "description": "Acme Grill - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000000",
+    "brandColors": {
+      "primary": "#E43820",
+      "secondary": "#FFB199"
+    },
+    "socialLinks": {
+      "website": "https://acme-grill.example.com",
+      "instagram": "https://instagram.com/acme-grill"
+    },
+    "status": "active",
+    "createdAt": "2026-10-13T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_1_0",
+        "tenantId": "t_1",
+        "name": "Acme Grill - Main",
+        "address": "10 Demo Street 1, Demo Area 2",
+        "phone": "+00 000 001 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.0564,
+        "longitude": 31.2447
+      },
+      {
+        "id": "b_1_1",
+        "tenantId": "t_1",
+        "name": "Acme Grill - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 3",
+        "phone": "+00 000 001 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.0604,
+        "longitude": 31.2477
+      }
+    ],
+    "subscription": {
+      "id": "sub_1",
+      "tenantId": "t_1",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "active",
+      "startDate": "2026-10-16",
+      "endDate": "2027-01-16",
+      "updatedAt": "2026-10-13T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://acme-grill.example.com",
+      "pwaUrl": "https://app.acme-grill.example.com",
+      "previewUrl": "https://preview.acme-grill.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_2",
+    "tenantId": "NWY-1002",
+    "businessName": "Blue Olive Bistro Demo Co.",
+    "restaurantName": "Blue Olive Bistro",
+    "contact": {
+      "phone": "+00 000 002 0000",
+      "email": "ops.blue-olive@example.com",
+      "name": "Demo Owner 2",
+      "city": "Demo City 2"
+    },
+    "logoUrl": null,
+    "description": "Blue Olive Bistro - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#167A3E",
+      "secondary": "#A7E3BC"
+    },
+    "socialLinks": {
+      "website": "https://blue-olive.example.com",
+      "instagram": "https://instagram.com/blue-olive"
+    },
+    "status": "active",
+    "createdAt": "2026-10-03T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_2_0",
+        "tenantId": "t_2",
+        "name": "Blue Olive Bistro - Main",
+        "address": "10 Demo Street 1, Demo Area 3",
+        "phone": "+00 000 002 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.0684,
+        "longitude": 31.2537
+      },
+      {
+        "id": "b_2_1",
+        "tenantId": "t_2",
+        "name": "Blue Olive Bistro - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 4",
+        "phone": "+00 000 002 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.0724,
+        "longitude": 31.2567
+      }
+    ],
+    "subscription": {
+      "id": "sub_2",
+      "tenantId": "t_2",
+      "packageCode": "start",
+      "durationMonths": 6,
+      "status": "active",
+      "startDate": "2026-10-06",
+      "endDate": "2027-04-06",
+      "updatedAt": "2026-10-03T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "in_setup",
+      "websiteUrl": "https://blue-olive.example.com",
+      "pwaUrl": "https://app.blue-olive.example.com",
+      "previewUrl": "https://preview.blue-olive.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_3",
+    "tenantId": "NWY-1003",
+    "businessName": "Cedar & Salt Demo Co.",
+    "restaurantName": "Cedar & Salt",
+    "contact": {
+      "phone": "+00 000 003 0000",
+      "email": "ops.cedar-salt@example.com",
+      "name": "Demo Owner 3",
+      "city": "Demo City 3"
+    },
+    "logoUrl": null,
+    "description": "Cedar & Salt - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#1F4FB4",
+      "secondary": "#B9CCF7"
+    },
+    "socialLinks": {
+      "website": "https://cedar-salt.example.com",
+      "instagram": "https://instagram.com/cedar-salt"
+    },
+    "status": "active",
+    "createdAt": "2026-08-09T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_3_0",
+        "tenantId": "t_3",
+        "name": "Cedar & Salt - Main",
+        "address": "10 Demo Street 1, Demo Area 4",
+        "phone": "+00 000 003 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.0804,
+        "longitude": 31.2627
+      }
+    ],
+    "subscription": {
+      "id": "sub_3",
+      "tenantId": "t_3",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "expiring_soon",
+      "startDate": "2026-08-12",
+      "endDate": "2026-11-12",
+      "updatedAt": "2026-08-09T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://cedar-salt.example.com",
+      "pwaUrl": "https://app.cedar-salt.example.com",
+      "previewUrl": "https://preview.cedar-salt.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_4",
+    "tenantId": "NWY-1004",
+    "businessName": "Demo Diner Demo Co.",
+    "restaurantName": "Demo Diner",
+    "contact": {
+      "phone": "+00 000 004 0000",
+      "email": "ops.demo-diner@example.com",
+      "name": "Demo Owner 4",
+      "city": "Demo City 4"
+    },
+    "logoUrl": null,
+    "description": "Demo Diner - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000003",
+    "brandColors": {
+      "primary": "#7A4A00",
+      "secondary": "#F6D08A"
+    },
+    "socialLinks": {
+      "website": "https://demo-diner.example.com",
+      "instagram": "https://instagram.com/demo-diner"
+    },
+    "status": "inactive",
+    "createdAt": "2026-06-25T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_4_0",
+        "tenantId": "t_4",
+        "name": "Demo Diner - Main",
+        "address": "10 Demo Street 1, Demo Area 5",
+        "phone": "+00 000 004 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.0924,
+        "longitude": 31.2717
+      }
+    ],
+    "subscription": {
+      "id": "sub_4",
+      "tenantId": "t_4",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "expired",
+      "startDate": "2026-06-28",
+      "endDate": "2026-09-28",
+      "updatedAt": "2026-06-25T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "not_tracked",
+      "pwaStatus": null,
+      "websiteUrl": "https://demo-diner.example.com",
+      "pwaUrl": null,
+      "previewUrl": null
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_6",
+    "tenantId": "NWY-1006",
+    "businessName": "Green Fork Kitchen Demo Co.",
+    "restaurantName": "Green Fork Kitchen",
+    "contact": {
+      "phone": "+00 000 006 0000",
+      "email": "ops.green-fork@example.com",
+      "name": "Demo Owner 6",
+      "city": "Demo City 6"
+    },
+    "logoUrl": null,
+    "description": "Green Fork Kitchen - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#0E7490",
+      "secondary": "#A5E3EE"
+    },
+    "socialLinks": {
+      "website": "https://green-fork.example.com",
+      "instagram": "https://instagram.com/green-fork"
+    },
+    "status": "active",
+    "createdAt": "2026-09-23T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_6_0",
+        "tenantId": "t_6",
+        "name": "Green Fork Kitchen - Main",
+        "address": "10 Demo Street 1, Demo Area 1",
+        "phone": "+00 000 006 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1164,
+        "longitude": 31.2897
+      },
+      {
+        "id": "b_6_1",
+        "tenantId": "t_6",
+        "name": "Green Fork Kitchen - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 2",
+        "phone": "+00 000 006 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1204,
+        "longitude": 31.2927
+      }
+    ],
+    "subscription": {
+      "id": "sub_6",
+      "tenantId": "t_6",
+      "packageCode": "growth",
+      "durationMonths": 12,
+      "status": "active",
+      "startDate": "2026-09-26",
+      "endDate": "2027-09-26",
+      "updatedAt": "2026-09-23T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://green-fork.example.com",
+      "pwaUrl": "https://app.green-fork.example.com",
+      "previewUrl": "https://preview.green-fork.example.com"
+    },
+    "apps": {
+      "android": "in_preparation",
+      "ios": "not_started",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_7",
+    "tenantId": "NWY-1007",
+    "businessName": "Harbor House Demo Co.",
+    "restaurantName": "Harbor House",
+    "contact": {
+      "phone": "+00 000 007 0000",
+      "email": "ops.harbor-house@example.com",
+      "name": "Demo Owner 7",
+      "city": "Demo City 1"
+    },
+    "logoUrl": null,
+    "description": "Harbor House - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000006",
+    "brandColors": {
+      "primary": "#B8251A",
+      "secondary": "#F3B7AF"
+    },
+    "socialLinks": {
+      "website": "https://harbor-house.example.com",
+      "instagram": "https://instagram.com/harbor-house"
+    },
+    "status": "active",
+    "createdAt": "2026-09-13T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_7_0",
+        "tenantId": "t_7",
+        "name": "Harbor House - Main",
+        "address": "10 Demo Street 1, Demo Area 2",
+        "phone": "+00 000 007 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1284,
+        "longitude": 31.2987
+      },
+      {
+        "id": "b_7_1",
+        "tenantId": "t_7",
+        "name": "Harbor House - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 3",
+        "phone": "+00 000 007 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1324,
+        "longitude": 31.3017
+      }
+    ],
+    "subscription": {
+      "id": "sub_7",
+      "tenantId": "t_7",
+      "packageCode": "growth",
+      "durationMonths": 6,
+      "status": "active",
+      "startDate": "2026-09-16",
+      "endDate": "2027-03-16",
+      "updatedAt": "2026-09-13T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://harbor-house.example.com",
+      "pwaUrl": "https://app.harbor-house.example.com",
+      "previewUrl": "https://preview.harbor-house.example.com"
+    },
+    "apps": {
+      "android": "submitted_to_store",
+      "ios": "in_preparation",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_8",
+    "tenantId": "NWY-1008",
+    "businessName": "Ivory Spoon Demo Co.",
+    "restaurantName": "Ivory Spoon",
+    "contact": {
+      "phone": "+00 000 008 0000",
+      "email": "ops.ivory-spoon@example.com",
+      "name": "Demo Owner 8",
+      "city": "Demo City 2"
+    },
+    "logoUrl": null,
+    "description": "Ivory Spoon - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#3F3F46",
+      "secondary": "#D4D4D8"
+    },
+    "socialLinks": {
+      "website": "https://ivory-spoon.example.com",
+      "instagram": "https://instagram.com/ivory-spoon"
+    },
+    "status": "active",
+    "createdAt": "2026-08-06T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_8_0",
+        "tenantId": "t_8",
+        "name": "Ivory Spoon - Main",
+        "address": "10 Demo Street 1, Demo Area 3",
+        "phone": "+00 000 008 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1404,
+        "longitude": 31.3077
+      },
+      {
+        "id": "b_8_1",
+        "tenantId": "t_8",
+        "name": "Ivory Spoon - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 4",
+        "phone": "+00 000 008 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1444,
+        "longitude": 31.3107
+      }
+    ],
+    "subscription": {
+      "id": "sub_8",
+      "tenantId": "t_8",
+      "packageCode": "growth",
+      "durationMonths": 3,
+      "status": "expiring_soon",
+      "startDate": "2026-08-09",
+      "endDate": "2026-11-09",
+      "updatedAt": "2026-08-06T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://ivory-spoon.example.com",
+      "pwaUrl": "https://app.ivory-spoon.example.com",
+      "previewUrl": "https://preview.ivory-spoon.example.com"
+    },
+    "apps": {
+      "android": "published",
+      "ios": "submitted_to_store",
+      "androidStoreUrl": "https://play.google.com/store/apps/details?id=com.example.ivory-spoon",
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_9",
+    "tenantId": "NWY-1009",
+    "businessName": "Juniper Table Demo Co.",
+    "restaurantName": "Juniper Table",
+    "contact": {
+      "phone": "+00 000 009 0000",
+      "email": "ops.juniper-table@example.com",
+      "name": "Demo Owner 9",
+      "city": "Demo City 3"
+    },
+    "logoUrl": null,
+    "description": "Juniper Table - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#E43820",
+      "secondary": "#FFB199"
+    },
+    "socialLinks": {
+      "website": "https://juniper-table.example.com",
+      "instagram": "https://instagram.com/juniper-table"
+    },
+    "status": "inactive",
+    "createdAt": "2026-06-20T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_9_0",
+        "tenantId": "t_9",
+        "name": "Juniper Table - Main",
+        "address": "10 Demo Street 1, Demo Area 4",
+        "phone": "+00 000 009 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1524,
+        "longitude": 31.3167
+      }
+    ],
+    "subscription": {
+      "id": "sub_9",
+      "tenantId": "t_9",
+      "packageCode": "growth",
+      "durationMonths": 3,
+      "status": "expired",
+      "startDate": "2026-06-23",
+      "endDate": "2026-09-23",
+      "updatedAt": "2026-06-20T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "in_setup",
+      "websiteUrl": "https://juniper-table.example.com",
+      "pwaUrl": "https://app.juniper-table.example.com",
+      "previewUrl": "https://preview.juniper-table.example.com"
+    },
+    "apps": {
+      "android": "published",
+      "ios": "published",
+      "androidStoreUrl": "https://play.google.com/store/apps/details?id=com.example.juniper-table",
+      "iosStoreUrl": "https://apps.apple.com/app/juniper-table/id000000000"
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_11",
+    "tenantId": "NWY-1011",
+    "businessName": "Luna Verde Demo Co.",
+    "restaurantName": "Luna Verde",
+    "contact": {
+      "phone": "+00 000 011 0000",
+      "email": "ops.luna-verde@example.com",
+      "name": "Demo Owner 11",
+      "city": "Demo City 5"
+    },
+    "logoUrl": null,
+    "description": "Luna Verde - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#1F4FB4",
+      "secondary": "#B9CCF7"
+    },
+    "socialLinks": {
+      "website": "https://luna-verde.example.com",
+      "instagram": "https://instagram.com/luna-verde"
+    },
+    "status": "active",
+    "createdAt": "2026-07-15T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_11_0",
+        "tenantId": "t_11",
+        "name": "Luna Verde - Main",
+        "address": "10 Demo Street 1, Demo Area 6",
+        "phone": "+00 000 011 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1764,
+        "longitude": 31.3347
+      },
+      {
+        "id": "b_11_1",
+        "tenantId": "t_11",
+        "name": "Luna Verde - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 1",
+        "phone": "+00 000 011 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1804,
+        "longitude": 31.3377
+      }
+    ],
+    "subscription": {
+      "id": "sub_11",
+      "tenantId": "t_11",
+      "packageCode": "growth",
+      "durationMonths": 12,
+      "status": "active",
+      "startDate": "2026-07-18",
+      "endDate": "2027-07-18",
+      "updatedAt": "2026-07-15T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://luna-verde.example.com",
+      "pwaUrl": "https://app.luna-verde.example.com",
+      "previewUrl": "https://preview.luna-verde.example.com"
+    },
+    "apps": {
+      "android": "published",
+      "ios": "published",
+      "androidStoreUrl": "https://play.google.com/store/apps/details?id=com.example.luna-verde",
+      "iosStoreUrl": "https://apps.apple.com/app/luna-verde/id000000000"
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_12",
+    "tenantId": "NWY-1012",
+    "businessName": "Maple & Main Demo Co.",
+    "restaurantName": "Maple & Main",
+    "contact": {
+      "phone": "+00 000 012 0000",
+      "email": "ops.maple-main@example.com",
+      "name": "Demo Owner 12",
+      "city": "Demo City 6"
+    },
+    "logoUrl": null,
+    "description": "Maple & Main - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#7A4A00",
+      "secondary": "#F6D08A"
+    },
+    "socialLinks": {
+      "website": "https://maple-main.example.com",
+      "instagram": "https://instagram.com/maple-main"
+    },
+    "status": "pending",
+    "createdAt": "2026-08-24T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_12_0",
+        "tenantId": "t_12",
+        "name": "Maple & Main - Main",
+        "address": "10 Demo Street 1, Demo Area 1",
+        "phone": "+00 000 012 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1884,
+        "longitude": 31.3437
+      },
+      {
+        "id": "b_12_1",
+        "tenantId": "t_12",
+        "name": "Maple & Main - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 2",
+        "phone": "+00 000 012 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1924,
+        "longitude": 31.3467
+      }
+    ],
+    "subscription": {
+      "id": "sub_12",
+      "tenantId": "t_12",
+      "packageCode": "start",
+      "durationMonths": 12,
+      "status": "active",
+      "startDate": "2026-08-27",
+      "endDate": "2027-08-27",
+      "updatedAt": "2026-08-24T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "in_setup",
+      "pwaStatus": null,
+      "websiteUrl": "https://maple-main.example.com",
+      "pwaUrl": null,
+      "previewUrl": null
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_13",
+    "tenantId": "NWY-1013",
+    "businessName": "Nomad Noodles Demo Co.",
+    "restaurantName": "Nomad Noodles",
+    "contact": {
+      "phone": "+00 000 013 0000",
+      "email": "ops.nomad-noodles@example.com",
+      "name": "Demo Owner 13",
+      "city": "Demo City 1"
+    },
+    "logoUrl": null,
+    "description": "Nomad Noodles - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000012",
+    "brandColors": {
+      "primary": "#5B2A86",
+      "secondary": "#D4BEEB"
+    },
+    "socialLinks": {
+      "website": "https://nomad-noodles.example.com",
+      "instagram": "https://instagram.com/nomad-noodles"
+    },
+    "status": "inactive",
+    "createdAt": "2026-04-06T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_13_0",
+        "tenantId": "t_13",
+        "name": "Nomad Noodles - Main",
+        "address": "10 Demo Street 1, Demo Area 2",
+        "phone": "+00 000 013 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2004,
+        "longitude": 31.3527
+      }
+    ],
+    "subscription": {
+      "id": "sub_13",
+      "tenantId": "t_13",
+      "packageCode": "start",
+      "durationMonths": 6,
+      "status": "expired",
+      "startDate": "2026-04-09",
+      "endDate": "2026-10-09",
+      "updatedAt": "2026-04-06T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "not_tracked",
+      "pwaStatus": null,
+      "websiteUrl": "https://nomad-noodles.example.com",
+      "pwaUrl": null,
+      "previewUrl": null
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_14",
+    "tenantId": "NWY-1014",
+    "businessName": "Orange Peel Cafe Demo Co.",
+    "restaurantName": "Orange Peel Cafe",
+    "contact": {
+      "phone": "+00 000 014 0000",
+      "email": "ops.orange-peel@example.com",
+      "name": "Demo Owner 14",
+      "city": "Demo City 2"
+    },
+    "logoUrl": null,
+    "description": "Orange Peel Cafe - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#0E7490",
+      "secondary": "#A5E3EE"
+    },
+    "socialLinks": {
+      "website": "https://orange-peel.example.com",
+      "instagram": "https://instagram.com/orange-peel"
+    },
+    "status": "active",
+    "createdAt": "2026-09-03T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_14_0",
+        "tenantId": "t_14",
+        "name": "Orange Peel Cafe - Main",
+        "address": "10 Demo Street 1, Demo Area 3",
+        "phone": "+00 000 014 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2124,
+        "longitude": 31.3617
+      },
+      {
+        "id": "b_14_1",
+        "tenantId": "t_14",
+        "name": "Orange Peel Cafe - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 4",
+        "phone": "+00 000 014 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2164,
+        "longitude": 31.3647
+      }
+    ],
+    "subscription": {
+      "id": "sub_14",
+      "tenantId": "t_14",
+      "packageCode": "growth",
+      "durationMonths": 6,
+      "status": "active",
+      "startDate": "2026-09-06",
+      "endDate": "2027-03-06",
+      "updatedAt": "2026-09-03T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://orange-peel.example.com",
+      "pwaUrl": "https://app.orange-peel.example.com",
+      "previewUrl": "https://preview.orange-peel.example.com"
+    },
+    "apps": {
+      "android": "in_preparation",
+      "ios": "not_started",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_15",
+    "tenantId": "NWY-1015",
+    "businessName": "Pike Street Deli Demo Co.",
+    "restaurantName": "Pike Street Deli",
+    "contact": {
+      "phone": "+00 000 015 0000",
+      "email": "ops.pike-street@example.com",
+      "name": "Demo Owner 15",
+      "city": "Demo City 3"
+    },
+    "logoUrl": null,
+    "description": "Pike Street Deli - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#B8251A",
+      "secondary": "#F3B7AF"
+    },
+    "socialLinks": {
+      "website": "https://pike-street.example.com",
+      "instagram": "https://instagram.com/pike-street"
+    },
+    "status": "active",
+    "createdAt": "2026-05-16T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_15_0",
+        "tenantId": "t_15",
+        "name": "Pike Street Deli - Main",
+        "address": "10 Demo Street 1, Demo Area 4",
+        "phone": "+00 000 015 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2244,
+        "longitude": 31.3707
+      },
+      {
+        "id": "b_15_1",
+        "tenantId": "t_15",
+        "name": "Pike Street Deli - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 5",
+        "phone": "+00 000 015 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2284,
+        "longitude": 31.3737
+      }
+    ],
+    "subscription": {
+      "id": "sub_15",
+      "tenantId": "t_15",
+      "packageCode": "start",
+      "durationMonths": 6,
+      "status": "expiring_soon",
+      "startDate": "2026-05-19",
+      "endDate": "2026-11-19",
+      "updatedAt": "2026-05-16T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://pike-street.example.com",
+      "pwaUrl": "https://app.pike-street.example.com",
+      "previewUrl": "https://preview.pike-street.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_16",
+    "tenantId": "NWY-1016",
+    "businessName": "Quartz Quisine Demo Co.",
+    "restaurantName": "Quartz Quisine",
+    "contact": {
+      "phone": "+00 000 016 0000",
+      "email": "ops.quartz-quisine@example.com",
+      "name": "Demo Owner 16",
+      "city": "Demo City 4"
+    },
+    "logoUrl": null,
+    "description": "Quartz Quisine - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000015",
+    "brandColors": {
+      "primary": "#3F3F46",
+      "secondary": "#D4D4D8"
+    },
+    "socialLinks": {
+      "website": "https://quartz-quisine.example.com",
+      "instagram": "https://instagram.com/quartz-quisine"
+    },
+    "status": "inactive",
+    "createdAt": "2026-10-08T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_16_0",
+        "tenantId": "t_16",
+        "name": "Quartz Quisine - Main",
+        "address": "10 Demo Street 1, Demo Area 5",
+        "phone": "+00 000 016 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2364,
+        "longitude": 31.3797
+      }
+    ],
+    "subscription": {
+      "id": "sub_16",
+      "tenantId": "t_16",
+      "packageCode": "growth",
+      "durationMonths": 3,
+      "status": "active",
+      "startDate": "2026-10-11",
+      "endDate": "2027-01-11",
+      "updatedAt": "2026-10-08T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://quartz-quisine.example.com",
+      "pwaUrl": "https://app.quartz-quisine.example.com",
+      "previewUrl": "https://preview.quartz-quisine.example.com"
+    },
+    "apps": {
+      "android": "published",
+      "ios": "submitted_to_store",
+      "androidStoreUrl": "https://play.google.com/store/apps/details?id=com.example.quartz-quisine",
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_17",
+    "tenantId": "NWY-1017",
+    "businessName": "Rustic Root Demo Co.",
+    "restaurantName": "Rustic Root",
+    "contact": {
+      "phone": "+00 000 017 0000",
+      "email": "ops.rustic-root@example.com",
+      "name": "Demo Owner 17",
+      "city": "Demo City 5"
+    },
+    "logoUrl": null,
+    "description": "Rustic Root - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#E43820",
+      "secondary": "#FFB199"
+    },
+    "socialLinks": {
+      "website": "https://rustic-root.example.com",
+      "instagram": "https://instagram.com/rustic-root"
+    },
+    "status": "active",
+    "createdAt": "2026-09-28T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_17_0",
+        "tenantId": "t_17",
+        "name": "Rustic Root - Main",
+        "address": "10 Demo Street 1, Demo Area 6",
+        "phone": "+00 000 017 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2484,
+        "longitude": 31.3887
+      },
+      {
+        "id": "b_17_1",
+        "tenantId": "t_17",
+        "name": "Rustic Root - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 1",
+        "phone": "+00 000 017 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2524,
+        "longitude": 31.3917
+      }
+    ],
+    "subscription": {
+      "id": "sub_17",
+      "tenantId": "t_17",
+      "packageCode": "start",
+      "durationMonths": 6,
+      "status": "active",
+      "startDate": "2026-10-01",
+      "endDate": "2027-04-01",
+      "updatedAt": "2026-09-28T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "in_setup",
+      "websiteUrl": "https://rustic-root.example.com",
+      "pwaUrl": "https://app.rustic-root.example.com",
+      "previewUrl": "https://preview.rustic-root.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_18",
+    "tenantId": "NWY-1018",
+    "businessName": "Saffron Street Demo Co.",
+    "restaurantName": "Saffron Street",
+    "contact": {
+      "phone": "+00 000 018 0000",
+      "email": "ops.saffron-street@example.com",
+      "name": "Demo Owner 18",
+      "city": "Demo City 6"
+    },
+    "logoUrl": null,
+    "description": "Saffron Street - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#167A3E",
+      "secondary": "#A7E3BC"
+    },
+    "socialLinks": {
+      "website": "https://saffron-street.example.com",
+      "instagram": "https://instagram.com/saffron-street"
+    },
+    "status": "active",
+    "createdAt": "2025-11-07T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_18_0",
+        "tenantId": "t_18",
+        "name": "Saffron Street - Main",
+        "address": "10 Demo Street 1, Demo Area 1",
+        "phone": "+00 000 018 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2604,
+        "longitude": 31.3977
+      },
+      {
+        "id": "b_18_1",
+        "tenantId": "t_18",
+        "name": "Saffron Street - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 2",
+        "phone": "+00 000 018 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2644,
+        "longitude": 31.4007
+      }
+    ],
+    "subscription": {
+      "id": "sub_18",
+      "tenantId": "t_18",
+      "packageCode": "growth",
+      "durationMonths": 12,
+      "status": "expiring_soon",
+      "startDate": "2025-11-10",
+      "endDate": "2026-11-10",
+      "updatedAt": "2025-11-07T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://saffron-street.example.com",
+      "pwaUrl": "https://app.saffron-street.example.com",
+      "previewUrl": "https://preview.saffron-street.example.com"
+    },
+    "apps": {
+      "android": "published",
+      "ios": "published",
+      "androidStoreUrl": "https://play.google.com/store/apps/details?id=com.example.saffron-street",
+      "iosStoreUrl": "https://apps.apple.com/app/saffron-street/id000000000"
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_19",
+    "tenantId": "NWY-1019",
+    "businessName": "Terra Tomate Demo Co.",
+    "restaurantName": "Terra Tomate",
+    "contact": {
+      "phone": "+00 000 019 0000",
+      "email": "ops.terra-tomate@example.com",
+      "name": "Demo Owner 19",
+      "city": "Demo City 1"
+    },
+    "logoUrl": null,
+    "description": "Terra Tomate - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000018",
+    "brandColors": {
+      "primary": "#1F4FB4",
+      "secondary": "#B9CCF7"
+    },
+    "socialLinks": {
+      "website": "https://terra-tomate.example.com",
+      "instagram": "https://instagram.com/terra-tomate"
+    },
+    "status": "inactive",
+    "createdAt": "2026-05-26T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_19_0",
+        "tenantId": "t_19",
+        "name": "Terra Tomate - Main",
+        "address": "10 Demo Street 1, Demo Area 2",
+        "phone": "+00 000 019 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2724,
+        "longitude": 31.4067
+      }
+    ],
+    "subscription": {
+      "id": "sub_19",
+      "tenantId": "t_19",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "expired",
+      "startDate": "2026-05-29",
+      "endDate": "2026-08-29",
+      "updatedAt": "2026-05-26T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": null,
+      "pwaStatus": "not_tracked",
+      "websiteUrl": null,
+      "pwaUrl": "https://app.terra-tomate.example.com",
+      "previewUrl": null
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_21",
+    "tenantId": "NWY-1021",
+    "businessName": "Velvet Vine Demo Co.",
+    "restaurantName": "Velvet Vine",
+    "contact": {
+      "phone": "+00 000 021 0000",
+      "email": "ops.velvet-vine@example.com",
+      "name": "Demo Owner 21",
+      "city": "Demo City 3"
+    },
+    "logoUrl": null,
+    "description": "Velvet Vine - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#5B2A86",
+      "secondary": "#D4BEEB"
+    },
+    "socialLinks": {
+      "website": "https://velvet-vine.example.com",
+      "instagram": "https://instagram.com/velvet-vine"
+    },
+    "status": "active",
+    "createdAt": "2026-08-04T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_21_0",
+        "tenantId": "t_21",
+        "name": "Velvet Vine - Main",
+        "address": "10 Demo Street 1, Demo Area 4",
+        "phone": "+00 000 021 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.2964,
+        "longitude": 31.4247
+      },
+      {
+        "id": "b_21_1",
+        "tenantId": "t_21",
+        "name": "Velvet Vine - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 5",
+        "phone": "+00 000 021 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3004,
+        "longitude": 31.4277
+      }
+    ],
+    "subscription": {
+      "id": "sub_21",
+      "tenantId": "t_21",
+      "packageCode": "start",
+      "durationMonths": 12,
+      "status": "active",
+      "startDate": "2026-08-07",
+      "endDate": "2027-08-07",
+      "updatedAt": "2026-08-04T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://velvet-vine.example.com",
+      "pwaUrl": "https://app.velvet-vine.example.com",
+      "previewUrl": "https://preview.velvet-vine.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_22",
+    "tenantId": "NWY-1022",
+    "businessName": "Willow & Wheat Demo Co.",
+    "restaurantName": "Willow & Wheat",
+    "contact": {
+      "phone": "+00 000 022 0000",
+      "email": "ops.willow-wheat@example.com",
+      "name": "Demo Owner 22",
+      "city": "Demo City 4"
+    },
+    "logoUrl": null,
+    "description": "Willow & Wheat - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000021",
+    "brandColors": {
+      "primary": "#0E7490",
+      "secondary": "#A5E3EE"
+    },
+    "socialLinks": {
+      "website": "https://willow-wheat.example.com",
+      "instagram": "https://instagram.com/willow-wheat"
+    },
+    "status": "active",
+    "createdAt": "2026-10-18T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_22_0",
+        "tenantId": "t_22",
+        "name": "Willow & Wheat - Main",
+        "address": "10 Demo Street 1, Demo Area 5",
+        "phone": "+00 000 022 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3084,
+        "longitude": 31.4337
+      },
+      {
+        "id": "b_22_1",
+        "tenantId": "t_22",
+        "name": "Willow & Wheat - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 6",
+        "phone": "+00 000 022 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3124,
+        "longitude": 31.4367
+      }
+    ],
+    "subscription": {
+      "id": "sub_22",
+      "tenantId": "t_22",
+      "packageCode": "growth",
+      "durationMonths": 3,
+      "status": "active",
+      "startDate": "2026-10-21",
+      "endDate": "2027-01-21",
+      "updatedAt": "2026-10-18T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "in_setup",
+      "websiteUrl": "https://willow-wheat.example.com",
+      "pwaUrl": "https://app.willow-wheat.example.com",
+      "previewUrl": "https://preview.willow-wheat.example.com"
+    },
+    "apps": {
+      "android": "not_started",
+      "ios": "in_preparation",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_23",
+    "tenantId": "NWY-1023",
+    "businessName": "Xenon Xpress Demo Co.",
+    "restaurantName": "Xenon Xpress",
+    "contact": {
+      "phone": "+00 000 023 0000",
+      "email": "ops.xenon-xpress@example.com",
+      "name": "Demo Owner 23",
+      "city": "Demo City 5"
+    },
+    "logoUrl": null,
+    "description": "Xenon Xpress - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#B8251A",
+      "secondary": "#F3B7AF"
+    },
+    "socialLinks": {
+      "website": "https://xenon-xpress.example.com",
+      "instagram": "https://instagram.com/xenon-xpress"
+    },
+    "status": "pending",
+    "createdAt": "2026-08-14T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_23_0",
+        "tenantId": "t_23",
+        "name": "Xenon Xpress - Main",
+        "address": "10 Demo Street 1, Demo Area 6",
+        "phone": "+00 000 023 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3204,
+        "longitude": 31.4427
+      }
+    ],
+    "subscription": {
+      "id": "sub_23",
+      "tenantId": "t_23",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "expiring_soon",
+      "startDate": "2026-08-17",
+      "endDate": "2026-11-17",
+      "updatedAt": "2026-08-14T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "in_setup",
+      "pwaStatus": null,
+      "websiteUrl": "https://xenon-xpress.example.com",
+      "pwaUrl": null,
+      "previewUrl": null
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_24",
+    "tenantId": "NWY-1024",
+    "businessName": "Yarrow Yard Demo Co.",
+    "restaurantName": "Yarrow Yard",
+    "contact": {
+      "phone": "+00 000 024 0000",
+      "email": "ops.yarrow-yard@example.com",
+      "name": "Demo Owner 24",
+      "city": "Demo City 6"
+    },
+    "logoUrl": null,
+    "description": "Yarrow Yard - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#3F3F46",
+      "secondary": "#D4D4D8"
+    },
+    "socialLinks": {
+      "website": "https://yarrow-yard.example.com",
+      "instagram": "https://instagram.com/yarrow-yard"
+    },
+    "status": "inactive",
+    "createdAt": "2026-03-27T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_24_0",
+        "tenantId": "t_24",
+        "name": "Yarrow Yard - Main",
+        "address": "10 Demo Street 1, Demo Area 1",
+        "phone": "+00 000 024 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3324,
+        "longitude": 31.4517
+      },
+      {
+        "id": "b_24_1",
+        "tenantId": "t_24",
+        "name": "Yarrow Yard - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 2",
+        "phone": "+00 000 024 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3364,
+        "longitude": 31.4547
+      }
+    ],
+    "subscription": {
+      "id": "sub_24",
+      "tenantId": "t_24",
+      "packageCode": "growth",
+      "durationMonths": 6,
+      "status": "expired",
+      "startDate": "2026-03-30",
+      "endDate": "2026-09-30",
+      "updatedAt": "2026-03-27T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://yarrow-yard.example.com",
+      "pwaUrl": "https://app.yarrow-yard.example.com",
+      "previewUrl": "https://preview.yarrow-yard.example.com"
+    },
+    "apps": {
+      "android": "submitted_to_store",
+      "ios": "in_preparation",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_25",
+    "tenantId": "NWY-1025",
+    "businessName": "Zephyr Kitchen Demo Co.",
+    "restaurantName": "Zephyr Kitchen",
+    "contact": {
+      "phone": "+00 000 025 0000",
+      "email": "ops.zephyr-kitchen@example.com",
+      "name": "Demo Owner 25",
+      "city": "Demo City 1"
+    },
+    "logoUrl": null,
+    "description": "Zephyr Kitchen - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000024",
+    "brandColors": {
+      "primary": "#E43820",
+      "secondary": "#FFB199"
+    },
+    "socialLinks": {
+      "website": "https://zephyr-kitchen.example.com",
+      "instagram": "https://instagram.com/zephyr-kitchen"
+    },
+    "status": "active",
+    "createdAt": "2026-10-15T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_25_0",
+        "tenantId": "t_25",
+        "name": "Zephyr Kitchen - Main",
+        "address": "10 Demo Street 1, Demo Area 2",
+        "phone": "+00 000 025 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3444,
+        "longitude": 31.4607
+      },
+      {
+        "id": "b_25_1",
+        "tenantId": "t_25",
+        "name": "Zephyr Kitchen - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 3",
+        "phone": "+00 000 025 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3484,
+        "longitude": 31.4637
+      }
+    ],
+    "subscription": {
+      "id": "sub_25",
+      "tenantId": "t_25",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "active",
+      "startDate": "2026-10-18",
+      "endDate": "2027-01-18",
+      "updatedAt": "2026-10-15T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://zephyr-kitchen.example.com",
+      "pwaUrl": "https://app.zephyr-kitchen.example.com",
+      "previewUrl": "https://preview.zephyr-kitchen.example.com"
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_26",
+    "tenantId": "NWY-1026",
+    "businessName": "Copper Cactus Demo Co.",
+    "restaurantName": "Copper Cactus",
+    "contact": {
+      "phone": "+00 000 026 0000",
+      "email": "ops.copper-cactus@example.com",
+      "name": "Demo Owner 26",
+      "city": "Demo City 2"
+    },
+    "logoUrl": null,
+    "description": "Copper Cactus - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#167A3E",
+      "secondary": "#A7E3BC"
+    },
+    "socialLinks": {
+      "website": "https://copper-cactus.example.com",
+      "instagram": "https://instagram.com/copper-cactus"
+    },
+    "status": "active",
+    "createdAt": "2026-09-08T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_26_0",
+        "tenantId": "t_26",
+        "name": "Copper Cactus - Main",
+        "address": "10 Demo Street 1, Demo Area 3",
+        "phone": "+00 000 026 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3564,
+        "longitude": 31.4697
+      },
+      {
+        "id": "b_26_1",
+        "tenantId": "t_26",
+        "name": "Copper Cactus - Branch 2",
+        "address": "17 Demo Street 2, Demo Area 4",
+        "phone": "+00 000 026 0001",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.3604,
+        "longitude": 31.4727
+      }
+    ],
+    "subscription": {
+      "id": "sub_26",
+      "tenantId": "t_26",
+      "packageCode": "growth",
+      "durationMonths": 12,
+      "status": "active",
+      "startDate": "2026-09-11",
+      "endDate": "2027-09-11",
+      "updatedAt": "2026-09-08T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "ready",
+      "pwaStatus": "ready",
+      "websiteUrl": "https://copper-cactus.example.com",
+      "pwaUrl": "https://app.copper-cactus.example.com",
+      "previewUrl": "https://preview.copper-cactus.example.com"
+    },
+    "apps": {
+      "android": "published",
+      "ios": "not_started",
+      "androidStoreUrl": "https://play.google.com/store/apps/details?id=com.example.copper-cactus",
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  }
+]

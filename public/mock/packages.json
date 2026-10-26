@@ -1,0 +1,51 @@
+[
+  {
+    "code": "start",
+    "name": "Start",
+    "tagline": "Website, PWA, admin panel and mobile apps for up to 2 branches.",
+    "features": [
+      "website",
+      "pwa",
+      "admin_panel",
+      "android_app",
+      "ios_app",
+      "branches_up_to_2",
+      "unlimited_orders",
+      "no_commission"
+    ],
+    "prices": {
+      "3": 15000,
+      "6": 32000,
+      "12": 60000
+    },
+    "branchLimits": {
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "code": "growth",
+    "name": "Growth",
+    "tagline": "Everything in Start plus AI.",
+    "features": [
+      "website",
+      "pwa",
+      "admin_panel",
+      "android_app",
+      "ios_app",
+      "branches_up_to_2",
+      "unlimited_orders",
+      "no_commission",
+      "ai"
+    ],
+    "prices": {
+      "3": 17000,
+      "6": 34000,
+      "12": 62000
+    },
+    "branchLimits": {
+      "min": 1,
+      "max": 2
+    }
+  }
+]

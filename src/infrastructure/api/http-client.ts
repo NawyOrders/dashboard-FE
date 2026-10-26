@@ -60,8 +60,8 @@ export interface HttpRequestOptions<T> {
   body?: unknown;
   headers?: Record<string, string>;
   signal?: AbortSignal;
-  /** Schema of the unwrapped `data` value. */
-  schema: z.ZodType<T>;
+  /** Schema of the unwrapped `data` value; input is untrusted JSON. */
+  schema: z.ZodType<T, z.ZodTypeDef, unknown>;
 }
 
 export interface HttpClient {

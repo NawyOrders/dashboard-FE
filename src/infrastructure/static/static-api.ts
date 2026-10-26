@@ -16,6 +16,7 @@ import type {
   PackageFeatureKey,
   RestaurantStatus,
 } from '@/domain/entities';
+import { STATIC_OFFERS } from './static-offers';
 
 export interface StaticApiOptions {
   minDelayMs?: number;
@@ -86,6 +87,15 @@ export function createStaticApi(
     ) => run(() => backend.resetTenantAccountPassword(input, actor)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
+    listOffers: () => run(() => STATIC_OFFERS),
+    updateApplicationPayment: (requestId: string, paid: boolean, actor: AdminUser) =>
+      run(() =>
+        backend.updateApplication(
+          requestId,
+          { paymentStatus: paid ? 'paid' : 'unpaid' },
+          actor,
+        ),
+      ).then(() => undefined),
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
       run(() => backend.approveApplication(tenantId, adminPassword, actor)),
     updateApplication: (

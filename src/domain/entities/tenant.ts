@@ -64,6 +64,8 @@ export interface Tenant {
   tenantId: string;
   businessName: string;
   restaurantName: string;
+  /** Arabic restaurant name (agent.md section 21). Both names are required in the form. */
+  restaurantNameAr?: string | null;
   contact: TenantContact;
   logoUrl: string | null;
   brandColors: BrandColors;
@@ -80,6 +82,13 @@ export interface Tenant {
   coverImageUrl?: string | null;
   /** Commercial register number (registration form: `commercialRegisterNumber`). */
   commercialRegisterNumber?: string | null;
-  // OPEN: payment status source, backend.
+  /** Payment flag of the submitted onboarding request (agent.md section 21). */
   paymentStatus?: PaymentStatus;
+  /** Submission time returned by the onboarding list. */
+  submittedAtUtc?: string | null;
+  /** Price the request was submitted with, from the onboarding list. */
+  agreedPrice?: number | null;
+  agreedCurrency?: string | null;
+  /** Raw onboarding status; the dashboard only reviews pending requests for now. */
+  onboardingStatus?: number;
 }

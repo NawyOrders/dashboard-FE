@@ -48,6 +48,7 @@ export const tenantSchema: z.ZodType<Tenant> = z.object({
   tenantId: z.string(),
   businessName: z.string(),
   restaurantName: z.string(),
+  restaurantNameAr: z.string().nullish(),
   contact: z.object({
     phone: z.string(),
     email: z.string(),
@@ -95,6 +96,10 @@ export const tenantSchema: z.ZodType<Tenant> = z.object({
   coverImageUrl: z.string().nullish(),
   commercialRegisterNumber: z.string().nullish(),
   paymentStatus: paymentStatusSchema.optional(),
+  submittedAtUtc: z.string().nullish(),
+  agreedPrice: z.number().nullish(),
+  agreedCurrency: z.string().nullish(),
+  onboardingStatus: z.number().int().optional(),
 });
 
 export const tenantsSchema = z.array(tenantSchema);

@@ -12,6 +12,7 @@ import type {
   PlatformLoginResult,
   RestaurantRole,
   RestaurantStatus,
+  SubscriptionOffer,
   SubscriptionStatus,
   Tenant,
   TenantRole,
@@ -154,6 +155,10 @@ export interface Api {
   ): Promise<void>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
+  /** Packages/durations offered by the backend (agent.md section 21). */
+  listOffers(): Promise<SubscriptionOffer[]>;
+  /** `PATCH /onboarding-requests/{requestId}/payment`. */
+  updateApplicationPayment(requestId: string, paid: boolean, actor: AdminUser): Promise<void>;
   approveApplication(
     tenantId: string,
     adminPassword: string,

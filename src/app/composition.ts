@@ -1,7 +1,9 @@
 import type { Api } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import { createBackend } from '@/application/use-cases';
-import { assertEnvironment, DATA_SOURCE, IS_DEMO_PROVIDER } from '@/config/data-source';
+import { assertEnvironment, IS_DEMO_PROVIDER } from '@/config/data-source';
+import { createApiAdapter } from '@/infrastructure/api/api-adapter';
+import { createHttpClient } from '@/infrastructure/api/http-client';
 import { SystemClock } from '@/infrastructure/clock/system-clock';
 import { createSequentialIdGenerator } from '@/infrastructure/ids/sequential-id-generator';
 import { StaticActivityLogRepository } from '@/infrastructure/static/static-activity-log-repository';
@@ -25,10 +27,7 @@ const CURRENT_USER: AdminUser = {
 };
 
 async function buildContainer(): Promise<Api> {
-  assertEnvironment();
-  if (DATA_SOURCE === 'api') {
-    throw new Error('api adapter not implemented');
-  }
+  const env = assertEnvironment();
 
   const data = await loadStaticData();
   const clock = new SystemClock();
@@ -49,8 +48,14 @@ async function buildContainer(): Promise<Api> {
   const deps: UseCaseDeps = { restaurants, activity, flags, sales, clock, ids, auth };
   const currentUser: CurrentUserProvider = { get: () => CURRENT_USER };
   const backend = createBackend(deps, currentUser);
+  const staticApi = createStaticApi(backend, {}, new StaticFileUploadRepository());
 
-  return createStaticApi(backend, {}, new StaticFileUploadRepository());
+  if (env.VITE_DATA_SOURCE === 'api') {
+    const client = createHttpClient({ baseUrl: env.VITE_API_BASE_URL });
+    return createApiAdapter({ staticApi, client });
+  }
+
+  return staticApi;
 }
 
 let apiPromise: Promise<Api> | null = null;

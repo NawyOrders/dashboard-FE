@@ -73,14 +73,20 @@ export function createStaticApi(
     addBranch: (tenantId: string, input: AddBranchInput, actor: AdminUser) =>
       run(() => backend.addBranch(tenantId, input, actor)),
     listActivity: (params?: ListActivityParams) => run(() => backend.listActivity(params)),
+    // OPEN: endpoint missing in swagger.
     listAdminAccounts: () => run(() => backend.listAdminAccounts()),
+    // OPEN: endpoint missing in swagger.
     createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
       run(() => backend.createAdminAccount(input, actor)),
+    // OPEN: endpoint missing in swagger.
     changeOwnPassword: (input: ChangeOwnPasswordInput, actor: AdminUser) =>
       run(() => backend.changeOwnPassword(input, actor)),
+    // OPEN: endpoint missing in swagger.
     listTenantAccounts: () => run(() => backend.listTenantAccounts()),
+    // OPEN: endpoint missing in swagger.
     createTenantAccount: (input: CreateTenantAccountInput, actor: AdminUser) =>
       run(() => backend.createTenantAccount(input, actor)),
+    // OPEN: endpoint missing in swagger.
     resetTenantAccountPassword: (
       input: ResetTenantAccountPasswordInput,
       actor: AdminUser,
@@ -96,13 +102,16 @@ export function createStaticApi(
           actor,
         ),
       ).then(() => undefined),
+    // OPEN: endpoint missing in swagger.
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
       run(() => backend.approveApplication(tenantId, adminPassword, actor)),
+    // OPEN: endpoint missing in swagger.
     updateApplication: (
       tenantId: string,
       patch: Partial<import('@/domain/entities').Tenant>,
       actor: AdminUser,
     ) => run(() => backend.updateApplication(tenantId, patch, actor)),
+    // OPEN: endpoint missing in swagger.
     deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
       run(() => backend.deleteApplication(tenantId, reason, actor)),
     uploadImage: (file: File) => uploads.uploadImage(file),

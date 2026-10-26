@@ -18,6 +18,8 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
   const onboarding = createOnboardingApi(client);
 
   return {
+    // OPEN: endpoint missing in swagger. Approve, delete, save changes and the
+    // accounts endpoints keep using the static adapter in api mode.
     ...staticApi,
 
     async listApplications() {

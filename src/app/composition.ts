@@ -1,42 +1,85 @@
 import type { Api } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import { createBackend } from '@/application/use-cases';
+import { DATA_SOURCE, IS_DEMO_PROVIDER } from '@/config/data-source';
 import { SystemClock } from '@/infrastructure/clock/system-clock';
 import { createSequentialIdGenerator } from '@/infrastructure/ids/sequential-id-generator';
-import { CURRENT_USER, createMockApi } from '@/infrastructure/mock/mock-api';
-import { InMemoryAdminAccountRepository } from '@/infrastructure/repositories/in-memory-admin-account-repository';
-import { InMemoryActivityLogRepository } from '@/infrastructure/repositories/in-memory-activity-log-repository';
-import { InMemoryFeatureFlagRepository } from '@/infrastructure/repositories/in-memory-feature-flag-repository';
-import { InMemoryRestaurantRepository } from '@/infrastructure/repositories/in-memory-restaurant-repository';
-import { InMemorySalesRepository } from '@/infrastructure/repositories/in-memory-sales-repository';
-import {
-  buildSeedActivity,
-  buildSeedAdminAccounts,
-  buildSeedSales,
-  buildSeedTenants,
-} from '@/infrastructure/seed/seed';
+import { StaticActivityLogRepository } from '@/infrastructure/static/static-activity-log-repository';
+import { createStaticApi } from '@/infrastructure/static/static-api';
+import { StaticAuthRepository } from '@/infrastructure/static/static-auth-repository';
+import { loadStaticData } from '@/infrastructure/static/static-data-loader';
+import { StaticFeatureFlagRepository } from '@/infrastructure/static/static-feature-flag-repository';
+import { StaticFileUploadRepository } from '@/infrastructure/static/static-file-upload-repository';
+import { StaticRestaurantRepository } from '@/infrastructure/static/static-restaurant-repository';
+import { StaticSalesRepository } from '@/infrastructure/static/static-sales-repository';
+import type { AdminUser } from '@/domain/entities';
 
-/** Demo badge is tied to the mock provider, never to a hard-coded environment flag. */
-export const IS_MOCK_PROVIDER = true;
+/** Demo badge is tied to the static data source, never to an environment flag. */
+export { IS_DEMO_PROVIDER };
 
-function buildContainer(): Api {
+const CURRENT_USER: AdminUser = {
+  id: 'acct_seed_1',
+  name: 'Demo Super Admin',
+  email: 'superadmin@example.com',
+  role: 'super_admin',
+};
+
+async function buildContainer(): Promise<Api> {
+  if (DATA_SOURCE === 'api') {
+    throw new Error('api adapter not implemented');
+  }
+
+  const data = await loadStaticData();
   const clock = new SystemClock();
   const ids = createSequentialIdGenerator(10_000);
-  const restaurants = new InMemoryRestaurantRepository(buildSeedTenants());
-  const activity = new InMemoryActivityLogRepository(clock, ids, buildSeedActivity(restaurants.findAll()));
-  const flags = new InMemoryFeatureFlagRepository();
-  const accounts = new InMemoryAdminAccountRepository(buildSeedAdminAccounts());
-  const sales = new InMemorySalesRepository(buildSeedSales(restaurants.findAll()));
+  const restaurants = new StaticRestaurantRepository([
+    ...data.restaurants,
+    ...data.applications,
+  ]);
+  const activity = new StaticActivityLogRepository(clock, ids, data.activityLogs);
+  const flags = new StaticFeatureFlagRepository();
+  const sales = new StaticSalesRepository(data.sales);
+  const auth = new StaticAuthRepository(clock, data.accounts, data.loginFixtures);
 
   for (const tenant of restaurants.findAll()) {
     flags.seedDefaults(tenant);
   }
 
-  const deps: UseCaseDeps = { restaurants, activity, flags, accounts, sales, clock, ids };
+  const deps: UseCaseDeps = { restaurants, activity, flags, sales, clock, ids, auth };
   const currentUser: CurrentUserProvider = { get: () => CURRENT_USER };
   const backend = createBackend(deps, currentUser);
 
-  return createMockApi(backend);
+  return createStaticApi(backend, {}, new StaticFileUploadRepository());
 }
 
-export const api: Api = buildContainer();
+let apiPromise: Promise<Api> | null = null;
+
+function getApi(): Promise<Api> {
+  apiPromise ??= buildContainer();
+  return apiPromise;
+}
+
+/** Loads the selected data source before the app renders. */
+export async function initializeApi(): Promise<void> {
+  await getApi();
+}
+
+/**
+ * The UI calls the API before/independently of the startup promise. Every `Api` method is
+ * async, so this proxy waits for the data source and forwards the call once it is ready.
+ */
+export const api: Api = new Proxy({} as Api, {
+  get(_target, property: string | symbol) {
+    return (...args: unknown[]) =>
+      getApi().then((resolved) => {
+        const method = (resolved as unknown as Record<string | symbol, unknown>)[property];
+        if (typeof method !== 'function') {
+          throw new Error(`Unknown API method: ${String(property)}`);
+        }
+        return (method as (...methodArgs: unknown[]) => Promise<unknown>).apply(
+          resolved,
+          args,
+        );
+      });
+  },
+});

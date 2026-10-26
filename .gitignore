@@ -2,6 +2,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
@@ -11,4 +12,6 @@ design.md
 tasks.md
 bugs.md
 QA_REPORT.md
+users.md
 .gitattributes
+restaurant-registration-fields.json

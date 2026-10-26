@@ -1,5 +1,7 @@
 import type { UseCaseDeps } from '@/application/ports';
-import type { AdminAccount, AdminUser, CreateAdminAccountInput } from '@/domain/entities';
+import type { AdminUser, CreateAdminAccountInput, InternalAccount } from '@/domain/entities';
+import { validatePassword } from '@/domain/rules/password';
+import { validateEmail } from '@/domain/rules/validation';
 
 export class DuplicateAccountEmailError extends Error {
   constructor(email: string) {
@@ -8,28 +10,50 @@ export class DuplicateAccountEmailError extends Error {
   }
 }
 
+export class InvalidPasswordError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidPasswordError';
+  }
+}
+
+export class InvalidAccountEmailError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidAccountEmailError';
+  }
+}
+
 export function makeCreateAdminAccount(deps: UseCaseDeps) {
-  return function createAdminAccount(
+  return async function createAdminAccount(
     input: CreateAdminAccountInput,
     actor: AdminUser,
-  ): AdminAccount {
-    const { accounts, activity, clock, ids } = deps;
+  ): Promise<InternalAccount> {
+    const { auth, activity, clock, ids } = deps;
     const email = input.email.trim().toLowerCase();
-
-    if (accounts.findByEmail(email)) {
+    const emailError = validateEmail(email);
+    if (emailError) {
+      throw new InvalidAccountEmailError(emailError);
+    }
+    if (await auth.findByEmail(email)) {
       throw new DuplicateAccountEmailError(email);
     }
 
-    const account: AdminAccount = {
+    const policyError = validatePassword(input.password);
+    if (policyError) {
+      throw new InvalidPasswordError(policyError);
+    }
+
+    const account = await auth.createAccount({
       id: ids.next('acct'),
       name: input.name.trim(),
       email,
+      accountType: 'internal',
       role: input.role,
-      status: 'active',
+      password: input.password,
       createdAt: clock.nowIso(),
-    };
+    });
 
-    accounts.save(account);
     activity.append({
       actor,
       action: 'account_created',

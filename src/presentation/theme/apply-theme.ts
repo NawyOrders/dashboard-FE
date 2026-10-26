@@ -7,7 +7,7 @@ import { tokens } from './tokens';
  */
 export function applyTheme(): void {
   const root = document.documentElement;
-  const { colors, focus } = tokens;
+  const { colors, focus, typography } = tokens;
 
   root.style.setProperty('--bg', colors.bg.DEFAULT);
   root.style.setProperty('--bg-2', colors.bg[2]);
@@ -19,4 +19,5 @@ export function applyTheme(): void {
   root.style.setProperty('--text-muted', colors.text.muted);
   root.style.setProperty('--border', colors.border.DEFAULT);
   root.style.setProperty('--focus-ring', focus.ring);
+  root.style.setProperty('--font-body', typography.fontSize.base.size);
 }

@@ -1,17 +1,20 @@
 import type {
   ActivityAction,
   ActivityLog,
-  AdminAccount,
   AdminUser,
   Branch,
   CreateAdminAccountInput,
   DurationMonths,
   FeatureFlag,
+  InternalAccount,
   PackageCode,
   PackageFeatureKey,
+  PlatformLoginResult,
+  RestaurantRole,
   RestaurantStatus,
   SubscriptionStatus,
   Tenant,
+  TenantRole,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
 import type { SalesMonthBucket } from '@/domain/rules/sales';
@@ -49,6 +52,39 @@ export interface ListActivityParams {
   action?: ActivityAction;
   from?: string;
   to?: string;
+}
+
+/** NW-247: the password of the signed-in user is changed with these two values. */
+export interface ChangeOwnPasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
+/** NW-247: a tenant account as the accounts page shows it. */
+export interface TenantAccountView {
+  id: string;
+  email: string;
+  name: string;
+  /** The restaurant the account belongs to. */
+  tenantId: string;
+  restaurantName: string;
+  restaurantRole: TenantRole;
+  createdAt: string;
+}
+
+/** NW-247: the fields of the "create tenant account" form. */
+export interface CreateTenantAccountInput {
+  tenantId: string;
+  /** The role inside the restaurant. `admin` is not selectable. */
+  restaurantRole: RestaurantRole;
+  email: string;
+  password: string;
+}
+
+/** NW-247: a Super Admin resets the password of a tenant account. */
+export interface ResetTenantAccountPasswordInput {
+  accountId: string;
+  newPassword: string;
 }
 
 /** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
@@ -96,10 +132,36 @@ export interface Api {
 
   listActivity(params?: ListActivityParams): Promise<ActivityLog[]>;
 
-  listAdminAccounts(): Promise<AdminAccount[]>;
+  listAdminAccounts(): Promise<InternalAccount[]>;
 
-  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<AdminAccount>;
+  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
+
+  /** NW-247: the signed-in user changes their own password. */
+  changeOwnPassword(input: ChangeOwnPasswordInput, actor: AdminUser): Promise<void>;
+
+  /** NW-247: the tenant accounts of the restaurants. */
+  listTenantAccounts(): Promise<TenantAccountView[]>;
+
+  createTenantAccount(
+    input: CreateTenantAccountInput,
+    actor: AdminUser,
+  ): Promise<TenantAccountView>;
+
+  /** NW-247: reset the password of a tenant account. */
+  resetTenantAccountPassword(
+    input: ResetTenantAccountPasswordInput,
+    actor: AdminUser,
+  ): Promise<void>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
-  approveApplication(tenantId: string, actor: AdminUser): Promise<Tenant>;
+  approveApplication(
+    tenantId: string,
+    adminPassword: string,
+    actor: AdminUser,
+  ): Promise<Tenant>;
+  updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
+  deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
+  /** Stores an uploaded image and returns its reference (NW-246). */
+  uploadImage(file: File): Promise<string>;
+  signIn(email: string, password: string): Promise<PlatformLoginResult>;
 }

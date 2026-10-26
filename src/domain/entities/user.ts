@@ -12,7 +12,9 @@ export type Permission =
   | 'support.access'
   | 'accounts.view'
   | 'account.create'
-  | 'role.manage';
+  | 'role.manage'
+  | 'tenantAccount.create'
+  | 'tenantAccount.resetPassword';
 
 export interface AdminUser {
   id: string;

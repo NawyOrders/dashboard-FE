@@ -42,9 +42,7 @@ type SidebarVariant = 'drawer' | 'rail';
 function Logo({ variant }: { variant: SidebarVariant }) {
   return (
     <div className="flex items-center gap-3 px-5 py-6">
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-avatar bg-gradient-to-br from-primary to-primary-light text-white shadow-primary">
-        <img src={nawyOrdersLogo} alt="Nawy Orders" className="size-6 object-contain" />
-      </span>
+      <img src={nawyOrdersLogo} alt="Nawy Orders" className="h-[50px] w-auto shrink-0 object-contain" />
       <span className={cn('min-w-0', variant === 'drawer' ? 'block' : 'hidden xl:block')}>
         <span className="block text-base font-bold leading-5 text-text">Nawy Orders</span>
         <span className="block text-2xs text-text-muted">Super Admin</span>
@@ -70,7 +68,7 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
               cn(
                 'group relative flex h-12 w-full items-center gap-3 rounded-panel px-3 text-sm font-medium transition-colors duration-150',
                 isActive
-                  ? 'bg-primary text-white shadow-primary'
+                  ? 'bg-primary text-white'
                   : 'text-text-muted hover:bg-bg-2 hover:text-text',
               )
             }

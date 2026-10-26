@@ -87,7 +87,7 @@ export function DropdownMenu({ label, items, triggerClassName }: DropdownMenuPro
             ref={menuRef}
             role="menu"
             style={{ position: 'fixed', top: coords.top, left: Math.max(8, coords.left) }}
-            className="z-50 w-56 rounded-card border border-border bg-card p-1.5 shadow-card"
+            className="z-50 w-56 rounded-card border border-border bg-card p-1.5"
           >
             {items.map((item) => (
               <button

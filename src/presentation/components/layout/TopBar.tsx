@@ -4,7 +4,7 @@ import { Bell, Menu, Search, Settings } from 'lucide-react';
 import { IconButton } from '@/presentation/components/ui/IconButton';
 import { Button } from '@/presentation/components/ui/Button';
 import { en } from '@/presentation/i18n/en';
-import { IS_MOCK_PROVIDER } from '@/app/composition';
+import { IS_DEMO_PROVIDER } from '@/app/composition';
 import { useDebounce } from '@/presentation/hooks/useDebounce';
 import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { cn } from '@/presentation/lib/cn';
@@ -112,7 +112,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 
       <div className="flex min-w-0 items-center gap-2">
         <span className="truncate text-lg font-semibold text-text">{title}</span>
-        {IS_MOCK_PROVIDER && (
+        {IS_DEMO_PROVIDER && (
           <Badge tone="warning" title={en.app.demoBadgeTitle} className="shrink-0">
             {en.app.demoBadge}
           </Badge>
@@ -160,7 +160,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
               id="topbar-search-listbox"
               role="listbox"
               aria-label={en.topbar.suggestionsLabel}
-              className="absolute inset-x-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-panel border border-border bg-card py-1 shadow-lg"
+              className="absolute inset-x-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-panel border border-border bg-card py-1"
             >
               {matches.length === 0 ? (
                 <p className="px-3 py-2 text-sm text-text-muted">
@@ -203,7 +203,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             <span className="relative">
               <Bell aria-hidden="true" className="size-5" />
               {pendingCount > 0 && (
-                <span className="absolute -end-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold tabular text-white">
+                <span className="absolute -end-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-micro font-semibold tabular text-white">
                   {pendingCount}
                 </span>
               )}
@@ -214,7 +214,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             <div
               role="menu"
               aria-label={en.topbar.notifications}
-              className="absolute end-0 top-[calc(100%+6px)] z-30 w-80 overflow-hidden rounded-panel border border-border bg-card py-1 shadow-lg"
+              className="absolute end-0 top-[calc(100%+6px)] z-30 w-80 overflow-hidden rounded-panel border border-border bg-card py-1"
             >
               <p className="px-3 py-2 text-2xs font-semibold uppercase tracking-wide text-text-muted">
                 {en.topbar.notifications}
@@ -251,7 +251,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         <Button onClick={() => navigate('/applications')} className="hidden sm:inline-flex">
           {en.topbar.reviewApplications}
           {pendingCount > 0 && (
-            <span className="ms-1 flex size-5 items-center justify-center rounded-full bg-white/25 text-[11px] font-semibold tabular">
+            <span className="ms-1 flex size-5 items-center justify-center rounded-full bg-white/25 text-badge font-semibold tabular">
               {pendingCount}
             </span>
           )}

@@ -8,11 +8,24 @@ export interface Branch {
   phone: string;
   /** Branch status is a separate field from Restaurant Status. */
   status: BranchStatus;
+  /** Opening time in HH:mm (registration form). */
+  openTime?: string | null;
+  /** Closing time in HH:mm (registration form). */
+  closeTime?: string | null;
+  /** Menu image uploaded in the registration form. */
+  menuImageUrl?: string | null;
+  /** Map-picked coordinates. `null` until the owner picks a point. */
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface TenantContact {
   phone: string;
   email: string;
+  /** Owner full name (registration form: `ownerName`). */
+  name?: string;
+  /** City (registration form: `city`). */
+  city?: string | null;
 }
 
 export interface BrandColors {
@@ -43,6 +56,8 @@ export interface MobileApps {
   iosStoreUrl: string | null;
 }
 
+export type PaymentStatus = 'paid' | 'unpaid';
+
 export interface Tenant {
   id: string;
   /** Human-readable tenant identifier shown in the UI (monospace). */
@@ -59,4 +74,12 @@ export interface Tenant {
   subscription: Subscription;
   channels: WebsiteChannels;
   apps: MobileApps;
+  /** Restaurant description (registration form: `description`). */
+  description?: string | null;
+  /** Cover image (registration form: `coverImageUrl`). */
+  coverImageUrl?: string | null;
+  /** Commercial register number (registration form: `commercialRegisterNumber`). */
+  commercialRegisterNumber?: string | null;
+  // OPEN: payment status source, backend.
+  paymentStatus?: PaymentStatus;
 }

@@ -1,0 +1,478 @@
+[
+  {
+    "id": "log_seed_19_created",
+    "timestamp": "2026-11-12T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_20",
+      "label": "Umbra Umami"
+    },
+    "previousValue": null,
+    "newValue": "Umbra Umami (NWY-1020)"
+  },
+  {
+    "id": "log_seed_4_created",
+    "timestamp": "2026-11-06T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_5",
+      "label": "Falcon's Nest"
+    },
+    "previousValue": null,
+    "newValue": "Falcon's Nest (NWY-1005)"
+  },
+  {
+    "id": "log_seed_9_created",
+    "timestamp": "2026-10-30T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_10",
+      "label": "Kelvin's Kitchen"
+    },
+    "previousValue": null,
+    "newValue": "Kelvin's Kitchen (NWY-1010)"
+  },
+  {
+    "id": "log_seed_feature",
+    "timestamp": "2026-10-24T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "feature_toggled",
+    "target": {
+      "type": "feature",
+      "tenantId": "t_6",
+      "label": "Green Fork Kitchen - Android App"
+    },
+    "previousValue": "Disabled",
+    "newValue": "Enabled"
+  },
+  {
+    "id": "log_seed_pkg",
+    "timestamp": "2026-10-21T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "package_changed",
+    "target": {
+      "type": "subscription",
+      "tenantId": "t_1",
+      "label": "Acme Grill - subscription"
+    },
+    "previousValue": "Start",
+    "newValue": "Growth"
+  },
+  {
+    "id": "log_seed_21_created",
+    "timestamp": "2026-10-18T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_22",
+      "label": "Willow & Wheat"
+    },
+    "previousValue": null,
+    "newValue": "Willow & Wheat (NWY-1022)"
+  },
+  {
+    "id": "log_seed_24_created",
+    "timestamp": "2026-10-15T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_25",
+      "label": "Zephyr Kitchen"
+    },
+    "previousValue": null,
+    "newValue": "Zephyr Kitchen (NWY-1025)"
+  },
+  {
+    "id": "log_seed_0_created",
+    "timestamp": "2026-10-13T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_1",
+      "label": "Acme Grill"
+    },
+    "previousValue": null,
+    "newValue": "Acme Grill (NWY-1001)"
+  },
+  {
+    "id": "log_seed_15_created",
+    "timestamp": "2026-10-08T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_16",
+      "label": "Quartz Quisine"
+    },
+    "previousValue": null,
+    "newValue": "Quartz Quisine (NWY-1016)"
+  },
+  {
+    "id": "log_seed_1_created",
+    "timestamp": "2026-10-03T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_2",
+      "label": "Blue Olive Bistro"
+    },
+    "previousValue": null,
+    "newValue": "Blue Olive Bistro (NWY-1002)"
+  },
+  {
+    "id": "log_seed_16_created",
+    "timestamp": "2026-09-28T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_17",
+      "label": "Rustic Root"
+    },
+    "previousValue": null,
+    "newValue": "Rustic Root (NWY-1017)"
+  },
+  {
+    "id": "log_seed_5_created",
+    "timestamp": "2026-09-23T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_6",
+      "label": "Green Fork Kitchen"
+    },
+    "previousValue": null,
+    "newValue": "Green Fork Kitchen (NWY-1006)"
+  },
+  {
+    "id": "log_seed_6_created",
+    "timestamp": "2026-09-13T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_7",
+      "label": "Harbor House"
+    },
+    "previousValue": null,
+    "newValue": "Harbor House (NWY-1007)"
+  },
+  {
+    "id": "log_seed_25_created",
+    "timestamp": "2026-09-08T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_26",
+      "label": "Copper Cactus"
+    },
+    "previousValue": null,
+    "newValue": "Copper Cactus (NWY-1026)"
+  },
+  {
+    "id": "log_seed_13_created",
+    "timestamp": "2026-09-03T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_14",
+      "label": "Orange Peel Cafe"
+    },
+    "previousValue": null,
+    "newValue": "Orange Peel Cafe (NWY-1014)"
+  },
+  {
+    "id": "log_seed_11_created",
+    "timestamp": "2026-08-24T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_12",
+      "label": "Maple & Main"
+    },
+    "previousValue": null,
+    "newValue": "Maple & Main (NWY-1012)"
+  },
+  {
+    "id": "log_seed_22_created",
+    "timestamp": "2026-08-14T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_23",
+      "label": "Xenon Xpress"
+    },
+    "previousValue": null,
+    "newValue": "Xenon Xpress (NWY-1023)"
+  },
+  {
+    "id": "log_seed_2_created",
+    "timestamp": "2026-08-09T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_3",
+      "label": "Cedar & Salt"
+    },
+    "previousValue": null,
+    "newValue": "Cedar & Salt (NWY-1003)"
+  },
+  {
+    "id": "log_seed_7_created",
+    "timestamp": "2026-08-06T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_8",
+      "label": "Ivory Spoon"
+    },
+    "previousValue": null,
+    "newValue": "Ivory Spoon (NWY-1008)"
+  },
+  {
+    "id": "log_seed_20_created",
+    "timestamp": "2026-08-04T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_21",
+      "label": "Velvet Vine"
+    },
+    "previousValue": null,
+    "newValue": "Velvet Vine (NWY-1021)"
+  },
+  {
+    "id": "log_seed_10_created",
+    "timestamp": "2026-07-15T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_11",
+      "label": "Luna Verde"
+    },
+    "previousValue": null,
+    "newValue": "Luna Verde (NWY-1011)"
+  },
+  {
+    "id": "log_seed_3_created",
+    "timestamp": "2026-06-25T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_4",
+      "label": "Demo Diner"
+    },
+    "previousValue": null,
+    "newValue": "Demo Diner (NWY-1004)"
+  },
+  {
+    "id": "log_seed_8_created",
+    "timestamp": "2026-06-20T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_9",
+      "label": "Juniper Table"
+    },
+    "previousValue": null,
+    "newValue": "Juniper Table (NWY-1009)"
+  },
+  {
+    "id": "log_seed_18_created",
+    "timestamp": "2026-05-26T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_19",
+      "label": "Terra Tomate"
+    },
+    "previousValue": null,
+    "newValue": "Terra Tomate (NWY-1019)"
+  },
+  {
+    "id": "log_seed_14_created",
+    "timestamp": "2026-05-16T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_15",
+      "label": "Pike Street Deli"
+    },
+    "previousValue": null,
+    "newValue": "Pike Street Deli (NWY-1015)"
+  },
+  {
+    "id": "log_seed_12_created",
+    "timestamp": "2026-04-06T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_13",
+      "label": "Nomad Noodles"
+    },
+    "previousValue": null,
+    "newValue": "Nomad Noodles (NWY-1013)"
+  },
+  {
+    "id": "log_seed_23_created",
+    "timestamp": "2026-03-27T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_24",
+      "label": "Yarrow Yard"
+    },
+    "previousValue": null,
+    "newValue": "Yarrow Yard (NWY-1024)"
+  },
+  {
+    "id": "log_seed_17_created",
+    "timestamp": "2025-11-07T09:00:00.000Z",
+    "actor": {
+      "id": "acct_seed_1",
+      "name": "Demo Super Admin",
+      "role": "super_admin"
+    },
+    "action": "restaurant_created",
+    "target": {
+      "type": "tenant",
+      "tenantId": "t_18",
+      "label": "Saffron Street"
+    },
+    "previousValue": null,
+    "newValue": "Saffron Street (NWY-1018)"
+  }
+]

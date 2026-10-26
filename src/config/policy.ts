@@ -5,6 +5,8 @@
  * because the spec leaves them as OPEN DECISIONS. Do not treat them as final rules.
  */
 
+import { PACKAGE_LIST } from './packages';
+
 // OPEN DECISION: subscription expiry warning threshold is not defined in the spec.
 // ASSUMPTION: 30 days is a conservative, common default used only for display highlighting.
 export const EXPIRING_SOON_DAYS = 30;
@@ -23,14 +25,14 @@ export const AUTO_SUSPEND_ON_EXPIRY = false;
 // ASSUMPTION: they are optional; when absent they render as "Not tracked".
 export const TREAT_NULL_CHANNEL_STATUS_AS_NOT_TRACKED = true;
 
-// OPEN DECISION: whether extra branches beyond the included 4 require a fee is undefined.
-// ASSUMPTION: we only show the note; no price is displayed anywhere.
-export const INCLUDED_BRANCHES = 4;
-export const EXTRA_BRANCH_FEE_DEFINED = false;
+// NW-247: the branch limit is 2 for EVERY package (owner decision), so the platform-wide
+// included-branch count is derived from the package configuration and never drifts from it.
+// There is no extra-branch fee: it is not defined, so it is neither shown nor calculated.
+export const INCLUDED_BRANCHES = Math.max(...PACKAGE_LIST.map((item) => item.branchLimits.max));
 
 // OPEN DECISION: reference prices are not confirmed as final commercial terms.
 export const REFERENCE_PRICE_NOTE =
-  'Reference price — tax inclusion and payment terms not yet confirmed';
+  'Reference price. Tax and payment terms not yet confirmed.';
 
 // OPEN DECISION: the "ending within 2 weeks" window is fixed by the design brief.
 // It is intentionally separate from EXPIRING_SOON_DAYS (which drives the KPI card and badges).
@@ -41,3 +43,7 @@ export const OVERVIEW_LATEST_CONTRACTS_COUNT = 8;
 
 // Number of calendar months (including the current one) shown in the contracts chart.
 export const OVERVIEW_CHART_MONTHS = 6;
+
+// NW-246: the fields an application must carry are no longer listed here — they come
+// from the registration JSON (`src/config/restaurant-registration-fields.json`) and are
+// validated by `domain/rules/registration-validation.ts`.

@@ -95,7 +95,7 @@ export function Pagination({
                 className={cn(
                   'inline-flex size-9 items-center justify-center rounded-panel text-sm transition-colors duration-150',
                   item === page
-                    ? 'bg-primary font-semibold text-white shadow-primary'
+                    ? 'bg-primary font-semibold text-white'
                     : 'text-text hover:bg-bg-2',
                 )}
               >

@@ -6,7 +6,11 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-export class InMemoryFeatureFlagRepository implements FeatureFlagRepository {
+/**
+ * STATIC feature-flag store. Flags are derived from each restaurant's package on load;
+ * toggles live in memory only and reset on refresh.
+ */
+export class StaticFeatureFlagRepository implements FeatureFlagRepository {
   private flags = new Map<string, FeatureFlag[]>();
 
   findByTenant(tenantId: string): FeatureFlag[] {
@@ -21,7 +25,6 @@ export class InMemoryFeatureFlagRepository implements FeatureFlagRepository {
     this.flags.set(flag.tenantId, list);
   }
 
-  /** Flags default to the tenant's package entitlement. */
   seedDefaults(tenant: Tenant): void {
     const list: FeatureFlag[] = TOGGLEABLE_FEATURES.map((key) => ({
       tenantId: tenant.id,

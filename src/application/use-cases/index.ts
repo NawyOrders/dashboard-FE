@@ -1,19 +1,25 @@
 import type {
   AddBranchInput,
+  ChangeOwnPasswordInput,
+  CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
   OverviewAnalysis,
+  ResetTenantAccountPasswordInput,
+  TenantAccountView,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import type {
   ActivityLog,
-  AdminAccount,
   AdminUser,
   Branch,
   CreateAdminAccountInput,
   FeatureFlag,
+  InternalAccount,
   PackageFeatureKey,
+  PlatformLoginRequest,
+  PlatformLoginResult,
   RestaurantStatus,
   Tenant,
 } from '@/domain/entities';
@@ -30,11 +36,21 @@ import { makeGetCurrentUser } from './get-current-user';
 import { makeGetOverviewAnalysis } from './get-overview-analysis';
 import { makeListAdminAccounts } from './list-admin-accounts';
 import { makeCreateAdminAccount } from './create-admin-account';
+import { makeChangeOwnPassword } from './change-own-password';
+import { makeListTenantAccounts } from './list-tenant-accounts';
+import { makeCreateTenantAccount } from './create-tenant-account';
+import { makeResetTenantAccountPassword } from './reset-tenant-account-password';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
 import { makeApproveApplication } from './approve-application';
+import { makeUpdateApplication } from './update-application';
+import { makeDeleteApplication } from './delete-application';
+import { makeSignIn } from './sign-in';
 
-/** Synchronous, framework-free core. The infrastructure adapter adds I/O semantics. */
+/**
+ * Framework-free core. The infrastructure adapter adds I/O semantics. The account
+ * functions are asynchronous because the account store hashes passwords (NW-247).
+ */
 export interface Backend {
   getCurrentUser(): AdminUser;
   listTenants(params?: ListTenantsParams): Tenant[];
@@ -51,14 +67,28 @@ export interface Backend {
   listFeatureFlags(tenantId: string): FeatureFlag[];
   addBranch(tenantId: string, input: AddBranchInput, actor: AdminUser): Branch;
   listActivity(params?: ListActivityParams): ActivityLog[];
-  listAdminAccounts(): AdminAccount[];
-  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): AdminAccount;
+  listAdminAccounts(): Promise<InternalAccount[]>;
+  createAdminAccount(input: CreateAdminAccountInput, actor: AdminUser): Promise<InternalAccount>;
+  changeOwnPassword(input: ChangeOwnPasswordInput, actor: AdminUser): Promise<void>;
+  listTenantAccounts(): Promise<TenantAccountView[]>;
+  createTenantAccount(
+    input: CreateTenantAccountInput,
+    actor: AdminUser,
+  ): Promise<TenantAccountView>;
+  resetTenantAccountPassword(
+    input: ResetTenantAccountPasswordInput,
+    actor: AdminUser,
+  ): Promise<void>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
-  approveApplication(tenantId: string, actor: AdminUser): Tenant;
+  approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
+  updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Tenant;
+  deleteApplication(tenantId: string, reason: string, actor: AdminUser): void;
+  signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult>;
 }
 
 export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvider): Backend {
+  const signIn = makeSignIn({ auth: deps.auth });
   return {
     getCurrentUser: makeGetCurrentUser(currentUser),
     listTenants: makeListTenants(deps.restaurants),
@@ -72,9 +102,16 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     listActivity: makeListActivity(deps),
     listAdminAccounts: makeListAdminAccounts(deps),
     createAdminAccount: makeCreateAdminAccount(deps),
+    changeOwnPassword: makeChangeOwnPassword(deps),
+    listTenantAccounts: makeListTenantAccounts(deps),
+    createTenantAccount: makeCreateTenantAccount(deps),
+    resetTenantAccountPassword: makeResetTenantAccountPassword(deps),
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
     approveApplication: makeApproveApplication(deps),
+    updateApplication: makeUpdateApplication(deps),
+    deleteApplication: makeDeleteApplication(deps),
+    signIn: (input: PlatformLoginRequest) => signIn(input),
   };
 }
 

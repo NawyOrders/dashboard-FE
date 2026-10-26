@@ -1,13 +1,19 @@
 import type {
+  Account,
+  AccountStatus,
   ActivityLog,
-  AdminAccount,
   AdminUser,
   FeatureFlag,
+  InternalAccount,
   PackageFeatureKey,
   Permission,
+  PlatformLoginRequest,
+  PlatformLoginResult,
   Role,
   SalesRecord,
   Tenant,
+  TenantAccount,
+  TenantRole,
 } from '@/domain/entities';
 
 /**
@@ -33,14 +39,65 @@ export interface FeatureFlagRepository {
   seedDefaults(tenant: Tenant): void;
 }
 
-export interface AdminAccountRepository {
-  findAll(): AdminAccount[];
-  findByEmail(email: string): AdminAccount | null;
-  save(account: AdminAccount): void;
+export interface NewInternalAccount {
+  id: string;
+  email: string;
+  name: string;
+  accountType: 'internal';
+  role: Role;
+  /**
+   * The plain password. The adapter stores a hash only — the password itself never
+   * reaches the store, an activity log or the console.
+   */
+  password?: string;
+  status?: AccountStatus;
+  createdAt?: string;
+}
+
+export interface NewTenantAccount {
+  id: string;
+  email: string;
+  name: string;
+  accountType: 'tenant';
+  tenantId: string;
+  restaurantRole: TenantRole;
+  password?: string;
+  status?: AccountStatus;
+  createdAt?: string;
+}
+
+/**
+ * Account store (NW-247). Internal dashboard accounts and tenant restaurant accounts
+ * live in the same store, separated by `accountType`.
+ */
+export interface AuthRepository {
+  findAll(): Promise<Account[]>;
+  findById(accountId: string): Promise<Account | null>;
+  findByEmail(email: string): Promise<Account | null>;
+  /**
+   * Platform sign-in (agent.md section 18). Failures are returned as values, never
+   * thrown. A tenant account always gets `Auth.InvalidCredentials`.
+   */
+  signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult>;
+  /** Verifies credentials for password-change flows; `null` means no/internal failure. */
+  findByCredentials(email: string, password: string): Promise<InternalAccount | null>;
+  createAccount(input: NewInternalAccount): Promise<InternalAccount>;
+  createAccount(input: NewTenantAccount): Promise<TenantAccount>;
+  /** Replaces the stored password of an account. */
+  updatePassword(accountId: string, password: string): Promise<void>;
 }
 
 export interface SalesRepository {
   findAll(): SalesRecord[];
+}
+
+/**
+ * Image uploads (NW-246). The registration form stores uploaded images through this
+ * port; the mock adapter keeps them as data URLs until a real upload endpoint exists.
+ */
+export interface FileUploadRepository {
+  /** Returns the stored reference (a data URL in the mock adapter). */
+  uploadImage(file: File): Promise<string>;
 }
 
 /** Injectable time source so business rules and tests are deterministic. */
@@ -66,10 +123,10 @@ export interface UseCaseDeps {
   restaurants: RestaurantRepository;
   activity: ActivityLogRepository;
   flags: FeatureFlagRepository;
-  accounts: AdminAccountRepository;
   sales: SalesRepository;
   clock: Clock;
   ids: IdGenerator;
+  auth: AuthRepository;
 }
 
 export type { FeatureFlag, PackageFeatureKey };

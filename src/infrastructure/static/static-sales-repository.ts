@@ -5,8 +5,8 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-/** Read-only in-memory store; returns deep copies so callers cannot mutate state. */
-export class InMemorySalesRepository implements SalesRepository {
+/** Read-only STATIC sales store loaded from `public/mock/sales.json`. */
+export class StaticSalesRepository implements SalesRepository {
   private records: SalesRecord[];
 
   constructor(seed: SalesRecord[] = []) {

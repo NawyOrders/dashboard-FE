@@ -81,7 +81,7 @@ export function ApplicationDetailsPanel({
           role="dialog"
           aria-modal="true"
           aria-label={en.applications.viewTitle}
-          className="fixed inset-y-0 end-0 z-50 flex w-[min(92vw,440px)] flex-col border-s border-border bg-card shadow-md"
+          className="fixed inset-y-0 end-0 z-50 flex w-[min(92vw,440px)] flex-col border-s border-border bg-card"
         >
           <div className="flex items-start justify-between gap-4 border-b border-border p-6">
             <h2 className="text-lg font-semibold text-text">{en.applications.viewTitle}</h2>

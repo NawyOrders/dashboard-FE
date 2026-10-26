@@ -1,0 +1,169 @@
+[
+  {
+    "id": "t_5",
+    "tenantId": "NWY-1005",
+    "businessName": "Falcon's Nest Demo Co.",
+    "restaurantName": "Falcon's Nest",
+    "contact": {
+      "phone": "+00 000 005 0000",
+      "email": "ops.falcons-nest@example.com",
+      "name": "Demo Owner 5",
+      "city": "Demo City 5"
+    },
+    "logoUrl": null,
+    "description": "Falcon's Nest - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#5B2A86",
+      "secondary": "#D4BEEB"
+    },
+    "socialLinks": {
+      "website": "https://falcons-nest.example.com",
+      "instagram": "https://instagram.com/falcons-nest"
+    },
+    "status": "pending_approval",
+    "createdAt": "2026-11-06T09:00:00.000Z",
+    "branches": [],
+    "subscription": {
+      "id": "sub_5",
+      "tenantId": "t_5",
+      "packageCode": "start",
+      "durationMonths": 3,
+      "status": "not_started",
+      "startDate": "2026-11-09",
+      "endDate": "2027-02-09",
+      "updatedAt": "2026-11-06T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": null,
+      "pwaStatus": null,
+      "websiteUrl": null,
+      "pwaUrl": null,
+      "previewUrl": null
+    },
+    "apps": {
+      "android": null,
+      "ios": null,
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "paid"
+  },
+  {
+    "id": "t_10",
+    "tenantId": "NWY-1010",
+    "businessName": "Kelvin's Kitchen Demo Co.",
+    "restaurantName": "Kelvin's Kitchen",
+    "contact": {
+      "phone": "+00 000 010 0000",
+      "email": "ops.kelvins-kitchen@example.com",
+      "name": "Demo Owner 10",
+      "city": "Demo City 4"
+    },
+    "logoUrl": null,
+    "description": "Kelvin's Kitchen - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": "123456789000009",
+    "brandColors": {
+      "primary": "#167A3E",
+      "secondary": "#A7E3BC"
+    },
+    "socialLinks": {
+      "website": "https://kelvins-kitchen.example.com",
+      "instagram": "https://instagram.com/kelvins-kitchen"
+    },
+    "status": "pending_approval",
+    "createdAt": "2026-10-30T09:00:00.000Z",
+    "branches": [
+      {
+        "id": "b_10_0",
+        "tenantId": "t_10",
+        "name": "Kelvin's Kitchen - Main",
+        "address": "10 Demo Street 1, Demo Area 5",
+        "phone": "+00 000 010 0000",
+        "status": "active",
+        "openTime": "10:00",
+        "closeTime": "23:00",
+        "menuImageUrl": null,
+        "latitude": 30.1644,
+        "longitude": 31.3257
+      }
+    ],
+    "subscription": {
+      "id": "sub_10",
+      "tenantId": "t_10",
+      "packageCode": "growth",
+      "durationMonths": 6,
+      "status": "not_started",
+      "startDate": "2026-11-02",
+      "endDate": "2027-05-02",
+      "updatedAt": "2026-10-30T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": "in_setup",
+      "pwaStatus": "not_tracked",
+      "websiteUrl": "https://kelvins-kitchen.example.com",
+      "pwaUrl": "https://app.kelvins-kitchen.example.com",
+      "previewUrl": null
+    },
+    "apps": {
+      "android": "not_started",
+      "ios": "not_started",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  },
+  {
+    "id": "t_20",
+    "tenantId": "NWY-1020",
+    "businessName": "Umbra Umami Demo Co.",
+    "restaurantName": "Umbra Umami",
+    "contact": {
+      "phone": "+00 000 020 0000",
+      "email": "ops.umbra-umami@example.com",
+      "name": "Demo Owner 20",
+      "city": "Demo City 2"
+    },
+    "logoUrl": null,
+    "description": "Umbra Umami - demo restaurant registered by the owner.",
+    "coverImageUrl": null,
+    "commercialRegisterNumber": null,
+    "brandColors": {
+      "primary": "#7A4A00",
+      "secondary": "#F6D08A"
+    },
+    "socialLinks": {
+      "website": "https://umbra-umami.example.com",
+      "instagram": "https://instagram.com/umbra-umami"
+    },
+    "status": "pending_approval",
+    "createdAt": "2026-11-12T09:00:00.000Z",
+    "branches": [],
+    "subscription": {
+      "id": "sub_20",
+      "tenantId": "t_20",
+      "packageCode": "growth",
+      "durationMonths": 12,
+      "status": "not_started",
+      "startDate": "2026-11-15",
+      "endDate": "2027-11-15",
+      "updatedAt": "2026-11-12T09:00:00.000Z"
+    },
+    "channels": {
+      "websiteStatus": null,
+      "pwaStatus": null,
+      "websiteUrl": null,
+      "pwaUrl": null,
+      "previewUrl": null
+    },
+    "apps": {
+      "android": "not_started",
+      "ios": "not_started",
+      "androidStoreUrl": null,
+      "iosStoreUrl": null
+    },
+    "paymentStatus": "unpaid"
+  }
+]

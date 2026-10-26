@@ -7,7 +7,7 @@ export function RolesSection() {
   const roles = Object.keys(ROLE_REGISTRY) as Role[];
 
   return (
-    <section className="mt-8 rounded-card border border-border bg-card p-6 shadow-card">
+    <section className="mt-8 rounded-card border border-border bg-card p-6">
       <h2 className="text-lg font-semibold text-text">{en.accounts.rolesTitle}</h2>
       <p className="mt-1 text-sm text-text-muted">{en.accounts.rolesSubtitle}</p>
 

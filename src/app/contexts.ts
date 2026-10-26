@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { AdminUser, Role } from '@/domain/entities';
+import type { AdminUser, PlatformLoginResult, Role } from '@/domain/entities';
 
 export interface CurrentUserContextValue {
   user: AdminUser | null;
@@ -20,3 +20,12 @@ export interface ToastContextValue {
 }
 
 export const ToastContext = createContext<ToastContextValue | null>(null);
+
+export interface AuthContextValue {
+  user: AdminUser | null;
+  signIn: (email: string, password: string) => Promise<PlatformLoginResult>;
+  signOut: () => void;
+}
+
+export const AuthContext = createContext<AuthContextValue | null>(null);
+

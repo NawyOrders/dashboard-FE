@@ -1,9 +1,8 @@
-import { ExternalLink, Lock } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { Badge } from '@/presentation/components/ui/Badge';
 import { en } from '@/presentation/i18n/en';
 import { PACKAGES } from '@/config/packages';
-import { packageHasFeature } from '@/domain/rules/packages';
 import type { AppStatus, Tenant } from '@/domain/entities';
 import { AppStatusStepper } from './AppStatusStepper';
 
@@ -44,25 +43,6 @@ function PlatformBlock({
 }
 
 export function AppsTab({ tenant }: { tenant: Tenant }) {
-  const entitled = packageHasFeature(tenant.subscription.packageCode, 'android_app');
-
-  if (!entitled) {
-    return (
-      <Card>
-        <CardBody className="flex flex-col items-center gap-3 py-14 text-center">
-          <span className="flex size-14 items-center justify-center rounded-avatar bg-bg-2 text-primary">
-            <Lock aria-hidden="true" className="size-7" />
-          </span>
-          <h3 className="text-lg font-semibold text-text">{en.details.appLockedTitle}</h3>
-          <p className="max-w-md text-sm text-text-muted">{en.details.appLockedBody}</p>
-          <p className="text-2xs text-text-muted">
-            {en.details.appEligibility}: {en.details.notEntitled}
-          </p>
-        </CardBody>
-      </Card>
-    );
-  }
-
   return (
     <Card>
       <CardHeader>

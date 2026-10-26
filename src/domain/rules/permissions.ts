@@ -27,6 +27,8 @@ export const ROLE_REGISTRY: Record<Role, RoleDefinition> = {
       'accounts.view',
       'account.create',
       'role.manage',
+      'tenantAccount.create',
+      'tenantAccount.resetPassword',
     ],
   },
   support: {

@@ -13,11 +13,12 @@ import { ROLE_REGISTRY } from '@/domain/rules/permissions';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useAdminAccounts } from '@/presentation/hooks/queries';
 import { adminAccountStatusMeta } from '@/presentation/lib/status';
-import type { AdminAccount } from '@/domain/entities';
+import type { InternalAccount } from '@/domain/entities';
 import { CreateAccountDialog } from './CreateAccountDialog';
 import { RolesSection } from './RolesSection';
+import { TenantAccountsSection } from './TenantAccountsSection';
 
-function roleLabel(role: AdminAccount['role']): string {
+function roleLabel(role: InternalAccount['role']): string {
   return ROLE_REGISTRY[role].label;
 }
 
@@ -64,7 +65,7 @@ export function AccountsPage() {
         }
       />
 
-      <div className="rounded-card border border-border bg-card shadow-card">
+      <div className="rounded-card border border-border bg-card">
         <div className="flex flex-wrap items-center gap-3 border-b border-border p-5">
           <div className="relative min-w-[200px] flex-1">
             <Search
@@ -127,6 +128,8 @@ export function AccountsPage() {
           </div>
         )}
       </div>
+
+      <TenantAccountsSection />
 
       <RolesSection />
 

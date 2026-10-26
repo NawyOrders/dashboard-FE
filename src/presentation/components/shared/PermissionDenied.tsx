@@ -8,7 +8,7 @@ export function PermissionDenied({ action }: { action?: string }) {
   return (
     <div
       role="alert"
-      className="flex flex-col items-center justify-center gap-4 rounded-card border border-border bg-card px-6 py-16 text-center shadow-card"
+        className="flex flex-col items-center justify-center gap-4 rounded-card border border-border bg-card px-6 py-16 text-center"
     >
       <div className="flex size-16 items-center justify-center rounded-avatar bg-danger-bg text-danger-fg">
         <ShieldAlert aria-hidden="true" className="size-8" />

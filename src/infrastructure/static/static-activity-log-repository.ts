@@ -5,7 +5,11 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-export class InMemoryActivityLogRepository implements ActivityLogRepository {
+/**
+ * STATIC activity log. New entries live in memory only; a refresh restores the seeded
+ * `public/mock/activity-logs.json`.
+ */
+export class StaticActivityLogRepository implements ActivityLogRepository {
   private logs: ActivityLog[];
 
   constructor(

@@ -11,7 +11,7 @@ export interface DialogProps {
   description?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }
 
 const SIZES = {
@@ -19,6 +19,7 @@ const SIZES = {
   md: 'max-w-md',
   lg: 'max-w-2xl',
   xl: 'max-w-4xl',
+  full: 'max-w-none',
 } as const;
 
 const FOCUSABLE =
@@ -68,7 +69,14 @@ export function Dialog({ open, onClose, title, description, children, footer, si
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+    <div
+      className={cn(
+        'fixed inset-0 z-50 flex justify-center',
+        size === 'full'
+          ? 'items-stretch p-0 sm:items-center sm:p-4'
+          : 'items-end p-4 sm:items-center',
+      )}
+    >
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-black/40"
@@ -81,8 +89,10 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         aria-labelledby={labelId}
         tabIndex={-1}
         className={cn(
-          'relative z-10 w-full overflow-hidden rounded-card bg-card text-text shadow-lg',
-          'max-h-[90vh] overflow-y-auto outline-none',
+          'relative z-10 w-full bg-card text-text outline-none',
+          size === 'full'
+            ? 'flex h-full max-h-none flex-col overflow-hidden rounded-none sm:h-auto sm:max-h-[90vh] sm:rounded-card sm:border sm:border-border'
+            : 'overflow-hidden rounded-card border border-border max-h-[90vh] overflow-y-auto',
           SIZES[size],
         )}
       >
@@ -102,7 +112,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
             <X aria-hidden="true" className="size-5" />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className={cn('p-6', size === 'full' && 'flex-1 overflow-y-auto')}>{children}</div>
         {footer && (
           <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border p-6">
             {footer}

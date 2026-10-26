@@ -15,6 +15,7 @@
     --text-muted: #7a6f69;
     --border: #f0e6dd;
     --focus-ring: #e438201f;
+    --font-body: 14px;
   }
 
   * {
@@ -32,7 +33,7 @@
     background-color: var(--bg);
     color: var(--text);
     font-family: 'Alexandria', system-ui, sans-serif;
-    font-size: 16px;
+    font-size: var(--font-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }

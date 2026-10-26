@@ -4,21 +4,27 @@ import { Button } from '@/presentation/components/ui/Button';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { Select } from '@/presentation/components/ui/Select';
 import { en } from '@/presentation/i18n/en';
+import { ALL_FILTER_VALUE } from '@/config/filters';
 import type { PackageCode, RestaurantStatus, SubscriptionStatus } from '@/domain/entities';
 import type { DirectoryFilters } from './types';
 
+const ALL_OPTION = { value: ALL_FILTER_VALUE, label: en.common.all };
+
 const PACKAGE_OPTIONS = [
+  ALL_OPTION,
   { value: 'start', label: 'Start' },
   { value: 'growth', label: 'Growth' },
 ];
 
-const RESTAURANT_STATUS_OPTIONS: { value: RestaurantStatus; label: string }[] = [
+const RESTAURANT_STATUS_OPTIONS: { value: RestaurantStatus | string; label: string }[] = [
+  ALL_OPTION,
   { value: 'active', label: en.status.restaurant.active },
   { value: 'pending', label: en.status.restaurant.pending },
   { value: 'inactive', label: en.status.restaurant.inactive },
 ];
 
-const SUBSCRIPTION_STATUS_OPTIONS: { value: SubscriptionStatus; label: string }[] = [
+const SUBSCRIPTION_STATUS_OPTIONS: { value: SubscriptionStatus | string; label: string }[] = [
+  ALL_OPTION,
   { value: 'active', label: en.status.subscription.active },
   { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
   { value: 'expired', label: en.status.subscription.expired },
@@ -71,31 +77,45 @@ export function RestaurantFiltersButton({
         <div
           role="dialog"
           aria-label={en.restaurants.filter}
-          className="absolute end-0 z-30 mt-2 w-80 rounded-card border border-border bg-card p-5 shadow-card"
+          className="absolute end-0 z-30 mt-2 w-80 rounded-card border border-border bg-card p-5"
         >
           <div className="flex flex-col gap-4">
             <Select
               label={en.restaurants.filters.package}
-              placeholder={en.common.all}
-              value={filters.packageCode ?? ''}
-              onChange={(event) => onChange('packageCode', (event.target.value || undefined) as PackageCode | undefined)}
+              value={filters.packageCode ?? ALL_FILTER_VALUE}
+              onChange={(event) =>
+                onChange(
+                  'packageCode',
+                  event.target.value === ALL_FILTER_VALUE
+                    ? undefined
+                    : (event.target.value as PackageCode),
+                )
+              }
               options={PACKAGE_OPTIONS}
             />
             <Select
               label={en.restaurants.filters.restaurantStatus}
-              placeholder={en.common.all}
-              value={filters.restaurantStatus ?? ''}
+              value={filters.restaurantStatus ?? ALL_FILTER_VALUE}
               onChange={(event) =>
-                onChange('restaurantStatus', (event.target.value || undefined) as RestaurantStatus | undefined)
+                onChange(
+                  'restaurantStatus',
+                  event.target.value === ALL_FILTER_VALUE
+                    ? undefined
+                    : (event.target.value as RestaurantStatus),
+                )
               }
               options={RESTAURANT_STATUS_OPTIONS}
             />
             <Select
               label={en.restaurants.filters.subscriptionStatus}
-              placeholder={en.common.all}
-              value={filters.subscriptionStatus ?? ''}
+              value={filters.subscriptionStatus ?? ALL_FILTER_VALUE}
               onChange={(event) =>
-                onChange('subscriptionStatus', (event.target.value || undefined) as SubscriptionStatus | undefined)
+                onChange(
+                  'subscriptionStatus',
+                  event.target.value === ALL_FILTER_VALUE
+                    ? undefined
+                    : (event.target.value as SubscriptionStatus),
+                )
               }
               options={SUBSCRIPTION_STATUS_OPTIONS}
             />

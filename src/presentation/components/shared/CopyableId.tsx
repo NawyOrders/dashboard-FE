@@ -22,7 +22,7 @@ export function CopyableId({ value, className }: CopyableIdProps) {
 
   return (
     <span className={cn('inline-flex items-center gap-1.5', className)}>
-      <span className="font-mono text-[13px] text-text-muted">{value}</span>
+      <span className="font-mono text-mono text-text-muted">{value}</span>
       <button
         type="button"
         onClick={copy}

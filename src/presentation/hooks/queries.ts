@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
 import type { ListActivityParams, ListTenantsParams } from '@/application/dto';
 import type { AdminUser, CreateAdminAccountInput } from '@/domain/entities';
+import type { CreateTenantAccountInput, ResetTenantAccountPasswordInput } from '@/application/dto';
 
 export const queryKeys = {
   tenants: (params: ListTenantsParams) => ['tenants', params] as const,
@@ -10,6 +11,7 @@ export const queryKeys = {
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
   adminAccounts: ['adminAccounts'] as const,
+  tenantAccounts: ['tenantAccounts'] as const,
   monthlySales: ['monthlySales'] as const,
   applications: ['applications'] as const,
 };
@@ -62,6 +64,50 @@ export function useCreateAdminAccount() {
   });
 }
 
+/** NW-247: the tenant accounts of the restaurants. */
+export function useTenantAccounts() {
+  return useQuery({
+    queryKey: queryKeys.tenantAccounts,
+    queryFn: () => api.listTenantAccounts(),
+  });
+}
+
+/** NW-247: create a tenant account for one restaurant. */
+export function useCreateTenantAccount() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      input,
+      actor,
+    }: {
+      input: CreateTenantAccountInput;
+      actor: AdminUser;
+    }) => api.createTenantAccount(input, actor),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.tenantAccounts });
+      void queryClient.invalidateQueries({ queryKey: ['activity'] });
+    },
+  });
+}
+
+/** NW-247: reset the password of a tenant account. */
+export function useResetTenantAccountPassword() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      input,
+      actor,
+    }: {
+      input: ResetTenantAccountPasswordInput;
+      actor: AdminUser;
+    }) => api.resetTenantAccountPassword(input, actor),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.tenantAccounts });
+      void queryClient.invalidateQueries({ queryKey: ['activity'] });
+    },
+  });
+}
+
 export function useFeatureFlags(tenantId: string) {
   return useQuery({
     queryKey: queryKeys.flags(tenantId),
@@ -87,8 +133,15 @@ export function useApplications() {
 export function useApproveApplication() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ tenantId, actor }: { tenantId: string; actor: AdminUser }) =>
-      api.approveApplication(tenantId, actor),
+    mutationFn: ({
+      tenantId,
+      adminPassword,
+      actor,
+    }: {
+      tenantId: string;
+      adminPassword: string;
+      actor: AdminUser;
+    }) => api.approveApplication(tenantId, adminPassword, actor),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
       void queryClient.invalidateQueries({ queryKey: ['tenants'] });

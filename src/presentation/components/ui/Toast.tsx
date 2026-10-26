@@ -41,7 +41,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               key={toast.id}
               role="status"
               className={cn(
-                'pointer-events-auto flex items-start gap-3 rounded-panel border bg-card p-4 shadow-card',
+                'pointer-events-auto flex items-start gap-3 rounded-panel border bg-card p-4',
                 toast.variant === 'error' ? 'border-danger-bg' : 'border-border',
               )}
             >

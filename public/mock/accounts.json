@@ -1,0 +1,68 @@
+[
+  {
+    "id": "acct_seed_1",
+    "accountType": "internal",
+    "name": "Demo Super Admin",
+    "email": "superadmin@example.com",
+    "status": "active",
+    "role": "super_admin",
+    "createdAt": "2026-07-28T09:00:00.000Z"
+  },
+  {
+    "id": "acct_seed_2",
+    "accountType": "internal",
+    "name": "Demo Support",
+    "email": "support@example.com",
+    "status": "active",
+    "role": "support",
+    "createdAt": "2026-09-11T09:00:00.000Z"
+  },
+  {
+    "id": "acct_seed_3",
+    "accountType": "internal",
+    "name": "Inactive Demo Admin",
+    "email": "inactive@example.com",
+    "status": "inactive",
+    "role": "support",
+    "createdAt": "2026-06-28T09:00:00.000Z"
+  },
+  {
+    "id": "acct_seed_4",
+    "accountType": "internal",
+    "name": "Locked Demo Admin",
+    "email": "locked@example.com",
+    "status": "active",
+    "role": "support",
+    "createdAt": "2026-06-18T09:00:00.000Z"
+  },
+  {
+    "id": "tacct_seed_1",
+    "accountType": "tenant",
+    "name": "Demo Tenant Admin",
+    "email": "tenant.admin@example.com",
+    "tenantId": "t_1",
+    "restaurantRole": "admin",
+    "status": "active",
+    "createdAt": "2026-09-26T09:00:00.000Z"
+  },
+  {
+    "id": "tacct_seed_2",
+    "accountType": "tenant",
+    "name": "Demo Tenant Manager",
+    "email": "tenant.manager@example.com",
+    "tenantId": "t_1",
+    "restaurantRole": "manager",
+    "status": "active",
+    "createdAt": "2026-09-27T09:00:00.000Z"
+  },
+  {
+    "id": "tacct_seed_3",
+    "accountType": "tenant",
+    "name": "Demo Tenant Waiter",
+    "email": "tenant.waiter@example.com",
+    "tenantId": "t_4",
+    "restaurantRole": "waiter",
+    "status": "active",
+    "createdAt": "2026-09-28T09:00:00.000Z"
+  }
+]

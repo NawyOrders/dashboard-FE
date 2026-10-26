@@ -5,8 +5,11 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-/** In-memory store. Always returns/stores deep copies so callers cannot mutate state. */
-export class InMemoryRestaurantRepository implements RestaurantRepository {
+/**
+ * STATIC restaurant store. The JSON files are loaded once; save/delete only update this
+ * in-memory cache, so a page refresh restores the data from `public/mock/`.
+ */
+export class StaticRestaurantRepository implements RestaurantRepository {
   private tenants: Tenant[];
 
   constructor(seed: Tenant[] = []) {
@@ -23,8 +26,12 @@ export class InMemoryRestaurantRepository implements RestaurantRepository {
   }
 
   save(tenant: Tenant): void {
-    const index = this.tenants.findIndex((t) => t.id === tenant.id);
+    const index = this.tenants.findIndex((item) => item.id === tenant.id);
     if (index >= 0) this.tenants[index] = clone(tenant);
     else this.tenants.push(clone(tenant));
+  }
+
+  remove(tenantId: string): void {
+    this.tenants = this.tenants.filter((tenant) => tenant.id !== tenantId);
   }
 }

@@ -1,10 +1,15 @@
 import type { UseCaseDeps } from '@/application/ports';
-import type { AdminAccount } from '@/domain/entities';
+import type { Account, InternalAccount } from '@/domain/entities';
+
+function isInternal(account: Account): account is InternalAccount {
+  return account.accountType === 'internal';
+}
 
 export function makeListAdminAccounts(deps: UseCaseDeps) {
-  return function listAdminAccounts(): AdminAccount[] {
-    return deps.accounts
-      .findAll()
+  return async function listAdminAccounts(): Promise<InternalAccount[]> {
+    const accounts = await deps.auth.findAll();
+    return accounts
+      .filter(isInternal)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.id.localeCompare(b.id));
   };
 }

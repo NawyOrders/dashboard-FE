@@ -1,0 +1,78 @@
+{
+  "users": [
+    {
+      "email": "superadmin@example.com",
+      "password": "SuperDemo123!",
+      "userId": "acct_seed_1",
+      "fullName": "Demo Super Admin",
+      "roles": [
+        "SuperAdmin"
+      ],
+      "accountType": "internal",
+      "isActive": true,
+      "isLockedOut": false
+    },
+    {
+      "email": "support@example.com",
+      "password": "SupportDemo123!",
+      "userId": "acct_seed_2",
+      "fullName": "Demo Support",
+      "roles": [
+        "Support"
+      ],
+      "accountType": "internal",
+      "isActive": true,
+      "isLockedOut": false
+    },
+    {
+      "email": "inactive@example.com",
+      "password": "InactiveDemo123!",
+      "userId": "acct_seed_3",
+      "fullName": "Inactive Demo Admin",
+      "roles": [
+        "Support"
+      ],
+      "accountType": "internal",
+      "isActive": false,
+      "isLockedOut": false
+    },
+    {
+      "email": "locked@example.com",
+      "password": "LockedDemo123!",
+      "userId": "acct_seed_4",
+      "fullName": "Locked Demo Admin",
+      "roles": [
+        "Support"
+      ],
+      "accountType": "internal",
+      "isActive": true,
+      "isLockedOut": true
+    },
+    {
+      "email": "tenant.admin@example.com",
+      "password": "TenantDemo123!",
+      "userId": "tacct_seed_1",
+      "fullName": "Demo Tenant Admin",
+      "roles": [
+        "Admin"
+      ],
+      "accountType": "tenant",
+      "tenantId": "t_1",
+      "isActive": true,
+      "isLockedOut": false
+    },
+    {
+      "email": "tenant.manager@example.com",
+      "password": "TenantDemo123!",
+      "userId": "tacct_seed_2",
+      "fullName": "Demo Tenant Manager",
+      "roles": [
+        "Manager"
+      ],
+      "accountType": "tenant",
+      "tenantId": "t_1",
+      "isActive": true,
+      "isLockedOut": false
+    }
+  ]
+}

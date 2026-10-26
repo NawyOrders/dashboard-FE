@@ -110,7 +110,7 @@ export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
                       </div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                      <span className="font-mono text-[13px] text-text-muted">{tenant.tenantId}</span>
+                      <span className="font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       <PackagePill code={tenant.subscription.packageCode} />

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LogOut, ShieldCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronDown, LogOut } from 'lucide-react';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { useAuth } from '@/presentation/hooks/useAuth';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
-import type { Role } from '@/domain/entities';
 
 function initials(name: string): string {
   return name
@@ -21,7 +22,9 @@ export interface AccountMenuProps {
 }
 
 export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
-  const { user, role, setRole } = useCurrentUser();
+  const { user } = useCurrentUser();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -37,9 +40,15 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
 
   if (!user) return <div className="h-16 animate-pulse rounded-panel bg-neutral-bg" />;
 
-  function signOut() {
+  function handleSignOut() {
+    signOut();
     setOpen(false);
-    toast({ title: 'Signed out (demo)', variant: 'neutral' });
+    try {
+      navigate('/login', { replace: true });
+    } catch {
+      // ignore
+    }
+    toast({ title: en.common.signOut, variant: 'neutral' });
   }
 
   return (
@@ -76,43 +85,17 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
       {open && (
         <div
           role="menu"
-          className="absolute bottom-full start-2 z-20 mb-2 w-72 rounded-card border border-border bg-card p-2 shadow-card"
+          className="absolute bottom-full start-2 z-20 mb-2 w-72 rounded-card border border-border bg-card p-2"
         >
           <div className="border-b border-border p-3">
             <p className="truncate text-sm font-semibold text-text">{user.name}</p>
             <p className="truncate text-2xs text-text-muted">{user.email}</p>
           </div>
 
-          <div className="p-3">
-            <p className="mb-2 flex items-center gap-1.5 text-2xs font-medium text-text-muted">
-              <ShieldCheck aria-hidden="true" className="size-3.5" />
-              {en.permissions.switchRole}
-            </p>
-            <div role="group" aria-label={en.permissions.switchRole} className="flex gap-1">
-              {(['super_admin', 'support'] as Role[]).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={role === option}
-                  onClick={() => setRole(option)}
-                  className={cn(
-                    'flex-1 rounded-pill px-2 py-1.5 text-2xs font-medium transition-colors duration-150',
-                    role === option
-                      ? 'bg-primary text-white'
-                      : 'bg-neutral-bg text-text-muted hover:text-text',
-                  )}
-                >
-                  {option === 'super_admin' ? 'Super Admin' : 'Support'}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <button
             type="button"
             role="menuitem"
-            onClick={signOut}
+            onClick={handleSignOut}
             className="flex w-full items-center gap-2 rounded-pill px-3 py-2 text-sm text-text transition-colors duration-150 hover:bg-danger-bg hover:text-danger-fg"
           >
             <LogOut aria-hidden="true" className="size-4" />
@@ -124,7 +107,7 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
       {variant === 'drawer' && (
         <button
           type="button"
-          onClick={signOut}
+          onClick={handleSignOut}
           className="mt-1 flex w-full items-center gap-2 rounded-panel px-3 py-2 text-sm text-text transition-colors duration-150 hover:bg-danger-bg hover:text-danger-fg"
         >
           <LogOut aria-hidden="true" className="size-4" />

@@ -43,7 +43,9 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 16. Subscription start date is chosen manually; no automatic rule.
 17. No grace period and no automatic suspension on expiry; expired subscriptions stay `expired`.
 18. Notifications bell is rendered but disabled/empty.
-19. Extra branches beyond 4 show a "fee not yet defined" note with no price.
+19. ~~Extra branches beyond 4 show a "fee not yet defined" note with no price.~~ Superseded by
+    NW-247: the branch limit is 2 for every package (owner decision), so no branch is ever
+    "beyond the limit" and **no fee text is shown anywhere**.
 
 ## Post-review decisions
 20. The top-bar global search navigates to `/restaurants?q=…`; the restaurants directory is
@@ -219,3 +221,166 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     0–1 branches (Falcon's Nest, Kelvin's Kitchen, Umbra Umami). `isListed` keeps them out of
     the directory/Overview, so they surface only on the Applications page until an admin
     approves them, after which they join the directory. No "create" use case exists any more.
+66. **SPA fallback for deep routes is a host responsibility (refresh 404).** The app uses
+    `createBrowserRouter` (history mode) with no `basename`, and `vite.config.ts` sets no `base`
+    (both default to `/`, so they match). Vite dev and `vite preview` rewrite unknown paths to
+    `index.html`, so `/applications`, `/analytics` and `/restaurants/:id` return 200 locally on
+    direct load and refresh. The repository ships **no** host configuration (`vercel.json`,
+    `netlify.toml`, `public/_redirects`, nginx/S3 rules), so a static host without an SPA rewrite
+    returns 404 when refreshing a deep route. Add the host-specific rewrite (or switch to a hash
+    router) once a target host is chosen — deliberately not guessed here.
+67. **The whole type scale is now token-driven and 2px smaller (floor 12px).** The design
+    token scale previously only defined `h1` 64, `caption` 48, `body` 16 and `dense` 14/12,
+    while components used Tailwind's default `text-xs/sm/base/lg/xl/2xl` sizes and a few
+    hard-coded `text-[40px]/[13px]/[11px]/[10px]` and SVG `fontSize` values. `AH-239` moves
+    every used size into `tokens.ts` (`h1` 62, `caption` 46, `2xs/xs/sm` 12, `base` 14,
+    `lg` 16, `xl` 18, `2xl` 22, plus `title` 38 for the mobile page title, `mono` 12,
+    `badge` 11, `micro` 10 and `chart` 12) and maps them in     `tailwind.config.ts`. Line-heights
+    are stored as unitless ratios so the proportion is preserved at any size, and no value
+    drops below the 12px floor. The global body size reads the `base` token through the
+    `--font-body` CSS variable injected by `applyTheme`, so `tokens.ts` stays the single
+    source. Hard-coded component sizes were replaced with the matching token names.
+
+## NW-246 schema-driven registration form
+68. **Branch limits per package (confirmed by the owner, not an assumption).** ~~`Start` allows
+    1–2 branches and `Growth` allows 1–4~~ **NW-247: the limit is 2 for EVERY package**
+    (`Start` and `Growth` both declare 1–2), stored in `config/packages.ts`
+    (`PackageDefinition.branchLimits`) and enforced by the registration-form repeater and by
+    the approve validation. The `limits` block of
+    `src/config/restaurant-registration-fields.json` (`minBranches: 1`, `maxBranches: 2`) is
+    **not** used for the maximum, because the limits are owned by the package configuration.
+    The platform-wide included-branch count (`INCLUDED_BRANCHES`, `config/policy.ts`) is now
+    derived from those package limits, so the two can never drift apart.
+69. **Leaflet is a new runtime dependency.** `leaflet` 1.9.4 (dependency) and `@types/leaflet`
+    1.9.22 (dev dependency) render the branch map picker. Tiles come from OpenStreetMap using
+    the `tileUrl`/`attribution` values in the registration-fields JSON; no API key is required.
+    The marker is a `divIcon` styled with the design tokens, so no marker image asset and no
+    hex value is needed.
+70. **Uploaded images are stored as data URLs in the mock.** The JSON marks both image-upload
+    fields with `saveBehavior: "local preview only until upload endpoint exists"`, so the file
+    upload goes through the `FileUploadRepository` port and the mock adapter returns a
+    `data:` URL that is written into `coverImageUrl` / `menuImageUrl`. No binary is persisted
+    and the payload stays inside the in-memory mock.
+71. **City options come from a static list.** The JSON field `city` declares
+    `options: "backend list (ASSUMPTION)"` and gives no values, so `config/cities.ts` holds a
+    fixed list of Egyptian cities (starting with the JSON example "الاسكندرية") until the
+    backend provides one.
+72. **The map opens on a default position.** With no coordinates yet, the picker centres on
+    `config/map.ts` (`DEFAULT_MAP_CENTER` = Cairo, zoom 12) and shows no marker until the
+    owner picks a point. The JSON does not define a default centre.
+73. **Monthly / yearly prices are derived from the reference price table.** The JSON package
+    shape asks for `monthlyPrice`/`yearlyPrice`, but the dashboard only had reference prices
+    per duration (Start 9,000 / 17,000 / 32,000 EGP for 3 / 6 / 12 months, Growth 18,000 /
+    34,000 / 64,000). Monthly is the 3-month price divided by three (Start 3,000, Growth 6,000)
+    and yearly is the 12-month reference price (Start 32,000, Growth 64,000). They stay
+    reference prices and are not confirmed commercial terms.
+74. **The billing cycle toggle is display-only.** `Monthly` / `Yearly` selects which price the
+    package cards show, as the JSON describes. The persisted subscription keeps the existing
+    `durationMonths` (3 / 6 / 12) model — a monthly/yearly cycle and a 3/6/12-month duration
+    are different concepts and are not merged. The cycle is therefore not written on save.
+75. **Read-only sections render values as text.** The `logo` and `brand_colors` sections are
+    marked `editable: false` in the JSON, so they are shown as plain values (logo tile, colour
+    swatches) instead of inputs; they are still part of the form and are never hidden.
+
+76. **Saving the form logs one entry per changed field.** `updateApplication` compares the stored
+    tenant with the saved one field by field (using the JSON field labels) and writes one
+    `restaurant_details_changed` entry per changed field, with the previous and new value.
+    Branches that were added or removed get one entry of their own. Nothing is logged when
+    nothing changed, and no entry is written for the billing cycle because it is not persisted.
+77. **Approve stores the form first.** Since the reviewer approves what is on screen, `Approve`
+    calls `updateApplication` with the current form values and then `approveApplication`. This
+    keeps the stored tenant and the approved data identical.
+78. **Labels from the JSON win over the English UI strings.** Where the JSON supplies a label
+    (`addButtonLabel`, `removeLabel`, the billing-cycle labels) that Arabic label is used as
+    given, because the JSON is the single source of truth for the form. Layout headings that the
+    JSON does not carry use `en.ts`.
+79. **Branch cards fold and the map mounts on demand.** The JSON `map.behavior` asks for the map
+    to load only while its branch is open, so each branch card is collapsible and the Leaflet
+    map is created only when the card is open. A branch with a validation problem is opened
+    automatically so the field can be focused.
+80. **The same form is reused on the restaurant details page.** Approved restaurants get a
+    `Registration` tab that renders the same schema-driven form; saving there uses the same
+    `updateApplication` use case and activity log. It is read-only for Support.
+81. **Seed data carries the new registration fields.** The demo tenants were extended (owner
+    name, city, description, branch opening hours and coordinates; cover and menu images stay
+    empty) so the form can be exercised end to end. Seeded phone numbers keep their display
+    format and do not satisfy the JSON phone pattern, so approving a seed application also
+    demonstrates the inline validation until the phone is corrected.
+
+## NW-247 — commercial register, accounts and passwords
+82. **Commercial register number (ASSUMPTION: verify with official source before production).**
+    The number is optional and, when filled, must be digits only and exactly
+    `commercialRegisterMinLength` … `commercialRegisterMaxLength` (15 … 15) characters long.
+    Both lengths live in `src/config/validation.ts` and carry the `// ASSUMPTION:` marker.
+83. **The commercial register number is added to the schema at load time.** The owner file
+    `src/config/restaurant-registration-fields.json` describes the customer-facing
+    registration wizard and must not be edited, so the dashboard-only field is declared in
+    `src/config/dashboard-registration-fields.ts` and merged into the parsed schema
+    (`withDashboardFields`). The form, the validation and the activity log keep working with
+    one schema; no field is hard-coded in a component.
+84. **The demo data never exceeds the branch limit.** With the limit of 2 for every package
+    (item 68), the seeded restaurants were reduced to at most 2 branches, so no demo record
+    contradicts the owner decision.
+85. **One account model for internal and tenant accounts.** `src/domain/entities/account.ts`
+    holds a single `Account` type with `accountType: 'internal' | 'tenant'`; internal accounts
+    carry the dashboard `role`, tenant accounts carry `tenantId` and the restaurant role.
+    Both live in one account store, so a tenant account can never be mistaken for a
+    dashboard user.
+86. **A tenant account never signs in to this dashboard.** The account store answers `null`
+    for a tenant account in `findByCredentials`, exactly as it does for a wrong password, so
+    the sign-in screen shows the same generic "Invalid email or password" error and never
+    reveals that the account exists. An inactive account is rejected the same way.
+87. **Passwords are stored as a hash only.** The mock account store hashes a password with
+    SHA-256 (`src/infrastructure/security/password-hasher.ts`) and keeps only the hash; the
+    plain password never reaches the store, an activity log or the console.
+    ASSUMPTION: SHA-256 without a per-account salt is enough for this mock — a real backend
+    must use a slow key-derivation function (argon2 / bcrypt / scrypt) with a unique salt.
+88. **The restaurant roles are still a mock.** `src/config/restaurant-roles.ts` copies the
+    owner file `restaurant-roles.mock.ts` and keeps its `// MOCK: replace with owner-defined
+    roles.` marker. `admin` is not offered in the role select: the admin account of a
+    restaurant is created when the application is approved.
+89. **One password policy for the whole product.** `src/domain/rules/password.ts` requires
+    at least 8 characters, at least one letter and at least one digit. The same rule is
+    used for the restaurant admin password (set while approving an application), for the
+    password of a dashboard user and for the password of a tenant account.
+    ASSUMPTION: the owner did not define a password policy — 8 characters with a letter
+    and a digit is the platform default used here.
+90. **Approving an application creates the admin account of the restaurant.** The password
+    is entered in the application view dialog and checked like every other required field:
+    an empty value blocks the approval and is listed in the inline summary. The account
+    gets the restaurant role `admin`, which is never offered in the role select. The
+    activity log records `account_created` for it — without the password value.
+91. **A user changes their own password in the platform settings.** The current password is
+    verified against the signed-in account first: a wrong one changes nothing and shows an
+    inline error. The new password follows the policy of item 89 and must be repeated. The
+    activity log records `account.password_changed` with the actor — never with a password
+    value.
+92. **A new dashboard account is created with a password.** The create-account form asks
+    for the password and its repetition; the password is required and follows the policy of
+    item 89. The account can sign in right after it is created. The activity log records
+    `account_created` with the email and the role — never with a password value.
+93. **The tenant accounts live in a section of the accounts page.** Every row shows the
+    restaurant, the role, the email and the date the account was created. A Super Admin
+    creates an account for one restaurant with the permission `tenantAccount.create`;
+    the Support role keeps read-only access to the list. The role select offers the roles
+    of `src/config/restaurant-roles.ts` only — `admin` is never in it, because that
+    account is created when the application is approved. The email format and the
+    password policy are checked by the use case as well, not only by the form.
+    ASSUMPTION: a tenant account has no name field in the form, so the account is stored
+    with the restaurant name and the role as its display name.
+94. **A Super Admin resets the password of a tenant account from the accounts page.** The
+    action needs the permission `tenantAccount.resetPassword`; the dialog asks for the new
+    password and its repetition. The old password stops working as soon as the reset is
+    saved — only the hash is replaced in the account store. The activity log records
+    `account.password_reset` with the actor and the account — never with a password value.
+95. **The static data source is read-only on disk.** `public/mock/*.json` is loaded once
+    through `fetch` and validated with Zod. Approve, save, delete, account creation,
+    password reset and password changes update the in-memory cache only; a page refresh
+    restores the fixture values. The files under `public/` are demo data and contain
+    fictional names, addresses, contact details and credentials only.
+96. **Demo login credentials are fixtures only.** The static adapter reads
+    `public/mock/auth/login-fixtures.json`; for example
+    `superadmin@example.com` / `SuperDemo123!` and `support@example.com` /
+    `SupportDemo123!`. These passwords are fictional, hashed in memory, and must never be
+    reused in a real environment. Sign-out clears both `nawy_session` and
+    `nawy_platform_tokens` from `sessionStorage`.

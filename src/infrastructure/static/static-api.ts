@@ -1,11 +1,15 @@
 import type {
   AddBranchInput,
   Api,
+  ChangeOwnPasswordInput,
+  CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
+  ResetTenantAccountPasswordInput,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { Backend } from '@/application/use-cases';
+import type { FileUploadRepository } from '@/application/ports';
 import type {
   AdminUser,
   CreateAdminAccountInput,
@@ -13,43 +17,40 @@ import type {
   RestaurantStatus,
 } from '@/domain/entities';
 
-export const CURRENT_USER: AdminUser = {
-  id: 'u_1',
-  name: 'Nour Hassan',
-  email: 'nour.hassan@nawy.example.com',
-  role: 'super_admin',
-};
-
-export interface MockApiOptions {
+export interface StaticApiOptions {
   minDelayMs?: number;
   maxDelayMs?: number;
 }
 
 function clone<T>(value: T): T {
+  if (value === undefined || value === null) return value;
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
 function forcedErrorActive(): boolean {
   if (typeof window === 'undefined') return false;
-  return new URLSearchParams(window.location.search).get('mockError') === '1';
+  return new URLSearchParams(window.location.search).get('staticError') === '1';
 }
 
 /**
- * Infrastructure adapter: gives the synchronous, framework-free `Backend` the I/O
- * characteristics of a real API — latency, cloning and a forced-error switch
- * (`?mockError=1`). Swap this adapter for an HTTP client without touching the app.
+ * Presentation-facing STATIC API adapter. It gives the synchronous use cases the I/O
+ * shape of an HTTP client (latency, cloning and a forced-error switch, `?staticError=1`).
  */
-export function createMockApi(backend: Backend, options: MockApiOptions = {}): Api {
+export function createStaticApi(
+  backend: Backend,
+  options: StaticApiOptions = {},
+  uploads: FileUploadRepository,
+): Api {
   const minDelayMs = options.minDelayMs ?? 300;
   const maxDelayMs = options.maxDelayMs ?? 600;
 
-  async function run<T>(fn: () => T): Promise<T> {
+  async function run<T>(fn: () => T | Promise<T>): Promise<T> {
     const ms = minDelayMs + Math.random() * Math.max(0, maxDelayMs - minDelayMs);
     await new Promise((resolve) => setTimeout(resolve, ms));
     if (forcedErrorActive()) {
-      throw new Error('Simulated API error (mockError=1)');
+      throw new Error('Simulated static data error (staticError=1)');
     }
-    return clone(fn());
+    return clone(await fn());
   }
 
   return {
@@ -74,9 +75,28 @@ export function createMockApi(backend: Backend, options: MockApiOptions = {}): A
     listAdminAccounts: () => run(() => backend.listAdminAccounts()),
     createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
       run(() => backend.createAdminAccount(input, actor)),
+    changeOwnPassword: (input: ChangeOwnPasswordInput, actor: AdminUser) =>
+      run(() => backend.changeOwnPassword(input, actor)),
+    listTenantAccounts: () => run(() => backend.listTenantAccounts()),
+    createTenantAccount: (input: CreateTenantAccountInput, actor: AdminUser) =>
+      run(() => backend.createTenantAccount(input, actor)),
+    resetTenantAccountPassword: (
+      input: ResetTenantAccountPasswordInput,
+      actor: AdminUser,
+    ) => run(() => backend.resetTenantAccountPassword(input, actor)),
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
-    approveApplication: (tenantId: string, actor: AdminUser) =>
-      run(() => backend.approveApplication(tenantId, actor)),
+    approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
+      run(() => backend.approveApplication(tenantId, adminPassword, actor)),
+    updateApplication: (
+      tenantId: string,
+      patch: Partial<import('@/domain/entities').Tenant>,
+      actor: AdminUser,
+    ) => run(() => backend.updateApplication(tenantId, patch, actor)),
+    deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
+      run(() => backend.deleteApplication(tenantId, reason, actor)),
+    uploadImage: (file: File) => uploads.uploadImage(file),
+    signIn: (email: string, password: string) =>
+      run(() => backend.signIn({ email, password })),
   };
 }

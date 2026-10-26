@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
+import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { signInSchema, type SignInFormValues } from '@/domain/rules/auth-schema';
 import { platformAuthErrorMessage } from '@/domain/rules/platform-auth';
 import { useAuth } from '@/presentation/hooks/useAuth';
@@ -57,7 +58,7 @@ export function LoginPage() {
             <label htmlFor="password" className="mb-1 block text-sm text-text">
               Password
             </label>
-            <Input id="password" type="password" autoComplete="current-password" {...register('password')} />
+            <PasswordInput id="password" autoComplete="current-password" {...register('password')} />
             {errors.password ? <p className="mt-1 text-xs text-error">{errors.password.message}</p> : null}
           </div>
           {formError ? <p className="text-sm text-error">{formError}</p> : null}

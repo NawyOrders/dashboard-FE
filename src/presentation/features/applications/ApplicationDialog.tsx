@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
+import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
 import { Dialog } from '@/presentation/components/ui/Dialog';
 import { Input } from '@/presentation/components/ui/Input';
@@ -104,6 +105,8 @@ function ApplicationDialogContent({
   } = useRestaurantFormState(tenant);
 
   const [problems, setProblems] = useState<RegistrationProblem[]>([]);
+  const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
+  const [paymentSaving, setPaymentSaving] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteReason, setDeleteReason] = useState('');
@@ -140,6 +143,27 @@ function ApplicationDialogContent({
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  useEffect(() => {
+    setPaid(tenant.paymentStatus === 'paid');
+  }, [tenant.id, tenant.paymentStatus]);
+
+  async function handlePaymentChange(next: boolean) {
+    if (!user || paymentSaving) return;
+    const previous = paid;
+    setPaid(next);
+    setPaymentSaving(true);
+    try {
+      await api.updateApplicationPayment(tenant.id, next, user);
+      // The toast is shown only after the PATCH resolves successfully.
+      toast({ title: en.applications.paymentUpdated, variant: 'success' });
+      onSaved();
+    } catch {
+      setPaid(previous);
+    } finally {
+      setPaymentSaving(false);
+    }
+  }
+
   async function handleSave() {
     if (!user) return;
     setSaving(true);
@@ -162,6 +186,12 @@ function ApplicationDialogContent({
 
   async function handleApprove() {
     if (!user) return;
+    if (!paid) {
+      document
+        .getElementById('payment-approval-blocker')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     const result = validateRegistrationForApprove(
       { ...tenant, ...toTenantPatch(values, tenant) } as Tenant,
       schema,
@@ -287,7 +317,7 @@ function ApplicationDialogContent({
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <PackagePill code={tenant.subscription.packageCode} />
-                {tenant.paymentStatus ? <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} /> : null}
+                <StatusPill meta={paymentStatusMeta(paid ? 'paid' : 'unpaid')} />
               </div>
             </div>
             <nav className="flex flex-col gap-1" aria-label={en.applications.viewTitle}>
@@ -308,6 +338,25 @@ function ApplicationDialogContent({
           </aside>
 
           <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3 rounded-card border border-border bg-card p-4">
+              <Checkbox
+                id="rf-field-paid"
+                label={en.applications.paymentCompleted}
+                checked={paid}
+                disabled={!isSuperAdmin || paymentSaving}
+                onChange={(event) => void handlePaymentChange(event.target.checked)}
+              />
+              {!paid ? (
+                <p
+                  id="payment-approval-blocker"
+                  role="alert"
+                  className="rounded-panel border border-warning-fg bg-warning-bg px-3 py-2 text-2xs font-medium text-warning-fg"
+                >
+                  {en.applications.paymentRequiredBeforeApproval}
+                </p>
+              ) : null}
+            </div>
+
             {problems.length > 0 ? (
               <div className="flex flex-col gap-2 rounded-card border border-danger bg-danger-bg p-4">
                 <span className="flex items-center gap-2 text-sm font-semibold text-danger-fg">

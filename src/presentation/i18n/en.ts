@@ -288,6 +288,9 @@ export const en = {
     adminPasswordHint:
       'Approving creates the admin account of this restaurant with this password.',
     adminPasswordCreated: 'Restaurant admin account created',
+    paymentCompleted: 'Payment completed',
+    paymentRequiredBeforeApproval: 'Payment must be completed before approval',
+    paymentUpdated: 'Payment status updated',
   },
   registration: {
     groups: {

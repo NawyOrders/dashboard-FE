@@ -130,6 +130,25 @@ export function useApplications() {
   });
 }
 
+/** `PATCH /onboarding-requests/{requestId}/payment` (agent.md section 21). */
+export function useUpdateApplicationPayment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      requestId,
+      paid,
+      actor,
+    }: {
+      requestId: string;
+      paid: boolean;
+      actor: AdminUser;
+    }) => api.updateApplicationPayment(requestId, paid, actor),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
+    },
+  });
+}
+
 export function useApproveApplication() {
   const queryClient = useQueryClient();
   return useMutation({

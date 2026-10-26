@@ -12,7 +12,7 @@ export const PLATFORM_AUTH_ERROR_CODE = {
   validation: 'Validation.Error',
 } as const;
 
-const INVALID_CREDENTIALS_MESSAGE = 'Invalid email or password. Please try again.';
+const INVALID_CREDENTIALS_MESSAGE = 'Invalid email or password';
 
 /** Maps platform role names to the dashboard role registry in exactly one place. */
 // OPEN: role names, see agent.md section 19

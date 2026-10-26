@@ -338,6 +338,7 @@ function ApplicationDialogContent({
               steps={schema.steps}
               values={values}
               branchLimits={branchLimits}
+              paymentStatus={tenant.paymentStatus}
               disabled={!isSuperAdmin}
               errors={fieldErrors}
               branchErrors={branchErrors}

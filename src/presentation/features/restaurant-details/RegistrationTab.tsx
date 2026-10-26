@@ -78,6 +78,7 @@ export function RegistrationTab({ tenant, onSaved }: RegistrationTabProps) {
         steps={schema.steps}
         values={values}
         branchLimits={branchLimits}
+        paymentStatus={tenant.paymentStatus}
         disabled={!isSuperAdmin}
         onFieldChange={setField}
         onBranchFieldChange={setBranchField}

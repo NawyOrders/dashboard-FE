@@ -1,4 +1,4 @@
-import type { DurationMonths, PackageCode } from '@/domain/entities';
+import type { DurationMonths, PackageCode, PaymentStatus } from '@/domain/entities';
 import type { RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { BranchesSection } from './BranchesSection';
@@ -11,6 +11,7 @@ export interface RestaurantFormProps {
   steps: RegistrationStep[];
   values: RestaurantFormValues;
   branchLimits: { min: number; max: number };
+  paymentStatus?: PaymentStatus;
   onFieldChange: (key: string, value: string) => void;
   onBranchFieldChange: (branchId: string, key: string, value: string) => void;
   onAddBranch: () => void;
@@ -98,6 +99,7 @@ export function RestaurantForm({
   steps,
   values,
   branchLimits,
+  paymentStatus,
   onFieldChange,
   onBranchFieldChange,
   onAddBranch,
@@ -165,6 +167,7 @@ export function RestaurantForm({
             step={subscriptionStep}
             packageCode={values.packageCode}
             durationMonths={values.durationMonths}
+            paymentStatus={paymentStatus}
             disabled={disabled}
             onPackageChange={onPackageChange}
             onDurationChange={onDurationChange}

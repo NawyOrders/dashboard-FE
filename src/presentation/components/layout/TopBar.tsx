@@ -4,7 +4,7 @@ import { Bell, Menu, Search, Settings } from 'lucide-react';
 import { IconButton } from '@/presentation/components/ui/IconButton';
 import { Button } from '@/presentation/components/ui/Button';
 import { en } from '@/presentation/i18n/en';
-import { IS_MOCK_PROVIDER } from '@/app/composition';
+import { IS_DEMO_PROVIDER } from '@/app/composition';
 import { useDebounce } from '@/presentation/hooks/useDebounce';
 import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { cn } from '@/presentation/lib/cn';
@@ -112,7 +112,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 
       <div className="flex min-w-0 items-center gap-2">
         <span className="truncate text-lg font-semibold text-text">{title}</span>
-        {IS_MOCK_PROVIDER && (
+        {IS_DEMO_PROVIDER && (
           <Badge tone="warning" title={en.app.demoBadgeTitle} className="shrink-0">
             {en.app.demoBadge}
           </Badge>

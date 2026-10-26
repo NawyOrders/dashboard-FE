@@ -373,3 +373,8 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     password and its repetition. The old password stops working as soon as the reset is
     saved — only the hash is replaced in the account store. The activity log records
     `account.password_reset` with the actor and the account — never with a password value.
+95. **The static data source is read-only on disk.** `public/mock/*.json` is loaded once
+    through `fetch` and validated with Zod. Approve, save, delete, account creation,
+    password reset and password changes update the in-memory cache only; a page refresh
+    restores the fixture values. The files under `public/` are demo data and contain
+    fictional names, addresses, contact details and credentials only.

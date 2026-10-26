@@ -1,5 +1,5 @@
 import { cn } from '@/presentation/lib/cn';
-import { DURATIONS } from '@/domain/entities';
+import { PACKAGE_DURATIONS } from '@/config/packages';
 import type { DurationMonths } from '@/domain/entities';
 
 export interface DurationSegmentedProps {
@@ -15,7 +15,7 @@ export function DurationSegmented({ value, onChange, disabled }: DurationSegment
       aria-label="Duration"
       className="inline-flex rounded-panel border border-border bg-card p-1"
     >
-      {DURATIONS.map((months) => {
+      {PACKAGE_DURATIONS.map((months) => {
         const selected = months === value;
         return (
           <button

@@ -6,8 +6,7 @@ import { ToastProvider } from '@/presentation/components/ui/Toast';
 import { api } from '@/app/composition';
 import type { AdminUser, PlatformLoginResult, Role } from '@/domain/entities';
 import { adminUserFromPlatformLogin } from '@/domain/rules/platform-auth';
-
-const TOKEN_STORAGE_KEY = 'nawy_platform_tokens';
+import { PLATFORM_TOKEN_STORAGE_KEY as TOKEN_STORAGE_KEY } from '@/infrastructure/api/access-token';
 
 interface StoredPlatformTokens {
   accessToken: string;

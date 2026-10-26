@@ -1,7 +1,7 @@
 import type { Api } from '@/application/dto';
 import type { CurrentUserProvider, UseCaseDeps } from '@/application/ports';
 import { createBackend } from '@/application/use-cases';
-import { DATA_SOURCE, IS_DEMO_PROVIDER } from '@/config/data-source';
+import { assertEnvironment, DATA_SOURCE, IS_DEMO_PROVIDER } from '@/config/data-source';
 import { SystemClock } from '@/infrastructure/clock/system-clock';
 import { createSequentialIdGenerator } from '@/infrastructure/ids/sequential-id-generator';
 import { StaticActivityLogRepository } from '@/infrastructure/static/static-activity-log-repository';
@@ -25,6 +25,7 @@ const CURRENT_USER: AdminUser = {
 };
 
 async function buildContainer(): Promise<Api> {
+  assertEnvironment();
   if (DATA_SOURCE === 'api') {
     throw new Error('api adapter not implemented');
   }
@@ -61,6 +62,7 @@ function getApi(): Promise<Api> {
 
 /** Loads the selected data source before the app renders. */
 export async function initializeApi(): Promise<void> {
+  assertEnvironment();
   await getApi();
 }
 

@@ -23,7 +23,11 @@ import { validateRegistrationForApprove } from '@/domain/rules/registration-vali
 import {
   isTenantProvisioningActive,
   isTenantProvisioningFailed,
+  isTenantProvisioningFinal,
 } from '@/domain/rules/tenant-provisioning';
+
+const PROVISIONING_POLL_MS = 5_000;
+const PROVISIONING_TIMEOUT_MS = 60_000;
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { fieldLabelByKey } from '@/presentation/features/restaurant-form/localized-schema';
@@ -131,6 +135,10 @@ function ApplicationDialogContent({
   const [saving, setSaving] = useState(false);
   const [approving, setApproving] = useState(false);
   const [provisioning, setProvisioning] = useState<TenantProvisioning | null>(null);
+  const [provisioningDeadline, setProvisioningDeadline] = useState<number | null>(null);
+  const [provisioningTimedOut, setProvisioningTimedOut] = useState(false);
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [retrying, setRetrying] = useState(false);
   const provisioningKeyRef = useRef<string | null>(null);
   const provisioningDoneRef = useRef(false);
 
@@ -178,6 +186,37 @@ function ApplicationDialogContent({
     });
     onApproved();
   }, [provisioning, toast, onApproved]);
+
+  useEffect(() => {
+    if (!provisioning || provisioningDoneRef.current) return;
+    if (isTenantProvisioningFinal(provisioning.status)) return;
+    if (provisioningTimedOut || provisioningDeadline === null) return;
+
+    const tenantId = provisioning.tenantId;
+    let cancelled = false;
+
+    const poll = async () => {
+      if (Date.now() >= provisioningDeadline) {
+        setProvisioningTimedOut(true);
+        return;
+      }
+      setStatusLoading(true);
+      try {
+        const next = await api.getTenantStatus(tenantId);
+        if (!cancelled) setProvisioning(next);
+      } catch {
+        // Transient status errors are retried until the polling deadline.
+      } finally {
+        if (!cancelled) setStatusLoading(false);
+      }
+    };
+
+    const timer = window.setInterval(() => void poll(), PROVISIONING_POLL_MS);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [provisioning, provisioningDeadline, provisioningTimedOut]);
 
   async function handlePaymentChange(next: boolean) {
     if (!user || paymentSaving) return;
@@ -246,11 +285,52 @@ function ApplicationDialogContent({
       const next = await api.approveApplication(tenant.id, adminPassword, user, idempotencyKey);
       setAdminPassword('');
       setProvisioning(next);
+      if (!isTenantProvisioningFinal(next.status)) {
+        setProvisioningTimedOut(false);
+        setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
+      }
     } catch {
       provisioningKeyRef.current = null;
       toast({ title: en.applications.approveError, variant: 'error' });
     } finally {
       setApproving(false);
+    }
+  }
+
+  async function handleRefreshStatus() {
+    if (!provisioning || statusLoading) return;
+    setStatusLoading(true);
+    try {
+      const next = await api.getTenantStatus(provisioning.tenantId);
+      setProvisioning(next);
+      if (!isTenantProvisioningFinal(next.status)) {
+        setProvisioningTimedOut(false);
+        setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
+      }
+    } catch {
+      toast({ title: en.applications.provisioning.refreshFailed, variant: 'error' });
+    } finally {
+      setStatusLoading(false);
+    }
+  }
+
+  async function handleRetryProvisioning() {
+    const idempotencyKey = provisioningKeyRef.current;
+    if (!provisioning || retrying || !idempotencyKey) return;
+    setRetrying(true);
+    try {
+      const next = await api.retryTenant(provisioning.tenantId, idempotencyKey);
+      setProvisioning(next);
+      if (isTenantProvisioningFinal(next.status)) {
+        setProvisioningDeadline(null);
+      } else {
+        setProvisioningTimedOut(false);
+        setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
+      }
+    } catch {
+      toast({ title: en.applications.provisioning.retryFailed, variant: 'error' });
+    } finally {
+      setRetrying(false);
     }
   }
 
@@ -401,6 +481,34 @@ function ApplicationDialogContent({
                   </span>
                 ) : null}
                 <p className="text-2xs text-text-muted">{provisioningHint(provisioning.status)}</p>
+                {isTenantProvisioningFailed(provisioning.status) ? (
+                  <div>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => void handleRetryProvisioning()}
+                      disabled={retrying}
+                    >
+                      {retrying
+                        ? en.applications.provisioning.retrying
+                        : en.applications.provisioning.retry}
+                    </Button>
+                  </div>
+                ) : provisioningTimedOut ? (
+                  <div className="flex flex-col items-start gap-2">
+                    <p className="rounded-panel border border-warning-fg bg-warning-bg px-3 py-2 text-2xs font-medium text-warning-fg">
+                      {en.applications.provisioning.timedOut}
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => void handleRefreshStatus()}
+                      disabled={statusLoading}
+                    >
+                      {en.applications.provisioning.refreshStatus}
+                    </Button>
+                  </div>
+                ) : null}
               </div>
             ) : null}
 

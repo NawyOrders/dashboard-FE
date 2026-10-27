@@ -5,6 +5,8 @@ import { toTenantSlug } from './slug';
  * Builds the `POST /api/v1/tenants` body from an approved onboarding request
  * (agent.md section 26). The admin password is sent as `ownerPassword` and is never
  * logged or stored by the dashboard.
+ *
+ * OPEN: branches and package not sent, backend to confirm
  */
 export function buildCreateTenantRequest(
   request: OnboardingRequestListItem,

@@ -9,6 +9,7 @@ import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 import { BranchMapPicker } from './BranchMapPicker';
 import { SchemaField } from './SchemaField';
+import { stepAddButton, stepRemoveLabel, stepTitle } from './localized-schema';
 import type { BranchFormValue } from './form-model';
 
 export interface BranchesSectionProps {
@@ -90,10 +91,10 @@ export function BranchesSection({
   }
 
   return (
-    <section className="flex flex-col gap-4" aria-label={step.titleEn}>
+    <section className="flex flex-col gap-4" aria-label={stepTitle(step)}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col gap-0.5">
-          <h3 className="text-sm font-semibold text-text">{step.titleEn}</h3>
+          <h3 className="text-sm font-semibold text-text">{stepTitle(step)}</h3>
           <p className="text-2xs text-text-muted">
             {en.registration.branchRange(limits.min, limits.max)}
           </p>
@@ -125,14 +126,14 @@ export function BranchesSection({
                     aria-hidden="true"
                     className={cn('size-4 transition-transform duration-150', open && 'rotate-180')}
                   />
-                  {`${step.titleEn} ${index + 1}`}
+                  {`${stepTitle(step)} ${index + 1}`}
                 </button>
                 <button
                   type="button"
                   disabled={disabled || atMin}
                   onClick={() => onRemove(branch.id)}
-                  title={step.removeLabel ?? en.common.close}
-                  aria-label={step.removeLabel ?? en.common.close}
+                  title={stepRemoveLabel(step)}
+                  aria-label={stepRemoveLabel(step)}
                   className="inline-flex size-8 items-center justify-center rounded-panel border border-border text-text-muted transition-colors duration-150 hover:border-error hover:text-error disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-text-muted"
                 >
                   <Trash2 aria-hidden="true" className="size-4" />
@@ -147,6 +148,7 @@ export function BranchesSection({
                         key={field.key}
                         id={`rf-branch-${branch.id}-${field.key}`}
                         field={field}
+                        scope="branch"
                         value={branch.fields[field.key] ?? ''}
                         disabled={disabled}
                         error={errors?.[`${branch.id}.${field.key}`]}
@@ -182,7 +184,7 @@ export function BranchesSection({
         className="inline-flex h-10 items-center justify-center gap-2 self-start rounded-panel border border-dashed border-border px-4 text-2xs font-medium text-text transition-colors duration-150 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-border disabled:hover:text-text"
       >
         <Plus aria-hidden="true" className="size-4" />
-        {step.addButtonLabel ?? en.common.create}
+        {stepAddButton(step)}
       </button>
     </section>
   );

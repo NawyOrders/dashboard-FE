@@ -22,6 +22,7 @@ import type { RegistrationProblem } from '@/domain/rules/registration-validation
 import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
+import { fieldLabelByKey } from '@/presentation/features/restaurant-form/localized-schema';
 import { toTenantPatch } from '@/presentation/features/restaurant-form/form-model';
 import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
 
@@ -60,12 +61,17 @@ function problemMessage(problem: RegistrationProblem): string {
 }
 
 /** DOM id of the field a problem belongs to. */
-function problemFieldId(problem: RegistrationProblem): string {
-  if (problem.fieldKey === 'branches') return FORM_GROUP_IDS.branches;
+function problemFieldId(problem: RegistrationProblem): string {  if (problem.fieldKey === 'branches') return FORM_GROUP_IDS.branches;
   if (problem.scope === 'branch' && problem.branchId) {
     return `rf-branch-${problem.branchId}-${problem.fieldKey}`;
   }
   return `rf-field-${problem.fieldKey}`;
+}
+
+/** The JSON field label is Arabic; the screen shows the label of the active locale. */
+function problemLabel(problem: RegistrationProblem): string {
+  const scope = problem.scope === 'branch' ? 'branch' : 'restaurant';
+  return fieldLabelByKey(problem.fieldKey, scope) ?? problem.label;
 }
 
 export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted, onSaved }: ApplicationDialogProps) {
@@ -300,7 +306,9 @@ function ApplicationDialogContent({
                 <TenantLogo name={tenant.restaurantName} size="lg" />
               )}
               <div className="flex flex-col gap-1">
-                <span className="text-sm font-semibold text-text">{tenant.restaurantName}</span>
+                <span dir="ltr" className="text-sm font-semibold text-text">
+                  {tenant.restaurantName}
+                </span>
                 {tenant.restaurantNameAr ? (
                   <span dir="rtl" className="text-2xs text-text-muted">
                     {tenant.restaurantNameAr}
@@ -374,8 +382,8 @@ function ApplicationDialogContent({
                         className="text-start text-2xs text-danger-fg underline underline-offset-2 hover:text-text"
                       >
                         {problem.scope === 'branch' && problem.branchIndex !== undefined
-                          ? `${problem.label} — ${en.registration.groups.branches} ${problem.branchIndex + 1}`
-                          : problem.label}
+                          ? `${problemLabel(problem)} — ${en.registration.groups.branches} ${problem.branchIndex + 1}`
+                          : problemLabel(problem)}
                         : {problemMessage(problem)}
                       </button>
                     </li>

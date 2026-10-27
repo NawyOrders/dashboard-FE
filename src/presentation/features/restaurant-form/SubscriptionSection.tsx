@@ -1,6 +1,5 @@
 import { Check } from 'lucide-react';
-import { PACKAGE_FEATURE_LABELS, PACKAGE_LIST, PACKAGES } from '@/config/packages';
-import { REFERENCE_PRICE_NOTE } from '@/config/policy';
+import { PACKAGE_LIST } from '@/config/packages';
 import type {
   DurationMonths,
   PackageCode,
@@ -19,7 +18,9 @@ import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 import { formatEgp } from '@/presentation/lib/format';
+import { packageFeatureLabel, packageName, packageTagline } from '@/presentation/lib/package-copy';
 import { paymentStatusMeta } from '@/presentation/lib/status';
+import { stepSubtitle, stepTitle } from './localized-schema';
 
 export interface SubscriptionSectionProps {
   step: RegistrationStep;
@@ -54,16 +55,16 @@ function ReadOnlySubscription({
     getReferencePrice(packageCode, durationMonths);
 
   const fields = [
-    { label: en.details.subscriptionPackage, value: PACKAGES[packageCode].name },
+    { label: en.details.subscriptionPackage, value: packageName(packageCode) },
     { label: en.registration.duration, value: en.registration.months(durationMonths) },
     { label: en.registration.price, value: formatEgp(price) },
   ];
 
   return (
-    <section className="flex flex-col gap-4" aria-label={step.titleEn}>
+    <section className="flex flex-col gap-4" aria-label={stepTitle(step)}>
       <header className="flex flex-col gap-0.5">
-        <h3 className="text-sm font-semibold text-text">{step.titleEn}</h3>
-        <p className="text-2xs text-text-muted">{step.subtitle}</p>
+        <h3 className="text-sm font-semibold text-text">{stepTitle(step)}</h3>
+        <p className="text-2xs text-text-muted">{stepSubtitle(step)}</p>
       </header>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -128,10 +129,10 @@ export function SubscriptionSection({
     priceFromOffers(offers, code, duration) ?? getReferencePrice(code, duration);
 
   return (
-    <section className="flex flex-col gap-4" aria-label={step.titleEn}>
+    <section className="flex flex-col gap-4" aria-label={stepTitle(step)}>
       <header className="flex flex-col gap-0.5">
-        <h3 className="text-sm font-semibold text-text">{step.titleEn}</h3>
-        <p className="text-2xs text-text-muted">{step.subtitle}</p>
+        <h3 className="text-sm font-semibold text-text">{stepTitle(step)}</h3>
+        <p className="text-2xs text-text-muted">{stepSubtitle(step)}</p>
       </header>
 
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -174,21 +175,21 @@ export function SubscriptionSection({
               )}
             >
               <span className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-text">{pkg.name}</span>
+                <span className="text-sm font-semibold text-text">{packageName(pkg.code)}</span>
                 {selected && (
                   <span className="flex size-5 items-center justify-center rounded-full bg-primary text-white">
                     <Check aria-hidden="true" className="size-3" />
                   </span>
                 )}
               </span>
-              <span className="text-2xs text-text-muted">{pkg.tagline}</span>
+              <span className="text-2xs text-text-muted">{packageTagline(pkg.code)}</span>
               <span className="flex flex-wrap gap-1">
                 {pkg.features.map((feature) => (
                   <span
                     key={feature}
                     className="rounded-pill bg-card px-2 py-0.5 text-2xs text-text-muted"
                   >
-                    {PACKAGE_FEATURE_LABELS[feature]}
+                    {packageFeatureLabel(feature)}
                   </span>
                 ))}
               </span>
@@ -204,7 +205,7 @@ export function SubscriptionSection({
         })}
       </div>
 
-      <p className="text-2xs text-text-muted">{REFERENCE_PRICE_NOTE}</p>
+      <p className="text-2xs text-text-muted">{en.registration.referencePriceNote}</p>
     </section>
   );
 }

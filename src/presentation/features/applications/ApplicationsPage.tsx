@@ -105,7 +105,9 @@ export function ApplicationsPage() {
                 <tr key={tenant.id} className="border-b border-border/60 last:border-b-0 hover:bg-bg-2/60">
                   <td className="px-4 py-3">
                     <div className="flex flex-col">
-                      <span className="font-medium text-text">{tenant.restaurantName}</span>
+                      <span dir="ltr" className="font-medium text-text">
+                        {tenant.restaurantName}
+                      </span>
                       <span dir="rtl" className="text-2xs text-text-muted">
                         {tenant.restaurantNameAr || en.common.notAvailable}
                       </span>

@@ -12,6 +12,7 @@ import { SchemaField } from './SchemaField';
 import { SubscriptionSection } from './SubscriptionSection';
 import { FORM_GROUP_IDS } from './form-groups';
 import { RESTAURANT_NAME_AR_FIELD } from './form-model';
+import { fieldLabel } from './localized-schema';
 import type { RestaurantFormValues } from './form-model';
 
 export interface RestaurantFormProps {
@@ -71,7 +72,9 @@ function ReadOnlySection({
           if (field.type === 'image') {
             return (
               <div key={field.key} className="flex flex-col gap-1.5">
-                <span className="text-2xs font-medium text-text">{field.label}</span>
+                <span className="text-2xs font-medium text-text">
+                  {fieldLabel(field, 'restaurant')}
+                </span>
                 <span className="flex size-16 items-center justify-center overflow-hidden rounded-panel border border-border bg-bg-2">
                   {value ? (
                     <img src={value} alt="" className="size-full object-cover" />
@@ -85,7 +88,9 @@ function ReadOnlySection({
           if (field.type === 'color') {
             return (
               <div key={field.key} className="flex flex-col gap-1.5">
-                <span className="text-2xs font-medium text-text">{field.label}</span>
+                <span className="text-2xs font-medium text-text">
+                  {fieldLabel(field, 'restaurant')}
+                </span>
                 <span className="flex items-center gap-2 text-sm text-text">
                   <span
                     aria-hidden="true"
@@ -99,7 +104,9 @@ function ReadOnlySection({
           }
           return (
             <div key={field.key} className="flex flex-col gap-1">
-              <span className="text-2xs font-medium text-text">{field.label}</span>
+              <span className="text-2xs font-medium text-text">
+                {fieldLabel(field, 'restaurant')}
+              </span>
               <span className="truncate text-sm text-text">{value || en.common.notAvailable}</span>
             </div>
           );
@@ -155,6 +162,7 @@ export function RestaurantForm({
                       <SchemaField
                         id={`rf-field-${field.key}`}
                         field={field}
+                        scope="restaurant"
                         value={values.fields[field.key] ?? ''}
                         disabled={disabled}
                         error={errors?.[field.key]}
@@ -164,6 +172,7 @@ export function RestaurantForm({
                         <SchemaField
                           id={`rf-field-${RESTAURANT_NAME_AR_FIELD.key}`}
                           field={RESTAURANT_NAME_AR_FIELD}
+                          scope="restaurant"
                           value={values.fields[RESTAURANT_NAME_AR_FIELD.key] ?? ''}
                           disabled={disabled}
                           error={errors?.[RESTAURANT_NAME_AR_FIELD.key]}

@@ -373,6 +373,30 @@ export const ar = {
     paymentCompleted: 'تم الدفع',
     paymentRequiredBeforeApproval: 'يجب إتمام الدفع قبل الموافقة',
     paymentUpdated: 'تم تحديث حالة الدفع',
+    provisioning: {
+      title: 'تهيئة المطعم',
+      statusLabel: 'الحالة',
+      // OPEN: status values from backend
+      statusValue: (status: string) => {
+        const labels: Record<string, string> = {
+          active: 'نشط',
+          failed: 'فشل',
+          provisioning: 'جارٍ التهيئة',
+          pending: 'قيد الانتظار',
+        };
+        return labels[status.trim().toLowerCase()] ?? status;
+      },
+      activeHint: 'تم تنشيط حساب المطعم.',
+      failedHint: 'تعذرت تهيئة المطعم. أعد المحاولة لإنشاء حساب المطعم مرة أخرى.',
+      pendingHint: 'جارٍ إنشاء حساب المطعم. تتحدث الحالة كل 5 ثوانٍ.',
+      activatedAt: 'تاريخ التنشيط',
+      timedOut: 'تستغرق التهيئة وقتًا أطول من المتوقع. حدّث الحالة للتحقق مرة أخرى.',
+      refreshStatus: 'تحديث الحالة',
+      retry: 'إعادة محاولة التهيئة',
+      retrying: 'جارٍ إعادة المحاولة…',
+      refreshFailed: 'تعذر تحديث حالة التهيئة.',
+      retryFailed: 'تعذرت إعادة محاولة التهيئة.',
+    },
   },
   registration: {
     groups: {

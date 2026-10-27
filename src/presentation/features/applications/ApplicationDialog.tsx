@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
@@ -17,9 +17,13 @@ import { formatDateTime } from '@/domain/rules/date';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
-import type { Tenant } from '@/domain/entities';
+import type { Tenant, TenantProvisioning } from '@/domain/entities';
 import type { RegistrationProblem } from '@/domain/rules/registration-validation';
 import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
+import {
+  isTenantProvisioningActive,
+  isTenantProvisioningFailed,
+} from '@/domain/rules/tenant-provisioning';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { fieldLabelByKey } from '@/presentation/features/restaurant-form/localized-schema';
@@ -74,6 +78,12 @@ function problemLabel(problem: RegistrationProblem): string {
   return fieldLabelByKey(problem.fieldKey, scope) ?? problem.label;
 }
 
+function provisioningHint(status: string): string {
+  if (isTenantProvisioningActive(status)) return en.applications.provisioning.activeHint;
+  if (isTenantProvisioningFailed(status)) return en.applications.provisioning.failedHint;
+  return en.applications.provisioning.pendingHint;
+}
+
 export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted, onSaved }: ApplicationDialogProps) {
   if (!tenant) return null;
   return (
@@ -120,6 +130,9 @@ function ApplicationDialogContent({
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [approving, setApproving] = useState(false);
+  const [provisioning, setProvisioning] = useState<TenantProvisioning | null>(null);
+  const provisioningKeyRef = useRef<string | null>(null);
+  const provisioningDoneRef = useRef(false);
 
   const fieldErrors = useMemo(() => {
     const errors: Record<string, string> = {};
@@ -153,6 +166,18 @@ function ApplicationDialogContent({
   useEffect(() => {
     setPaid(tenant.paymentStatus === 'paid');
   }, [tenant.id, tenant.paymentStatus]);
+
+  useEffect(() => {
+    if (!provisioning || provisioningDoneRef.current) return;
+    if (!isTenantProvisioningActive(provisioning.status)) return;
+    provisioningDoneRef.current = true;
+    toast({
+      title: en.applications.approveSuccess,
+      description: en.applications.adminPasswordCreated,
+      variant: 'success',
+    });
+    onApproved();
+  }, [provisioning, toast, onApproved]);
 
   async function handlePaymentChange(next: boolean) {
     if (!user || paymentSaving) return;
@@ -214,19 +239,15 @@ function ApplicationDialogContent({
       return;
     }
     setProblems([]);
+    const idempotencyKey = crypto.randomUUID();
+    provisioningKeyRef.current = idempotencyKey;
     setApproving(true);
     try {
-      // The approval is based on what the reviewer sees, so the form is stored first.
-      await api.updateApplication(tenant.id, toTenantPatch(values, tenant), user);
-      await api.approveApplication(tenant.id, adminPassword, user);
+      const next = await api.approveApplication(tenant.id, adminPassword, user, idempotencyKey);
       setAdminPassword('');
-      toast({
-        title: en.applications.approveSuccess,
-        description: en.applications.adminPasswordCreated,
-        variant: 'success',
-      });
-      onApproved();
+      setProvisioning(next);
     } catch {
+      provisioningKeyRef.current = null;
       toast({ title: en.applications.approveError, variant: 'error' });
     } finally {
       setApproving(false);
@@ -275,13 +296,24 @@ function ApplicationDialogContent({
             ) : null}
             {isSuperAdmin ? (
               <>
-                <Button variant="secondary" onClick={handleDiscard} disabled={saving || approving}>
+                <Button
+                  variant="secondary"
+                  onClick={handleDiscard}
+                  disabled={saving || approving || provisioning !== null}
+                >
                   {en.applications.discard}
                 </Button>
-                <Button variant="secondary" onClick={handleSave} disabled={saving || approving}>
+                <Button
+                  variant="secondary"
+                  onClick={handleSave}
+                  disabled={saving || approving || provisioning !== null}
+                >
                   {saving ? en.applications.saving : en.applications.saveChanges}
                 </Button>
-                <Button onClick={handleApprove} disabled={approving || saving}>
+                <Button
+                  onClick={handleApprove}
+                  disabled={approving || saving || provisioning !== null}
+                >
                   {approving ? en.applications.approving : en.applications.approve}
                 </Button>
               </>
@@ -347,6 +379,31 @@ function ApplicationDialogContent({
           </aside>
 
           <div className="flex flex-col gap-6">
+            {provisioning ? (
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex flex-col gap-2 rounded-card border border-border bg-card p-4"
+              >
+                <span className="text-sm font-semibold text-text">
+                  {en.applications.provisioning.title}
+                </span>
+                <div className="flex flex-wrap items-center gap-2 text-2xs text-text-muted">
+                  <span>{en.applications.provisioning.statusLabel}:</span>
+                  <span className="rounded-panel border border-border bg-bg-2 px-2 py-1 font-medium text-text">
+                    {en.applications.provisioning.statusValue(provisioning.status)}
+                  </span>
+                </div>
+                {provisioning.activatedAtUtc ? (
+                  <span className="text-2xs text-text-muted">
+                    {en.applications.provisioning.activatedAt}:{' '}
+                    {formatDateTime(provisioning.activatedAtUtc)}
+                  </span>
+                ) : null}
+                <p className="text-2xs text-text-muted">{provisioningHint(provisioning.status)}</p>
+              </div>
+            ) : null}
+
             <div className="flex flex-col gap-3 rounded-card border border-border bg-card p-4">
               <Checkbox
                 id="rf-field-paid"
@@ -401,7 +458,7 @@ function ApplicationDialogContent({
                 onChange={(event) => setAdminPassword(event.target.value)}
                 error={fieldErrors.adminPassword}
                 hint={en.applications.adminPasswordHint}
-                disabled={!isSuperAdmin}
+                disabled={!isSuperAdmin || provisioning !== null}
                 autoComplete="new-password"
               />
             </div>

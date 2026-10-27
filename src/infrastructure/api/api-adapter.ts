@@ -1,4 +1,5 @@
 import type { Api } from '@/application/dto';
+import { buildCreateTenantRequest } from '@/domain/rules/tenant-create';
 import { createAuthApi } from './auth-api';
 import { createOnboardingApi } from './onboarding-api';
 import { createTenantApi } from './tenant-api';
@@ -12,9 +13,9 @@ export interface ApiAdapterOptions {
 }
 
 /**
- * API data source (agent.md section 21). Onboarding comes from the backend; approve,
- * delete, save and the accounts endpoints stay on the static adapter until the backend
- * publishes them.
+ * API data source (agent.md section 21). Onboarding and tenant provisioning come from
+ * the backend; delete, save and the accounts endpoints stay on the static adapter until
+ * the backend publishes them.
  */
 export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api {
   const onboarding = createOnboardingApi(client);
@@ -22,8 +23,8 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
   const auth = createAuthApi(client);
 
   return {
-    // OPEN: endpoint missing in swagger. Approve, delete, save changes and the
-    // accounts endpoints keep using the static adapter in api mode.
+    // OPEN: endpoint missing in swagger. Delete, save changes and the accounts
+    // endpoints keep using the static adapter in api mode.
     ...staticApi,
 
     signIn: (email, password) => auth.signIn(email, password),
@@ -40,6 +41,16 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
 
     async updateApplicationPayment(requestId, paid) {
       await onboarding.setPayment(requestId, paid);
+    },
+
+    async approveApplication(requestId, adminPassword, _actor, idempotencyKey) {
+      const page = await onboarding.listRequests({ page: 1, pageSize: 100 });
+      const request = page.items.find((item) => item.requestId === requestId);
+      if (!request) throw new Error(`Onboarding request not found: ${requestId}`);
+      return tenants.createTenant(
+        buildCreateTenantRequest(request, adminPassword),
+        idempotencyKey,
+      );
     },
 
     getTenantStatus: (tenantId) => tenants.getTenantStatus(tenantId),

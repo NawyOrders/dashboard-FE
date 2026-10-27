@@ -17,6 +17,7 @@ import type {
   RestaurantStatus,
   TenantProvisioning,
 } from '@/domain/entities';
+import { toTenantSlug } from '@/domain/rules/slug';
 import { STATIC_OFFERS } from './static-offers';
 
 export interface StaticApiOptions {
@@ -105,7 +106,15 @@ export function createStaticApi(
       ).then(() => undefined),
     // OPEN: endpoint missing in swagger.
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
-      run(() => backend.approveApplication(tenantId, adminPassword, actor)),
+      run<TenantProvisioning>(async () => {
+        const tenant = await backend.approveApplication(tenantId, adminPassword, actor);
+        return {
+          tenantId: tenant.id,
+          slug: toTenantSlug(tenant.restaurantName),
+          status: 'active',
+          activatedAtUtc: null,
+        };
+      }),
     // OPEN: static approve, remove when api is live
     getTenantStatus: (tenantId: string) =>
       run<TenantProvisioning>(() => ({

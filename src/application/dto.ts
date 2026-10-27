@@ -164,7 +164,8 @@ export interface Api {
     tenantId: string,
     adminPassword: string,
     actor: AdminUser,
-  ): Promise<Tenant>;
+    idempotencyKey: string,
+  ): Promise<TenantProvisioning>;
   /** `GET /api/v1/tenants/{tenantId}` — tenant provisioning state (agent.md section 26). */
   getTenantStatus(tenantId: string): Promise<TenantProvisioning>;
   /** `POST /api/v1/tenants/{tenantId}/retry` — retries a failed provisioning. */

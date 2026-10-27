@@ -372,6 +372,30 @@ export const en = {
     paymentCompleted: 'Payment completed',
     paymentRequiredBeforeApproval: 'Payment must be completed before approval',
     paymentUpdated: 'Payment status updated',
+    provisioning: {
+      title: 'Restaurant provisioning',
+      statusLabel: 'Status',
+      // OPEN: status values from backend
+      statusValue: (status: string) => {
+        const labels: Record<string, string> = {
+          active: 'Active',
+          failed: 'Failed',
+          provisioning: 'Provisioning',
+          pending: 'Pending',
+        };
+        return labels[status.trim().toLowerCase()] ?? status;
+      },
+      activeHint: 'The restaurant account is active.',
+      failedHint: 'Provisioning failed. Retry to create the restaurant account again.',
+      pendingHint: 'Creating the restaurant account. The status refreshes every 5 seconds.',
+      activatedAt: 'Activated at',
+      timedOut: 'Provisioning is taking longer than expected. Refresh the status to check again.',
+      refreshStatus: 'Refresh status',
+      retry: 'Retry provisioning',
+      retrying: 'Retrying…',
+      refreshFailed: 'Could not refresh the provisioning status.',
+      retryFailed: 'Could not retry provisioning.',
+    },
   },
   registration: {
     groups: {

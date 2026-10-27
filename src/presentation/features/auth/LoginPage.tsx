@@ -5,9 +5,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
-import { signInSchema, type SignInFormValues } from '@/domain/rules/auth-schema';
+import { createSignInSchema, type SignInFormValues } from '@/domain/rules/auth-schema';
 import { platformAuthErrorMessage } from '@/domain/rules/platform-auth';
 import { useAuth } from '@/presentation/hooks/useAuth';
+import { en } from '@/presentation/i18n/en';
 
 export function LoginPage() {
   const { signIn } = useAuth();
@@ -20,7 +21,7 @@ export function LoginPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormValues>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(createSignInSchema()),
     defaultValues: { email: '', password: '' },
   });
 
@@ -43,27 +44,27 @@ export function LoginPage() {
     <div className="min-h-screen bg-bg flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-card border border-border bg-card p-6 shadow-none">
         <div className="mb-6 text-center">
-          <h1 className="text-xl font-semibold text-text">Nawy Orders � Super Admin</h1>
-          <p className="mt-1 text-sm text-text-muted">Sign in to continue</p>
+          <h1 className="text-xl font-semibold text-text">{en.auth.title}</h1>
+          <p className="mt-1 text-sm text-text-muted">{en.auth.subtitle}</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="email" className="mb-1 block text-sm text-text">
-              Email
+              {en.auth.email}
             </label>
             <Input id="email" type="email" autoComplete="email" {...register('email')} />
             {errors.email ? <p className="mt-1 text-xs text-error">{errors.email.message}</p> : null}
           </div>
           <div>
             <label htmlFor="password" className="mb-1 block text-sm text-text">
-              Password
+              {en.auth.password}
             </label>
             <PasswordInput id="password" autoComplete="current-password" {...register('password')} />
             {errors.password ? <p className="mt-1 text-xs text-error">{errors.password.message}</p> : null}
           </div>
           {formError ? <p className="text-sm text-error">{formError}</p> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
+            {isSubmitting ? en.auth.signingIn : en.auth.signIn}
           </Button>
         </form>
       </div>

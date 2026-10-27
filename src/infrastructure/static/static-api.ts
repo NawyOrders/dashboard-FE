@@ -104,7 +104,7 @@ export function createStaticApi(
           actor,
         ),
       ).then(() => undefined),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: static approve, remove when api is live
     approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
       run<TenantProvisioning>(async () => {
         const tenant = await backend.approveApplication(tenantId, adminPassword, actor);

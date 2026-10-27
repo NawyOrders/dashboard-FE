@@ -2,6 +2,7 @@ import { useEffect, useId, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 
 export interface DialogProps {
@@ -105,7 +106,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
           </div>
           <button
             type="button"
-            aria-label="Close dialog"
+            aria-label={en.common.closeDialog}
             onClick={onClose}
             className="inline-flex size-9 shrink-0 items-center justify-center rounded-panel text-text-muted transition-colors duration-150 hover:bg-bg-2 hover:text-text"
           >

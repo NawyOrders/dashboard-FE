@@ -1,4 +1,5 @@
 import { AlertTriangle } from 'lucide-react';
+import { en } from '@/presentation/i18n/en';
 
 /**
  * Shown at startup when `src/config/restaurant-registration-fields.json` fails
@@ -14,12 +15,13 @@ export function SchemaErrorScreen({ issues }: { issues: string[] }) {
             <AlertTriangle aria-hidden="true" className="size-5" />
           </span>
           <div>
-            <h1 className="text-lg font-semibold text-text">
-              Restaurant registration schema is invalid
-            </h1>
+            <h1 className="text-lg font-semibold text-text">{en.system.schemaInvalidTitle}</h1>
             <p className="mt-1 text-sm text-text-muted">
-              <code className="font-mono text-xs">src/config/restaurant-registration-fields.json</code>{' '}
-              does not match the expected structure, so the registration form cannot be rendered.
+              {en.system.schemaInvalidBodyPrefix}{' '}
+              <code className="font-mono text-xs" dir="ltr">
+                src/config/restaurant-registration-fields.json
+              </code>{' '}
+              {en.system.schemaInvalidBodySuffix}
             </p>
           </div>
         </div>
@@ -32,9 +34,7 @@ export function SchemaErrorScreen({ issues }: { issues: string[] }) {
           ))}
         </ul>
 
-        <p className="mt-4 text-2xs text-text-muted">
-          Fix the JSON file and reload the page.
-        </p>
+        <p className="mt-4 text-2xs text-text-muted">{en.system.schemaFix}</p>
       </div>
     </div>
   );

@@ -11,13 +11,12 @@ import { api } from '@/app/composition';
 import { en } from '@/presentation/i18n/en';
 import type { RestaurantStatus, Tenant } from '@/domain/entities';
 
-const OPTIONS: { value: RestaurantStatus; label: string }[] = [
-  { value: 'active', label: en.status.restaurant.active },
-  { value: 'pending', label: en.status.restaurant.pending },
-  { value: 'inactive', label: en.status.restaurant.inactive },
-];
-
 export function RestaurantStatusControl({ tenant }: { tenant: Tenant }) {
+  const options: { value: RestaurantStatus; label: string }[] = [
+    { value: 'active', label: en.status.restaurant.active },
+    { value: 'pending', label: en.status.restaurant.pending },
+    { value: 'inactive', label: en.status.restaurant.inactive },
+  ];
   const { user } = useCurrentUser();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -47,7 +46,7 @@ export function RestaurantStatusControl({ tenant }: { tenant: Tenant }) {
           value={next}
           disabled={!allowed}
           onChange={(event) => setNext(event.target.value as RestaurantStatus)}
-          options={OPTIONS}
+          options={options}
         />
       </div>
       <Button

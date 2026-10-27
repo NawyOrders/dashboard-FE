@@ -12,8 +12,8 @@ import { usePermission } from '@/presentation/hooks/usePermission';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
 import { api } from '@/app/composition';
-import { PACKAGE_FEATURE_LABELS } from '@/config/packages';
 import { packageHasFeature } from '@/domain/rules/packages';
+import { packageFeatureLabel, packageName } from '@/presentation/lib/package-copy';
 import { en } from '@/presentation/i18n/en';
 import type { PackageFeatureKey, Tenant } from '@/domain/entities';
 
@@ -76,7 +76,7 @@ export function ManageFeaturesDialog({ open, tenant, onClose }: ManageFeaturesDi
               return (
                 <li key={key} className="flex items-center justify-between gap-4 py-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-text">{PACKAGE_FEATURE_LABELS[key]}</p>
+                    <p className="text-sm font-medium text-text">{packageFeatureLabel(key)}</p>
                     <p className="text-2xs text-text-muted">
                       {locked
                         ? en.manageFeatures.lockedForStart
@@ -89,11 +89,11 @@ export function ManageFeaturesDialog({ open, tenant, onClose }: ManageFeaturesDi
                     {locked && (
                       <Badge tone="neutral">
                         <Lock aria-hidden="true" className="size-3" />
-                        Growth
+                        {packageName('growth')}
                       </Badge>
                     )}
                     <Switch
-                      label={PACKAGE_FEATURE_LABELS[key]}
+                      label={packageFeatureLabel(key)}
                       checked={enabled && featureAllowed}
                       disabled={locked || !allowed}
                       onCheckedChange={(next) => setPending({ key, next })}
@@ -114,7 +114,7 @@ export function ManageFeaturesDialog({ open, tenant, onClose }: ManageFeaturesDi
           pending
             ? [
                 {
-                  label: PACKAGE_FEATURE_LABELS[pending.key],
+                  label: packageFeatureLabel(pending.key),
                   previous: pending.next ? en.manageFeatures.disabled : en.manageFeatures.enabled,
                   next: pending.next ? en.manageFeatures.enabled : en.manageFeatures.disabled,
                 },

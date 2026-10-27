@@ -13,21 +13,21 @@ import { AccountMenu } from './AccountMenu';
 
 interface NavItem {
   to: string;
-  label: string;
+  label: keyof typeof en.nav;
   icon: ReactNode;
   end?: boolean;
   permission?: Permission;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: en.nav.overview, icon: <LayoutDashboard aria-hidden="true" className="size-5" />, end: true },
-  { to: '/restaurants', label: en.nav.restaurants, icon: <Store aria-hidden="true" className="size-5" /> },
-  { to: '/applications', label: en.nav.applications, icon: <Inbox aria-hidden="true" className="size-5" />, permission: 'restaurant.create' },
-  { to: '/subscriptions', label: en.nav.subscriptions, icon: <CreditCard aria-hidden="true" className="size-5" /> },
-  { to: '/analytics', label: en.nav.analytics, icon: <BarChart3 aria-hidden="true" className="size-5" />, permission: 'analytics.view' },
-  { to: '/accounts', label: en.nav.accounts, icon: <Users aria-hidden="true" className="size-5" />, permission: 'accounts.view' },
-  { to: '/activity', label: en.nav.activity, icon: <ScrollText aria-hidden="true" className="size-5" /> },
-  { to: '/settings', label: en.nav.settings, icon: <Settings aria-hidden="true" className="size-5" /> },
+  { to: '/', label: 'overview', icon: <LayoutDashboard aria-hidden="true" className="size-5" />, end: true },
+  { to: '/restaurants', label: 'restaurants', icon: <Store aria-hidden="true" className="size-5" /> },
+  { to: '/applications', label: 'applications', icon: <Inbox aria-hidden="true" className="size-5" />, permission: 'restaurant.create' },
+  { to: '/subscriptions', label: 'subscriptions', icon: <CreditCard aria-hidden="true" className="size-5" /> },
+  { to: '/analytics', label: 'analytics', icon: <BarChart3 aria-hidden="true" className="size-5" />, permission: 'analytics.view' },
+  { to: '/accounts', label: 'accounts', icon: <Users aria-hidden="true" className="size-5" />, permission: 'accounts.view' },
+  { to: '/activity', label: 'activity', icon: <ScrollText aria-hidden="true" className="size-5" /> },
+  { to: '/settings', label: 'settings', icon: <Settings aria-hidden="true" className="size-5" /> },
 ];
 
 const FOCUSABLE =
@@ -42,10 +42,10 @@ type SidebarVariant = 'drawer' | 'rail';
 function Logo({ variant }: { variant: SidebarVariant }) {
   return (
     <div className="flex items-center gap-3 px-5 py-6">
-      <img src={nawyOrdersLogo} alt="Nawy Orders" className="h-[50px] w-auto shrink-0 object-contain" />
+      <img src={nawyOrdersLogo} alt={en.app.name} className="h-[50px] w-auto shrink-0 object-contain" />
       <span className={cn('min-w-0', variant === 'drawer' ? 'block' : 'hidden xl:block')}>
-        <span className="block text-base font-bold leading-5 text-text">Nawy Orders</span>
-        <span className="block text-2xs text-text-muted">Super Admin</span>
+        <span className="block text-base font-bold leading-5 text-text">{en.app.name}</span>
+        <span className="block text-2xs text-text-muted">{en.app.role}</span>
       </span>
     </div>
   );
@@ -56,8 +56,9 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
   const items = NAV_ITEMS.filter((item) => !item.permission || isAllowed(role, item.permission));
 
   return (
-    <nav aria-label="Main navigation" className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
+    <nav aria-label={en.topbar.mainNavigation} className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
       {items.map((item) => {
+        const label = en.nav[item.label];
         const link = (
           <NavLink
             key={item.to}
@@ -82,7 +83,7 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
                     variant === 'drawer' ? 'min-w-0 flex-1 truncate' : 'hidden xl:inline',
                   )}
                 >
-                  {item.label}
+                  {label}
                 </span>
                 {isActive && (
                   <ChevronRight
@@ -103,7 +104,7 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
         return (
           <Tooltip
             key={item.to}
-            label={item.label}
+            label={label}
             side="right"
             className="w-full"
             bubbleClassName="xl:group-hover:hidden xl:group-focus-within:hidden"
@@ -176,7 +177,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Main navigation"
+        aria-label={en.topbar.mainNavigation}
         className={cn(
           'fixed inset-y-0 start-0 z-50 flex w-[min(85vw,320px)] flex-col border-e border-border bg-card md:hidden',
           'transition-transform duration-200 ease-out',
@@ -187,7 +188,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
           <Logo variant="drawer" />
           <button
             type="button"
-            aria-label="Close navigation"
+            aria-label={en.topbar.closeNavigation}
             onClick={onClose}
             className="me-3 mt-4 inline-flex size-9 items-center justify-center rounded-panel text-text-muted transition-colors duration-150 hover:bg-bg-2 hover:text-text"
           >

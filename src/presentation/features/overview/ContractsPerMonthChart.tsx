@@ -17,11 +17,11 @@ export interface ContractsPerMonthChartProps {
 const MAX_TOOLTIP_NAMES = 5;
 
 function monthTooltip(bucket: MonthBucket): string {
-  const base = `${bucket.label}: ${bucket.count} contract${bucket.count === 1 ? '' : 's'}`;
+  const base = `${bucket.label}: ${en.overview.contractCount(bucket.count)}`;
   if (bucket.restaurantNames.length === 0) return base;
   const names = bucket.restaurantNames.slice(0, MAX_TOOLTIP_NAMES);
   const extra = bucket.restaurantNames.length - names.length;
-  return `${base} — ${names.join(', ')}${extra > 0 ? ` +${extra} more` : ''}`;
+  return `${base} — ${names.join(', ')}${extra > 0 ? ` ${en.overview.andMore(extra)}` : ''}`;
 }
 
 function MonthTable({ buckets }: { buckets: MonthBucket[] }) {

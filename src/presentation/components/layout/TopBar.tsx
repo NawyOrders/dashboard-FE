@@ -10,15 +10,15 @@ import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { cn } from '@/presentation/lib/cn';
 import { Badge } from '@/presentation/components/ui/Badge';
 
-const ROUTE_TITLES: Record<string, string> = {
-  '/': 'Overview',
-  '/restaurants': 'Restaurants',
-  '/applications': 'Applications',
-  '/subscriptions': 'Subscriptions',
-  '/analytics': 'Analytics',
-  '/accounts': 'Accounts & Roles',
-  '/activity': 'Activity Logs',
-  '/settings': 'Platform Settings',
+const ROUTE_TITLES: Record<string, keyof typeof en.nav> = {
+  '/': 'overview',
+  '/restaurants': 'restaurants',
+  '/applications': 'applications',
+  '/subscriptions': 'subscriptions',
+  '/analytics': 'analytics',
+  '/accounts': 'accounts',
+  '/activity': 'activity',
+  '/settings': 'settings',
 };
 
 const MAX_SUGGESTIONS = 6;
@@ -36,7 +36,8 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   const [bellOpen, setBellOpen] = useState(false);
   const bellRef = useRef<HTMLDivElement>(null);
 
-  const title = ROUTE_TITLES[location.pathname] ?? 'Nawy Orders';
+  const routeTitle = ROUTE_TITLES[location.pathname];
+  const title = routeTitle ? en.nav[routeTitle] : en.app.name;
   const debounced = useDebounce(query.trim(), 200);
   const hasQuery = debounced.length > 0;
   const { data, isFetching } = useTenants(hasQuery ? { search: debounced } : {});
@@ -106,7 +107,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 
   return (
     <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border/60 bg-bg/90 px-6 py-3 backdrop-blur md:px-8">
-      <IconButton label="Open navigation" variant="ghost" className="md:hidden" onClick={onMenuClick}>
+      <IconButton label={en.topbar.openNavigation} variant="ghost" className="md:hidden" onClick={onMenuClick}>
         <Menu aria-hidden="true" className="size-5" />
       </IconButton>
 

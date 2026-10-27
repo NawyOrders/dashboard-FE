@@ -67,10 +67,10 @@ export function Pagination({
             ))}
           </select>
         </label>
-        <nav aria-label="Pagination" className="flex items-center gap-1">
+        <nav aria-label={en.common.pagination} className="flex items-center gap-1">
           <button
             type="button"
-            aria-label="Previous page"
+            aria-label={en.common.previousPage}
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
             className="inline-flex size-9 items-center justify-center rounded-panel border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
@@ -89,7 +89,7 @@ export function Pagination({
               <button
                 key={item}
                 type="button"
-                aria-label={`Page ${item}`}
+                aria-label={en.common.page(item)}
                 aria-current={item === page ? 'page' : undefined}
                 onClick={() => onPageChange(item)}
                 className={cn(
@@ -105,7 +105,7 @@ export function Pagination({
           })}
           <button
             type="button"
-            aria-label="Next page"
+            aria-label={en.common.nextPage}
             disabled={page >= pageCount}
             onClick={() => onPageChange(page + 1)}
             className="inline-flex size-9 items-center justify-center rounded-panel border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"

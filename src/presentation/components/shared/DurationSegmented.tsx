@@ -1,6 +1,7 @@
 import { cn } from '@/presentation/lib/cn';
 import { PACKAGE_DURATIONS } from '@/config/packages';
 import type { DurationMonths } from '@/domain/entities';
+import { en } from '@/presentation/i18n/en';
 
 export interface DurationSegmentedProps {
   value: DurationMonths;
@@ -19,7 +20,7 @@ export function DurationSegmented({
   return (
     <div
       role="radiogroup"
-      aria-label="Duration"
+      aria-label={en.registration.duration}
       className="inline-flex rounded-panel border border-border bg-card p-1"
     >
       {options.map((months) => {
@@ -37,7 +38,7 @@ export function DurationSegmented({
               selected ? 'bg-primary text-white' : 'text-text-muted hover:text-text',
             )}
           >
-            {months} months
+            {en.common.months(months)}
           </button>
         );
       })}

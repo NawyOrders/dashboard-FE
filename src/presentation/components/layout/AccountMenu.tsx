@@ -69,7 +69,7 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
         <span className={cn('min-w-0', variant === 'drawer' ? 'block' : 'hidden xl:block')}>
           <span className="block truncate text-sm font-semibold text-text">{user.name}</span>
           <span className="block truncate text-2xs text-text-muted">
-            {user.role === 'super_admin' ? en.app.role : 'Support'}
+            {user.role === 'super_admin' ? en.app.role : en.app.supportRole}
           </span>
         </span>
         <ChevronDown

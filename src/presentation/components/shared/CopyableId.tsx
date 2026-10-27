@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { cn } from '@/presentation/lib/cn';
+import { en } from '@/presentation/i18n/en';
 
 export interface CopyableIdProps {
   value: string;
@@ -26,7 +27,7 @@ export function CopyableId({ value, className }: CopyableIdProps) {
       <button
         type="button"
         onClick={copy}
-        aria-label={`Copy ${value}`}
+        aria-label={en.common.copyValue(value)}
         className="inline-flex size-6 items-center justify-center rounded-[8px] text-text-muted transition-colors duration-150 hover:bg-bg-2 hover:text-text"
       >
         {copied ? (

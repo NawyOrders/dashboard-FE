@@ -6,19 +6,19 @@ import type { TenantSort } from '@/application/dto';
 import { RestaurantFiltersButton } from './RestaurantFiltersButton';
 import type { DirectoryState } from './useDirectoryState';
 
-const SORT_OPTIONS: { value: TenantSort; label: string }[] = [
-  { value: 'newest', label: en.restaurants.sortNewest },
-  { value: 'oldest', label: en.restaurants.sortOldest },
-  { value: 'name_asc', label: en.restaurants.sortNameAsc },
-  { value: 'expiry_asc', label: en.restaurants.sortExpiryAsc },
-];
-
 export interface RestaurantToolbarProps {
   directory: DirectoryState;
   onExport: () => void;
 }
 
 export function RestaurantToolbar({ directory, onExport }: RestaurantToolbarProps) {
+  const sortOptions: { value: TenantSort; label: string }[] = [
+    { value: 'newest', label: en.restaurants.sortNewest },
+    { value: 'oldest', label: en.restaurants.sortOldest },
+    { value: 'name_asc', label: en.restaurants.sortNameAsc },
+    { value: 'expiry_asc', label: en.restaurants.sortExpiryAsc },
+  ];
+
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div className="relative min-w-[200px] flex-1 sm:flex-none">
@@ -41,7 +41,7 @@ export function RestaurantToolbar({ directory, onExport }: RestaurantToolbarProp
           aria-label={en.restaurants.sortBy}
           value={directory.sort}
           onChange={(event) => directory.setSort(event.target.value as TenantSort)}
-          options={SORT_OPTIONS}
+          options={sortOptions}
         />
       </div>
 

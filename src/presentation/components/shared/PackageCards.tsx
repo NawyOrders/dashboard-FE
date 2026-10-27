@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react';
-import { PACKAGE_LIST, PACKAGE_FEATURE_LABELS } from '@/config/packages';
+import { PACKAGE_LIST } from '@/config/packages';
+import { packageFeatureLabel, packageName, packageTagline } from '@/presentation/lib/package-copy';
 import { cn } from '@/presentation/lib/cn';
 import type { PackageCode } from '@/domain/entities';
 
@@ -28,18 +29,18 @@ export function PackageCards({ value, onChange, disabled }: PackageCardsProps) {
             )}
           >
             <span className="flex items-center justify-between gap-2">
-              <span className="text-sm font-semibold text-text">{pkg.name}</span>
+              <span className="text-sm font-semibold text-text">{packageName(pkg.code)}</span>
               {selected && (
                 <span className="flex size-5 items-center justify-center rounded-full bg-primary text-white">
                   <Check aria-hidden="true" className="size-3" />
                 </span>
               )}
             </span>
-            <span className="text-2xs text-text-muted">{pkg.tagline}</span>
+            <span className="text-2xs text-text-muted">{packageTagline(pkg.code)}</span>
             <span className="mt-1 flex flex-wrap gap-1">
               {pkg.features.map((feature) => (
                 <span key={feature} className="rounded-pill bg-card px-2 py-0.5 text-2xs text-text-muted">
-                  {PACKAGE_FEATURE_LABELS[feature]}
+                  {packageFeatureLabel(feature)}
                 </span>
               ))}
             </span>

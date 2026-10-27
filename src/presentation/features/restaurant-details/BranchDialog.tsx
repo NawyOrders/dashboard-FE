@@ -8,32 +8,28 @@ import { Select } from '@/presentation/components/ui/Select';
 import { en } from '@/presentation/i18n/en';
 import { validateName, validatePhone } from '@/domain/rules/validation';
 
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, 'Name is required')
-    .superRefine((value, ctx) => {
-      const message = validateName(value, 'branch');
-      if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
-    }),
-  address: z.string().min(3, 'Address is required'),
-  phone: z
-    .string()
-    .min(1, 'Phone is required')
-    .superRefine((value, ctx) => {
-      const message = validatePhone(value, 'branchPhone');
-      if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
-    }),
-  status: z.enum(['active', 'pending', 'inactive']),
-});
+function createBranchSchema() {
+  return z.object({
+    name: z
+      .string()
+      .min(1, en.create.branches.nameRequired)
+      .superRefine((value, ctx) => {
+        const message = validateName(value, 'branch');
+        if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
+      }),
+    address: z.string().min(3, en.create.branches.addressRequired),
+    phone: z
+      .string()
+      .min(1, en.create.branches.phoneRequired)
+      .superRefine((value, ctx) => {
+        const message = validatePhone(value, 'branchPhone');
+        if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
+      }),
+    status: z.enum(['active', 'pending', 'inactive']),
+  });
+}
 
-export type BranchFormValues = z.infer<typeof schema>;
-
-const STATUS_OPTIONS = [
-  { value: 'active', label: en.status.branch.active },
-  { value: 'pending', label: en.status.branch.pending },
-  { value: 'inactive', label: en.status.branch.inactive },
-];
+export type BranchFormValues = z.infer<ReturnType<typeof createBranchSchema>>;
 
 export interface BranchDialogProps {
   open: boolean;
@@ -43,13 +39,18 @@ export interface BranchDialogProps {
 }
 
 export function BranchDialog({ open, loading, onClose, onSubmit }: BranchDialogProps) {
+  const statusOptions = [
+    { value: 'active', label: en.status.branch.active },
+    { value: 'pending', label: en.status.branch.pending },
+    { value: 'inactive', label: en.status.branch.inactive },
+  ];
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<BranchFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createBranchSchema()),
     defaultValues: { name: '', address: '', phone: '', status: 'active' },
   });
 
@@ -96,7 +97,7 @@ export function BranchDialog({ open, loading, onClose, onSubmit }: BranchDialogP
         />
         <Select
           label={en.create.branches.status}
-          options={STATUS_OPTIONS}
+          options={statusOptions}
           {...register('status')}
         />
       </form>

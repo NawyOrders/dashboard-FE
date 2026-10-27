@@ -1,4 +1,5 @@
 import { Badge } from '@/presentation/components/ui/Badge';
+import { en } from '@/presentation/i18n/en';
 import { appStatusMeta } from '@/presentation/lib/status';
 import type { AppStatus } from '@/domain/entities';
 
@@ -21,8 +22,8 @@ export function AppsCell({ android, ios }: { android: AppStatus | null; ios: App
   }
   return (
     <span className="flex flex-col gap-1">
-      <AppMini label="Android" status={android} />
-      <AppMini label="iOS" status={ios} />
+      <AppMini label={en.common.platforms.android} status={android} />
+      <AppMini label={en.common.platforms.ios} status={ios} />
     </span>
   );
 }

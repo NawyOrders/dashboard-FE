@@ -27,6 +27,8 @@ export const ar = {
     noMatches: 'لا توجد مطاعم',
     suggestionsLabel: 'اقتراحات البحث',
     openNavigation: 'فتح القائمة',
+    mainNavigation: 'التنقل الرئيسي',
+    closeNavigation: 'إغلاق القائمة',
   },
   language: {
     label: 'اللغة',
@@ -105,6 +107,8 @@ export const ar = {
       n === 1 ? 'شهر واحد' : n === 2 ? 'شهران' : n <= 10 ? `${n} أشهر` : `${n} شهرًا`,
     actionsFor: (name: string) => `إجراءات ${name}`,
     selectRestaurantRow: (name: string) => `تحديد ${name}`,
+    channels: { web: 'ويب', pwa: 'PWA' },
+    platforms: { android: 'Android', ios: 'iOS' },
   },
   status: {
     restaurant: {
@@ -165,6 +169,10 @@ export const ar = {
     restaurants: 'المطاعم',
     noContracts: 'لا يوجد',
     noSales: 'لا توجد مبيعات في آخر 6 أشهر.',
+    analysisLabel: 'تحليل النظرة العامة',
+    contractCount: (n: number) =>
+      n === 1 ? 'عقد واحد' : n === 2 ? 'عقدان' : `${n} عقود`,
+    andMore: (n: number) => `+${n} أخرى`,
     latestTitle: 'أحدث العقود',
     latestSubtitle: (count: number) => `أحدث ${count} مطعمًا تم التعاقد معهم`,
     viewAll: 'عرض الكل',
@@ -220,6 +228,22 @@ export const ar = {
     branchesCount: (used: number, included: number) => `${used} / ${included}`,
     exportSelected: 'تصدير المحدد',
     exportAll: 'تصدير كل النتائج',
+    csv: {
+      restaurant: 'المطعم',
+      business: 'الاسم التجاري',
+      tenantId: 'معرّف المطعم',
+      package: 'الباقة',
+      restaurantStatus: 'حالة المطعم',
+      subscriptionStatus: 'حالة الاشتراك',
+      startDate: 'تاريخ البدء',
+      expiryDate: 'تاريخ الانتهاء',
+      branches: 'الفروع',
+      website: 'الموقع',
+      pwa: 'PWA',
+      android: 'تطبيق Android',
+      ios: 'تطبيق iOS',
+      created: 'تاريخ الإنشاء',
+    },
   },
   details: {
     title: 'تفاصيل المطعم',
@@ -285,6 +309,9 @@ export const ar = {
       removeBranch: 'إزالة',
       included: (used: number, included: number) => `${used} من ${included} مشمول`,
       limitNote: (max: number) => `تسمح هذه الباقة بما يصل إلى ${max} فروع.`,
+      nameRequired: 'الاسم مطلوب',
+      addressRequired: 'العنوان مطلوب',
+      phoneRequired: 'الهاتف مطلوب',
     },
   },
   analytics: {
@@ -655,6 +682,8 @@ export const ar = {
     status: 'حالة الاشتراك',
     startDate: 'تاريخ البدء',
     endDate: 'تاريخ الانتهاء',
+    startRequired: 'تاريخ البدء مطلوب',
+    endRequired: 'تاريخ الانتهاء مطلوب',
     success: 'تم تحديث الاشتراك',
   },
   toasts: {

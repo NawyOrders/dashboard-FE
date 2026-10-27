@@ -16,17 +16,17 @@ export interface LatestContractsTableProps {
   loading?: boolean;
 }
 
-const HEADERS = [
-  en.restaurants.columns.restaurant,
-  en.restaurants.columns.tenantId,
-  en.restaurants.columns.package,
-  en.overview.duration,
-  en.overview.contractDate,
-  en.restaurants.columns.restaurantStatus,
-  en.restaurants.columns.subscriptionStatus,
-];
-
 export function LatestContractsTable({ tenants, loading }: LatestContractsTableProps) {
+  const headers = [
+    en.restaurants.columns.restaurant,
+    en.restaurants.columns.tenantId,
+    en.restaurants.columns.package,
+    en.overview.duration,
+    en.overview.contractDate,
+    en.restaurants.columns.restaurantStatus,
+    en.restaurants.columns.subscriptionStatus,
+  ];
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center">
@@ -56,7 +56,7 @@ export function LatestContractsTable({ tenants, loading }: LatestContractsTableP
               <caption className="sr-only">{en.overview.latestTitle}</caption>
               <thead>
                 <tr className="border-b border-border text-2xs font-medium text-text-muted">
-                  {HEADERS.map((header) => (
+                  {headers.map((header) => (
                     <th key={header} scope="col" className="whitespace-nowrap px-3 py-3 text-start">
                       {header}
                     </th>

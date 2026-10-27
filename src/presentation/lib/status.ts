@@ -82,7 +82,7 @@ export function adminAccountStatusMeta(status: AccountStatus): StatusMeta {
 
 export function paymentStatusMeta(status: PaymentStatus): StatusMeta {
   if (status === 'paid') {
-    return { label: 'Payment completed', tone: 'success' };
+    return { label: en.payments.completed, tone: 'success' };
   }
-  return { label: 'Payment not completed', tone: 'warning' };
+  return { label: en.payments.notCompleted, tone: 'warning' };
 }

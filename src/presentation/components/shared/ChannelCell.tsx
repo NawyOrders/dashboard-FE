@@ -1,4 +1,5 @@
 import { Badge } from '@/presentation/components/ui/Badge';
+import { en } from '@/presentation/i18n/en';
 import { channelStatusMeta } from '@/presentation/lib/status';
 import type { ChannelStatus } from '@/domain/entities';
 
@@ -23,8 +24,8 @@ export function ChannelCell({
 }) {
   return (
     <span className="flex flex-col gap-1">
-      <ChannelMini label="Web" status={websiteStatus} />
-      <ChannelMini label="PWA" status={pwaStatus} />
+      <ChannelMini label={en.common.channels.web} status={websiteStatus} />
+      <ChannelMini label={en.common.channels.pwa} status={pwaStatus} />
     </span>
   );
 }

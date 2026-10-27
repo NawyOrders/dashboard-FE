@@ -4,6 +4,7 @@ import { ContractsPerMonthChart } from './ContractsPerMonthChart';
 import { SalesPerMonthChart } from './components/SalesPerMonthChart';
 import { LatestContractsTable } from './LatestContractsTable';
 import { EndingSoonTable } from './EndingSoonTable';
+import { en } from '@/presentation/i18n/en';
 
 /**
  * Overview analysis section: contracts-per-month and sales-per-month charts side by
@@ -31,7 +32,7 @@ export function OverviewAnalysis() {
   }
 
   return (
-    <section className="mb-6 flex flex-col gap-6" aria-label="Overview analysis">
+    <section className="mb-6 flex flex-col gap-6" aria-label={en.overview.analysisLabel}>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <ContractsPerMonthChart buckets={data?.contractsPerMonth ?? []} loading={loading} />
         <SalesPerMonthChart buckets={salesQuery.data ?? []} loading={salesQuery.isLoading} />

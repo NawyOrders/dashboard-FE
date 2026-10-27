@@ -1,6 +1,7 @@
 import { AlertCircle, Clock } from 'lucide-react';
 import { formatDate, daysUntil } from '@/domain/rules/date';
 import { EXPIRING_SOON_DAYS } from '@/config/policy';
+import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 
 export interface ExpiryDateProps {
@@ -21,8 +22,12 @@ export function ExpiryDate({ endDate }: ExpiryDateProps) {
       )}
     >
       {formatDate(endDate)}
-      {expired && <AlertCircle aria-label="Expired" className="size-3.5" />}
-      {soon && <Clock aria-label="Expiring soon" className="size-3.5" />}
+      {expired && (
+        <AlertCircle aria-label={en.status.subscription.expired} className="size-3.5" />
+      )}
+      {soon && (
+        <Clock aria-label={en.status.subscription.expiring_soon} className="size-3.5" />
+      )}
     </span>
   );
 }

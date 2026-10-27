@@ -13,14 +13,6 @@ import { en } from '@/presentation/i18n/en';
 import { ALL_FILTER_VALUE } from '@/config/filters';
 import type { ActivityAction } from '@/domain/entities';
 
-const ACTION_OPTIONS = [
-  { value: ALL_FILTER_VALUE, label: en.common.all },
-  ...(Object.keys(en.activity.actions) as ActivityAction[]).map((action) => ({
-    value: action,
-    label: en.activity.actions[action],
-  })),
-];
-
 export function ActivityLogsPage() {
   const { allowed } = usePermission('activity.view');
   const [action, setAction] = useState<ActivityAction | ''>('');
@@ -28,6 +20,14 @@ export function ActivityLogsPage() {
   const [to, setTo] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
+  const actionOptions = [
+    { value: ALL_FILTER_VALUE, label: en.common.all },
+    ...(Object.keys(en.activity.actions) as ActivityAction[]).map((action) => ({
+      value: action,
+      label: en.activity.actions[action],
+    })),
+  ];
 
   const query = useActivity({
     action: action || undefined,
@@ -75,7 +75,7 @@ export function ActivityLogsPage() {
                 );
                 setPage(1);
               }}
-              options={ACTION_OPTIONS}
+              options={actionOptions}
             />
             <Input
               label={en.activity.filters.from}

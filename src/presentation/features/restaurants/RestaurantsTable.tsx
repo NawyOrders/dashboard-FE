@@ -19,36 +19,24 @@ import { SelectionBar } from './SelectionBar';
 import { RestaurantRow } from './RestaurantRow';
 import { TableSkeleton } from './TableSkeleton';
 
-const CSV_COLUMNS: CsvColumn<Tenant>[] = [
-  { key: 'name', header: 'Restaurant', value: (t) => t.restaurantName },
-  { key: 'business', header: 'Business', value: (t) => t.businessName },
-  { key: 'tenantId', header: 'Tenant ID', value: (t) => t.tenantId },
-  { key: 'package', header: 'Package', value: (t) => PACKAGES[t.subscription.packageCode].name },
-  { key: 'restaurantStatus', header: 'Restaurant Status', value: (t) => t.status },
-  { key: 'subscriptionStatus', header: 'Subscription Status', value: (t) => t.subscription.status },
-  { key: 'start', header: 'Start Date', value: (t) => t.subscription.startDate },
-  { key: 'expiry', header: 'Expiry Date', value: (t) => t.subscription.endDate },
-  { key: 'branches', header: 'Branches', value: (t) => `${t.branches.length} / ${INCLUDED_BRANCHES}` },
-  { key: 'website', header: 'Website', value: (t) => t.channels.websiteStatus ?? 'Not tracked' },
-  { key: 'pwa', header: 'PWA', value: (t) => t.channels.pwaStatus ?? 'Not tracked' },
-  { key: 'android', header: 'Android App', value: (t) => t.apps.android ?? '—' },
-  { key: 'ios', header: 'iOS App', value: (t) => t.apps.ios ?? '—' },
-  { key: 'created', header: 'Created', value: (t) => formatDate(t.createdAt.slice(0, 10)) },
-];
-
-const HEADERS = [
-  en.restaurants.columns.restaurant,
-  en.restaurants.columns.tenantId,
-  en.restaurants.columns.package,
-  en.restaurants.columns.restaurantStatus,
-  en.restaurants.columns.subscriptionStatus,
-  en.restaurants.columns.startDate,
-  en.restaurants.columns.expiryDate,
-  en.restaurants.columns.branches,
-  en.restaurants.columns.website,
-  en.restaurants.columns.apps,
-  en.restaurants.columns.actions,
-];
+function csvColumns(): CsvColumn<Tenant>[] {
+  return [
+    { key: 'name', header: en.restaurants.csv.restaurant, value: (t) => t.restaurantName },
+    { key: 'business', header: en.restaurants.csv.business, value: (t) => t.businessName },
+    { key: 'tenantId', header: en.restaurants.csv.tenantId, value: (t) => t.tenantId },
+    { key: 'package', header: en.restaurants.csv.package, value: (t) => PACKAGES[t.subscription.packageCode].name },
+    { key: 'restaurantStatus', header: en.restaurants.csv.restaurantStatus, value: (t) => t.status },
+    { key: 'subscriptionStatus', header: en.restaurants.csv.subscriptionStatus, value: (t) => t.subscription.status },
+    { key: 'start', header: en.restaurants.csv.startDate, value: (t) => t.subscription.startDate },
+    { key: 'expiry', header: en.restaurants.csv.expiryDate, value: (t) => t.subscription.endDate },
+    { key: 'branches', header: en.restaurants.csv.branches, value: (t) => `${t.branches.length} / ${INCLUDED_BRANCHES}` },
+    { key: 'website', header: en.restaurants.csv.website, value: (t) => t.channels.websiteStatus ?? en.common.notTracked },
+    { key: 'pwa', header: en.restaurants.csv.pwa, value: (t) => t.channels.pwaStatus ?? en.common.notTracked },
+    { key: 'android', header: en.restaurants.csv.android, value: (t) => t.apps.android ?? en.common.notAvailable },
+    { key: 'ios', header: en.restaurants.csv.ios, value: (t) => t.apps.ios ?? en.common.notAvailable },
+    { key: 'created', header: en.restaurants.csv.created, value: (t) => formatDate(t.createdAt.slice(0, 10)) },
+  ];
+}
 
 export interface RestaurantsTableProps {
   title?: string;
@@ -69,13 +57,27 @@ export function RestaurantsTable({
   const pageIds = pageRows.map((t) => t.id);
   const allOnPageSelected = pageIds.length > 0 && pageIds.every((id) => selected.has(id));
 
+  const headers = [
+    en.restaurants.columns.restaurant,
+    en.restaurants.columns.tenantId,
+    en.restaurants.columns.package,
+    en.restaurants.columns.restaurantStatus,
+    en.restaurants.columns.subscriptionStatus,
+    en.restaurants.columns.startDate,
+    en.restaurants.columns.expiryDate,
+    en.restaurants.columns.branches,
+    en.restaurants.columns.website,
+    en.restaurants.columns.apps,
+    en.restaurants.columns.actions,
+  ];
+
   function exportRows(target: Tenant[], filename: string) {
     if (target.length === 0) {
-      toast({ title: 'Nothing to export', variant: 'neutral' });
+      toast({ title: en.common.nothingToExport, variant: 'neutral' });
       return;
     }
-    downloadCsv(filename, target, CSV_COLUMNS);
-    toast({ title: en.toasts.exported, description: `${target.length} rows`, variant: 'success' });
+    downloadCsv(filename, target, csvColumns());
+    toast({ title: en.toasts.exported, description: en.common.rowsCount(target.length), variant: 'success' });
   }
 
   const selectedRows = rows.filter((t) => selected.has(t.id));
@@ -147,17 +149,17 @@ export function RestaurantsTable({
                       <Checkbox
                         checked={allOnPageSelected}
                         onChange={() => directory.toggleAllOnPage(pageIds)}
-                        aria-label="Select all rows on this page"
+                        aria-label={en.common.selectAllRows}
                       />
                     </th>
-                    {HEADERS.map((header, index) => (
+                    {headers.map((header, index) => (
                       <th
                         key={header}
                         scope="col"
                         className={cn(
                           'whitespace-nowrap px-4 py-3 text-start',
                           index === 0 && 'sticky start-12 z-10 min-w-[240px] bg-card pe-4',
-                          index === HEADERS.length - 1 && 'pe-4',
+                          index === headers.length - 1 && 'pe-4',
                         )}
                       >
                         {header}

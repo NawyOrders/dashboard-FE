@@ -1,8 +1,9 @@
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
+import { en } from '@/presentation/i18n/en';
 
 export function TableSkeleton({ rows = 6 }: { rows?: number }) {
   return (
-    <div className="flex flex-col gap-3 p-6 pt-0" aria-busy="true" aria-label="Loading restaurants">
+    <div className="flex flex-col gap-3 p-6 pt-0" aria-busy="true" aria-label={en.common.loadingRestaurants}>
       {Array.from({ length: rows }).map((_, index) => (
         <div key={index} className="flex items-center gap-4">
           <Skeleton className="size-10 rounded-avatar" />

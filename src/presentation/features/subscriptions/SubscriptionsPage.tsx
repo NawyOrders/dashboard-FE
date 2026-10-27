@@ -21,22 +21,6 @@ import { en } from '@/presentation/i18n/en';
 import { ALL_FILTER_VALUE } from '@/config/filters';
 import type { PackageCode, SubscriptionStatus } from '@/domain/entities';
 
-const ALL_OPTION = { value: ALL_FILTER_VALUE, label: en.common.all };
-
-const STATUS_OPTIONS = [
-  ALL_OPTION,
-  { value: 'active', label: en.status.subscription.active },
-  { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
-  { value: 'expired', label: en.status.subscription.expired },
-  { value: 'not_started', label: en.status.subscription.not_started },
-];
-
-const PACKAGE_OPTIONS = [
-  ALL_OPTION,
-  { value: 'start', label: 'Start' },
-  { value: 'growth', label: 'Growth' },
-];
-
 function DaysRemaining({ endDate, status }: { endDate: string; status: SubscriptionStatus }) {
   if (status === 'not_started') {
     return <span className="text-text-muted">{en.subscriptions.never}</span>;
@@ -59,6 +43,20 @@ export function SubscriptionsPage() {
   const [expiringOnly, setExpiringOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
+
+  const allOption = { value: ALL_FILTER_VALUE, label: en.common.all };
+  const statusOptions = [
+    allOption,
+    { value: 'active', label: en.status.subscription.active },
+    { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
+    { value: 'expired', label: en.status.subscription.expired },
+    { value: 'not_started', label: en.status.subscription.not_started },
+  ];
+  const packageOptions = [
+    allOption,
+    { value: 'start', label: 'Start' },
+    { value: 'growth', label: 'Growth' },
+  ];
 
   const query = useTenants();
 
@@ -96,7 +94,7 @@ export function SubscriptionsPage() {
                 );
                 setPage(1);
               }}
-              options={STATUS_OPTIONS}
+              options={statusOptions}
             />
             <Select
               label={en.subscriptions.filters.package}
@@ -109,7 +107,7 @@ export function SubscriptionsPage() {
                 );
                 setPage(1);
               }}
-              options={PACKAGE_OPTIONS}
+              options={packageOptions}
             />
             <label className="flex h-11 items-center">
               <Checkbox

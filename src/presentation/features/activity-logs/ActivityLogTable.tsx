@@ -76,7 +76,7 @@ export function ActivityLogTable({
               <td className="whitespace-nowrap px-4 py-4">
                 <span className="block font-medium text-text">{log.actor.name}</span>
                 <span className="block text-2xs text-text-muted">
-                  {log.actor.role === 'super_admin' ? en.app.role : 'Support'}
+                  {log.actor.role === 'super_admin' ? en.app.role : en.app.supportRole}
                 </span>
               </td>
               <td className="whitespace-nowrap px-4 py-4 text-text">{en.activity.actions[log.action]}</td>

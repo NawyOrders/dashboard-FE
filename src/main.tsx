@@ -8,6 +8,7 @@ import { applyTheme } from '@/presentation/theme/apply-theme';
 import { SchemaErrorScreen } from '@/presentation/components/shared/SchemaErrorScreen';
 import { StartupErrorScreen } from '@/presentation/components/shared/StartupErrorScreen';
 import { REGISTRATION_SCHEMA, REGISTRATION_SCHEMA_ISSUES } from '@/config/registration-schema';
+import { en } from '@/i18n';
 import './index.css';
 
 applyTheme();
@@ -35,7 +36,7 @@ async function bootstrap() {
   try {
     await initializeApi();
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'The data source could not load.';
+    const message = error instanceof Error ? error.message : en.system.dataSourceFailed;
     if (import.meta.env.DEV) console.error('Data source startup failed:', error);
     root.render(
       <React.StrictMode>

@@ -38,7 +38,7 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
         <Checkbox
           checked={selected}
           onChange={() => onToggle(tenant.id)}
-          aria-label={`Select ${tenant.restaurantName}`}
+          aria-label={en.common.selectRestaurantRow(tenant.restaurantName)}
         />
       </td>
       <td className={cn(stickyCell, 'start-12 min-w-[240px] pe-4')}>
@@ -88,7 +88,7 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
       </td>
       <td className={cn(cell, 'whitespace-nowrap pe-4')}>
         <DropdownMenu
-          label={`Actions for ${tenant.restaurantName}`}
+          label={en.common.actionsFor(tenant.restaurantName)}
           items={[
             {
               key: 'view',

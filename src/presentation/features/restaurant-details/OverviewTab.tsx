@@ -6,7 +6,8 @@ import { InfoList, InfoRow } from '@/presentation/components/shared/InfoList';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { restaurantStatusMeta, subscriptionStatusMeta, channelStatusMeta, appStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
-import { PACKAGES, PACKAGE_FEATURE_LABELS } from '@/config/packages';
+import { PACKAGES } from '@/config/packages';
+import { packageFeatureLabel } from '@/presentation/lib/package-copy';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
@@ -46,7 +47,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
               <ColorSwatch color={current.brandColors.secondary} />
             </InfoRow>
             {current.socialLinks.website && (
-              <InfoRow label="Website">
+              <InfoRow label={en.details.website}>
                 <a
                   href={current.socialLinks.website}
                   target="_blank"
@@ -58,7 +59,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
               </InfoRow>
             )}
             {current.socialLinks.instagram && (
-              <InfoRow label="Instagram">
+              <InfoRow label={en.details.instagram}>
                 <a
                   href={current.socialLinks.instagram}
                   target="_blank"
@@ -77,8 +78,8 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
         <CardHeader><h3 className="text-xl font-semibold">{en.details.contact}</h3></CardHeader>
         <CardBody className="pt-0">
           <InfoList>
-            <InfoRow label="Phone">{current.contact.phone}</InfoRow>
-            <InfoRow label="Email">{current.contact.email}</InfoRow>
+            <InfoRow label={en.details.phone}>{current.contact.phone}</InfoRow>
+            <InfoRow label={en.details.email}>{current.contact.email}</InfoRow>
           </InfoList>
         </CardBody>
       </Card>
@@ -103,7 +104,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
               <span className="flex flex-wrap gap-1.5">
                 {pkg.features.map((feature) => (
                   <span key={feature} className="rounded-pill bg-bg-2 px-2.5 py-1 text-2xs text-primary-dark">
-                    {PACKAGE_FEATURE_LABELS[feature]}
+                    {packageFeatureLabel(feature)}
                   </span>
                 ))}
               </span>
@@ -151,7 +152,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
         <CardHeader><h3 className="text-xl font-semibold">{en.details.branchUsage}</h3></CardHeader>
         <CardBody className="pt-0">
           <p className="text-sm text-text">
-            <span className="font-semibold">{current.branches.length}</span> of {INCLUDED_BRANCHES} included
+            {en.details.branchUsageValue(current.branches.length, INCLUDED_BRANCHES)}
           </p>
           <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-neutral-bg">
             <div

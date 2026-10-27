@@ -21,16 +21,6 @@ import { ActivityLogTable } from '@/presentation/features/activity-logs/Activity
 const TAB_KEYS = ['overview', 'subscription', 'website', 'apps', 'branches', 'registration', 'activity'] as const;
 type TabKey = (typeof TAB_KEYS)[number];
 
-const TAB_ITEMS = [
-  { key: 'overview', label: en.details.tabs.overview },
-  { key: 'subscription', label: en.details.tabs.subscription },
-  { key: 'website', label: en.details.tabs.website },
-  { key: 'apps', label: en.details.tabs.apps },
-  { key: 'branches', label: en.details.tabs.branches },
-  { key: 'registration', label: en.details.tabs.registration },
-  { key: 'activity', label: en.details.tabs.activity },
-];
-
 function ActivityTab({ tenantId }: { tenantId: string }) {
   const activity = useActivity({ tenantId });
   return (
@@ -56,6 +46,16 @@ export function RestaurantDetailsPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
 
+  const tabItems = [
+    { key: 'overview', label: en.details.tabs.overview },
+    { key: 'subscription', label: en.details.tabs.subscription },
+    { key: 'website', label: en.details.tabs.website },
+    { key: 'apps', label: en.details.tabs.apps },
+    { key: 'branches', label: en.details.tabs.branches },
+    { key: 'registration', label: en.details.tabs.registration },
+    { key: 'activity', label: en.details.tabs.activity },
+  ];
+
   useEffect(() => {
     const requested = searchParams.get('tab');
     if (requested === 'features') {
@@ -79,9 +79,9 @@ export function RestaurantDetailsPage() {
   if (tenant.isError || !tenant.data) {
     return (
       <div>
-        <PageHeader title="Restaurant details" />
+        <PageHeader title={en.details.title} />
         <ErrorState
-          error={tenant.error ?? new Error('Restaurant not found')}
+          error={tenant.error ?? new Error(en.details.notFound)}
           onRetry={() => tenant.refetch()}
         />
       </div>
@@ -98,7 +98,7 @@ export function RestaurantDetailsPage() {
         onManageFeatures={() => setFeaturesOpen(true)}
       />
 
-      <Tabs items={TAB_ITEMS} activeKey={tab} onChange={(key) => setTab(key as TabKey)} />
+      <Tabs items={tabItems} activeKey={tab} onChange={(key) => setTab(key as TabKey)} />
 
       <TabPanel>
         {tab === 'overview' && <OverviewTab tenant={data} />}

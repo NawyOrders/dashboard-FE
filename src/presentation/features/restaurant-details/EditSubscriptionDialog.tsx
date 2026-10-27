@@ -22,22 +22,17 @@ import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 import type { Tenant } from '@/domain/entities';
 
-const schema = z.object({
-  packageCode: z.enum(['start', 'growth']),
-  durationMonths: z.union([z.literal(3), z.literal(6), z.literal(12)]),
-  status: z.enum(['active', 'expiring_soon', 'expired', 'not_started']),
-  startDate: z.string().min(1, 'Start date is required'),
-  endDate: z.string().min(1, 'Expiry date is required'),
-});
+function createSubscriptionSchema() {
+  return z.object({
+    packageCode: z.enum(['start', 'growth']),
+    durationMonths: z.union([z.literal(3), z.literal(6), z.literal(12)]),
+    status: z.enum(['active', 'expiring_soon', 'expired', 'not_started']),
+    startDate: z.string().min(1, en.editSubscription.startRequired),
+    endDate: z.string().min(1, en.editSubscription.endRequired),
+  });
+}
 
-type FormValues = z.infer<typeof schema>;
-
-const STATUS_OPTIONS = [
-  { value: 'active', label: en.status.subscription.active },
-  { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
-  { value: 'expired', label: en.status.subscription.expired },
-  { value: 'not_started', label: en.status.subscription.not_started },
-];
+type FormValues = z.infer<ReturnType<typeof createSubscriptionSchema>>;
 
 export interface EditSubscriptionDialogProps {
   tenant: Tenant;
@@ -51,6 +46,13 @@ export function EditSubscriptionDialog({ tenant, open, onClose }: EditSubscripti
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<FormValues | null>(null);
 
+  const statusOptions = [
+    { value: 'active', label: en.status.subscription.active },
+    { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
+    { value: 'expired', label: en.status.subscription.expired },
+    { value: 'not_started', label: en.status.subscription.not_started },
+  ];
+
   const {
     register,
     handleSubmit,
@@ -59,7 +61,7 @@ export function EditSubscriptionDialog({ tenant, open, onClose }: EditSubscripti
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createSubscriptionSchema()),
     defaultValues: {
       packageCode: tenant.subscription.packageCode,
       durationMonths: tenant.subscription.durationMonths,
@@ -172,7 +174,7 @@ export function EditSubscriptionDialog({ tenant, open, onClose }: EditSubscripti
           <div className={cn('grid grid-cols-1 gap-4', 'sm:grid-cols-3')}>
             <Select
               label={en.editSubscription.status}
-              options={STATUS_OPTIONS}
+              options={statusOptions}
               {...register('status')}
             />
             <Input label={en.editSubscription.startDate} type="date" error={errors.startDate?.message} {...register('startDate')} />
@@ -185,7 +187,7 @@ export function EditSubscriptionDialog({ tenant, open, onClose }: EditSubscripti
         open={pending !== null}
         title={en.editSubscription.title}
         changes={changes}
-        body={changes.length === 0 ? 'No changes to save.' : undefined}
+        body={changes.length === 0 ? en.details.noChanges : undefined}
         loading={mutation.isPending}
         onCancel={() => setPending(null)}
         onConfirm={() => {

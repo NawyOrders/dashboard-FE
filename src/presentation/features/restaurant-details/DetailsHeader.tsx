@@ -35,7 +35,9 @@ export function DetailsHeader({ tenant, onEditSubscription, onManageFeatures }: 
         <div className="flex min-w-0 items-start gap-4">
           <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} size="lg" />
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold text-text">{tenant.restaurantName}</h1>
+            <h1 dir="ltr" className="text-start text-2xl font-semibold text-text">
+              {tenant.restaurantName}
+            </h1>
             {tenant.restaurantNameAr ? (
               <p dir="rtl" className="mt-0.5 text-sm text-text-muted">
                 {tenant.restaurantNameAr}

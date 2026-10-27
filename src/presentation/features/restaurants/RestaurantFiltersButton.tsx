@@ -8,29 +8,6 @@ import { ALL_FILTER_VALUE } from '@/config/filters';
 import type { PackageCode, RestaurantStatus, SubscriptionStatus } from '@/domain/entities';
 import type { DirectoryFilters } from './types';
 
-const ALL_OPTION = { value: ALL_FILTER_VALUE, label: en.common.all };
-
-const PACKAGE_OPTIONS = [
-  ALL_OPTION,
-  { value: 'start', label: 'Start' },
-  { value: 'growth', label: 'Growth' },
-];
-
-const RESTAURANT_STATUS_OPTIONS: { value: RestaurantStatus | string; label: string }[] = [
-  ALL_OPTION,
-  { value: 'active', label: en.status.restaurant.active },
-  { value: 'pending', label: en.status.restaurant.pending },
-  { value: 'inactive', label: en.status.restaurant.inactive },
-];
-
-const SUBSCRIPTION_STATUS_OPTIONS: { value: SubscriptionStatus | string; label: string }[] = [
-  ALL_OPTION,
-  { value: 'active', label: en.status.subscription.active },
-  { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
-  { value: 'expired', label: en.status.subscription.expired },
-  { value: 'not_started', label: en.status.subscription.not_started },
-];
-
 export interface RestaurantFiltersButtonProps {
   filters: DirectoryFilters;
   activeFilterCount: number;
@@ -46,6 +23,26 @@ export function RestaurantFiltersButton({
 }: RestaurantFiltersButtonProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const allOption = { value: ALL_FILTER_VALUE, label: en.common.all };
+  const packageOptions = [
+    allOption,
+    { value: 'start', label: 'Start' },
+    { value: 'growth', label: 'Growth' },
+  ];
+  const restaurantStatusOptions: { value: RestaurantStatus | string; label: string }[] = [
+    allOption,
+    { value: 'active', label: en.status.restaurant.active },
+    { value: 'pending', label: en.status.restaurant.pending },
+    { value: 'inactive', label: en.status.restaurant.inactive },
+  ];
+  const subscriptionStatusOptions: { value: SubscriptionStatus | string; label: string }[] = [
+    allOption,
+    { value: 'active', label: en.status.subscription.active },
+    { value: 'expiring_soon', label: en.status.subscription.expiring_soon },
+    { value: 'expired', label: en.status.subscription.expired },
+    { value: 'not_started', label: en.status.subscription.not_started },
+  ];
 
   useEffect(() => {
     if (!open) return;
@@ -91,7 +88,7 @@ export function RestaurantFiltersButton({
                     : (event.target.value as PackageCode),
                 )
               }
-              options={PACKAGE_OPTIONS}
+              options={packageOptions}
             />
             <Select
               label={en.restaurants.filters.restaurantStatus}
@@ -104,7 +101,7 @@ export function RestaurantFiltersButton({
                     : (event.target.value as RestaurantStatus),
                 )
               }
-              options={RESTAURANT_STATUS_OPTIONS}
+              options={restaurantStatusOptions}
             />
             <Select
               label={en.restaurants.filters.subscriptionStatus}
@@ -117,7 +114,7 @@ export function RestaurantFiltersButton({
                     : (event.target.value as SubscriptionStatus),
                 )
               }
-              options={SUBSCRIPTION_STATUS_OPTIONS}
+              options={subscriptionStatusOptions}
             />
             <Checkbox
               label={en.restaurants.filters.expiringSoon}

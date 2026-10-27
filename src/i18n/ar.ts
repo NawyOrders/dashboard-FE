@@ -289,6 +289,7 @@ export const ar = {
     subscriptionStatus: 'حالة الاشتراك',
     changeHistory: 'سجل التغييرات',
     referencePrices: 'الأسعار المرجعية',
+    referencePriceNote: 'سعر مرجعي. لم يتم تأكيد الضرائب وشروط الدفع بعد.',
     months: (n: number) =>
       n === 1 ? 'شهر واحد' : n === 2 ? 'شهران' : n <= 10 ? `${n} أشهر` : `${n} شهرًا`,
     noActivity: 'لا يوجد نشاط مسجل لهذا المطعم بعد.',
@@ -439,6 +440,10 @@ export const ar = {
         email: { label: 'البريد الإلكتروني', placeholder: 'example@email.com' },
         phone: { label: 'رقم الجوال', placeholder: '20XXXXXXXXXX' },
         city: { label: 'المدينة', placeholder: 'المدينة' },
+        commercialRegisterNumber: {
+          label: 'رقم السجل التجاري (اختياري)',
+          placeholder: '15 رقمًا',
+        },
         description: { label: 'وصف المطعم', placeholder: 'وصف المطعم' },
         coverImageUrl: { label: 'صورة الغلاف' },
         primaryColor: { label: 'اللون الأساسي' },

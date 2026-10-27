@@ -7,6 +7,7 @@ import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
+import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { ExpiryDate } from '@/presentation/components/shared/ExpiryDate';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
@@ -168,8 +169,13 @@ export function SubscriptionsPage() {
                       <td className="whitespace-nowrap px-6 py-4">
                         <span className="flex items-center gap-3">
                           <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} />
-                          <span>
-                            <span className="block font-semibold text-text">{tenant.restaurantName}</span>
+                          <span className="min-w-0">
+                            <RestaurantName
+                              name={tenant.restaurantName}
+                              nameAr={tenant.restaurantNameAr}
+                              primaryClassName="font-semibold text-text"
+                              secondaryClassName="text-2xs text-text-muted"
+                            />
                             <span className="block font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                           </span>
                         </span>

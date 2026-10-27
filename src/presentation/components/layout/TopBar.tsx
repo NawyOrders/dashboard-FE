@@ -9,6 +9,8 @@ import { useDebounce } from '@/presentation/hooks/useDebounce';
 import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { cn } from '@/presentation/lib/cn';
 import { Badge } from '@/presentation/components/ui/Badge';
+import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 const ROUTE_TITLES: Record<string, keyof typeof en.nav> = {
   '/': 'overview',
@@ -183,7 +185,12 @@ export function TopBar({ onMenuClick }: TopBarProps) {
                       index === activeIndex ? 'bg-muted' : 'hover:bg-muted/60',
                     )}
                   >
-                    <span className="truncate">{tenant.restaurantName}</span>
+                    <RestaurantName
+                      name={tenant.restaurantName}
+                      nameAr={tenant.restaurantNameAr}
+                      primaryClassName="text-sm"
+                      secondaryClassName="text-2xs text-text-muted"
+                    />
                     <span className="shrink-0 font-mono text-xs text-text-muted">
                       {tenant.tenantId}
                     </span>
@@ -234,7 +241,12 @@ export function TopBar({ onMenuClick }: TopBarProps) {
                     }}
                     className="flex w-full items-center justify-between gap-3 px-3 py-2 text-start text-sm text-text hover:bg-muted/60"
                   >
-                    <span className="truncate">{application.restaurantName}</span>
+                    <RestaurantName
+                      name={application.restaurantName}
+                      nameAr={application.restaurantNameAr}
+                      primaryClassName="text-sm"
+                      secondaryClassName="text-2xs text-text-muted"
+                    />
                     <span className="shrink-0 font-mono text-xs text-text-muted">
                       {application.tenantId}
                     </span>
@@ -244,6 +256,8 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             </div>
           )}
         </div>
+
+        <LanguageSwitcher />
 
         <IconButton label={en.topbar.settings} onClick={() => navigate('/settings')}>
           <Settings aria-hidden="true" className="size-5" />

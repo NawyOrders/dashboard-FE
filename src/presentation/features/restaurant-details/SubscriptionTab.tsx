@@ -8,7 +8,6 @@ import { formatDate } from '@/domain/rules/date';
 import { formatEgp } from '@/presentation/lib/format';
 import { PACKAGES, PACKAGE_LIST } from '@/config/packages';
 import { DURATIONS } from '@/domain/entities';
-import { REFERENCE_PRICE_NOTE } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
 import { ActivityLogTable } from '@/presentation/features/activity-logs/ActivityLogTable';
@@ -58,7 +57,7 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
         <CardHeader>
           <div>
             <h3 className="text-xl font-semibold">{en.details.referencePrices}</h3>
-            <p className="mt-1 text-2xs text-text-muted">{REFERENCE_PRICE_NOTE}</p>
+            <p className="mt-1 text-2xs text-text-muted">{en.details.referencePriceNote}</p>
           </div>
         </CardHeader>
         <CardBody className="pt-0">

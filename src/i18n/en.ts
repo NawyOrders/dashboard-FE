@@ -286,6 +286,7 @@ export const en = {
     subscriptionStatus: 'Subscription status',
     changeHistory: 'Change history',
     referencePrices: 'Reference prices',
+    referencePriceNote: 'Reference price. Tax and payment terms not yet confirmed.',
     months: (n: number) => `${n} months`,
     noActivity: 'No activity recorded for this tenant yet.',
     openWebsite: 'Open link',
@@ -438,6 +439,10 @@ export const en = {
         email: { label: 'Email', placeholder: 'example@email.com' },
         phone: { label: 'Mobile number', placeholder: '20XXXXXXXXXX' },
         city: { label: 'City', placeholder: 'City' },
+        commercialRegisterNumber: {
+          label: 'Commercial register number (optional)',
+          placeholder: '15 digits',
+        },
         description: { label: 'Restaurant description', placeholder: 'Restaurant description' },
         coverImageUrl: { label: 'Cover image' },
         primaryColor: { label: 'Primary color' },

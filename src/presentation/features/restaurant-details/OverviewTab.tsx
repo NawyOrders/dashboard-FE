@@ -2,6 +2,7 @@ import { useTenant } from '@/presentation/hooks/queries';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
+import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { InfoList, InfoRow } from '@/presentation/components/shared/InfoList';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { restaurantStatusMeta, subscriptionStatusMeta, channelStatusMeta, appStatusMeta } from '@/presentation/lib/status';
@@ -34,8 +35,13 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
         <CardBody className="pt-0">
           <div className="mb-4 flex items-center gap-4">
             <TenantLogo name={current.restaurantName} color={current.brandColors.primary} size="lg" />
-            <div>
-              <p className="font-semibold text-text">{current.restaurantName}</p>
+            <div className="min-w-0">
+              <RestaurantName
+                name={current.restaurantName}
+                nameAr={current.restaurantNameAr}
+                primaryClassName="font-semibold text-text"
+                secondaryClassName="text-sm text-text-muted"
+              />
               <p className="text-sm text-text-muted">{current.businessName}</p>
             </div>
           </div>

@@ -27,7 +27,7 @@ export function DetailsHeader({ tenant, onEditSubscription, onManageFeatures }: 
         to="/restaurants"
         className="mb-4 inline-flex items-center gap-1.5 text-2xs font-medium text-text-muted transition-colors duration-150 hover:text-primary"
       >
-        <ArrowLeft aria-hidden="true" className="size-3.5" />
+        <ArrowLeft aria-hidden="true" className="size-3.5 rtl:rotate-180" />
         {en.details.back}
       </Link>
 

@@ -89,7 +89,7 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
                   <ChevronRight
                     aria-hidden="true"
                     className={cn(
-                      'absolute end-2 size-4',
+                      'absolute end-2 size-4 rtl:rotate-180',
                       variant === 'drawer' ? 'block' : 'hidden xl:block',
                     )}
                   />
@@ -181,7 +181,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
         className={cn(
           'fixed inset-y-0 start-0 z-50 flex w-[min(85vw,320px)] flex-col border-e border-border bg-card md:hidden',
           'transition-transform duration-200 ease-out',
-          mobileOpen ? 'visible translate-x-0' : 'invisible -translate-x-full',
+          mobileOpen ? 'visible translate-x-0' : 'invisible -translate-x-full rtl:translate-x-full',
         )}
       >
         <div className="flex items-start justify-between">

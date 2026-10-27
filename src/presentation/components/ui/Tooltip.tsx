@@ -13,9 +13,9 @@ export interface TooltipProps {
 export function Tooltip({ label, children, side = 'top', bubbleClassName, className }: TooltipProps) {
   const position =
     side === 'top'
-      ? 'bottom-full mb-2 start-1/2 -translate-x-1/2'
+      ? 'bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2'
       : side === 'bottom'
-        ? 'top-full mt-2 start-1/2 -translate-x-1/2'
+        ? 'top-full mt-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2'
         : 'start-full ms-2 top-1/2 -translate-y-1/2';
 
   return (

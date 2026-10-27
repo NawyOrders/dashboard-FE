@@ -7,6 +7,7 @@ import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
+import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { subscriptionStatusMeta } from '@/presentation/lib/status';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { formatDate } from '@/domain/rules/date';
@@ -103,9 +104,14 @@ export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
                         <Link
                           to={`/restaurants/${tenant.id}?tab=subscription`}
                           title={tenant.restaurantName}
-                          className="max-w-[160px] truncate font-semibold text-text hover:text-primary"
+                          className="max-w-[200px]"
                         >
-                          {tenant.restaurantName}
+                          <RestaurantName
+                            name={tenant.restaurantName}
+                            nameAr={tenant.restaurantNameAr}
+                            primaryClassName="font-semibold text-text hover:text-primary"
+                            secondaryClassName="text-2xs font-normal text-text-muted"
+                          />
                         </Link>
                       </div>
                     </td>

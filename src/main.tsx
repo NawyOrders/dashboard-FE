@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import { router } from '@/app/router';
 import { initializeApi } from '@/app/composition';
-import { Providers } from '@/app/providers';
+import { AppRoot } from '@/app/AppRoot';
 import { applyTheme } from '@/presentation/theme/apply-theme';
 import { SchemaErrorScreen } from '@/presentation/components/shared/SchemaErrorScreen';
 import { StartupErrorScreen } from '@/presentation/components/shared/StartupErrorScreen';
 import { REGISTRATION_SCHEMA, REGISTRATION_SCHEMA_ISSUES } from '@/config/registration-schema';
-import { en } from '@/i18n';
+import { initializeLocale, en } from '@/i18n';
 import './index.css';
 
 applyTheme();
+initializeLocale();
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
@@ -48,9 +47,7 @@ async function bootstrap() {
 
   root.render(
     <React.StrictMode>
-      <Providers>
-        <RouterProvider router={router} />
-      </Providers>
+      <AppRoot />
     </React.StrictMode>,
   );
 }

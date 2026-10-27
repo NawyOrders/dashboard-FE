@@ -31,8 +31,8 @@ export const TREAT_NULL_CHANNEL_STATUS_AS_NOT_TRACKED = true;
 export const INCLUDED_BRANCHES = Math.max(...PACKAGE_LIST.map((item) => item.branchLimits.max));
 
 // OPEN DECISION: reference prices are not confirmed as final commercial terms.
-export const REFERENCE_PRICE_NOTE =
-  'Reference price. Tax and payment terms not yet confirmed.';
+// The note shown under "Reference prices" lives in the translation files
+// (`details.referencePriceNote`) so it follows the selected language.
 
 // OPEN DECISION: the "ending within 2 weeks" window is fixed by the design brief.
 // It is intentionally separate from EXPIRING_SOON_DAYS (which drives the KPI card and badges).

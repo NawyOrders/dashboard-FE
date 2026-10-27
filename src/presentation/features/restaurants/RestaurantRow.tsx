@@ -8,6 +8,7 @@ import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { ChannelCell } from '@/presentation/components/shared/ChannelCell';
 import { AppsCell } from '@/presentation/components/shared/AppsCell';
 import { ExpiryDate } from '@/presentation/components/shared/ExpiryDate';
+import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
 import { usePermission } from '@/presentation/hooks/usePermission';
@@ -49,11 +50,16 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
               type="button"
               onClick={() => openTab('overview')}
               title={tenant.restaurantName}
-              className="block max-w-[180px] truncate text-start text-sm font-semibold text-text hover:text-primary"
+              className="block max-w-[220px] text-start"
             >
-              {tenant.restaurantName}
+              <RestaurantName
+                name={tenant.restaurantName}
+                nameAr={tenant.restaurantNameAr}
+                primaryClassName="text-sm font-semibold text-text hover:text-primary"
+                secondaryClassName="text-2xs text-text-muted"
+              />
             </button>
-            <span className="block max-w-[180px] truncate text-2xs text-text-muted" title={tenant.businessName}>
+            <span className="block max-w-[220px] truncate text-2xs text-text-muted" title={tenant.businessName}>
               {tenant.businessName}
             </span>
           </div>

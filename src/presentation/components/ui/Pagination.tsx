@@ -75,7 +75,7 @@ export function Pagination({
             onClick={() => onPageChange(page - 1)}
             className="inline-flex size-9 items-center justify-center rounded-panel border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <ChevronLeft aria-hidden="true" className="size-4" />
+            <ChevronLeft aria-hidden="true" className="size-4 rtl:rotate-180" />
           </button>
           {buildPages(page, pageCount).map((item, index) => {
             if (typeof item === 'string') {
@@ -110,7 +110,7 @@ export function Pagination({
             onClick={() => onPageChange(page + 1)}
             className="inline-flex size-9 items-center justify-center rounded-panel border border-border text-text transition-colors duration-150 hover:bg-bg-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <ChevronRight aria-hidden="true" className="size-4" />
+            <ChevronRight aria-hidden="true" className="size-4 rtl:rotate-180" />
           </button>
         </nav>
       </div>

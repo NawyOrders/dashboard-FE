@@ -11,12 +11,8 @@ import { RESTAURANT_ROLES } from '@/config/restaurant-roles';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useCreateTenantAccount, useTenants } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
+import { tenantRoleLabel } from '@/presentation/lib/role-copy';
 import type { RestaurantRole } from '@/domain/entities';
-
-const ROLE_OPTIONS = RESTAURANT_ROLES.map((role) => ({
-  value: role.id,
-  label: role.label,
-}));
 
 export interface CreateTenantAccountDialogProps {
   open: boolean;
@@ -40,6 +36,11 @@ export function CreateTenantAccountDialog({ open, onClose }: CreateTenantAccount
     password: false,
     confirmPassword: false,
   });
+
+  const roleOptions = RESTAURANT_ROLES.map((role) => ({
+    value: role.id,
+    label: tenantRoleLabel(role.id),
+  }));
 
   const restaurantOptions = useMemo(
     () =>
@@ -139,7 +140,7 @@ export function CreateTenantAccountDialog({ open, onClose }: CreateTenantAccount
           label={en.accounts.restaurantRole}
           value={restaurantRole}
           onChange={(event) => setRestaurantRole(event.target.value as RestaurantRole)}
-          options={ROLE_OPTIONS}
+          options={roleOptions}
         />
         <Input
           label={en.accounts.email}

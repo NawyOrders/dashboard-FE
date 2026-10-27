@@ -1,6 +1,7 @@
 import { ShieldCheck } from 'lucide-react';
 import { en } from '@/presentation/i18n/en';
 import { ROLE_REGISTRY } from '@/domain/rules/permissions';
+import { roleDescription, roleLabel } from '@/presentation/lib/role-copy';
 import type { Role } from '@/domain/entities';
 
 export function RolesSection() {
@@ -23,8 +24,8 @@ export function RolesSection() {
                 <ShieldCheck aria-hidden="true" className="size-5" />
               </span>
               <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-text">{definition.label}</h3>
-                <p className="mt-1 text-sm text-text-muted">{definition.description}</p>
+                <h3 className="text-sm font-semibold text-text">{roleLabel(role)}</h3>
+                <p className="mt-1 text-sm text-text-muted">{roleDescription(role)}</p>
                 <p className="mt-2 text-2xs font-medium text-primary">
                   {en.accounts.permissionsCount(definition.permissions.length)}
                 </p>

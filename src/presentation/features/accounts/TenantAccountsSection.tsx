@@ -8,7 +8,7 @@ import { usePermission } from '@/presentation/hooks/usePermission';
 import { useTenantAccounts } from '@/presentation/hooks/queries';
 import { en } from '@/presentation/i18n/en';
 import { formatDate } from '@/domain/rules/date';
-import { tenantRoleLabel } from '@/config/restaurant-roles';
+import { tenantRoleLabel } from '@/presentation/lib/role-copy';
 import { CreateTenantAccountDialog } from './CreateTenantAccountDialog';
 import { ResetTenantPasswordDialog } from './ResetTenantPasswordDialog';
 

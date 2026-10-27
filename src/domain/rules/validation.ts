@@ -10,6 +10,8 @@
  * separate concern handled by the form schema.
  */
 
+import { en } from '@/i18n';
+
 // letters (any script) + digits + space + hyphen + apostrophe
 const NAME_ALLOWED = /^[\p{L}\p{N} \-']+$/u;
 const HAS_LETTER = /\p{L}/u;
@@ -21,51 +23,17 @@ export type PhoneKind = 'phone' | 'branchPhone';
 export const MIN_PHONE_DIGITS = 7;
 export const MAX_PHONE_DIGITS = 15;
 
-export const VALIDATION_MESSAGES = {
-  businessNameInvalid:
-    "Business name can only contain letters, numbers, spaces, hyphens (-), and apostrophes (').",
-  businessNameNumeric:
-    'Business name must contain at least one letter and cannot consist solely of numbers.',
-  restaurantNameInvalid:
-    "Restaurant name contains invalid characters. Only letters, numbers, spaces, hyphens (-), and apostrophes (') are allowed.",
-  restaurantNameNumeric:
-    'Restaurant name must include valid alphabetic characters and cannot be entirely numeric.',
-  branchNameInvalid:
-    "Branch name can only contain letters, numbers, spaces, hyphens (-), and apostrophes (').",
-  branchNameNumeric:
-    'Branch name must contain at least one letter and cannot consist solely of numbers.',
-  phoneLetters:
-    'Please enter a valid phone number containing digits only (optional leading + allowed).',
-  phoneSymbols: 'Invalid phone number. Symbols and special characters are not allowed.',
-  phoneFormat: 'Please enter a valid phone number format (e.g., +201012345678 or 01012345678).',
-  phoneTooShort:
-    'Phone number is too short. Please enter a valid phone number (minimum 7–10 digits).',
-  branchPhoneLetters: 'Branch phone number must contain digits only (optional leading + allowed).',
-  branchPhoneSymbols: 'Invalid phone number. Symbols and special characters are not allowed.',
-  branchPhoneFormat:
-    'Please enter a valid phone number format (e.g., +201012345678 or 01012345678).',
-  branchPhoneTooShort:
-    'Branch phone number is too short. Please enter a valid number (minimum 7–10 digits).',
-  emailInvalidFormat:
-    'Invalid email format. Please enter a valid email address (e.g., user@example.com).',
-  emailSymbols:
-    'Please enter a valid email address. Special characters (@#$%^&) are not allowed in this format.',
-  emailNoDomain: 'Please enter a valid email address (e.g., name@domain.com).',
-  emailIncompleteDomain:
-    'Please enter a valid email address with a complete domain (e.g., name@example.com).',
-} as const;
-
 function invalidNameMessage(kind: NameKind): string {
-  if (kind === 'restaurant') return VALIDATION_MESSAGES.restaurantNameInvalid;
-  if (kind === 'branch') return VALIDATION_MESSAGES.branchNameInvalid;
-  return VALIDATION_MESSAGES.businessNameInvalid;
+  if (kind === 'restaurant') return en.validation.restaurantNameInvalid;
+  if (kind === 'branch') return en.validation.branchNameInvalid;
+  return en.validation.businessNameInvalid;
 }
 
 function numericNameMessage(kind: NameKind): string {
-  if (kind === 'restaurant') return VALIDATION_MESSAGES.restaurantNameNumeric;
+  if (kind === 'restaurant') return en.validation.restaurantNameNumeric;
   return kind === 'branch'
-    ? VALIDATION_MESSAGES.branchNameNumeric
-    : VALIDATION_MESSAGES.businessNameNumeric;
+    ? en.validation.branchNameNumeric
+    : en.validation.businessNameNumeric;
 }
 
 /**
@@ -89,25 +57,19 @@ export function validatePhone(value: string, kind: PhoneKind): string | null {
   if (trimmed.length === 0) return null;
 
   if (HAS_LETTER_ANYWHERE.test(trimmed)) {
-    return kind === 'phone'
-      ? VALIDATION_MESSAGES.phoneLetters
-      : VALIDATION_MESSAGES.branchPhoneLetters;
+    return kind === 'phone' ? en.validation.phoneLetters : en.validation.branchPhoneLetters;
   }
 
   const digits = trimmed.startsWith('+') ? trimmed.slice(1) : trimmed;
   if (!/^\d+$/.test(digits)) {
-    return kind === 'phone'
-      ? VALIDATION_MESSAGES.phoneSymbols
-      : VALIDATION_MESSAGES.branchPhoneSymbols;
+    return kind === 'phone' ? en.validation.phoneSymbols : en.validation.branchPhoneSymbols;
   }
 
   if (digits.length < MIN_PHONE_DIGITS) {
-    return kind === 'phone'
-      ? VALIDATION_MESSAGES.phoneTooShort
-      : VALIDATION_MESSAGES.branchPhoneTooShort;
+    return kind === 'phone' ? en.validation.phoneTooShort : en.validation.branchPhoneTooShort;
   }
   if (digits.length > MAX_PHONE_DIGITS) {
-    return kind === 'phone' ? VALIDATION_MESSAGES.phoneFormat : VALIDATION_MESSAGES.branchPhoneFormat;
+    return kind === 'phone' ? en.validation.phoneFormat : en.validation.branchPhoneFormat;
   }
   return null;
 }
@@ -132,21 +94,21 @@ export function validateEmail(value: string): string | null {
 
   const parts = trimmed.split('@');
   if (parts.length !== 2) {
-    if (EMAIL_DISALLOWED_SYMBOLS.test(trimmed)) return VALIDATION_MESSAGES.emailSymbols;
-    if (/^\d+$/.test(trimmed)) return VALIDATION_MESSAGES.emailInvalidFormat;
-    return VALIDATION_MESSAGES.emailNoDomain;
+    if (EMAIL_DISALLOWED_SYMBOLS.test(trimmed)) return en.validation.emailSymbols;
+    if (/^\d+$/.test(trimmed)) return en.validation.emailInvalidFormat;
+    return en.validation.emailNoDomain;
   }
 
   const [local, domain] = parts as [string, string];
   if (!EMAIL_LOCAL_ALLOWED.test(local) || EMAIL_DOMAIN_DISALLOWED.test(domain)) {
-    return VALIDATION_MESSAGES.emailSymbols;
+    return en.validation.emailSymbols;
   }
   if (local.length === 0 || !EMAIL_DOMAIN_ALLOWED.test(domain)) {
-    return VALIDATION_MESSAGES.emailIncompleteDomain;
+    return en.validation.emailIncompleteDomain;
   }
 
   const tld = domain.split('.').pop() ?? '';
-  if (!/^[A-Za-z]{2,}$/.test(tld)) return VALIDATION_MESSAGES.emailIncompleteDomain;
+  if (!/^[A-Za-z]{2,}$/.test(tld)) return en.validation.emailIncompleteDomain;
 
   return null;
 }

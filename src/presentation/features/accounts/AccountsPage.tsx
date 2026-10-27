@@ -9,18 +9,13 @@ import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { en } from '@/presentation/i18n/en';
 import { formatDate } from '@/domain/rules/date';
-import { ROLE_REGISTRY } from '@/domain/rules/permissions';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useAdminAccounts } from '@/presentation/hooks/queries';
+import { roleLabel } from '@/presentation/lib/role-copy';
 import { adminAccountStatusMeta } from '@/presentation/lib/status';
-import type { InternalAccount } from '@/domain/entities';
 import { CreateAccountDialog } from './CreateAccountDialog';
 import { RolesSection } from './RolesSection';
 import { TenantAccountsSection } from './TenantAccountsSection';
-
-function roleLabel(role: InternalAccount['role']): string {
-  return ROLE_REGISTRY[role].label;
-}
 
 export function AccountsPage() {
   const { allowed } = usePermission('accounts.view');
@@ -37,8 +32,7 @@ export function AccountsPage() {
       (account) =>
         account.name.toLowerCase().includes(needle) ||
         account.email.toLowerCase().includes(needle) ||
-        roleLabel(account.role).toLowerCase().includes(needle),
-    );
+        roleLabel(account.role).toLowerCase().includes(needle),    );
   }, [accountsQuery.data, search]);
 
   if (!allowed) {

@@ -11,12 +11,10 @@ import { ROLE_REGISTRY } from '@/domain/rules/permissions';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useCreateAdminAccount } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
+import { roleLabel } from '@/presentation/lib/role-copy';
 import type { Role } from '@/domain/entities';
 
-const ROLE_OPTIONS = (Object.keys(ROLE_REGISTRY) as Role[]).map((role) => ({
-  value: role,
-  label: ROLE_REGISTRY[role].label,
-}));
+const ROLE_KEYS = Object.keys(ROLE_REGISTRY) as Role[];
 
 export interface CreateAccountDialogProps {
   open: boolean;
@@ -39,6 +37,8 @@ export function CreateAccountDialog({ open, onClose }: CreateAccountDialogProps)
     password: false,
     confirmPassword: false,
   });
+
+  const roleOptions = ROLE_KEYS.map((role) => ({ value: role, label: roleLabel(role) }));
 
   const nameError = !touched.name
     ? undefined
@@ -140,7 +140,7 @@ export function CreateAccountDialog({ open, onClose }: CreateAccountDialogProps)
           label={en.accounts.role}
           value={role}
           onChange={(event) => setRole(event.target.value as Role)}
-          options={ROLE_OPTIONS}
+          options={roleOptions}
         />
         <PasswordInput
           label={en.accounts.password}

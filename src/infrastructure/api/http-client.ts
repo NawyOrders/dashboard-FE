@@ -62,6 +62,8 @@ export interface HttpRequestOptions<T> {
   signal?: AbortSignal;
   /** Schema of the unwrapped `data` value; input is untrusted JSON. */
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
+  /** Exact success status the endpoint contract defines, e.g. 202 on tenant create. */
+  expectedStatus?: number;
 }
 
 export interface HttpClient {
@@ -89,6 +91,7 @@ export function createHttpClient({
     headers,
     signal,
     schema,
+    expectedStatus,
   }: HttpRequestOptions<T>): Promise<T> {
     const url = new URL(path.replace(/^\/+/, ''), root);
     if (query) {
@@ -131,6 +134,13 @@ export function createHttpClient({
         response.status,
         message,
         envelope.success ? (envelope.data.errors ?? null) : null,
+      );
+    }
+
+    if (expectedStatus !== undefined && response.status !== expectedStatus) {
+      throw new ApiError(
+        response.status,
+        `Expected HTTP ${expectedStatus} but received ${response.status}.`,
       );
     }
 

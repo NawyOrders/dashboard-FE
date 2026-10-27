@@ -1,6 +1,7 @@
 import type { Api } from '@/application/dto';
 import { createAuthApi } from './auth-api';
 import { createOnboardingApi } from './onboarding-api';
+import { createTenantApi } from './tenant-api';
 import { mapOnboardingRequestToTenant } from './onboarding-mapping';
 import type { HttpClient } from './http-client';
 
@@ -17,6 +18,7 @@ export interface ApiAdapterOptions {
  */
 export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api {
   const onboarding = createOnboardingApi(client);
+  const tenants = createTenantApi(client);
   const auth = createAuthApi(client);
 
   return {
@@ -39,5 +41,8 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     async updateApplicationPayment(requestId, paid) {
       await onboarding.setPayment(requestId, paid);
     },
+
+    getTenantStatus: (tenantId) => tenants.getTenantStatus(tenantId),
+    retryTenant: (tenantId, idempotencyKey) => tenants.retryTenant(tenantId, idempotencyKey),
   };
 }

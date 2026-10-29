@@ -163,6 +163,7 @@ export interface Api {
     tenantId: string,
     adminPassword: string,
     actor: AdminUser,
+    subscriptionStartDate: string,
   ): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;

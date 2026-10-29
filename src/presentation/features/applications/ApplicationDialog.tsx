@@ -13,7 +13,9 @@ import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
-import { formatDateTime } from '@/domain/rules/date';
+import { formatDate, formatDateTime } from '@/domain/rules/date';
+import { resolveSubscriptionStart, todayInCairo } from '@/domain/rules/subscription';
+import type { SubscriptionStartProblem } from '@/domain/rules/subscription';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -75,6 +77,17 @@ function problemLabel(problem: RegistrationProblem): string {
   return fieldLabelByKey(problem.fieldKey, scope) ?? problem.label;
 }
 
+function startDateMessage(problem: SubscriptionStartProblem): string {
+  switch (problem) {
+    case 'required':
+      return en.applications.subscriptionStartRequired;
+    case 'invalid':
+      return en.applications.subscriptionStartInvalid;
+    case 'past':
+      return en.applications.subscriptionStartPast;
+  }
+}
+
 export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted, onSaved }: ApplicationDialogProps) {
   if (!tenant) return null;
   return (
@@ -116,6 +129,17 @@ function ApplicationDialogContent({
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
+  const [today] = useState(() => todayInCairo());
+  const [subscriptionStartDate, setSubscriptionStartDate] = useState(today);
+  const subscriptionStart = useMemo(
+    () =>
+      resolveSubscriptionStart(
+        subscriptionStartDate,
+        tenant.subscription.durationMonths,
+        today,
+      ),
+    [subscriptionStartDate, tenant.subscription.durationMonths, today],
+  );
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteReason, setDeleteReason] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -206,18 +230,34 @@ function ApplicationDialogContent({
       branchLimits,
       { label: en.applications.adminPasswordLabel, value: adminPassword },
     );
-    if (!result.ok) {
-      setProblems(result.problems);
-      const first = result.problems[0];
+    const problems = [...result.problems];
+    if (!subscriptionStart.ok) {
+      problems.push({
+        fieldKey: 'subscriptionStartDate',
+        label: en.applications.subscriptionStartDate,
+        scope: 'field',
+        reason: 'startDate',
+        message: startDateMessage(subscriptionStart.problem),
+      });
+    }
+    if (problems.length > 0) {
+      setProblems(problems);
+      const first = problems[0];
       if (first) {
         window.setTimeout(() => focusField(first), 0);
       }
       return;
     }
+    if (!subscriptionStart.ok) return;
     setProblems([]);
     setApproving(true);
     try {
-      await api.approveApplication(tenant.id, adminPassword, user);
+      await api.approveApplication(
+        tenant.id,
+        adminPassword,
+        user,
+        subscriptionStart.startDate,
+      );
       setAdminPassword('');
       toast({ title: en.applications.approveSuccess, variant: 'success' });
       onApproved();
@@ -397,6 +437,28 @@ function ApplicationDialogContent({
                 </ul>
               </div>
             ) : null}
+
+            {/* OPEN: send start date to backend when approve accepts it */}
+            <div className="flex flex-col gap-2 rounded-card border border-border bg-card p-4">
+              <Input
+                id="rf-field-subscriptionStartDate"
+                type="date"
+                label={en.applications.subscriptionStartDate}
+                value={subscriptionStartDate}
+                min={today}
+                onChange={(event) => setSubscriptionStartDate(event.target.value)}
+                error={
+                  subscriptionStart.ok
+                    ? undefined
+                    : startDateMessage(subscriptionStart.problem)
+                }
+                disabled={!isSuperAdmin}
+              />
+              <p className="text-2xs text-text-muted">
+                {en.applications.subscriptionEndDate}:{' '}
+                {subscriptionStart.ok ? formatDate(subscriptionStart.endDate) : '—'}
+              </p>
+            </div>
 
             {/* OPEN: not in submit DTO, backend to confirm. */}
             <div className="rounded-card border border-border bg-card p-4">

@@ -104,8 +104,15 @@ export function createStaticApi(
         ),
       ).then(() => undefined),
     // OPEN: static approve, remove when api is live
-    approveApplication: (tenantId: string, adminPassword: string, actor: AdminUser) =>
-      run<Tenant>(() => backend.approveApplication(tenantId, adminPassword, actor)),
+    approveApplication: (
+      tenantId: string,
+      adminPassword: string,
+      actor: AdminUser,
+      subscriptionStartDate: string,
+    ) =>
+      run<Tenant>(() =>
+        backend.approveApplication(tenantId, adminPassword, actor, subscriptionStartDate),
+      ),
     // OPEN: endpoint missing in swagger.
     updateApplication: (
       tenantId: string,

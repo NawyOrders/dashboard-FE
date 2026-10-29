@@ -1,6 +1,7 @@
 import type { Api, ListTenantsParams } from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
 import type { Tenant } from '@/domain/entities';
+import { resolveSubscriptionStart, todayInCairo } from '@/domain/rules/subscription';
 import { isListed } from '@/domain/rules/tenants';
 import { createAuthApi } from './auth-api';
 import { createOnboardingApi } from './onboarding-api';
@@ -53,10 +54,26 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     },
 
     // OPEN: tenant API paused, reconnect to POST /api/v1/tenants when backend is ready, see backend-api-contract.md
-    async approveApplication(tenantId, _adminPassword, _actor) {
+    // OPEN: send start date to backend when approve accepts it
+    async approveApplication(tenantId, _adminPassword, _actor, subscriptionStartDate) {
       const application = applicationsCache.find((tenant) => tenant.id === tenantId);
       if (!application) throw new Error(`Application not found: ${tenantId}`);
-      const approved: Tenant = { ...application, status: 'approved' };
+      const start = resolveSubscriptionStart(
+        subscriptionStartDate,
+        application.subscription.durationMonths,
+        todayInCairo(),
+      );
+      if (!start.ok) throw new Error('Invalid subscription start date');
+      const approved: Tenant = {
+        ...application,
+        status: 'approved',
+        subscription: {
+          ...application.subscription,
+          startDate: subscriptionStartDate.trim(),
+          endDate: start.endDate,
+          updatedAt: new Date().toISOString(),
+        },
+      };
       approvedLocally.set(tenantId, approved);
       return approved;
     },

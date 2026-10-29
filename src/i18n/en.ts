@@ -369,6 +369,11 @@ export const en = {
     adminPasswordHint:
       'Approving creates the admin account of this restaurant with this password.',
     adminPasswordCreated: 'Restaurant admin account created',
+    subscriptionStartDate: 'Subscription start date',
+    subscriptionEndDate: 'Subscription end date',
+    subscriptionStartRequired: 'Subscription start date is required',
+    subscriptionStartInvalid: 'Enter a valid subscription start date',
+    subscriptionStartPast: 'Subscription start date cannot be earlier than today',
     paymentCompleted: 'Payment completed',
     paymentRequiredBeforeApproval: 'Payment must be completed before approval',
     paymentUpdated: 'Payment status updated',

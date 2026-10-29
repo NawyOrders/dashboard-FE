@@ -165,11 +165,13 @@ export function useApproveApplication() {
       tenantId,
       adminPassword,
       actor,
+      subscriptionStartDate,
     }: {
       tenantId: string;
       adminPassword: string;
       actor: AdminUser;
-    }) => api.approveApplication(tenantId, adminPassword, actor),
+      subscriptionStartDate: string;
+    }) => api.approveApplication(tenantId, adminPassword, actor, subscriptionStartDate),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
       void queryClient.invalidateQueries({ queryKey: ['tenants'] });

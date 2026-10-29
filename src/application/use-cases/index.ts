@@ -81,7 +81,12 @@ export interface Backend {
   ): Promise<void>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
-  approveApplication(tenantId: string, adminPassword: string, actor: AdminUser): Promise<Tenant>;
+  approveApplication(
+    tenantId: string,
+    adminPassword: string,
+    actor: AdminUser,
+    subscriptionStartDate: string,
+  ): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Tenant;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): void;
   signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult>;

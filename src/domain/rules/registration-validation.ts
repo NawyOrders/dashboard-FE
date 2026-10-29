@@ -15,6 +15,7 @@ export type RegistrationProblemReason =
   | 'option'
   | 'digits'
   | 'password'
+  | 'startDate'
   | 'branchCount';
 
 /**

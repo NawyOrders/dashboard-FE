@@ -1,6 +1,7 @@
 import type { UseCaseDeps } from '@/application/ports';
 import type { AdminUser, Tenant } from '@/domain/entities';
 import { validatePassword } from '@/domain/rules/password';
+import { resolveSubscriptionStart, todayInCairo } from '@/domain/rules/subscription';
 
 export class ApplicationNotPendingError extends Error {
   constructor(tenantId: string) {
@@ -13,6 +14,13 @@ export class InvalidAdminPasswordError extends Error {
   constructor() {
     super('The restaurant admin password does not satisfy the password policy.');
     this.name = 'InvalidAdminPasswordError';
+  }
+}
+
+export class InvalidSubscriptionStartDateError extends Error {
+  constructor() {
+    super('The subscription start date is missing, invalid or in the past.');
+    this.name = 'InvalidSubscriptionStartDateError';
   }
 }
 
@@ -30,6 +38,7 @@ export function makeApproveApplication(deps: UseCaseDeps) {
     tenantId: string,
     adminPassword: string,
     actor: AdminUser,
+    subscriptionStartDate: string,
   ): Promise<Tenant> {
     const { restaurants, activity, auth, clock, ids } = deps;
     const tenant = restaurants.findById(tenantId);
@@ -37,7 +46,23 @@ export function makeApproveApplication(deps: UseCaseDeps) {
     if (tenant.status !== 'pending_approval') throw new ApplicationNotPendingError(tenantId);
     if (validatePassword(adminPassword)) throw new InvalidAdminPasswordError();
 
-    const next: Tenant = { ...tenant, status: 'approved' };
+    const start = resolveSubscriptionStart(
+      subscriptionStartDate,
+      tenant.subscription.durationMonths,
+      todayInCairo(new Date(clock.nowIso())),
+    );
+    if (!start.ok) throw new InvalidSubscriptionStartDateError();
+
+    const next: Tenant = {
+      ...tenant,
+      status: 'approved',
+      subscription: {
+        ...tenant.subscription,
+        startDate: subscriptionStartDate.trim(),
+        endDate: start.endDate,
+        updatedAt: clock.nowIso(),
+      },
+    };
     restaurants.save(next);
 
     const account = await auth.createAccount({

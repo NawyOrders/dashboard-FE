@@ -1,4 +1,4 @@
-import type { Subscription, SubscriptionStatus } from '@/domain/entities';
+import type { DurationMonths, Subscription, SubscriptionStatus } from '@/domain/entities';
 import { EXPIRING_SOON_DAYS } from '@/config/policy';
 import { addMonths, daysUntil, parseIsoDate, startOfToday, toIsoDate } from './date';
 
@@ -24,6 +24,53 @@ export function isActiveSubscription(sub: Subscription): boolean {
 export function endDateFromDuration(startDate: string, months: number): string {
   const start = parseIsoDate(startDate) ?? startOfToday();
   return toIsoDate(addMonths(start, months));
+}
+
+/** Today's calendar date (yyyy-mm-dd) in Africa/Cairo. */
+export function todayInCairo(now: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Africa/Cairo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now);
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((item) => item.type === type)?.value ?? '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+
+export type SubscriptionStartProblem = 'required' | 'invalid' | 'past';
+
+export type SubscriptionStartResult =
+  | { ok: true; startDate: string; endDate: string }
+  | { ok: false; problem: SubscriptionStartProblem };
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * ASSUMPTION: start date rules, owner to confirm
+ *
+ * The subscription start date is a real calendar date (yyyy-mm-dd) that is not earlier
+ * than today in Africa/Cairo. Empty or malformed input is rejected. The end date is the
+ * start date plus the package duration in months.
+ */
+export function resolveSubscriptionStart(
+  value: string,
+  durationMonths: DurationMonths,
+  today: string,
+): SubscriptionStartResult {
+  const startDate = value.trim();
+  if (!startDate) return { ok: false, problem: 'required' };
+  if (!ISO_DATE.test(startDate)) return { ok: false, problem: 'invalid' };
+
+  const start = parseIsoDate(startDate);
+  const todayDate = parseIsoDate(today);
+  if (!start || !todayDate || toIsoDate(start) !== startDate) {
+    return { ok: false, problem: 'invalid' };
+  }
+  if (start.getTime() < todayDate.getTime()) return { ok: false, problem: 'past' };
+
+  return { ok: true, startDate, endDate: endDateFromDuration(startDate, durationMonths) };
 }
 
 /**

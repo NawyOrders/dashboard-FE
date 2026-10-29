@@ -60,8 +60,6 @@ export interface HttpRequestOptions<T> {
   body?: unknown;
   headers?: Record<string, string>;
   signal?: AbortSignal;
-  /** Public endpoints take no Bearer token (menu OCR). */
-  skipAuth?: boolean;
   /** Reads headers of the accepted response, e.g. `Retry-After` on a 202 job. */
   onResponseHeaders?: (headers: Headers) => void;
   /** Schema of the unwrapped `data` value; input is untrusted JSON. */
@@ -94,7 +92,6 @@ export function createHttpClient({
     body,
     headers,
     signal,
-    skipAuth,
     onResponseHeaders,
     schema,
     expectedStatus,
@@ -109,7 +106,7 @@ export function createHttpClient({
 
     const requestHeaders = new Headers(headers);
     requestHeaders.set('Accept', 'application/json');
-    const token = skipAuth ? null : getAccessToken();
+    const token = getAccessToken();
     if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
 
     const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;

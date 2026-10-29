@@ -12,6 +12,9 @@ import type { HttpClient } from './http-client';
  *
  * The envelope is unwrapped once by the shared HTTP client.
  * OPEN: confirm envelope with backend (the HTML plan uses value/error).
+ *
+ * The swagger marks these routes public, but the backend answers 401 without a
+ * Bearer token, so every call goes through the authenticated client path.
  */
 
 const MENU_OCR_PATH = 'api/v1/onboarding/menu-ocr';
@@ -97,7 +100,6 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
         method: 'POST',
         body: form,
         signal,
-        skipAuth: true,
         expectedStatus: 202,
         onResponseHeaders: (headers) => {
           retryAfterSeconds = parseRetryAfter(headers.get('Retry-After'));
@@ -112,7 +114,6 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
       return client.request({
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/status`,
         signal,
-        skipAuth: true,
         schema: statusSchema,
       });
     },
@@ -121,7 +122,6 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
       return client.request({
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/result`,
         signal,
-        skipAuth: true,
         schema: resultSchema,
       });
     },

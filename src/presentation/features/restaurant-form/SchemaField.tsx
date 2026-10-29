@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Input } from '@/presentation/components/ui/Input';
 import { Select } from '@/presentation/components/ui/Select';
 import { SELECT_OPTIONS } from '@/config/cities';
 import type { RegistrationField } from '@/domain/rules/registration-schema';
+import { validatePhone } from '@/domain/rules/validation';
 import { en } from '@/presentation/i18n/en';
 import { ImageUploadField } from './ImageUploadField';
 import { TextareaField } from './TextareaField';
@@ -66,6 +68,11 @@ export function SchemaField({
   id,
   scope,
 }: SchemaFieldProps) {
+  // Every phone field shows the Egyptian mobile error as soon as it loses focus.
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const phoneError =
+    field.type === 'tel' && phoneTouched ? validatePhone(value) : null;
+
   if (field.type === 'textarea') {
     return (
       <div className="flex flex-col gap-1.5">
@@ -161,7 +168,10 @@ export function SchemaField({
         maxLength={field.maxLength}
         placeholder={fieldPlaceholder(field, scope)}
         onChange={(event) => onChange(event.target.value)}
-        error={error}
+        onBlur={() => {
+          if (field.type === 'tel') setPhoneTouched(true);
+        }}
+        error={phoneError ?? error}
         min={field.range?.[0]}
         max={field.range?.[1]}
         step={field.type === 'number' ? 'any' : undefined}

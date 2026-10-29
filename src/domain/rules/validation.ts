@@ -15,13 +15,16 @@ import { en } from '@/i18n';
 // letters (any script) + digits + space + hyphen + apostrophe
 const NAME_ALLOWED = /^[\p{L}\p{N} \-']+$/u;
 const HAS_LETTER = /\p{L}/u;
-const HAS_LETTER_ANYWHERE = /\p{L}/u;
 
 export type NameKind = 'business' | 'restaurant' | 'branch';
-export type PhoneKind = 'phone' | 'branchPhone';
 
-export const MIN_PHONE_DIGITS = 7;
-export const MAX_PHONE_DIGITS = 15;
+/**
+ * ASSUMPTION: Egyptian mobile rule, temporary, owner will revisit. Source JSON still says 7-15 digits
+ *
+ * Every phone field accepts only an Egyptian mobile number: exactly 11 digits starting
+ * with 010, 011, 012 or 015. Spaces and dashes are ignored before the check.
+ */
+export const EGYPTIAN_MOBILE_PATTERN = /^01[0125][0-9]{8}$/;
 
 function invalidNameMessage(kind: NameKind): string {
   if (kind === 'restaurant') return en.validation.restaurantNameInvalid;
@@ -49,29 +52,13 @@ export function validateName(value: string, kind: NameKind): string | null {
 }
 
 /**
- * Optional single leading `+`, then digits only; 7–15 digits total.
- * (BUG-005..008, BUG-017..020)
+ * Egyptian mobile rule (NW-247). Spaces and dashes are ignored; empty values return
+ * `null` because "required" is handled by the form schema.
  */
-export function validatePhone(value: string, kind: PhoneKind): string | null {
-  const trimmed = value.trim();
-  if (trimmed.length === 0) return null;
-
-  if (HAS_LETTER_ANYWHERE.test(trimmed)) {
-    return kind === 'phone' ? en.validation.phoneLetters : en.validation.branchPhoneLetters;
-  }
-
-  const digits = trimmed.startsWith('+') ? trimmed.slice(1) : trimmed;
-  if (!/^\d+$/.test(digits)) {
-    return kind === 'phone' ? en.validation.phoneSymbols : en.validation.branchPhoneSymbols;
-  }
-
-  if (digits.length < MIN_PHONE_DIGITS) {
-    return kind === 'phone' ? en.validation.phoneTooShort : en.validation.branchPhoneTooShort;
-  }
-  if (digits.length > MAX_PHONE_DIGITS) {
-    return kind === 'phone' ? en.validation.phoneFormat : en.validation.branchPhoneFormat;
-  }
-  return null;
+export function validatePhone(value: string): string | null {
+  const normalized = value.replace(/[\s-]/g, '');
+  if (normalized.length === 0) return null;
+  return EGYPTIAN_MOBILE_PATTERN.test(normalized) ? null : en.validation.egyptianMobile;
 }
 
 // local part: letters, digits, `.`, `_`, `%`, `+`, `-`, `'`

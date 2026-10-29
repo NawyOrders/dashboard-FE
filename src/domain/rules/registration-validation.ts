@@ -1,7 +1,7 @@
 import type { Branch, Tenant } from '@/domain/entities';
 import type { RegistrationField, RegistrationSchema } from '@/domain/rules/registration-schema';
 import { SELECT_OPTIONS } from '@/config/cities';
-import { validateEmail } from '@/domain/rules/validation';
+import { validateEmail, validatePhone } from '@/domain/rules/validation';
 import { validatePassword } from '@/domain/rules/password';
 import { readBranchField, readSchemaField } from '@/domain/rules/registration-mapping';
 
@@ -164,7 +164,15 @@ function checkField(
     return;
   }
 
-  if (field.pattern && !new RegExp(field.pattern).test(value)) {
+  // Every tel field uses the Egyptian mobile rule; the JSON pattern is still the old
+  // 7-15 digit / 20-prefix contract and is intentionally not used for phones.
+  if (field.type === 'tel') {
+    const message = validatePhone(value);
+    if (message) {
+      problems.push({ ...base, reason: 'pattern', message });
+      return;
+    }
+  } else if (field.pattern && !new RegExp(field.pattern).test(value)) {
     problems.push({ ...base, reason: 'pattern' });
     return;
   }

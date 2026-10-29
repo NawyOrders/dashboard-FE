@@ -5,7 +5,7 @@
     "businessName": "Falcon's Nest Demo Co.",
     "restaurantName": "Falcon's Nest",
     "contact": {
-      "phone": "+00 000 005 0000",
+      "phone": "01100500000",
       "email": "ops.falcons-nest@example.com",
       "name": "Demo Owner 5",
       "city": "Demo City 5"
@@ -56,7 +56,7 @@
     "businessName": "Kelvin's Kitchen Demo Co.",
     "restaurantName": "Kelvin's Kitchen",
     "contact": {
-      "phone": "+00 000 010 0000",
+      "phone": "01101000000",
       "email": "ops.kelvins-kitchen@example.com",
       "name": "Demo Owner 10",
       "city": "Demo City 4"
@@ -81,7 +81,7 @@
         "tenantId": "t_10",
         "name": "Kelvin's Kitchen - Main",
         "address": "10 Demo Street 1, Demo Area 5",
-        "phone": "+00 000 010 0000",
+        "phone": "01101000000",
         "status": "active",
         "openTime": "10:00",
         "closeTime": "23:00",
@@ -121,7 +121,7 @@
     "businessName": "Umbra Umami Demo Co.",
     "restaurantName": "Umbra Umami",
     "contact": {
-      "phone": "+00 000 020 0000",
+      "phone": "01102000000",
       "email": "ops.umbra-umami@example.com",
       "name": "Demo Owner 20",
       "city": "Demo City 2"

@@ -588,18 +588,7 @@ export const en = {
       "Branch name can only contain letters, numbers, spaces, hyphens (-), and apostrophes (').",
     branchNameNumeric:
       'Branch name must contain at least one letter and cannot consist solely of numbers.',
-    phoneLetters:
-      'Please enter a valid phone number containing digits only (optional leading + allowed).',
-    phoneSymbols: 'Invalid phone number. Symbols and special characters are not allowed.',
-    phoneFormat: 'Please enter a valid phone number format (e.g., +201012345678 or 01012345678).',
-    phoneTooShort:
-      'Phone number is too short. Please enter a valid phone number (minimum 7–10 digits).',
-    branchPhoneLetters: 'Branch phone number must contain digits only (optional leading + allowed).',
-    branchPhoneSymbols: 'Invalid phone number. Symbols and special characters are not allowed.',
-    branchPhoneFormat:
-      'Please enter a valid phone number format (e.g., +201012345678 or 01012345678).',
-    branchPhoneTooShort:
-      'Branch phone number is too short. Please enter a valid number (minimum 7–10 digits).',
+    egyptianMobile: 'Mobile number must be 11 digits and start with 010, 011, 012 or 015',
     emailInvalidFormat:
       'Invalid email format. Please enter a valid email address (e.g., user@example.com).',
     emailSymbols:

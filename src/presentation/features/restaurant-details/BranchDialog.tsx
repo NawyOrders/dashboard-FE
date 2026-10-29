@@ -22,7 +22,7 @@ function createBranchSchema() {
       .string()
       .min(1, en.create.branches.phoneRequired)
       .superRefine((value, ctx) => {
-        const message = validatePhone(value, 'branchPhone');
+        const message = validatePhone(value);
         if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
       }),
     status: z.enum(['active', 'pending', 'inactive']),
@@ -51,6 +51,7 @@ export function BranchDialog({ open, loading, onClose, onSubmit }: BranchDialogP
     formState: { errors },
   } = useForm<BranchFormValues>({
     resolver: zodResolver(createBranchSchema()),
+    mode: 'onTouched',
     defaultValues: { name: '', address: '', phone: '', status: 'active' },
   });
 

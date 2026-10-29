@@ -11,7 +11,6 @@ import { en } from '@/presentation/i18n/en';
 import { MenuOcrStatus } from './MenuOcrStatus';
 import type { MenuPhase } from './MenuOcrStatus';
 import { MenuResultDialog } from './MenuResultDialog';
-import { MAX_VISIBLE_MENU_ITEMS } from './MenuResultDialog';
 import type { MenuEditableField, MenuEditableItem } from './MenuResultDialog';
 
 // OPEN: menu result is not sent with submit until backend accepts it.
@@ -178,7 +177,7 @@ export function MenuOcrSection({ disabled }: MenuOcrSectionProps) {
         phase={phase}
         problem={problem}
         progress={progress}
-        shownCount={Math.min(items.length, MAX_VISIBLE_MENU_ITEMS)}
+        shownCount={items.length}
         totalCount={items.length}
         disabled={disabled}
         onRetry={() => void run(file)}

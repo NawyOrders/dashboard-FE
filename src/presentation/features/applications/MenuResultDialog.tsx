@@ -11,8 +11,6 @@ export interface MenuEditableItem extends MenuExtractedItem {
 
 export type MenuEditableField = 'nameAr' | 'nameEn' | 'price';
 
-export const MAX_VISIBLE_MENU_ITEMS = 5;
-
 export interface MenuResultDialogProps {
   open: boolean;
   rows: MenuEditableItem[];
@@ -32,8 +30,6 @@ export function MenuResultDialog({
   onEdit,
   onRemove,
 }: MenuResultDialogProps) {
-  const visible = rows.slice(0, MAX_VISIBLE_MENU_ITEMS);
-
   return (
     <Dialog
       open={open}
@@ -51,11 +47,11 @@ export function MenuResultDialog({
       ) : (
         <div className="flex flex-col gap-4">
           <p className="text-2xs text-text-muted">
-            {en.menu.count(visible.length, rows.length)}
+            {en.menu.count(rows.length, rows.length)}
           </p>
 
           <ul className="flex flex-col gap-3">
-            {visible.map((row) => (
+            {rows.map((row) => (
               <li
                 key={row.id}
                 className="flex flex-col gap-3 rounded-panel border border-border bg-bg-2/40 p-4"

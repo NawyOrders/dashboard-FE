@@ -4,10 +4,16 @@ export interface Branch {
   id: string;
   tenantId: string;
   name: string;
+  /** Arabic branch name (fixed display data until the backend returns it). */
+  nameAr?: string | null;
   address: string;
+  /** City of the address line. */
+  city?: string | null;
   phone: string;
   /** Branch status is a separate field from Restaurant Status. */
   status: BranchStatus;
+  /** Day the working hours below belong to. */
+  workingDay?: string | null;
   /** Opening time in HH:mm (registration form). */
   openTime?: string | null;
   /** Closing time in HH:mm (registration form). */

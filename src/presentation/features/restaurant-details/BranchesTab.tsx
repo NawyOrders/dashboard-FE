@@ -77,22 +77,42 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
           <EmptyState title={en.details.noBranches} />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-sm">
+            <table className="w-full min-w-[760px] border-collapse text-sm">
               <caption className="sr-only">{en.create.branches.title}</caption>
               <thead>
                 <tr className="border-y border-border text-2xs font-medium text-text-muted">
                   <th scope="col" className="px-4 py-3 text-start">{en.create.branches.name}</th>
                   <th scope="col" className="px-4 py-3 text-start">{en.create.branches.address}</th>
                   <th scope="col" className="px-4 py-3 text-start">{en.create.branches.phone}</th>
+                  <th scope="col" className="px-4 py-3 text-start">{en.create.branches.hours}</th>
                   <th scope="col" className="px-4 py-3 text-start">{en.create.branches.status}</th>
                 </tr>
               </thead>
               <tbody>
                 {tenant.branches.map((branch) => (
                   <tr key={branch.id} className="border-b border-border last:border-0">
-                    <td className="whitespace-nowrap px-4 py-4 font-medium text-text">{branch.name}</td>
-                    <td className="px-4 py-4 text-text-muted">{branch.address}</td>
+                    <td className="whitespace-nowrap px-4 py-4">
+                      <div className="flex flex-col">
+                        <span dir="ltr" className="font-medium text-text">{branch.name}</span>
+                        {branch.nameAr ? (
+                          <span dir="rtl" className="text-2xs text-text-muted">{branch.nameAr}</span>
+                        ) : null}
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-text-muted">
+                      <div className="flex flex-col">
+                        <span>{branch.address}</span>
+                        {branch.city ? (
+                          <span className="text-2xs">{branch.city}</span>
+                        ) : null}
+                      </div>
+                    </td>
                     <td className="tabular whitespace-nowrap px-4 py-4 text-text-muted">{branch.phone}</td>
+                    <td className="whitespace-nowrap px-4 py-4 text-text-muted">
+                      {branch.openTime && branch.closeTime
+                        ? `${branch.workingDay ? `${branch.workingDay} ` : ''}${branch.openTime}–${branch.closeTime}`
+                        : '—'}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-4">
                       <StatusPill meta={branchStatusMeta(branch.status)} />
                     </td>

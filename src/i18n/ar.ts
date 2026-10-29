@@ -305,6 +305,7 @@ export const ar = {
       name: 'اسم الفرع',
       address: 'العنوان',
       phone: 'الهاتف',
+      hours: 'ساعات العمل',
       status: 'الحالة',
       addBranch: 'إضافة فرع',
       removeBranch: 'إزالة',

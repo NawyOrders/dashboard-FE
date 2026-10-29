@@ -301,6 +301,7 @@ export const en = {
       name: 'Branch name',
       address: 'Address',
       phone: 'Phone',
+      hours: 'Working hours',
       status: 'Status',
       addBranch: 'Add branch',
       removeBranch: 'Remove',

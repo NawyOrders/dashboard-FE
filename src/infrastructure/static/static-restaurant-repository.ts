@@ -1,4 +1,5 @@
 import type { RestaurantRepository } from '@/application/ports';
+import { applyFixedBranches } from '@/config/branches.fixed';
 import type { Tenant } from '@/domain/entities';
 
 function clone<T>(value: T): T {
@@ -13,7 +14,7 @@ export class StaticRestaurantRepository implements RestaurantRepository {
   private tenants: Tenant[];
 
   constructor(seed: Tenant[] = []) {
-    this.tenants = clone(seed);
+    this.tenants = seed.map((tenant) => applyFixedBranches(clone(tenant)));
   }
 
   findAll(): Tenant[] {

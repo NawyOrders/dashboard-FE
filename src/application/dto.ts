@@ -7,6 +7,7 @@ import type {
   DurationMonths,
   FeatureFlag,
   InternalAccount,
+  MenuExtractedItem,
   PackageCode,
   PackageFeatureKey,
   PlatformLoginResult,
@@ -18,6 +19,7 @@ import type {
   TenantRole,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
+import type { MenuFileProblem } from '@/domain/rules/menu-file';
 import type { SalesMonthBucket } from '@/domain/rules/sales';
 
 export type TenantSort = 'newest' | 'oldest' | 'name_asc' | 'expiry_asc';
@@ -87,6 +89,33 @@ export interface ResetTenantAccountPasswordInput {
   accountId: string;
   newPassword: string;
 }
+
+/** Live state of a menu OCR job, pushed to the page while it is polled. */
+export interface MenuExtractionProgress {
+  status: string;
+  progressPercentage: number | null;
+  stage: string | null;
+}
+
+export interface ExtractMenuOptions {
+  signal?: AbortSignal;
+  onProgress?: (progress: MenuExtractionProgress) => void;
+}
+
+/**
+ * Outcome of the menu OCR flow. The extracted rows stay in the page that ran the job;
+ * nothing is persisted or sent with the application.
+ */
+export type MenuExtractionOutcome =
+  | {
+      status: 'completed';
+      jobId: string;
+      items: MenuExtractedItem[];
+      completedAtUtc: string | null;
+    }
+  | { status: 'invalid-file'; problem: MenuFileProblem }
+  | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
+  | { status: 'timeout'; jobId: string };
 
 /** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
 export interface OverviewAnalysis {
@@ -169,5 +198,10 @@ export interface Api {
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
   /** Stores an uploaded image and returns its reference (NW-246). */
   uploadImage(file: File): Promise<string>;
+  /**
+   * Menu OCR (public endpoint): validates the file, submits the job, polls it and
+   * returns the extracted rows. The result is kept in the page only.
+   */
+  extractMenu(file: File | null, options?: ExtractMenuOptions): Promise<MenuExtractionOutcome>;
   signIn(email: string, password: string): Promise<PlatformLoginResult>;
 }

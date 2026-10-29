@@ -1,5 +1,4 @@
 import type {
-  MenuExtractionResponse,
   OnboardingAssetType,
   OnboardingRequestPage,
   OnboardingUploadFile,
@@ -10,7 +9,6 @@ import type {
 } from '@/domain/entities';
 import type { HttpClient } from './http-client';
 import {
-  menuExtractionResponseSchema,
   offersResponseSchema,
   onboardingRequestPageSchema,
   onboardingUploadUrlsResponseSchema,
@@ -38,8 +36,6 @@ export interface OnboardingApi {
     file: File,
     type: OnboardingAssetType,
   ): Promise<{ assetId: string; uploadToken: string | null }>;
-  /** The only OCR endpoint used by the dashboard (agent.md section 21). */
-  extractMenu(file: File): Promise<MenuExtractionResponse>;
 }
 
 export function createOnboardingApi(client: HttpClient): OnboardingApi {
@@ -142,17 +138,6 @@ export function createOnboardingApi(client: HttpClient): OnboardingApi {
 
       await confirmAsset(upload.assetId, upload.uploadToken);
       return { assetId: upload.assetId, uploadToken: upload.uploadToken };
-    },
-
-    extractMenu(file) {
-      const form = new FormData();
-      form.append('image', file);
-      return client.request({
-        path: 'api/v1/onboarding/menu-ocr',
-        method: 'POST',
-        body: form,
-        schema: menuExtractionResponseSchema,
-      });
     },
   };
 }

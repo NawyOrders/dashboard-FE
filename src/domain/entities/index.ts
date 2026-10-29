@@ -7,3 +7,4 @@ export * from './tenant';
 export * from './activity-log';
 export * from './sales';
 export * from './onboarding';
+export * from './menu-ocr';

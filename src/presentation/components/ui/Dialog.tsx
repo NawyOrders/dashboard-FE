@@ -26,6 +26,9 @@ const SIZES = {
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+/** Open dialogs, in opening order, so Escape closes only the top-most one. */
+const openDialogs: string[] = [];
+
 export function Dialog({ open, onClose, title, description, children, footer, size = 'md' }: DialogProps) {
   const labelId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -43,8 +46,18 @@ export function Dialog({ open, onClose, title, description, children, footer, si
 
   useEffect(() => {
     if (!open) return;
+    openDialogs.push(labelId);
+    return () => {
+      const index = openDialogs.lastIndexOf(labelId);
+      if (index >= 0) openDialogs.splice(index, 1);
+    };
+  }, [open, labelId]);
+
+  useEffect(() => {
+    if (!open) return;
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
+        if (openDialogs[openDialogs.length - 1] !== labelId) return;
         onClose();
         return;
       }
@@ -65,7 +78,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
     }
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [open, onClose]);
+  }, [open, onClose, labelId]);
 
   if (!open) return null;
 

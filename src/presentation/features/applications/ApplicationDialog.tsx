@@ -23,6 +23,7 @@ import type { Tenant } from '@/domain/entities';
 import type { RegistrationProblem } from '@/domain/rules/registration-validation';
 import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
 
+import { MenuOcrSection } from './MenuOcrSection';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { fieldLabelByKey } from '@/presentation/features/restaurant-form/localized-schema';
@@ -473,6 +474,8 @@ function ApplicationDialogContent({
                 autoComplete="new-password"
               />
             </div>
+
+            <MenuOcrSection disabled={!isSuperAdmin} />
 
             <RestaurantForm
               steps={schema.steps}

@@ -5,6 +5,9 @@ import type {
   AdminUser,
   FeatureFlag,
   InternalAccount,
+  MenuOcrResultPayload,
+  MenuOcrStatus,
+  MenuOcrSubmission,
   PackageFeatureKey,
   Permission,
   PlatformLoginRequest,
@@ -98,6 +101,16 @@ export interface SalesRepository {
 export interface FileUploadRepository {
   /** Returns the stored reference (a data URL in the mock adapter). */
   uploadImage(file: File): Promise<string>;
+}
+
+/**
+ * Menu OCR backend (public endpoint, no Bearer token). The polling policy — Retry-After,
+ * backoff and the overall timeout — lives in the application layer, not here.
+ */
+export interface MenuOcrPort {
+  submit(file: File, signal?: AbortSignal): Promise<MenuOcrSubmission>;
+  getStatus(jobId: string, signal?: AbortSignal): Promise<MenuOcrStatus>;
+  getResult(jobId: string, signal?: AbortSignal): Promise<MenuOcrResultPayload>;
 }
 
 /** Injectable time source so business rules and tests are deterministic. */

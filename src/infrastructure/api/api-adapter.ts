@@ -1,9 +1,11 @@
 import type { Api, ListTenantsParams } from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
+import { makeExtractMenu } from '@/application/use-cases/extract-menu';
 import type { Tenant } from '@/domain/entities';
 import { resolveSubscriptionStart, todayInCairo } from '@/domain/rules/subscription';
 import { isListed } from '@/domain/rules/tenants';
 import { createAuthApi } from './auth-api';
+import { createOcrApi } from './ocr-api';
 import { createOnboardingApi } from './onboarding-api';
 import { mapOnboardingRequestToTenant } from './onboarding-mapping';
 import type { HttpClient } from './http-client';
@@ -22,6 +24,7 @@ export interface ApiAdapterOptions {
 export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api {
   const onboarding = createOnboardingApi(client);
   const auth = createAuthApi(client);
+  const extractMenu = makeExtractMenu(createOcrApi(client));
 
   /** Approved applications live here until the tenant endpoint is reconnected. */
   const approvedLocally = new Map<string, Tenant>();
@@ -41,6 +44,8 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     ...staticApi,
 
     signIn: (email, password) => auth.signIn(email, password),
+
+    extractMenu: (file, options) => extractMenu(file, options),
 
     async listApplications() {
       applicationsCache = await fetchApplications();

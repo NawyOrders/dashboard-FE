@@ -5,6 +5,7 @@ import type {
   CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
+  MenuExtractionOutcome,
   ResetTenantAccountPasswordInput,
   UpdateSubscriptionInput,
 } from '@/application/dto';
@@ -123,6 +124,12 @@ export function createStaticApi(
     deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
       run(() => backend.deleteApplication(tenantId, reason, actor)),
     uploadImage: (file: File) => uploads.uploadImage(file),
+    // OPEN: menu OCR runs on the backend; the static data source has no API base URL.
+    extractMenu: async (): Promise<MenuExtractionOutcome> => ({
+      status: 'failed',
+      errorCode: 'StaticDataSource',
+      errorMessage: null,
+    }),
     signIn: (email: string, password: string) =>
       run(() => backend.signIn({ email, password })),
   };

@@ -115,32 +115,3 @@ export interface OnboardingUploadUrlsResponse {
   uploads: OnboardingUploadUrl[];
 }
 
-export interface MenuExtractionItem {
-  nameAr: string | null;
-  nameEn: string | null;
-  price: number | null;
-  variants: Record<string, number | null> | null;
-  confidence: number;
-  needsReview: boolean;
-  hasBlockingIssues: boolean;
-  issueCodes: string[] | null;
-}
-
-export interface MenuExtractionCategory {
-  nameAr: string | null;
-  nameEn: string | null;
-  priceColumns: string[] | null;
-  items: MenuExtractionItem[];
-}
-
-export interface MenuExtractionResponse {
-  requestId: string | null;
-  currency: string | null;
-  categories: MenuExtractionCategory[];
-  requiresReview: boolean;
-  reliability: string | null;
-  totalItems: number;
-  blockingIssuesCount: number;
-  needsReviewCount: number;
-  processingDurationMs: number;
-}

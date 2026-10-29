@@ -60,6 +60,10 @@ export interface HttpRequestOptions<T> {
   body?: unknown;
   headers?: Record<string, string>;
   signal?: AbortSignal;
+  /** Public endpoints take no Bearer token (menu OCR). */
+  skipAuth?: boolean;
+  /** Reads headers of the accepted response, e.g. `Retry-After` on a 202 job. */
+  onResponseHeaders?: (headers: Headers) => void;
   /** Schema of the unwrapped `data` value; input is untrusted JSON. */
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
   /** Exact success status the endpoint contract defines, e.g. 202 on tenant create. */
@@ -90,6 +94,8 @@ export function createHttpClient({
     body,
     headers,
     signal,
+    skipAuth,
+    onResponseHeaders,
     schema,
     expectedStatus,
   }: HttpRequestOptions<T>): Promise<T> {
@@ -103,7 +109,7 @@ export function createHttpClient({
 
     const requestHeaders = new Headers(headers);
     requestHeaders.set('Accept', 'application/json');
-    const token = getAccessToken();
+    const token = skipAuth ? null : getAccessToken();
     if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
 
     const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
@@ -122,6 +128,8 @@ export function createHttpClient({
             : JSON.stringify(body),
       signal,
     });
+
+    onResponseHeaders?.(response.headers);
 
     const payload = parseJson(await response.text());
     const envelope = apiEnvelopeSchema.safeParse(payload);

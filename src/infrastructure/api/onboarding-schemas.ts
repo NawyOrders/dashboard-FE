@@ -1,8 +1,5 @@
 import { z } from 'zod';
 import type {
-  MenuExtractionCategory,
-  MenuExtractionItem,
-  MenuExtractionResponse,
   OnboardingBranch,
   OnboardingRequestListItem,
   OnboardingRequestPage,
@@ -138,48 +135,6 @@ export const onboardingUploadUrlsResponseSchema: ResponseSchema<OnboardingUpload
     .array(onboardingUploadUrlSchema)
     .nullish()
     .transform((uploads) => uploads ?? []),
-});
-
-export const menuExtractionItemSchema: ResponseSchema<MenuExtractionItem> = z.object({
-  nameAr: nullableString,
-  nameEn: nullableString,
-  price: nullableNumber,
-  variants: z.record(z.number().nullable()).nullish().transform((value) => value ?? null),
-  confidence: z.number(),
-  needsReview: z.boolean(),
-  hasBlockingIssues: z.boolean(),
-  issueCodes: z
-    .array(z.string())
-    .nullish()
-    .transform((value) => value ?? null),
-});
-
-export const menuExtractionCategorySchema: ResponseSchema<MenuExtractionCategory> = z.object({
-  nameAr: nullableString,
-  nameEn: nullableString,
-  priceColumns: z
-    .array(z.string())
-    .nullish()
-    .transform((value) => value ?? null),
-  items: z
-    .array(menuExtractionItemSchema)
-    .nullish()
-    .transform((items) => items ?? []),
-});
-
-export const menuExtractionResponseSchema: ResponseSchema<MenuExtractionResponse> = z.object({
-  requestId: nullableString,
-  currency: nullableString,
-  categories: z
-    .array(menuExtractionCategorySchema)
-    .nullish()
-    .transform((categories) => categories ?? []),
-  requiresReview: z.boolean(),
-  reliability: nullableString,
-  totalItems: z.number().int(),
-  blockingIssuesCount: z.number().int(),
-  needsReviewCount: z.number().int(),
-  processingDurationMs: z.number().int(),
 });
 
 /** The payment PATCH answers with an empty `data`; its body is not used. */

@@ -15,7 +15,6 @@ import type {
   SubscriptionOffer,
   SubscriptionStatus,
   Tenant,
-  TenantProvisioning,
   TenantRole,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
@@ -164,12 +163,7 @@ export interface Api {
     tenantId: string,
     adminPassword: string,
     actor: AdminUser,
-    idempotencyKey: string,
-  ): Promise<TenantProvisioning>;
-  /** `GET /api/v1/tenants/{tenantId}` — tenant provisioning state (agent.md section 26). */
-  getTenantStatus(tenantId: string): Promise<TenantProvisioning>;
-  /** `POST /api/v1/tenants/{tenantId}/retry` — retries a failed provisioning. */
-  retryTenant(tenantId: string, idempotencyKey: string): Promise<TenantProvisioning>;
+  ): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
   deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
   /** Stores an uploaded image and returns its reference (NW-246). */

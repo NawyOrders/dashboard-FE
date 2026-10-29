@@ -165,13 +165,11 @@ export function useApproveApplication() {
       tenantId,
       adminPassword,
       actor,
-      idempotencyKey,
     }: {
       tenantId: string;
       adminPassword: string;
       actor: AdminUser;
-      idempotencyKey: string;
-    }) => api.approveApplication(tenantId, adminPassword, actor, idempotencyKey),
+    }) => api.approveApplication(tenantId, adminPassword, actor),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
       void queryClient.invalidateQueries({ queryKey: ['tenants'] });

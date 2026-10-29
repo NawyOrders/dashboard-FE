@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
@@ -17,17 +17,10 @@ import { formatDateTime } from '@/domain/rules/date';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
-import type { Tenant, TenantProvisioning } from '@/domain/entities';
+import type { Tenant } from '@/domain/entities';
 import type { RegistrationProblem } from '@/domain/rules/registration-validation';
 import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
-import {
-  isTenantProvisioningActive,
-  isTenantProvisioningFailed,
-  isTenantProvisioningFinal,
-} from '@/domain/rules/tenant-provisioning';
 
-const PROVISIONING_POLL_MS = 5_000;
-const PROVISIONING_TIMEOUT_MS = 60_000;
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { fieldLabelByKey } from '@/presentation/features/restaurant-form/localized-schema';
@@ -82,12 +75,6 @@ function problemLabel(problem: RegistrationProblem): string {
   return fieldLabelByKey(problem.fieldKey, scope) ?? problem.label;
 }
 
-function provisioningHint(status: string): string {
-  if (isTenantProvisioningActive(status)) return en.applications.provisioning.activeHint;
-  if (isTenantProvisioningFailed(status)) return en.applications.provisioning.failedHint;
-  return en.applications.provisioning.pendingHint;
-}
-
 export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted, onSaved }: ApplicationDialogProps) {
   if (!tenant) return null;
   return (
@@ -134,13 +121,6 @@ function ApplicationDialogContent({
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [approving, setApproving] = useState(false);
-  const [provisioning, setProvisioning] = useState<TenantProvisioning | null>(null);
-  const [provisioningDeadline, setProvisioningDeadline] = useState<number | null>(null);
-  const [provisioningTimedOut, setProvisioningTimedOut] = useState(false);
-  const [statusLoading, setStatusLoading] = useState(false);
-  const [retrying, setRetrying] = useState(false);
-  const provisioningKeyRef = useRef<string | null>(null);
-  const provisioningDoneRef = useRef(false);
 
   const fieldErrors = useMemo(() => {
     const errors: Record<string, string> = {};
@@ -174,49 +154,6 @@ function ApplicationDialogContent({
   useEffect(() => {
     setPaid(tenant.paymentStatus === 'paid');
   }, [tenant.id, tenant.paymentStatus]);
-
-  useEffect(() => {
-    if (!provisioning || provisioningDoneRef.current) return;
-    if (!isTenantProvisioningActive(provisioning.status)) return;
-    provisioningDoneRef.current = true;
-    toast({
-      title: en.applications.approveSuccess,
-      description: en.applications.adminPasswordCreated,
-      variant: 'success',
-    });
-    onApproved();
-  }, [provisioning, toast, onApproved]);
-
-  useEffect(() => {
-    if (!provisioning || provisioningDoneRef.current) return;
-    if (isTenantProvisioningFinal(provisioning.status)) return;
-    if (provisioningTimedOut || provisioningDeadline === null) return;
-
-    const tenantId = provisioning.tenantId;
-    let cancelled = false;
-
-    const poll = async () => {
-      if (Date.now() >= provisioningDeadline) {
-        setProvisioningTimedOut(true);
-        return;
-      }
-      setStatusLoading(true);
-      try {
-        const next = await api.getTenantStatus(tenantId);
-        if (!cancelled) setProvisioning(next);
-      } catch {
-        // Transient status errors are retried until the polling deadline.
-      } finally {
-        if (!cancelled) setStatusLoading(false);
-      }
-    };
-
-    const timer = window.setInterval(() => void poll(), PROVISIONING_POLL_MS);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, [provisioning, provisioningDeadline, provisioningTimedOut]);
 
   async function handlePaymentChange(next: boolean) {
     if (!user || paymentSaving) return;
@@ -278,59 +215,16 @@ function ApplicationDialogContent({
       return;
     }
     setProblems([]);
-    const idempotencyKey = crypto.randomUUID();
-    provisioningKeyRef.current = idempotencyKey;
     setApproving(true);
     try {
-      const next = await api.approveApplication(tenant.id, adminPassword, user, idempotencyKey);
+      await api.approveApplication(tenant.id, adminPassword, user);
       setAdminPassword('');
-      setProvisioning(next);
-      if (!isTenantProvisioningFinal(next.status)) {
-        setProvisioningTimedOut(false);
-        setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
-      }
+      toast({ title: en.applications.approveSuccess, variant: 'success' });
+      onApproved();
     } catch {
-      provisioningKeyRef.current = null;
       toast({ title: en.applications.approveError, variant: 'error' });
     } finally {
       setApproving(false);
-    }
-  }
-
-  async function handleRefreshStatus() {
-    if (!provisioning || statusLoading) return;
-    setStatusLoading(true);
-    try {
-      const next = await api.getTenantStatus(provisioning.tenantId);
-      setProvisioning(next);
-      if (!isTenantProvisioningFinal(next.status)) {
-        setProvisioningTimedOut(false);
-        setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
-      }
-    } catch {
-      toast({ title: en.applications.provisioning.refreshFailed, variant: 'error' });
-    } finally {
-      setStatusLoading(false);
-    }
-  }
-
-  async function handleRetryProvisioning() {
-    const idempotencyKey = provisioningKeyRef.current;
-    if (!provisioning || retrying || !idempotencyKey) return;
-    setRetrying(true);
-    try {
-      const next = await api.retryTenant(provisioning.tenantId, idempotencyKey);
-      setProvisioning(next);
-      if (isTenantProvisioningFinal(next.status)) {
-        setProvisioningDeadline(null);
-      } else {
-        setProvisioningTimedOut(false);
-        setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
-      }
-    } catch {
-      toast({ title: en.applications.provisioning.retryFailed, variant: 'error' });
-    } finally {
-      setRetrying(false);
     }
   }
 
@@ -379,20 +273,20 @@ function ApplicationDialogContent({
                 <Button
                   variant="secondary"
                   onClick={handleDiscard}
-                  disabled={saving || approving || provisioning !== null}
+                  disabled={saving || approving}
                 >
                   {en.applications.discard}
                 </Button>
                 <Button
                   variant="secondary"
                   onClick={handleSave}
-                  disabled={saving || approving || provisioning !== null}
+                  disabled={saving || approving}
                 >
                   {saving ? en.applications.saving : en.applications.saveChanges}
                 </Button>
                 <Button
                   onClick={handleApprove}
-                  disabled={approving || saving || provisioning !== null}
+                  disabled={approving || saving}
                 >
                   {approving ? en.applications.approving : en.applications.approve}
                 </Button>
@@ -459,59 +353,6 @@ function ApplicationDialogContent({
           </aside>
 
           <div className="flex flex-col gap-6">
-            {provisioning ? (
-              <div
-                role="status"
-                aria-live="polite"
-                className="flex flex-col gap-2 rounded-card border border-border bg-card p-4"
-              >
-                <span className="text-sm font-semibold text-text">
-                  {en.applications.provisioning.title}
-                </span>
-                <div className="flex flex-wrap items-center gap-2 text-2xs text-text-muted">
-                  <span>{en.applications.provisioning.statusLabel}:</span>
-                  <span className="rounded-panel border border-border bg-bg-2 px-2 py-1 font-medium text-text">
-                    {en.applications.provisioning.statusValue(provisioning.status)}
-                  </span>
-                </div>
-                {provisioning.activatedAtUtc ? (
-                  <span className="text-2xs text-text-muted">
-                    {en.applications.provisioning.activatedAt}:{' '}
-                    {formatDateTime(provisioning.activatedAtUtc)}
-                  </span>
-                ) : null}
-                <p className="text-2xs text-text-muted">{provisioningHint(provisioning.status)}</p>
-                {isTenantProvisioningFailed(provisioning.status) ? (
-                  <div>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => void handleRetryProvisioning()}
-                      disabled={retrying}
-                    >
-                      {retrying
-                        ? en.applications.provisioning.retrying
-                        : en.applications.provisioning.retry}
-                    </Button>
-                  </div>
-                ) : provisioningTimedOut ? (
-                  <div className="flex flex-col items-start gap-2">
-                    <p className="rounded-panel border border-warning-fg bg-warning-bg px-3 py-2 text-2xs font-medium text-warning-fg">
-                      {en.applications.provisioning.timedOut}
-                    </p>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => void handleRefreshStatus()}
-                      disabled={statusLoading}
-                    >
-                      {en.applications.provisioning.refreshStatus}
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-
             <div className="flex flex-col gap-3 rounded-card border border-border bg-card p-4">
               <Checkbox
                 id="rf-field-paid"
@@ -566,7 +407,7 @@ function ApplicationDialogContent({
                 onChange={(event) => setAdminPassword(event.target.value)}
                 error={fieldErrors.adminPassword}
                 hint={en.applications.adminPasswordHint}
-                disabled={!isSuperAdmin || provisioning !== null}
+                disabled={!isSuperAdmin}
                 autoComplete="new-password"
               />
             </div>

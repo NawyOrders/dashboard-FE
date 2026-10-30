@@ -1,15 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
 import { Dialog } from '@/presentation/components/ui/Dialog';
+import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Input } from '@/presentation/components/ui/Input';
 import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
+import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
-import { useOffers } from '@/presentation/hooks/queries';
+import { useApplication, useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
@@ -26,13 +28,24 @@ import {
 const PROVISIONING_POLL_MS = 5_000;
 const PROVISIONING_TIMEOUT_MS = 60_000;
 
+import { ApplicationAuditSection } from './ApplicationAuditSection';
+import { MenuDetailsSection } from './MenuDetailsSection';
 import { MenuOcrSection } from './MenuOcrSection';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
+import type { BranchExtra } from '@/presentation/features/restaurant-form/BranchesSection';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
 
 interface ApplicationDialogProps {
   tenant: Tenant | null;
+  onClose: () => void;
+  onApproved: () => void;
+  onRejected: () => void;
+  onSaved: () => void;
+}
+
+interface ApplicationDialogLoaderProps {
+  requestId: string;
   onClose: () => void;
   onApproved: () => void;
   onRejected: () => void;
@@ -48,8 +61,71 @@ function provisioningHint(status: string): string {
 export function ApplicationDialog({ tenant, onClose, onApproved, onRejected, onSaved }: ApplicationDialogProps) {
   if (!tenant) return null;
   return (
+    <ApplicationDialogLoader
+      requestId={tenant.id}
+      onClose={onClose}
+      onApproved={onApproved}
+      onRejected={onRejected}
+      onSaved={onSaved}
+    />
+  );
+}
+
+/** Loads the full request before the dialog renders, so no section shows stale list data. */
+function ApplicationDialogLoader({
+  requestId,
+  onClose,
+  onApproved,
+  onRejected,
+  onSaved,
+}: ApplicationDialogLoaderProps) {
+  const details = useApplication(requestId);
+
+  if (details.isLoading) {
+    return (
+      <Dialog
+        open
+        onClose={onClose}
+        title={en.applications.viewTitle}
+        size="full"
+        footer={
+          <Button variant="secondary" onClick={onClose}>
+            {en.common.close}
+          </Button>
+        }
+      >
+        <div className="flex flex-col gap-4" role="status" aria-live="polite">
+          <span className="text-sm text-text-muted">{en.common.loading}</span>
+          <Skeleton className="h-6 w-1/3" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </Dialog>
+    );
+  }
+
+  if (details.isError || !details.data) {
+    return (
+      <Dialog
+        open
+        onClose={onClose}
+        title={en.applications.viewTitle}
+        size="full"
+        footer={
+          <Button variant="secondary" onClick={onClose}>
+            {en.common.close}
+          </Button>
+        }
+      >
+        <ErrorState error={details.error} onRetry={() => void details.refetch()} />
+      </Dialog>
+    );
+  }
+
+  return (
     <ApplicationDialogContent
-      tenant={tenant}
+      key={details.dataUpdatedAt}
+      tenant={details.data}
       onClose={onClose}
       onApproved={onApproved}
       onRejected={onRejected}
@@ -80,6 +156,17 @@ function ApplicationDialogContent({
   } = useRestaurantFormState(tenant);
 
   const offers = useOffers();
+
+  const branchMeta = useMemo(() => {
+    const meta: Record<string, BranchExtra> = {};
+    for (const branch of tenant.branches) {
+      meta[branch.id] = {
+        isPrimary: branch.isPrimary,
+        workingHours: branch.workingHours,
+      };
+    }
+    return meta;
+  }, [tenant.branches]);
 
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
@@ -431,8 +518,6 @@ function ApplicationDialogContent({
               />
             </div>
 
-            <MenuOcrSection disabled={!isSuperAdmin} referenceId={tenant.id} />
-
             <RestaurantForm
               steps={schema.steps}
               values={values}
@@ -442,11 +527,19 @@ function ApplicationDialogContent({
               offers={offers.data}
               subscriptionReadOnly
               submittedPrice={tenant.agreedPrice}
+              submittedCurrency={tenant.agreedCurrency}
+              branchMeta={branchMeta}
               onFieldChange={setField}
               onBranchFieldChange={setBranchField}
               onAddBranch={addBranch}
               onRemoveBranch={removeBranch}
             />
+
+            <MenuDetailsSection categories={tenant.menuCategories ?? []} />
+
+            <MenuOcrSection disabled={!isSuperAdmin} referenceId={tenant.id} />
+
+            <ApplicationAuditSection tenant={tenant} />
           </div>
         </div>
       </Dialog>

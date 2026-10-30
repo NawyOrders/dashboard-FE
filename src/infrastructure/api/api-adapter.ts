@@ -7,7 +7,7 @@ import { createAuthApi, toPlatformSession } from './auth-api';
 import { loginResponseSchema } from './auth-schemas';
 import { createOcrApi } from './ocr-api';
 import { createOnboardingApi } from './onboarding-api';
-import { mapOnboardingRequestToTenant } from './onboarding-mapping';
+import { mapOnboardingDetailsToTenant, mapOnboardingRequestToTenant } from './onboarding-mapping';
 import { createTenantApi } from './tenant-api';
 import { mapTenantDetails, mapTenantListItem } from './tenant-mapping';
 import type { HttpClient } from './http-client';
@@ -104,6 +104,10 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
         onboarding.listOffers(),
       ]);
       return page.items.map((item) => mapOnboardingRequestToTenant(item, offers));
+    },
+
+    async getApplication(requestId) {
+      return mapOnboardingDetailsToTenant(await onboarding.getRequest(requestId));
     },
 
     listOffers: () => onboarding.listOffers(),

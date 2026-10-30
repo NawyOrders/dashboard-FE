@@ -37,6 +37,8 @@ export interface SubscriptionSectionProps {
   readOnly?: boolean;
   /** Price the request was submitted with (`agreedPrice` from the onboarding list). */
   submittedPrice?: number | null;
+  /** Currency of the submitted price, from the onboarding details. */
+  submittedCurrency?: string | null;
 }
 
 function ReadOnlySubscription({
@@ -46,9 +48,16 @@ function ReadOnlySubscription({
   paymentStatus,
   offers,
   submittedPrice,
+  submittedCurrency,
 }: Pick<
   SubscriptionSectionProps,
-  'step' | 'packageCode' | 'durationMonths' | 'paymentStatus' | 'offers' | 'submittedPrice'
+  | 'step'
+  | 'packageCode'
+  | 'durationMonths'
+  | 'paymentStatus'
+  | 'offers'
+  | 'submittedPrice'
+  | 'submittedCurrency'
 >) {
   const price = submittedPrice ?? priceFromOffers(offers, packageCode, durationMonths);
 
@@ -58,6 +67,10 @@ function ReadOnlySubscription({
     {
       label: en.registration.price,
       value: price === null ? en.common.notAvailable : formatEgp(price),
+    },
+    {
+      label: en.registration.currency,
+      value: submittedCurrency || en.common.notAvailable,
     },
   ];
 
@@ -106,6 +119,7 @@ export function SubscriptionSection({
   offers,
   readOnly,
   submittedPrice,
+  submittedCurrency,
 }: SubscriptionSectionProps) {
   if (readOnly) {
     return (
@@ -116,6 +130,7 @@ export function SubscriptionSection({
         paymentStatus={paymentStatus}
         offers={offers}
         submittedPrice={submittedPrice}
+        submittedCurrency={submittedCurrency}
       />
     );
   }

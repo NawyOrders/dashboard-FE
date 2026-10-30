@@ -1,8 +1,12 @@
 import { durationOfOffer, packageCodeOfOffer } from '@/domain/rules/packages';
 import type {
+  Branch,
+  OnboardingBranch,
+  OnboardingRequestDetails,
   OnboardingRequestListItem,
   SubscriptionOffer,
   Tenant,
+  TenantMenuCategory,
 } from '@/domain/entities';
 
 /**
@@ -115,5 +119,128 @@ export function mapOnboardingRequestToTenant(
     agreedPrice: item.agreedPrice,
     agreedCurrency: item.agreedCurrency,
     onboardingStatus: item.status,
+  };
+}
+
+function mapDetailsBranch(
+  branch: OnboardingBranch,
+  requestId: string,
+  index: number,
+): Branch {
+  // The registration form keeps one opening window per branch; show the first open day.
+  const openDay = branch.workingHours.find((hour) => !hour.isClosed && hour.openTime);
+
+  return {
+    id: `${requestId}-branch-${index + 1}`,
+    tenantId: requestId,
+    name: branch.name ?? '',
+    address: branch.addressLine1 ?? '',
+    addressLine2: branch.addressLine2,
+    city: branch.city,
+    region: branch.region,
+    countryCode: branch.countryCode,
+    postalCode: branch.postalCode,
+    phone: branch.phone ?? '',
+    status: 'pending',
+    openTime: openDay?.openTime ?? null,
+    closeTime: openDay?.closeTime ?? null,
+    latitude: branch.latitude,
+    longitude: branch.longitude,
+    workingHours: branch.workingHours,
+    isPrimary: branch.isPrimary,
+    sortOrder: branch.sortOrder,
+  };
+}
+
+function mapMenuCategories(details: OnboardingRequestDetails): TenantMenuCategory[] {
+  return details.menuCategories.map((category) => ({
+    nameEn: category.nameEn,
+    nameAr: category.nameAr,
+    items: category.items.map((item) => ({
+      nameEn: item.nameEn,
+      nameAr: item.nameAr,
+      price: item.price,
+      variants: item.variants.map((variant) => ({
+        nameEn: variant.nameEn,
+        nameAr: variant.nameAr,
+        price: variant.price,
+      })),
+    })),
+  }));
+}
+
+/** Maps `GET /onboarding-requests/{requestId}` onto the view dialog's tenant. */
+export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails): Tenant {
+  const offer = details.subscriptionOffer;
+  const durationMonths = offer ? durationOfOffer(offer) : 3;
+  const startDate = toDateOnly(details.submittedAtUtc);
+  const restaurantName = details.restaurantNameEn ?? details.restaurantNameAr ?? '';
+
+  return {
+    id: details.requestId,
+    tenantId: details.requestId,
+    businessName: restaurantName,
+    restaurantName,
+    restaurantNameAr: details.restaurantNameAr,
+    contact: {
+      phone: details.ownerPhone ?? '',
+      email: details.ownerEmail ?? '',
+      name: details.ownerFullName ?? '',
+      city: null,
+    },
+    logoUrl: details.logoAsset?.url ?? null,
+    brandColors: {
+      primary: details.primaryColorHex ?? '',
+      secondary: details.secondaryColorHex ?? '',
+      accent: details.accentColorHex ?? '',
+    },
+    socialLinks: {},
+    status: restaurantStatusFromOnboarding(),
+    createdAt: details.submittedAtUtc,
+    branches: details.branches.map((branch, index) =>
+      mapDetailsBranch(branch, details.requestId, index),
+    ),
+    subscription: {
+      id: `onboarding-${details.requestId}`,
+      tenantId: details.requestId,
+      packageCode: offer ? packageCodeOfOffer(offer) : 'start',
+      durationMonths,
+      status: 'not_started',
+      startDate,
+      endDate: addMonths(startDate, durationMonths),
+      updatedAt: details.submittedAtUtc,
+    },
+    channels: {
+      websiteStatus: null,
+      pwaStatus: null,
+      websiteUrl: null,
+      pwaUrl: null,
+      previewUrl: null,
+    },
+    apps: {
+      android: null,
+      ios: null,
+      androidStoreUrl: null,
+      iosStoreUrl: null,
+    },
+    description: null,
+    coverImageUrl: null,
+    commercialRegisterNumber: null,
+    paymentStatus: details.paid ? 'paid' : 'unpaid',
+    submittedAtUtc: details.submittedAtUtc,
+    agreedPrice: details.agreedPrice,
+    agreedCurrency: details.agreedCurrency ?? offer?.currency ?? null,
+    onboardingStatus: details.status,
+    subscriptionOfferId: offer?.id ?? null,
+    logoAssetId: details.logoAsset?.assetId ?? null,
+    menuAssetId: details.menuAsset?.assetId ?? null,
+    menuCategories: mapMenuCategories(details),
+    paidAtUtc: details.paidAtUtc,
+    paidChangedBy: details.paidChangedBy,
+    approvedAtUtc: details.approvedAtUtc,
+    approvedBy: details.approvedBy,
+    rejectedAtUtc: details.rejectedAtUtc,
+    rejectedBy: details.rejectedBy,
+    rejectionReason: details.rejectionReason,
   };
 }

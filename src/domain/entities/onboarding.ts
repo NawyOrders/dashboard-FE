@@ -66,6 +66,85 @@ export interface OnboardingBranch {
   workingHours: OnboardingWorkingHour[];
 }
 
+/** A stored onboarding file (logo or menu) as the details endpoint returns it. */
+export interface OnboardingAssetReference {
+  assetId: string;
+  /** Readable URL the browser can load; `null` when the backend only returns the id. */
+  url: string | null;
+}
+
+export interface OnboardingMenuVariant {
+  nameEn: string | null;
+  nameAr: string | null;
+  price: number | null;
+}
+
+export interface OnboardingMenuItem {
+  nameEn: string | null;
+  nameAr: string | null;
+  price: number | null;
+  variants: OnboardingMenuVariant[];
+}
+
+export interface OnboardingMenuCategory {
+  nameEn: string | null;
+  nameAr: string | null;
+  items: OnboardingMenuItem[];
+}
+
+/** Body of `PATCH /api/v1/onboarding-requests/{requestId}`; partial data is allowed. */
+export interface UpdateOnboardingRequest {
+  restaurantNameEn?: string | null;
+  restaurantNameAr?: string | null;
+  ownerFullName?: string | null;
+  ownerEmail?: string | null;
+  ownerPhone?: string | null;
+  subscriptionOfferId?: string;
+  logoAssetId?: string;
+  logoUploadToken?: string | null;
+  menuAssetId?: string;
+  menuUploadToken?: string | null;
+  branches?: OnboardingBranch[];
+  primaryColorHex?: string | null;
+  secondaryColorHex?: string | null;
+  accentColorHex?: string | null;
+  agreedPrice?: number | null;
+  agreedCurrency?: string | null;
+}
+
+/**
+ * `GET /api/v1/onboarding-requests/{requestId}`. The list row plus the parts the list
+ * omits: the offer, the branches, the assets, the menu and the audit fields.
+ */
+export interface OnboardingRequestDetails {
+  requestId: string;
+  restaurantNameEn: string | null;
+  restaurantNameAr: string | null;
+  ownerFullName: string | null;
+  ownerEmail: string | null;
+  ownerPhone: string | null;
+  status: number;
+  paid: boolean;
+  agreedPrice: number | null;
+  agreedCurrency: string | null;
+  submittedAtUtc: string;
+  subscriptionOffer: SubscriptionOffer | null;
+  branches: OnboardingBranch[];
+  logoAsset: OnboardingAssetReference | null;
+  menuAsset: OnboardingAssetReference | null;
+  menuCategories: OnboardingMenuCategory[];
+  primaryColorHex: string | null;
+  secondaryColorHex: string | null;
+  accentColorHex: string | null;
+  paidAtUtc: string | null;
+  paidChangedBy: string | null;
+  approvedAtUtc: string | null;
+  approvedBy: string | null;
+  rejectedAtUtc: string | null;
+  rejectedBy: string | null;
+  rejectionReason: string | null;
+}
+
 /** Body of `POST /api/v1/onboarding-requests` (swagger shape). */
 export interface SubmitOnboardingRequest {
   restaurantNameEn: string | null;

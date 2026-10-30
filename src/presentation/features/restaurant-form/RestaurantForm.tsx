@@ -8,6 +8,7 @@ import type {
 import type { RegistrationSection, RegistrationStep } from '@/domain/rules/registration-schema';
 import { en } from '@/presentation/i18n/en';
 import { BranchesSection } from './BranchesSection';
+import type { BranchExtra } from './BranchesSection';
 import { SchemaField } from './SchemaField';
 import { SubscriptionSection } from './SubscriptionSection';
 import { FORM_GROUP_IDS } from './form-groups';
@@ -33,6 +34,10 @@ export interface RestaurantFormProps {
   subscriptionReadOnly?: boolean;
   /** Price the request was submitted with (`agreedPrice` from the onboarding list). */
   submittedPrice?: number | null;
+  /** Currency of the submitted price, from the onboarding details. */
+  submittedCurrency?: string | null;
+  /** Primary flag and weekly hours from the onboarding details, keyed by branch id. */
+  branchMeta?: Record<string, BranchExtra>;
   /** Validation messages keyed by the JSON field key. */
   errors?: Record<string, string>;
   /** Validation messages keyed by `${branchId}.${fieldKey}`. */
@@ -137,6 +142,8 @@ export function RestaurantForm({
   offers,
   subscriptionReadOnly,
   submittedPrice,
+  submittedCurrency,
+  branchMeta,
   errors,
   branchErrors,
 }: RestaurantFormProps) {
@@ -199,6 +206,7 @@ export function RestaurantForm({
             limits={branchLimits}
             disabled={disabled}
             errors={branchErrors}
+            branchMeta={branchMeta}
             onFieldChange={onBranchFieldChange}
             onAdd={onAddBranch}
             onRemove={onRemoveBranch}
@@ -217,6 +225,7 @@ export function RestaurantForm({
             offers={offers}
             readOnly={subscriptionReadOnly}
             submittedPrice={submittedPrice}
+            submittedCurrency={submittedCurrency}
             onPackageChange={onPackageChange}
             onDurationChange={onDurationChange}
           />

@@ -102,6 +102,7 @@ export function createStaticApi(
     // OPEN: endpoint missing in swagger. Analytics charts.
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
+    getApplication: (requestId: string) => run(() => backend.getTenant(requestId)),
     listOffers: () => run(() => STATIC_OFFERS),
     updateApplicationPayment: (requestId: string, paid: boolean, actor: AdminUser) =>
       run(() =>

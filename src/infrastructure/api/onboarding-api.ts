@@ -1,6 +1,7 @@
 import type {
   ApproveOnboardingResponse,
   OnboardingAssetType,
+  OnboardingRequestDetails,
   OnboardingRequestPage,
   OnboardingUploadFile,
   OnboardingUploadUrlsResponse,
@@ -13,6 +14,7 @@ import type { HttpClient } from './http-client';
 import {
   approveOnboardingResponseSchema,
   offersResponseSchema,
+  onboardingRequestDetailsSchema,
   onboardingRequestPageSchema,
   onboardingUploadUrlsResponseSchema,
   paymentResponseSchema,
@@ -28,6 +30,8 @@ function newIdempotencyKey(): string {
 
 export interface OnboardingApi {
   listRequests(params: { page: number; pageSize: number }): Promise<OnboardingRequestPage>;
+  /** `GET /onboarding-requests/{requestId}` — the full request behind the view dialog. */
+  getRequest(requestId: string): Promise<OnboardingRequestDetails>;
   listOffers(): Promise<SubscriptionOffer[]>;
   /** OPEN: backend submit not finished. Do not call this from the UI yet. */
   submitRequest(body: SubmitOnboardingRequest): Promise<SubmitOnboardingResponse>;
@@ -71,6 +75,13 @@ export function createOnboardingApi(client: HttpClient): OnboardingApi {
         path: REQUESTS_PATH,
         query: { page, pageSize },
         schema: onboardingRequestPageSchema,
+      });
+    },
+
+    getRequest(requestId) {
+      return client.request({
+        path: `${REQUESTS_PATH}/${requestId}`,
+        schema: onboardingRequestDetailsSchema,
       });
     },
 

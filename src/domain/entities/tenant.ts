@@ -1,5 +1,13 @@
 import type { BranchStatus, ChannelStatus, AppStatus, RestaurantStatus, Subscription } from './subscription';
 
+export interface BranchWorkingHour {
+  dayOfWeek: number;
+  isClosed: boolean;
+  openTime: string | null;
+  closeTime: string | null;
+  closesNextDay: boolean;
+}
+
 export interface Branch {
   id: string;
   tenantId: string;
@@ -7,8 +15,14 @@ export interface Branch {
   /** Arabic branch name (fixed display data until the backend returns it). */
   nameAr?: string | null;
   address: string;
+  /** Second address line from the onboarding request. */
+  addressLine2?: string | null;
   /** City of the address line. */
   city?: string | null;
+  /** Region from the onboarding request. */
+  region?: string | null;
+  countryCode?: string | null;
+  postalCode?: string | null;
   phone: string;
   /** Branch status is a separate field from Restaurant Status. */
   status: BranchStatus;
@@ -23,6 +37,12 @@ export interface Branch {
   /** Map-picked coordinates. `null` until the owner picks a point. */
   latitude?: number | null;
   longitude?: number | null;
+  /** Full week of working hours from the onboarding request. */
+  workingHours?: BranchWorkingHour[];
+  /** Primary branch flag from the onboarding request. */
+  isPrimary?: boolean;
+  /** Order of the branch in the onboarding request. */
+  sortOrder?: number;
 }
 
 export interface TenantContact {
@@ -37,6 +57,27 @@ export interface TenantContact {
 export interface BrandColors {
   primary: string;
   secondary: string;
+  /** Accent color from the onboarding request; absent on older tenant records. */
+  accent?: string;
+}
+
+export interface TenantMenuVariant {
+  nameEn: string | null;
+  nameAr: string | null;
+  price: number | null;
+}
+
+export interface TenantMenuItem {
+  nameEn: string | null;
+  nameAr: string | null;
+  price: number | null;
+  variants: TenantMenuVariant[];
+}
+
+export interface TenantMenuCategory {
+  nameEn: string | null;
+  nameAr: string | null;
+  items: TenantMenuItem[];
 }
 
 export interface SocialLinks {
@@ -97,6 +138,20 @@ export interface Tenant {
   agreedCurrency?: string | null;
   /** Raw onboarding status; the dashboard only reviews pending requests for now. */
   onboardingStatus?: number;
+  /** Offer the request was submitted with. */
+  subscriptionOfferId?: string | null;
+  /** Stored logo/menu assets of the request (used by the PATCH body). */
+  logoAssetId?: string | null;
+  menuAssetId?: string | null;
+  /** Menu extracted for the request; read-only in the view dialog. */
+  menuCategories?: TenantMenuCategory[];
+  paidAtUtc?: string | null;
+  paidChangedBy?: string | null;
+  approvedAtUtc?: string | null;
+  approvedBy?: string | null;
+  rejectedAtUtc?: string | null;
+  rejectedBy?: string | null;
+  rejectionReason?: string | null;
   /** Slug of the tenant on the backend, from the tenant endpoints. */
   slug?: string | null;
   /** Set once the backend provisioning finishes (live tenant endpoints). */

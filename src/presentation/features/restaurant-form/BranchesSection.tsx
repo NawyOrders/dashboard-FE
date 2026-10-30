@@ -5,12 +5,19 @@ import type {
   RegistrationMapConfig,
   RegistrationStep,
 } from '@/domain/rules/registration-schema';
+import type { BranchWorkingHour } from '@/domain/entities';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 import { BranchMapPicker } from './BranchMapPicker';
 import { SchemaField } from './SchemaField';
 import { stepAddButton, stepRemoveLabel, stepTitle } from './localized-schema';
 import type { BranchFormValue } from './form-model';
+
+/** Read-only extras of a branch that the JSON schema does not describe. */
+export interface BranchExtra {
+  isPrimary?: boolean;
+  workingHours?: BranchWorkingHour[];
+}
 
 export interface BranchesSectionProps {
   step: RegistrationStep;
@@ -23,12 +30,62 @@ export interface BranchesSectionProps {
   disabled?: boolean;
   /** Validation messages keyed by `${branchId}.${fieldKey}`. */
   errors?: Record<string, string>;
+  /** Primary flag and weekly hours from the onboarding details, keyed by branch id. */
+  branchMeta?: Record<string, BranchExtra>;
 }
 
 function toCoordinate(value: string | undefined): number | null {
   if (value === undefined || value.trim() === '') return null;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function workingHourLabel(hour: BranchWorkingHour): string {
+  if (hour.isClosed || !hour.openTime || !hour.closeTime) return en.applications.closed;
+  return `${hour.openTime} – ${hour.closeTime}`;
+}
+
+function BranchExtraDetails({ meta }: { meta: BranchExtra }) {
+  const hours = [...(meta.workingHours ?? [])].sort((a, b) => a.dayOfWeek - b.dayOfWeek);
+  return (
+    <div className="flex flex-col gap-2 rounded-panel border border-border bg-card/60 p-3">
+      {meta.isPrimary !== undefined ? (
+        <div className="flex flex-wrap items-center gap-2 text-2xs">
+          <span className="font-medium text-text-muted">{en.applications.branchPrimary}</span>
+          <span
+            className={cn(
+              'rounded-pill px-2 py-0.5 font-medium',
+              meta.isPrimary ? 'bg-success-bg text-success-fg' : 'bg-bg-2 text-text-muted',
+            )}
+          >
+            {meta.isPrimary
+              ? en.applications.branchPrimaryYes
+              : en.applications.branchPrimaryNo}
+          </span>
+        </div>
+      ) : null}
+      {hours.length > 0 ? (
+        <div className="flex flex-col gap-1">
+          <span className="text-2xs font-medium text-text-muted">
+            {en.applications.workingHours}
+          </span>
+          <ul className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
+            {hours.map((hour) => (
+              <li
+                key={hour.dayOfWeek}
+                className="flex items-center justify-between gap-2 text-2xs text-text"
+              >
+                <span className="text-text-muted">
+                  {en.weekdays[hour.dayOfWeek] ?? String(hour.dayOfWeek)}
+                </span>
+                <span dir="ltr">{workingHourLabel(hour)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 /**
@@ -48,6 +105,7 @@ export function BranchesSection({
   onRemove,
   disabled,
   errors,
+  branchMeta,
 }: BranchesSectionProps) {
   const [openBranchIds, setOpenBranchIds] = useState<string[]>(() =>
     branches.slice(0, 1).map((branch) => branch.id),
@@ -110,6 +168,7 @@ export function BranchesSection({
       <div className="flex flex-col gap-3">
         {branches.map((branch, index) => {
           const open = openBranchIds.includes(branch.id);
+          const meta = branchMeta?.[branch.id];
           return (
             <article
               key={branch.id}
@@ -168,6 +227,10 @@ export function BranchesSection({
                       mapConfig={mapConfig}
                       disabled={disabled}
                     />
+                  ) : null}
+
+                  {meta && (meta.isPrimary !== undefined || (meta.workingHours?.length ?? 0) > 0) ? (
+                    <BranchExtraDetails meta={meta} />
                   ) : null}
                 </>
               ) : null}

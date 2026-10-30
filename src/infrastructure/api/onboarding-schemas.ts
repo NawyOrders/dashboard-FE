@@ -1,7 +1,12 @@
 import { z } from 'zod';
 import type {
   ApproveOnboardingResponse,
+  OnboardingAssetReference,
   OnboardingBranch,
+  OnboardingMenuCategory,
+  OnboardingMenuItem,
+  OnboardingMenuVariant,
+  OnboardingRequestDetails,
   OnboardingRequestListItem,
   OnboardingRequestPage,
   OnboardingUploadFile,
@@ -115,6 +120,85 @@ export const onboardingBranchRequestSchema: ResponseSchema<OnboardingBranch> = z
   isPrimary: z.boolean(),
   sortOrder: z.number().int(),
   workingHours: z.array(onboardingWorkingHourSchema),
+});
+
+/**
+ * The details endpoint returns the stored logo/menu as an asset reference. The readable
+ * URL is `url`; `readUrl` is accepted as well because swagger does not pin the name.
+ */
+export const onboardingAssetReferenceSchema: ResponseSchema<OnboardingAssetReference> = z
+  .object({
+    assetId: z.string().min(1),
+    url: nullableString,
+    readUrl: nullableString.optional(),
+  })
+  .transform(({ assetId, url, readUrl }) => ({ assetId, url: url ?? readUrl ?? null }));
+
+export const onboardingMenuVariantSchema: ResponseSchema<OnboardingMenuVariant> = z.object({
+  nameEn: nullableString,
+  nameAr: nullableString,
+  price: nullableNumber,
+});
+
+export const onboardingMenuItemSchema: ResponseSchema<OnboardingMenuItem> = z.object({
+  nameEn: nullableString,
+  nameAr: nullableString,
+  price: nullableNumber,
+  variants: z
+    .array(onboardingMenuVariantSchema)
+    .nullish()
+    .transform((variants) => variants ?? []),
+});
+
+export const onboardingMenuCategorySchema: ResponseSchema<OnboardingMenuCategory> = z.object({
+  nameEn: nullableString,
+  nameAr: nullableString,
+  items: z
+    .array(onboardingMenuItemSchema)
+    .nullish()
+    .transform((items) => items ?? []),
+});
+
+/** `GET /api/v1/onboarding-requests/{requestId}` (and the body of its PATCH response). */
+export const onboardingRequestDetailsSchema: ResponseSchema<OnboardingRequestDetails> = z.object({
+  requestId: z.string().uuid(),
+  restaurantNameEn: nullableString,
+  restaurantNameAr: nullableString,
+  ownerFullName: nullableString,
+  ownerEmail: nullableString,
+  ownerPhone: nullableString,
+  status: z.number().int(),
+  paid: z.boolean(),
+  agreedPrice: nullableNumber,
+  agreedCurrency: nullableString,
+  submittedAtUtc: z.string().min(1),
+  subscriptionOffer: subscriptionOfferSchema
+    .nullish()
+    .transform((offer) => offer ?? null),
+  branches: z
+    .array(onboardingBranchRequestSchema)
+    .nullish()
+    .transform((branches) => branches ?? []),
+  logoAsset: onboardingAssetReferenceSchema
+    .nullish()
+    .transform((asset) => asset ?? null),
+  menuAsset: onboardingAssetReferenceSchema
+    .nullish()
+    .transform((asset) => asset ?? null),
+  menuCategories: z
+    .array(onboardingMenuCategorySchema)
+    .nullish()
+    .transform((categories) => categories ?? []),
+  primaryColorHex: nullableString,
+  secondaryColorHex: nullableString,
+  accentColorHex: nullableString,
+  paidAtUtc: nullableString,
+  paidChangedBy: nullableString,
+  approvedAtUtc: nullableString,
+  approvedBy: nullableString,
+  rejectedAtUtc: nullableString,
+  rejectedBy: nullableString,
+  rejectionReason: nullableString,
 });
 
 /** Request body of POST /api/v1/onboarding-requests. */

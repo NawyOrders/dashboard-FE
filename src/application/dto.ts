@@ -191,6 +191,8 @@ export interface Api {
   ): Promise<void>;
   getMonthlySales(): Promise<SalesMonthBucket[]>;
   listApplications(): Promise<Tenant[]>;
+  /** `GET /onboarding-requests/{requestId}` — the full request for the view dialog. */
+  getApplication(requestId: string): Promise<Tenant>;
   /** Packages/durations offered by the backend (agent.md section 21). */
   listOffers(): Promise<SubscriptionOffer[]>;
   /** `PATCH /onboarding-requests/{requestId}/payment`. */

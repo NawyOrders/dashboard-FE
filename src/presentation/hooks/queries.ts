@@ -14,6 +14,7 @@ export const queryKeys = {
   tenantAccounts: ['tenantAccounts'] as const,
   monthlySales: ['monthlySales'] as const,
   applications: ['applications'] as const,
+  application: (requestId: string) => ['application', requestId] as const,
   offers: ['offers'] as const,
 };
 
@@ -128,6 +129,15 @@ export function useApplications() {
   return useQuery({
     queryKey: queryKeys.applications,
     queryFn: () => api.listApplications(),
+  });
+}
+
+/** `GET /onboarding-requests/{requestId}` — the full request for the view dialog. */
+export function useApplication(requestId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.application(requestId ?? ''),
+    queryFn: () => api.getApplication(requestId ?? ''),
+    enabled: Boolean(requestId),
   });
 }
 

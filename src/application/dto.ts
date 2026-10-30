@@ -222,8 +222,8 @@ export interface Api {
    */
   extractMenu(file: File | null, options?: ExtractMenuOptions): Promise<MenuExtractionOutcome>;
   signIn(email: string, password: string): Promise<PlatformLoginResult>;
-  /** `POST /api/v1/auth/refresh-token` with `{ refreshToken }`; returns the login shape. */
+  /** Renews the session from the stored refresh token; returns the login shape. */
   refreshSession(refreshToken: string): Promise<PlatformLoginResponse>;
-  /** `POST /api/v1/auth/logout` with `{ refreshToken }` and the bearer header. */
+  /** Ends the server session; the bearer header is sent with the refresh token. */
   logout(refreshToken: string): Promise<void>;
 }

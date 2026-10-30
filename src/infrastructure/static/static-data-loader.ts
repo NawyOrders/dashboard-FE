@@ -1,16 +1,9 @@
 import type { z } from 'zod';
-import type {
-  Account,
-  ActivityLog,
-  PackageDefinition,
-  SalesRecord,
-  Tenant,
-} from '@/domain/entities';
+import type { Account, ActivityLog, SalesRecord, Tenant } from '@/domain/entities';
 import {
   accountsSchema,
   activityLogsSchema,
   loginFixturesSchema,
-  packagesSchema,
   salesSchema,
   tenantsSchema,
   type LoginFixture,
@@ -20,7 +13,6 @@ export interface StaticData {
   restaurants: Tenant[];
   sales: SalesRecord[];
   accounts: Account[];
-  packages: PackageDefinition[];
   activityLogs: ActivityLog[];
   loginFixtures: LoginFixture[];
 }
@@ -46,18 +38,14 @@ export function loadStaticData(): Promise<StaticData> {
     readJson('restaurants.json', tenantsSchema),
     readJson('sales.json', salesSchema),
     readJson('accounts.json', accountsSchema),
-    readJson('packages.json', packagesSchema),
     readJson('activity-logs.json', activityLogsSchema),
     readJson('auth/login-fixtures.json', loginFixturesSchema),
-  ]).then(
-    ([restaurants, sales, accounts, packages, activityLogs, loginFixtures]) => ({
-      restaurants,
-      sales,
-      accounts,
-      packages,
-      activityLogs,
-      loginFixtures: loginFixtures.users,
-    }),
-  );
+  ]).then(([restaurants, sales, accounts, activityLogs, loginFixtures]) => ({
+    restaurants,
+    sales,
+    accounts,
+    activityLogs,
+    loginFixtures: loginFixtures.users,
+  }));
   return cache;
 }

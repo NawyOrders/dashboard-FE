@@ -62,6 +62,8 @@ export function createStaticApi(
     getCurrentUser: () => run(() => backend.getCurrentUser()),
     listTenants: (params?: ListTenantsParams) => run(() => backend.listTenants(params)),
     getTenant: (tenantId: string) => run(() => backend.getTenant(tenantId)),
+    // OPEN: endpoint missing in swagger. KPI counts, analytics charts and their refresh
+    // read the static overview analysis.
     getOverviewAnalysis: () => run(() => backend.getOverviewAnalysis()),
     updateSubscription: (tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser) =>
       run(() => backend.updateSubscription(tenantId, input, actor)),
@@ -76,25 +78,27 @@ export function createStaticApi(
     listFeatureFlags: (tenantId: string) => run(() => backend.listFeatureFlags(tenantId)),
     addBranch: (tenantId: string, input: AddBranchInput, actor: AdminUser) =>
       run(() => backend.addBranch(tenantId, input, actor)),
+    // OPEN: endpoint missing in swagger. Activity logs keep the static source.
     listActivity: (params?: ListActivityParams) => run(() => backend.listActivity(params)),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: endpoint missing in swagger. Internal users.
     listAdminAccounts: () => run(() => backend.listAdminAccounts()),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: endpoint missing in swagger. Internal users.
     createAdminAccount: (input: CreateAdminAccountInput, actor: AdminUser) =>
       run(() => backend.createAdminAccount(input, actor)),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: endpoint missing in swagger. Internal users.
     changeOwnPassword: (input: ChangeOwnPasswordInput, actor: AdminUser) =>
       run(() => backend.changeOwnPassword(input, actor)),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: endpoint missing in swagger. Tenant accounts.
     listTenantAccounts: () => run(() => backend.listTenantAccounts()),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: endpoint missing in swagger. Tenant accounts.
     createTenantAccount: (input: CreateTenantAccountInput, actor: AdminUser) =>
       run(() => backend.createTenantAccount(input, actor)),
-    // OPEN: endpoint missing in swagger.
+    // OPEN: endpoint missing in swagger. Tenant accounts.
     resetTenantAccountPassword: (
       input: ResetTenantAccountPasswordInput,
       actor: AdminUser,
     ) => run(() => backend.resetTenantAccountPassword(input, actor)),
+    // OPEN: endpoint missing in swagger. Analytics charts.
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     listOffers: () => run(() => STATIC_OFFERS),
@@ -106,7 +110,7 @@ export function createStaticApi(
           actor,
         ),
       ).then(() => undefined),
-    // OPEN: endpoint missing in swagger. Static demo keeps the local approve.
+    // Static demo fallback; `api` mode uses POST /onboarding-requests/{id}/approve.
     approveApplication: (tenantId: string, actor: AdminUser) =>
       run<TenantProvisioning>(async () => {
         const tenant = await backend.updateApplication(tenantId, { status: 'approved' }, actor);
@@ -117,12 +121,12 @@ export function createStaticApi(
           activatedAtUtc: null,
         };
       }),
-    // OPEN: endpoint missing in swagger. Static demo marks the tenant inactive.
+    // Static demo fallback; `api` mode uses POST /onboarding-requests/{id}/reject.
     rejectApplication: (tenantId: string, _reason: string, actor: AdminUser) =>
       run(() => backend.updateApplication(tenantId, { status: 'inactive' }, actor)).then(
         () => undefined,
       ),
-    // OPEN: static approve, remove when api is live
+    // Static demo fallback; `api` mode reads /tenants/{id}/provisioning-status.
     getTenantStatus: (tenantId: string) =>
       run<TenantProvisioning>(() => ({
         tenantId,
@@ -130,7 +134,7 @@ export function createStaticApi(
         status: 'active',
         activatedAtUtc: null,
       })),
-    // OPEN: static approve, remove when api is live
+    // Static demo fallback; `api` mode uses POST /tenants/{id}/retry.
     retryTenant: (tenantId: string) =>
       run<TenantProvisioning>(() => ({
         tenantId,
@@ -138,7 +142,7 @@ export function createStaticApi(
         status: 'active',
         activatedAtUtc: null,
       })),
-    // OPEN: endpoint missing in swagger.
+    // Static demo fallback; `api` mode uses PUT /tenants/{id}.
     updateTenant: (tenantId: string, input: UpdateTenantInput, actor: AdminUser) =>
       run(() =>
         backend.updateApplication(
@@ -157,7 +161,7 @@ export function createStaticApi(
           actor,
         ),
       ),
-    // OPEN: endpoint missing in swagger.
+    // Static demo fallback; `api` mode uses POST /tenants/{id}/plan/activate.
     activatePlan: (tenantId: string, actor: AdminUser) =>
       run(() => {
         const tenant = backend.getTenant(tenantId);
@@ -167,12 +171,7 @@ export function createStaticApi(
           actor,
         );
       }).then(() => undefined),
-    // OPEN: endpoint missing in swagger.
-    updateApplication: (
-      tenantId: string,
-      patch: Partial<import('@/domain/entities').Tenant>,
-      actor: AdminUser,
-    ) => run(() => backend.updateApplication(tenantId, patch, actor)),
+    // OPEN: endpoint missing in swagger. Images are kept as data URLs until an upload endpoint exists.
     uploadImage: (file: File) => uploads.uploadImage(file),
     // OPEN: menu OCR runs on the backend; the static data source has no API base URL.
     extractMenu: async (): Promise<MenuExtractionOutcome> => ({

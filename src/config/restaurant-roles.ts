@@ -1,5 +1,6 @@
 import type { RestaurantRole, TenantRole } from '@/domain/entities';
 
+// OPEN: endpoint missing in swagger. Roles stay a local list.
 // MOCK: replace with owner-defined roles.
 // `admin` is intentionally NOT in this list. It is created automatically on application approval.
 export const RESTAURANT_ROLES = [

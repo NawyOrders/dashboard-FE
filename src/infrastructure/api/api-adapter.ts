@@ -17,9 +17,11 @@ export interface ApiAdapterOptions {
 }
 
 /**
- * API data source (agent.md section 21). Onboarding, tenant provisioning and the menu
- * OCR come from the backend; the accounts endpoints stay on the static adapter until
- * the backend publishes them.
+ * API data source (agent.md section 21). Applications, offers, the tenants list and
+ * details, provisioning status, retry, plan activation and the menu OCR come from the
+ * backend. The screens below have no endpoint in the swagger and keep the static
+ * adapter: internal users, tenant accounts, roles, activity logs, analytics charts,
+ * KPI counts and refresh.
  */
 export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api {
   const onboarding = createOnboardingApi(client);
@@ -46,8 +48,8 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
   }
 
   return {
-    // OPEN: endpoint missing in swagger. Save changes and the accounts endpoints
-    // keep using the static adapter in api mode.
+    // OPEN: endpoint missing in swagger. Internal users, tenant accounts, roles,
+    // activity logs, analytics charts, KPI counts and refresh keep the static adapter.
     ...staticApi,
 
     signIn: (email, password) => auth.signIn(email, password),

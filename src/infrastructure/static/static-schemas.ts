@@ -2,7 +2,6 @@ import { z } from 'zod';
 import type {
   Account,
   ActivityLog,
-  PackageDefinition,
   PlatformLoginResponse,
   PlatformRole,
   SalesRecord,
@@ -177,36 +176,6 @@ export const activityLogSchema: z.ZodType<ActivityLog> = z.object({
 });
 
 export const activityLogsSchema = z.array(activityLogSchema);
-
-const packageFeatureKeySchema = z.enum([
-  'website',
-  'pwa',
-  'admin_panel',
-  'android_app',
-  'ios_app',
-  'branches_up_to_2',
-  'unlimited_orders',
-  'no_commission',
-  'ai',
-]);
-
-export const packageDefinitionSchema: z.ZodType<PackageDefinition> = z.object({
-  code: packageCodeSchema,
-  name: z.string(),
-  tagline: z.string(),
-  features: z.array(packageFeatureKeySchema),
-  prices: z.object({
-    3: z.number(),
-    6: z.number(),
-    12: z.number(),
-  }),
-  branchLimits: z.object({
-    min: z.number(),
-    max: z.number(),
-  }),
-});
-
-export const packagesSchema = z.array(packageDefinitionSchema);
 
 export const loginFixtureSchema = z.object({
   email: z.string(),

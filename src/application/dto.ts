@@ -132,7 +132,7 @@ export interface OverviewAnalysis {
 
 /**
  * The single application contract the presentation layer depends on.
- * The infrastructure mock (or a future HTTP client) implements it; components never
+ * The infrastructure adapters (live API or static demo) implement it; components never
  * import an adapter directly. Every tenant-scoped function takes a `tenantId`.
  */
 export interface Api {
@@ -213,7 +213,6 @@ export interface Api {
   updateTenant(tenantId: string, input: UpdateTenantInput, actor: AdminUser): Promise<Tenant>;
   /** `POST /api/v1/tenants/{tenantId}/plan/activate` — Super Admin, details screen only. */
   activatePlan(tenantId: string, actor: AdminUser): Promise<void>;
-  updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
   /** Stores an uploaded image and returns its reference (NW-246). */
   uploadImage(file: File): Promise<string>;
   /**

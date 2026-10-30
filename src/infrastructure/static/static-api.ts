@@ -7,16 +7,19 @@ import type {
   ListTenantsParams,
   MenuExtractionOutcome,
   ResetTenantAccountPasswordInput,
+  UpdateApplicationInput,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { Backend } from '@/application/use-cases';
 import type { FileUploadRepository } from '@/application/ports';
 import type {
   AdminUser,
+  Branch,
   CreateAdminAccountInput,
   PackageFeatureKey,
   PlatformLoginResponse,
   RestaurantStatus,
+  Tenant,
   TenantProvisioning,
   UpdateTenantInput,
 } from '@/domain/entities';
@@ -36,6 +39,86 @@ function clone<T>(value: T): T {
 function forcedErrorActive(): boolean {
   if (typeof window === 'undefined') return false;
   return new URLSearchParams(window.location.search).get('staticError') === '1';
+}
+
+/** Demo fallback: maps the onboarding PATCH body onto the static tenant model. */
+function applicationInputToTenantPatch(
+  current: Tenant,
+  input: UpdateApplicationInput,
+): Partial<Tenant> {
+  const patch: Partial<Tenant> = {};
+
+  if (input.restaurantNameEn !== undefined) {
+    patch.restaurantName = input.restaurantNameEn ?? '';
+    patch.businessName = patch.restaurantName;
+  }
+  if (input.restaurantNameAr !== undefined) patch.restaurantNameAr = input.restaurantNameAr;
+
+  if (
+    input.ownerFullName !== undefined ||
+    input.ownerEmail !== undefined ||
+    input.ownerPhone !== undefined
+  ) {
+    patch.contact = {
+      ...current.contact,
+      ...(input.ownerFullName !== undefined ? { name: input.ownerFullName ?? '' } : {}),
+      ...(input.ownerEmail !== undefined ? { email: input.ownerEmail ?? '' } : {}),
+      ...(input.ownerPhone !== undefined ? { phone: input.ownerPhone ?? '' } : {}),
+    };
+  }
+
+  if (input.branches !== undefined) {
+    patch.branches = input.branches.map((branch, index) => {
+      const existing = current.branches[index];
+      const openDay = branch.workingHours.find((hour) => !hour.isClosed);
+      const next: Branch = {
+        id: existing?.id ?? `${current.id}-branch-${index + 1}`,
+        tenantId: current.id,
+        name: branch.name ?? '',
+        address: branch.addressLine1 ?? '',
+        addressLine2: branch.addressLine2,
+        city: branch.city,
+        region: branch.region,
+        countryCode: branch.countryCode,
+        postalCode: branch.postalCode,
+        phone: branch.phone ?? '',
+        status: existing?.status ?? 'pending',
+        openTime: openDay?.openTime ?? null,
+        closeTime: openDay?.closeTime ?? null,
+        latitude: branch.latitude,
+        longitude: branch.longitude,
+        workingHours: branch.workingHours,
+        isPrimary: branch.isPrimary,
+        sortOrder: branch.sortOrder,
+      };
+      return next;
+    });
+  }
+
+  if (
+    input.primaryColorHex !== undefined ||
+    input.secondaryColorHex !== undefined ||
+    input.accentColorHex !== undefined
+  ) {
+    patch.brandColors = {
+      ...current.brandColors,
+      ...(input.primaryColorHex !== undefined ? { primary: input.primaryColorHex ?? '' } : {}),
+      ...(input.secondaryColorHex !== undefined
+        ? { secondary: input.secondaryColorHex ?? '' }
+        : {}),
+      ...(input.accentColorHex !== undefined ? { accent: input.accentColorHex ?? '' } : {}),
+    };
+  }
+
+  if (input.subscriptionOfferId !== undefined) {
+    patch.subscriptionOfferId = input.subscriptionOfferId;
+  }
+  if (input.logoAssetId !== undefined) patch.logoAssetId = input.logoAssetId;
+  if (input.menuAssetId !== undefined) patch.menuAssetId = input.menuAssetId;
+  if (input.agreedPrice !== undefined) patch.agreedPrice = input.agreedPrice;
+  if (input.agreedCurrency !== undefined) patch.agreedCurrency = input.agreedCurrency;
+
+  return patch;
 }
 
 /**
@@ -103,6 +186,16 @@ export function createStaticApi(
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
     getApplication: (requestId: string) => run(() => backend.getTenant(requestId)),
+    // Static demo fallback; `api` mode uses PATCH /onboarding-requests/{id}.
+    updateApplication: (requestId: string, input: UpdateApplicationInput, actor: AdminUser) =>
+      run(() => {
+        const current = backend.getTenant(requestId);
+        return backend.updateApplication(
+          requestId,
+          applicationInputToTenantPatch(current, input),
+          actor,
+        );
+      }),
     listOffers: () => run(() => STATIC_OFFERS),
     updateApplicationPayment: (requestId: string, paid: boolean, actor: AdminUser) =>
       run(() =>

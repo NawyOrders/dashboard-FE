@@ -9,6 +9,7 @@ import type {
   SubmitOnboardingRequest,
   SubmitOnboardingResponse,
   SubscriptionOffer,
+  UpdateOnboardingRequest,
 } from '@/domain/entities';
 import type { HttpClient } from './http-client';
 import {
@@ -32,6 +33,11 @@ export interface OnboardingApi {
   listRequests(params: { page: number; pageSize: number }): Promise<OnboardingRequestPage>;
   /** `GET /onboarding-requests/{requestId}` — the full request behind the view dialog. */
   getRequest(requestId: string): Promise<OnboardingRequestDetails>;
+  /** `PATCH /onboarding-requests/{requestId}` — only the changed fields are sent. */
+  updateRequest(
+    requestId: string,
+    body: UpdateOnboardingRequest,
+  ): Promise<OnboardingRequestDetails>;
   listOffers(): Promise<SubscriptionOffer[]>;
   /** OPEN: backend submit not finished. Do not call this from the UI yet. */
   submitRequest(body: SubmitOnboardingRequest): Promise<SubmitOnboardingResponse>;
@@ -81,6 +87,15 @@ export function createOnboardingApi(client: HttpClient): OnboardingApi {
     getRequest(requestId) {
       return client.request({
         path: `${REQUESTS_PATH}/${requestId}`,
+        schema: onboardingRequestDetailsSchema,
+      });
+    },
+
+    updateRequest(requestId, body) {
+      return client.request({
+        path: `${REQUESTS_PATH}/${requestId}`,
+        method: 'PATCH',
+        body,
         schema: onboardingRequestDetailsSchema,
       });
     },

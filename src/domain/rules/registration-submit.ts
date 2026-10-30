@@ -51,8 +51,9 @@ function swaggerTime(value: string | undefined): string | null {
 /**
  * The JSON stores one opening window per branch, so the same window is sent for every
  * day. `closesNextDay` is inferred from a closing time at or before the opening time.
+ * Shared with the onboarding PATCH body.
  */
-function buildWorkingHours(
+export function buildWorkingHours(
   rawOpenTime: string | undefined,
   rawCloseTime: string | undefined,
 ): OnboardingWorkingHour[] {

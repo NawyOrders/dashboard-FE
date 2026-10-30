@@ -19,6 +19,7 @@ import type {
   Tenant,
   TenantProvisioning,
   TenantRole,
+  UpdateOnboardingRequest,
   UpdateTenantInput,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
@@ -26,6 +27,9 @@ import type { MenuFileProblem } from '@/domain/rules/menu-file';
 import type { SalesMonthBucket } from '@/domain/rules/sales';
 
 export type TenantSort = 'newest' | 'oldest' | 'name_asc' | 'expiry_asc';
+
+/** Body of the onboarding PATCH: only the changed fields, in the swagger-v4 shape. */
+export type UpdateApplicationInput = UpdateOnboardingRequest;
 
 export interface ListTenantsParams {
   /** Free text — matches business name, restaurant name or Tenant ID. */
@@ -193,6 +197,12 @@ export interface Api {
   listApplications(): Promise<Tenant[]>;
   /** `GET /onboarding-requests/{requestId}` — the full request for the view dialog. */
   getApplication(requestId: string): Promise<Tenant>;
+  /** `PATCH /onboarding-requests/{requestId}` — only the changed fields are sent. */
+  updateApplication(
+    requestId: string,
+    input: UpdateApplicationInput,
+    actor: AdminUser,
+  ): Promise<Tenant>;
   /** Packages/durations offered by the backend (agent.md section 21). */
   listOffers(): Promise<SubscriptionOffer[]>;
   /** `PATCH /onboarding-requests/{requestId}/payment`. */

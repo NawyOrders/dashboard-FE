@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
+import type { UpdateApplicationInput } from '@/application/dto';
 import { Button } from '@/presentation/components/ui/Button';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
+import type { Change } from '@/presentation/components/ui/ConfirmDialog';
 import { Dialog } from '@/presentation/components/ui/Dialog';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Input } from '@/presentation/components/ui/Input';
@@ -11,7 +14,7 @@ import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
-import { useApplication, useOffers } from '@/presentation/hooks/queries';
+import { queryKeys, useApplication, useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
@@ -29,6 +32,7 @@ const PROVISIONING_POLL_MS = 5_000;
 const PROVISIONING_TIMEOUT_MS = 60_000;
 
 import { ApplicationAuditSection } from './ApplicationAuditSection';
+import { buildApplicationChanges } from './application-changes';
 import { MenuDetailsSection } from './MenuDetailsSection';
 import { MenuOcrSection } from './MenuOcrSection';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
@@ -143,6 +147,7 @@ function ApplicationDialogContent({
 }: ApplicationDialogProps & { tenant: Tenant }) {
   const { user } = useCurrentUser();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const isSuperAdmin = user?.role === 'super_admin';
 
   const {
@@ -170,6 +175,11 @@ function ApplicationDialogContent({
 
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [pendingChanges, setPendingChanges] = useState<{
+    input: UpdateApplicationInput;
+    changes: Change[];
+  } | null>(null);
   const [adminPassword, setAdminPassword] = useState('');
   const [approving, setApproving] = useState(false);
   const [provisioning, setProvisioning] = useState<TenantProvisioning | null>(null);
@@ -248,6 +258,39 @@ function ApplicationDialogContent({
       setPaid(previous);
     } finally {
       setPaymentSaving(false);
+    }
+  }
+
+  function handleSave() {
+    if (!isSuperAdmin || saving) return;
+    const next = buildApplicationChanges(tenant, values, offers.data);
+    if (next.changes.length === 0) {
+      toast({ title: en.details.noChanges });
+      return;
+    }
+    setPendingChanges(next);
+  }
+
+  async function handleConfirmSave() {
+    if (!user || !pendingChanges || saving) return;
+    setSaving(true);
+    try {
+      const updated = await api.updateApplication(tenant.id, pendingChanges.input, user);
+      // The view dialog refreshes from the PATCH response without closing.
+      queryClient.setQueryData(queryKeys.application(tenant.id), updated);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
+      void queryClient.invalidateQueries({ queryKey: ['activity'] });
+      toast({ title: en.applications.changesSaved, variant: 'success' });
+      setPendingChanges(null);
+      onSaved();
+    } catch (error) {
+      toast({
+        title: en.applications.saveFailed,
+        ...(error instanceof Error ? { description: error.message } : {}),
+        variant: 'error',
+      });
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -345,7 +388,7 @@ function ApplicationDialogContent({
     { id: FORM_GROUP_IDS.subscription, label: en.registration.groups.subscription },
   ];
 
-  const busy = approving || rejecting || provisioning !== null;
+  const busy = approving || rejecting || provisioning !== null || saving;
 
   return (
     <>
@@ -367,6 +410,9 @@ function ApplicationDialogContent({
               </Button>
               <Button variant="secondary" onClick={onClose} disabled={busy}>
                 {en.common.close}
+              </Button>
+              <Button variant="secondary" onClick={handleSave} disabled={busy}>
+                {saving ? en.applications.saving : en.applications.saveChanges}
               </Button>
               <Button onClick={handleApprove} disabled={busy}>
                 {approving ? en.applications.approving : en.applications.approve}
@@ -523,7 +569,6 @@ function ApplicationDialogContent({
               values={values}
               branchLimits={branchLimits}
               paymentStatus={paid ? 'paid' : 'unpaid'}
-              disabled
               offers={offers.data}
               subscriptionReadOnly
               submittedPrice={tenant.agreedPrice}
@@ -543,6 +588,17 @@ function ApplicationDialogContent({
           </div>
         </div>
       </Dialog>
+
+      <ConfirmDialog
+        open={pendingChanges !== null}
+        title={en.applications.saveChanges}
+        confirmLabel={en.common.save}
+        cancelLabel={en.common.cancel}
+        changes={pendingChanges?.changes ?? []}
+        loading={saving}
+        onCancel={() => setPendingChanges(null)}
+        onConfirm={() => void handleConfirmSave()}
+      />
 
       <ConfirmDialog
         open={showRejectConfirm}

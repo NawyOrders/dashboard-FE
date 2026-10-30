@@ -110,6 +110,10 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
       return mapOnboardingDetailsToTenant(await onboarding.getRequest(requestId));
     },
 
+    async updateApplication(requestId, input) {
+      return mapOnboardingDetailsToTenant(await onboarding.updateRequest(requestId, input));
+    },
+
     listOffers: () => onboarding.listOffers(),
 
     async updateApplicationPayment(requestId, paid) {

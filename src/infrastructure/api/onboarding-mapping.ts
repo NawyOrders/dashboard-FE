@@ -142,8 +142,9 @@ function mapDetailsBranch(
     postalCode: branch.postalCode,
     phone: branch.phone ?? '',
     status: 'pending',
-    openTime: openDay?.openTime ?? null,
-    closeTime: openDay?.closeTime ?? null,
+    // The form inputs expect HH:mm; swagger times carry seconds.
+    openTime: openDay?.openTime ? openDay.openTime.slice(0, 5) : null,
+    closeTime: openDay?.closeTime ? openDay.closeTime.slice(0, 5) : null,
     latitude: branch.latitude,
     longitude: branch.longitude,
     workingHours: branch.workingHours,
@@ -174,12 +175,13 @@ export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails):
   const offer = details.subscriptionOffer;
   const durationMonths = offer ? durationOfOffer(offer) : 3;
   const startDate = toDateOnly(details.submittedAtUtc);
-  const restaurantName = details.restaurantNameEn ?? details.restaurantNameAr ?? '';
+  // Keep the English name field bound to the English value; the Arabic name has its own field.
+  const restaurantName = details.restaurantNameEn ?? '';
 
   return {
     id: details.requestId,
     tenantId: details.requestId,
-    businessName: restaurantName,
+    businessName: details.restaurantNameEn ?? details.restaurantNameAr ?? '',
     restaurantName,
     restaurantNameAr: details.restaurantNameAr,
     contact: {

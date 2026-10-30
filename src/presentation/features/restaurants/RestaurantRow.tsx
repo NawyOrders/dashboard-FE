@@ -1,4 +1,4 @@
-import { ClipboardList, CreditCard, Eye, SlidersHorizontal } from 'lucide-react';
+import { ClipboardList, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -11,7 +11,6 @@ import { ExpiryDate } from '@/presentation/components/shared/ExpiryDate';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
-import { usePermission } from '@/presentation/hooks/usePermission';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
@@ -25,8 +24,6 @@ export interface RestaurantRowProps {
 
 export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps) {
   const navigate = useNavigate();
-  const canEdit = usePermission('subscription.change').allowed;
-  const canToggleFeature = usePermission('feature.toggle').allowed;
 
   const stickyCell = cn('sticky z-10', selected ? 'bg-bg-2' : 'bg-card group-hover:bg-bg-2');
   const cell = cn('px-4 py-4 align-middle', selected ? 'bg-bg-2' : 'group-hover:bg-bg-2');
@@ -101,22 +98,6 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
               label: en.common.viewDetails,
               icon: <Eye aria-hidden="true" className="size-4" />,
               onSelect: () => openTab('overview'),
-            },
-            {
-              key: 'subscription',
-              label: en.common.editSubscription,
-              icon: <CreditCard aria-hidden="true" className="size-4" />,
-              disabled: !canEdit,
-              disabledReason: en.permissions.deniedAction,
-              onSelect: () => openTab('subscription'),
-            },
-            {
-              key: 'features',
-              label: en.common.manageFeatures,
-              icon: <SlidersHorizontal aria-hidden="true" className="size-4" />,
-              disabled: !canToggleFeature,
-              disabledReason: en.permissions.deniedAction,
-              onSelect: () => openTab('features'),
             },
             {
               key: 'activity',

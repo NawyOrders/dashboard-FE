@@ -4,6 +4,7 @@ export * from './platform-auth';
 export * from './package';
 export * from './subscription';
 export * from './tenant';
+export * from './tenant-api';
 export * from './activity-log';
 export * from './sales';
 export * from './onboarding';

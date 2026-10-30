@@ -1,9 +1,15 @@
 import { z } from 'zod';
-import type { CreateTenantRequest, TenantProvisioning } from '@/domain/entities';
+import type {
+  TenantDetails,
+  TenantListItem,
+  TenantPage,
+  TenantPlan,
+  UpdateTenantInput,
+} from '@/domain/entities';
 
 /**
- * Zod schemas for the tenant provisioning endpoints (agent.md section 26). The contract
- * is taken from the owner decision; no swagger file is available for these endpoints.
+ * Zod schemas for the live tenant endpoints (agent.md section 27). Shapes come from the
+ * backend swagger; every response is parsed at the infrastructure boundary.
  */
 
 /** Response schemas receive untyped JSON, so the input side is `unknown`. */
@@ -14,22 +20,82 @@ const nullableString = z
   .nullish()
   .transform((value) => value ?? null);
 
-/** Body of `POST /api/v1/tenants`; the slug is always generated from the English name. */
-export const createTenantRequestSchema: ResponseSchema<CreateTenantRequest> = z.object({
-  slug: z.string().min(1),
+export const tenantListItemSchema: ResponseSchema<TenantListItem> = z.object({
+  tenantId: z.string().uuid(),
+  slug: nullableString,
+  restaurantNameAr: nullableString,
+  restaurantNameEn: nullableString,
+  ownerFullName: nullableString,
+  ownerEmail: nullableString,
+  // OPEN: the swagger does not enumerate the tenant status values.
+  status: nullableString,
+  createdAtUtc: z.string().min(1),
+  activatedAtUtc: nullableString,
+  planStatus: nullableString,
+});
+
+export const tenantPageSchema: ResponseSchema<TenantPage> = z.object({
+  items: z
+    .array(tenantListItemSchema)
+    .nullish()
+    .transform((items) => items ?? []),
+  totalCount: z.number().int(),
+  page: z.number().int(),
+  pageSize: z.number().int(),
+  totalPages: z.number().int(),
+  hasPreviousPage: z.boolean(),
+  hasNextPage: z.boolean(),
+});
+
+export const tenantPlanSchema: ResponseSchema<TenantPlan> = z.object({
+  subscriptionId: z.string().min(1),
+  subscriptionOfferId: z.string().min(1),
+  packageCode: nullableString,
+  termCode: nullableString,
+  durationMonths: z.number().int(),
+  price: z.number(),
+  currency: nullableString,
+  status: nullableString,
+  startsAtUtc: nullableString,
+  endsAtUtc: nullableString,
+  createdAtUtc: z.string().min(1),
+});
+
+export const tenantDetailsSchema: ResponseSchema<TenantDetails> = z.object({
+  tenantId: z.string().uuid(),
+  slug: nullableString,
   restaurantNameAr: nullableString,
   restaurantNameEn: nullableString,
   ownerFullName: nullableString,
   ownerEmail: nullableString,
   ownerPhone: nullableString,
-  ownerPassword: z.string().min(1),
+  status: nullableString,
+  createdAtUtc: z.string().min(1),
+  activatedAtUtc: nullableString,
+  provisioningError: nullableString,
+  plan: tenantPlanSchema
+    .nullish()
+    .transform((plan) => plan ?? null),
 });
 
-/** 202 of `POST /api/v1/tenants`, and the body of GET status / POST retry. */
-export const tenantProvisioningResponseSchema: ResponseSchema<TenantProvisioning> = z.object({
-  tenantId: z.string().min(1),
+/** Body of `PUT /api/v1/tenants/{tenantId}`. */
+export const updateTenantRequestSchema: ResponseSchema<UpdateTenantInput> = z.object({
   slug: nullableString,
+  restaurantNameAr: nullableString,
+  restaurantNameEn: nullableString,
+  ownerFullName: nullableString,
+  ownerEmail: nullableString,
+  ownerPhone: nullableString,
+});
+
+/** `GET /tenants/{tenantId}/provisioning-status`. */
+export const provisioningStatusSchema = z.object({
+  tenantId: z.string().uuid(),
   // OPEN: status values from backend (the contract does not enumerate them).
-  status: z.string().min(1),
+  status: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? ''),
   activatedAtUtc: nullableString,
+  provisioningError: nullableString,
 });

@@ -1,4 +1,10 @@
 import { useTenant } from '@/presentation/hooks/queries';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/app/composition';
+import { Button } from '@/presentation/components/ui/Button';
+import { Tooltip } from '@/presentation/components/ui/Tooltip';
+import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { useToast } from '@/presentation/hooks/useToast';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
@@ -11,8 +17,11 @@ import { PACKAGES } from '@/config/packages';
 import { packageFeatureLabel } from '@/presentation/lib/package-copy';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
+import {
+  isTenantProvisioned,
+  isTenantProvisioningFailed,
+} from '@/domain/rules/tenant-provisioning';
 import type { Tenant } from '@/domain/entities';
-import { RestaurantStatusControl } from './RestaurantStatusControl';
 
 function ColorSwatch({ color }: { color: string }) {
   return (
@@ -20,6 +29,84 @@ function ColorSwatch({ color }: { color: string }) {
       <span className="size-6 rounded-[8px] border border-border" style={{ backgroundColor: color }} />
       <span className="font-mono text-mono text-text-muted">{color.toUpperCase()}</span>
     </span>
+  );
+}
+
+function ProvisioningCard({ tenant }: { tenant: Tenant }) {
+  const { user } = useCurrentUser();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const provisioning = useQuery({
+    queryKey: ['tenantProvisioning', tenant.id],
+    queryFn: () => api.getTenantStatus(tenant.id),
+    enabled: !isTenantProvisioned(tenant),
+  });
+
+  const retry = useMutation({
+    mutationFn: () => api.retryTenant(tenant.id, crypto.randomUUID()),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['tenantProvisioning', tenant.id] });
+      void queryClient.invalidateQueries({ queryKey: ['tenant', tenant.id] });
+      void queryClient.invalidateQueries({ queryKey: ['tenants'] });
+      toast({ title: en.toasts.updated, variant: 'success' });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: en.applications.provisioning.retryFailed,
+        description: error.message,
+        variant: 'error',
+      });
+    },
+  });
+
+  if (isTenantProvisioned(tenant) || !provisioning.data) return null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <h3 className="text-xl font-semibold">{en.applications.provisioning.title}</h3>
+      </CardHeader>
+      <CardBody className="pt-0">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-2xs text-text-muted">
+              {en.applications.provisioning.statusLabel}
+            </span>
+            <StatusPill meta={restaurantStatusMeta(tenant.status)} />
+          </div>
+          <p className="text-2xs text-text-muted">
+            {en.applications.provisioning.statusValue(provisioning.data.status)}
+          </p>
+          {tenant.provisioningError ? (
+            <p className="rounded-panel bg-warning-bg px-3 py-2 text-2xs text-warning-fg">
+              {tenant.provisioningError}
+            </p>
+          ) : null}
+          {isTenantProvisioningFailed(provisioning.data.status) ? (
+            user ? (
+              <div>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => retry.mutate()}
+                  disabled={retry.isPending}
+                >
+                  {retry.isPending
+                    ? en.applications.provisioning.retrying
+                    : en.applications.provisioning.retry}
+                </Button>
+              </div>
+            ) : (
+              <Tooltip label={en.permissions.deniedAction}>
+                <Button size="sm" variant="secondary" disabled>
+                  {en.applications.provisioning.retry}
+                </Button>
+              </Tooltip>
+            )
+          ) : null}
+        </div>
+      </CardBody>
+    </Card>
   );
 }
 
@@ -148,11 +235,10 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
               <StatusPill meta={appStatusMeta(current.apps.ios)} />
             </div>
           </div>
-          <div className="mt-5 border-t border-border pt-5">
-            <RestaurantStatusControl tenant={current} />
-          </div>
         </CardBody>
       </Card>
+
+      <ProvisioningCard tenant={current} />
 
       <Card className="lg:col-span-2">
         <CardHeader><h3 className="text-xl font-semibold">{en.details.branchUsage}</h3></CardHeader>

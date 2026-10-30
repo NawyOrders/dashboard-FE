@@ -97,4 +97,10 @@ export interface Tenant {
   agreedCurrency?: string | null;
   /** Raw onboarding status; the dashboard only reviews pending requests for now. */
   onboardingStatus?: number;
+  /** Slug of the tenant on the backend, from the tenant endpoints. */
+  slug?: string | null;
+  /** Set once the backend provisioning finishes (live tenant endpoints). */
+  activatedAtUtc?: string | null;
+  /** Provisioning error reported by the backend, when the tenant failed to activate. */
+  provisioningError?: string | null;
 }

@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
-import { Button } from '@/presentation/components/ui/Button';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -9,14 +7,11 @@ import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { subscriptionStatusMeta } from '@/presentation/lib/status';
-import { usePermission } from '@/presentation/hooks/usePermission';
 import { formatDate } from '@/domain/rules/date';
 import { OVERVIEW_ENDING_WITHIN_DAYS } from '@/config/policy';
-import { EditSubscriptionDialog } from '@/presentation/features/restaurant-details/EditSubscriptionDialog';
 import { en } from '@/presentation/i18n/en';
 import { cn } from '@/presentation/lib/cn';
 import type { EndingSoonEntry } from '@/domain/rules/overview';
-import type { Tenant } from '@/domain/entities';
 
 export interface EndingSoonTableProps {
   entries: EndingSoonEntry[];
@@ -41,9 +36,6 @@ function DaysRemaining({ days }: { days: number }) {
 }
 
 export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
-  const { allowed } = usePermission('subscription.change');
-  const [renewTenant, setRenewTenant] = useState<Tenant | null>(null);
-
   return (
     <Card>
       <CardHeader className="items-center">
@@ -90,9 +82,6 @@ export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
                   <th scope="col" className="whitespace-nowrap px-3 py-3 text-start">
                     {en.restaurants.columns.subscriptionStatus}
                   </th>
-                  <th scope="col" className="whitespace-nowrap px-3 py-3 text-end">
-                    {en.restaurants.columns.actions}
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -130,17 +119,6 @@ export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
                     <td className="whitespace-nowrap px-3 py-3">
                       <StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />
                     </td>
-                    <td className="whitespace-nowrap px-3 py-3 text-end">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled={!allowed}
-                        title={allowed ? undefined : en.permissions.deniedAction}
-                        onClick={() => setRenewTenant(tenant)}
-                      >
-                        {en.overview.renew}
-                      </Button>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -148,14 +126,6 @@ export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
           </div>
         )}
       </CardBody>
-
-      {renewTenant && (
-        <EditSubscriptionDialog
-          tenant={renewTenant}
-          open
-          onClose={() => setRenewTenant(null)}
-        />
-      )}
     </Card>
   );
 }

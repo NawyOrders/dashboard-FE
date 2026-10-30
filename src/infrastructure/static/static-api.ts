@@ -17,6 +17,7 @@ import type {
   PackageFeatureKey,
   RestaurantStatus,
   TenantProvisioning,
+  UpdateTenantInput,
 } from '@/domain/entities';
 import { toTenantSlug } from '@/domain/rules/slug';
 import { STATIC_OFFERS } from './static-offers';
@@ -137,6 +138,35 @@ export function createStaticApi(
         status: 'active',
         activatedAtUtc: null,
       })),
+    // OPEN: endpoint missing in swagger.
+    updateTenant: (tenantId: string, input: UpdateTenantInput, actor: AdminUser) =>
+      run(() =>
+        backend.updateApplication(
+          tenantId,
+          {
+            restaurantName: input.restaurantNameEn ?? input.restaurantNameAr ?? '',
+            businessName: input.restaurantNameEn ?? input.restaurantNameAr ?? '',
+            restaurantNameAr: input.restaurantNameAr,
+            contact: {
+              phone: input.ownerPhone ?? '',
+              email: input.ownerEmail ?? '',
+              name: input.ownerFullName ?? '',
+            },
+            slug: input.slug,
+          },
+          actor,
+        ),
+      ),
+    // OPEN: endpoint missing in swagger.
+    activatePlan: (tenantId: string, actor: AdminUser) =>
+      run(() => {
+        const tenant = backend.getTenant(tenantId);
+        return backend.updateApplication(
+          tenantId,
+          { subscription: { ...tenant.subscription, status: 'active' } },
+          actor,
+        );
+      }).then(() => undefined),
     // OPEN: endpoint missing in swagger.
     updateApplication: (
       tenantId: string,

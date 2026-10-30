@@ -22,3 +22,14 @@ export function isTenantProvisioningActive(status: string): boolean {
 export function isTenantProvisioningFailed(status: string): boolean {
   return normalized(status) === 'failed';
 }
+
+/**
+ * A tenant is provisioned once the backend reports an activation time. The edit form is
+ * only offered before that point.
+ */
+export function isTenantProvisioned(tenant: {
+  status: string;
+  activatedAtUtc?: string | null;
+}): boolean {
+  return Boolean(tenant.activatedAtUtc) || tenant.status === 'active';
+}

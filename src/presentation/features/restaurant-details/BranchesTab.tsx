@@ -1,45 +1,15 @@
-import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
-import { Button } from '@/presentation/components/ui/Button';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
-import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { branchStatusMeta } from '@/presentation/lib/status';
-import { usePermission } from '@/presentation/hooks/usePermission';
-import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
-import { useToast } from '@/presentation/hooks/useToast';
-import { queryKeys } from '@/presentation/hooks/queries';
-import { api } from '@/app/composition';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { PACKAGES } from '@/config/packages';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
-import { BranchDialog } from './BranchDialog';
-import type { BranchFormValues } from './BranchDialog';
 
+// OPEN: endpoint missing in swagger. The tenant endpoints do not return branches, so this
+// tab is read-only until the backend exposes them.
 export function BranchesTab({ tenant }: { tenant: Tenant }) {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const { user } = useCurrentUser();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const { allowed } = usePermission('restaurant.edit');
-
-  const mutation = useMutation({
-    mutationFn: (values: BranchFormValues) => api.addBranch(tenant.id, values, user!),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tenant(tenant.id) });
-      queryClient.invalidateQueries({ queryKey: ['tenants'] });
-      queryClient.invalidateQueries({ queryKey: ['activity'] });
-      setDialogOpen(false);
-      toast({ title: en.toasts.updated, variant: 'success' });
-    },
-    onError: (error: Error) => {
-      toast({ title: en.common.somethingWentWrong, description: error.message, variant: 'error' });
-    },
-  });
-
   const overIncluded = tenant.branches.length > INCLUDED_BRANCHES;
 
   return (
@@ -51,19 +21,6 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
             {en.create.branches.included(tenant.branches.length, INCLUDED_BRANCHES)}
           </p>
         </div>
-        {allowed ? (
-          <Button onClick={() => setDialogOpen(true)}>
-            <Plus aria-hidden="true" className="size-4" />
-            {en.create.branches.addBranch}
-          </Button>
-        ) : (
-          <Tooltip label={en.permissions.deniedAction}>
-            <Button disabled>
-              <Plus aria-hidden="true" className="size-4" />
-              {en.create.branches.addBranch}
-            </Button>
-          </Tooltip>
-        )}
       </CardHeader>
 
       <CardBody className="pt-0">
@@ -123,13 +80,6 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
           </div>
         )}
       </CardBody>
-
-      <BranchDialog
-        open={dialogOpen}
-        loading={mutation.isPending}
-        onClose={() => setDialogOpen(false)}
-        onSubmit={(values) => mutation.mutate(values)}
-      />
     </Card>
   );
 }

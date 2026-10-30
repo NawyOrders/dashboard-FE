@@ -18,6 +18,7 @@ import type {
   Tenant,
   TenantProvisioning,
   TenantRole,
+  UpdateTenantInput,
 } from '@/domain/entities';
 import type { EndingSoonEntry, MonthBucket } from '@/domain/rules/overview';
 import type { MenuFileProblem } from '@/domain/rules/menu-file';
@@ -204,6 +205,10 @@ export interface Api {
   getTenantStatus(tenantId: string): Promise<TenantProvisioning>;
   /** `POST /api/v1/tenants/{tenantId}/retry` — retries a failed provisioning. */
   retryTenant(tenantId: string, idempotencyKey: string): Promise<TenantProvisioning>;
+  /** `PUT /api/v1/tenants/{tenantId}` — names and owner data, before provisioning only. */
+  updateTenant(tenantId: string, input: UpdateTenantInput, actor: AdminUser): Promise<Tenant>;
+  /** `POST /api/v1/tenants/{tenantId}/plan/activate` — Super Admin, details screen only. */
+  activatePlan(tenantId: string, actor: AdminUser): Promise<void>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
   /** Stores an uploaded image and returns its reference (NW-246). */
   uploadImage(file: File): Promise<string>;

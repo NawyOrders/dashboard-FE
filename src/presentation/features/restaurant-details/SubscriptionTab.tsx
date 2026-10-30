@@ -1,4 +1,9 @@
-import { useActivity } from '@/presentation/hooks/queries';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/app/composition';
+import { Button } from '@/presentation/components/ui/Button';
+import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
+import { useToast } from '@/presentation/hooks/useToast';
+import { useActivity, queryKeys } from '@/presentation/hooks/queries';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { InfoList, InfoRow } from '@/presentation/components/shared/InfoList';
@@ -24,11 +29,45 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
   const history = (activity.data ?? []).filter((log) =>
     (HISTORY_ACTIONS as readonly string[]).includes(log.action),
   );
+  const { user } = useCurrentUser();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const activate = useMutation({
+    mutationFn: () => api.activatePlan(tenant.id, user!),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.tenant(tenant.id) });
+      void queryClient.invalidateQueries({ queryKey: ['tenants'] });
+      void queryClient.invalidateQueries({ queryKey: ['tenantProvisioning', tenant.id] });
+      toast({ title: en.details.planActivated, variant: 'success' });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: en.details.planActivationFailed,
+        description: error.message,
+        variant: 'error',
+      });
+    },
+  });
 
   return (
     <div className="flex flex-col gap-6">
       <Card>
-        <CardHeader><h3 className="text-xl font-semibold">{en.details.subscriptionPackage}</h3></CardHeader>
+        <CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-xl font-semibold">{en.details.subscriptionPackage}</h3>
+            {user?.role === 'super_admin' ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => activate.mutate()}
+                disabled={activate.isPending}
+              >
+                {activate.isPending ? en.details.activating : en.details.activatePlan}
+              </Button>
+            ) : null}
+          </div>
+        </CardHeader>
         <CardBody className="pt-0">
           <InfoList className="sm:columns-2">
             <InfoRow label={en.details.subscriptionPackage}>

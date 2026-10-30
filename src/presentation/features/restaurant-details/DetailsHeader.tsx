@@ -1,4 +1,4 @@
-import { ArrowLeft, Pencil, SlidersHorizontal } from 'lucide-react';
+import { ArrowLeft, Pencil } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/Button';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -8,18 +8,18 @@ import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { paymentStatusMeta, restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
 import { usePermission } from '@/presentation/hooks/usePermission';
+import { isTenantProvisioned } from '@/domain/rules/tenant-provisioning';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
 
 export interface DetailsHeaderProps {
   tenant: Tenant;
-  onEditSubscription: () => void;
-  onManageFeatures: () => void;
+  onEdit: () => void;
 }
 
-export function DetailsHeader({ tenant, onEditSubscription, onManageFeatures }: DetailsHeaderProps) {
-  const canEditSubscription = usePermission('subscription.change').allowed;
-  const canToggleFeature = usePermission('feature.toggle').allowed;
+export function DetailsHeader({ tenant, onEdit }: DetailsHeaderProps) {
+  const canEdit = usePermission('restaurant.edit').allowed;
+  const editable = canEdit && !isTenantProvisioned(tenant);
 
   return (
     <div className="mb-6">
@@ -54,34 +54,28 @@ export function DetailsHeader({ tenant, onEditSubscription, onManageFeatures }: 
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center gap-3">
-          {canToggleFeature ? (
-            <Button variant="secondary" onClick={onManageFeatures}>
-              <SlidersHorizontal aria-hidden="true" className="size-4" />
-              {en.common.manageFeatures}
-            </Button>
-          ) : (
-            <Tooltip label={en.permissions.deniedAction}>
-              <Button variant="secondary" disabled>
-                <SlidersHorizontal aria-hidden="true" className="size-4" />
-                {en.common.manageFeatures}
-              </Button>
-            </Tooltip>
-          )}
-          {canEditSubscription ? (
-            <Button onClick={onEditSubscription}>
+        {editable ? (
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
+            <Button onClick={onEdit}>
               <Pencil aria-hidden="true" className="size-4" />
-              {en.common.editSubscription}
+              {en.details.editTenant}
             </Button>
-          ) : (
-            <Tooltip label={en.permissions.deniedAction}>
-              <Button disabled>
-                <Pencil aria-hidden="true" className="size-4" />
-                {en.common.editSubscription}
-              </Button>
-            </Tooltip>
-          )}
-        </div>
+          </div>
+        ) : canEdit ? (
+          <Tooltip label={en.details.provisionedReadOnly}>
+            <Button disabled>
+              <Pencil aria-hidden="true" className="size-4" />
+              {en.details.editTenant}
+            </Button>
+          </Tooltip>
+        ) : (
+          <Tooltip label={en.permissions.deniedAction}>
+            <Button disabled>
+              <Pencil aria-hidden="true" className="size-4" />
+              {en.details.editTenant}
+            </Button>
+          </Tooltip>
+        )}
       </div>
     </div>
   );

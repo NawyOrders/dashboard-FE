@@ -1,53 +1,93 @@
-import type { CreateTenantRequest, TenantProvisioning } from '@/domain/entities';
+import { z } from 'zod';
+import type {
+  TenantDetails,
+  TenantPage,
+  TenantProvisioning,
+  UpdateTenantInput,
+} from '@/domain/entities';
 import type { HttpClient } from './http-client';
-import { createTenantRequestSchema, tenantProvisioningResponseSchema } from './tenant-schemas';
+import {
+  provisioningStatusSchema,
+  tenantDetailsSchema,
+  tenantPageSchema,
+  updateTenantRequestSchema,
+} from './tenant-schemas';
 
 /**
- * Tenant provisioning client (agent.md section 26).
+ * Tenant endpoints of the live backend (agent.md section 27).
  *
- * Approve is not a separate endpoint: `POST /api/v1/tenants` creates the tenant, then the
- * status endpoint reports provisioning until it reaches a final value.
+ * The list and details are read-only projections; `PUT` edits the names and owner data
+ * before provisioning, and the provisioning endpoints report/retry the activation.
  */
 
 const TENANTS_PATH = 'api/v1/tenants';
+const noContentSchema = z.unknown();
 
 export interface TenantApi {
-  createTenant(body: CreateTenantRequest, idempotencyKey: string): Promise<TenantProvisioning>;
-  getTenantStatus(tenantId: string): Promise<TenantProvisioning>;
-  retryTenant(tenantId: string, idempotencyKey: string): Promise<TenantProvisioning>;
+  listTenants(params: { page: number; pageSize: number }): Promise<TenantPage>;
+  getTenant(tenantId: string): Promise<TenantDetails>;
+  updateTenant(tenantId: string, input: UpdateTenantInput): Promise<void>;
+  getProvisioningStatus(tenantId: string): Promise<TenantProvisioning>;
+  retryTenant(tenantId: string): Promise<void>;
+  activatePlan(tenantId: string): Promise<void>;
 }
 
 export function createTenantApi(client: HttpClient): TenantApi {
-  function statusPath(tenantId: string): string {
+  function tenantPath(tenantId: string): string {
     return `${TENANTS_PATH}/${tenantId}`;
   }
 
   return {
-    createTenant(body, idempotencyKey) {
+    listTenants({ page, pageSize }) {
       return client.request({
         path: TENANTS_PATH,
-        method: 'POST',
-        headers: { 'Idempotency-Key': idempotencyKey },
-        body: createTenantRequestSchema.parse(body),
-        schema: tenantProvisioningResponseSchema,
-        expectedStatus: 202,
+        query: { page, pageSize },
+        schema: tenantPageSchema,
       });
     },
 
-    getTenantStatus(tenantId) {
+    getTenant(tenantId) {
       return client.request({
-        path: statusPath(tenantId),
-        schema: tenantProvisioningResponseSchema,
+        path: tenantPath(tenantId),
+        schema: tenantDetailsSchema,
       });
     },
 
-    retryTenant(tenantId, idempotencyKey) {
-      return client.request({
-        path: `${statusPath(tenantId)}/retry`,
+    async updateTenant(tenantId, input) {
+      await client.request({
+        path: tenantPath(tenantId),
+        method: 'PUT',
+        body: updateTenantRequestSchema.parse(input),
+        schema: noContentSchema,
+      });
+    },
+
+    async getProvisioningStatus(tenantId) {
+      const status = await client.request({
+        path: `${tenantPath(tenantId)}/provisioning-status`,
+        schema: provisioningStatusSchema,
+      });
+      return {
+        tenantId: status.tenantId,
+        slug: null,
+        status: status.status,
+        activatedAtUtc: status.activatedAtUtc,
+      };
+    },
+
+    async retryTenant(tenantId) {
+      await client.request({
+        path: `${tenantPath(tenantId)}/retry`,
         method: 'POST',
-        headers: { 'Idempotency-Key': idempotencyKey },
-        schema: tenantProvisioningResponseSchema,
-        expectedStatus: 202,
+        schema: noContentSchema,
+      });
+    },
+
+    async activatePlan(tenantId) {
+      await client.request({
+        path: `${tenantPath(tenantId)}/plan/activate`,
+        method: 'POST',
+        schema: noContentSchema,
       });
     },
   };

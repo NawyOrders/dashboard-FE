@@ -43,6 +43,7 @@ export const en = {
     emailRequired: 'Email is required',
     emailInvalid: 'Enter a valid email',
     passwordRequired: 'Password is required',
+    sessionExpired: 'Your session has expired. Please sign in again.',
   },
   system: {
     cannotStart: 'Cannot start the dashboard',

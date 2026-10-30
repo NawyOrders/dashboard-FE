@@ -4,6 +4,11 @@ import { createBackend } from '@/application/use-cases';
 import { assertEnvironment, IS_DEMO_PROVIDER } from '@/config/data-source';
 import { createApiAdapter } from '@/infrastructure/api/api-adapter';
 import { createHttpClient } from '@/infrastructure/api/http-client';
+import {
+  createSessionManager,
+  notifySessionExpired,
+  type SessionManager,
+} from '@/infrastructure/api/session-manager';
 import { SystemClock } from '@/infrastructure/clock/system-clock';
 import { createSequentialIdGenerator } from '@/infrastructure/ids/sequential-id-generator';
 import { StaticActivityLogRepository } from '@/infrastructure/static/static-activity-log-repository';
@@ -49,17 +54,38 @@ async function buildContainer(): Promise<Api> {
 
   if (env.VITE_DATA_SOURCE === 'api') {
     const client = createHttpClient({ baseUrl: env.VITE_API_BASE_URL });
-    return createApiAdapter({ staticApi, client });
+    const adapter = createApiAdapter({ staticApi, client });
+    const sessions = createSessionManager((refreshToken) => adapter.refreshSession(refreshToken));
+    client.setUnauthorizedHandler(async () => {
+      const session = await sessions.refresh();
+      return session?.accessToken ?? null;
+    });
+    sessionManager = sessions;
+    return adapter;
   }
 
   return staticApi;
 }
 
 let apiPromise: Promise<Api> | null = null;
+let sessionManager: SessionManager | null = null;
 
 function getApi(): Promise<Api> {
   apiPromise ??= buildContainer();
   return apiPromise;
+}
+
+/**
+ * Proactive refresh shared by the timer and the 401 handler. Static mode has no refresh
+ * endpoint, so the session ends at the access-token expiry (agent.md section 25).
+ */
+export async function refreshPlatformSession(): Promise<boolean> {
+  await getApi();
+  if (!sessionManager) {
+    notifySessionExpired();
+    return false;
+  }
+  return (await sessionManager.refresh()) !== null;
 }
 
 /** Loads the selected data source before the app renders. */

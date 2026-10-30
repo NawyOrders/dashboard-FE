@@ -61,6 +61,7 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
         method: 'POST',
         body: { refreshToken },
         schema: loginResponseSchema,
+        skipAuthRetry: true,
       });
       return toPlatformSession(response);
     },

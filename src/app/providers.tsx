@@ -3,10 +3,43 @@ import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthContext, CurrentUserContext } from './contexts';
 import { ToastProvider } from '@/presentation/components/ui/Toast';
-import { api } from '@/app/composition';
+import { api, refreshPlatformSession } from '@/app/composition';
+import { router } from '@/app/router';
 import type { AdminUser, PlatformLoginResult, Role } from '@/domain/entities';
 import { adminUserFromPlatformLogin } from '@/domain/rules/platform-auth';
-import { clearTokenSet, saveTokenSet } from '@/infrastructure/api/access-token';
+import { isRefreshTokenExpired, refreshDelayMs } from '@/domain/rules/session';
+import { clearTokenSet, readTokenSet, saveTokenSet } from '@/infrastructure/api/access-token';
+import {
+  SESSION_EXPIRED_EVENT,
+  SESSION_REFRESHED_EVENT,
+} from '@/infrastructure/api/session-manager';
+
+const SESSION_USER_KEY = 'nawy_session';
+
+function readStoredUser(): AdminUser | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_USER_KEY);
+    return raw ? (JSON.parse(raw) as AdminUser) : null;
+  } catch {
+    return null;
+  }
+}
+
+function persistStoredUser(user: AdminUser): void {
+  try {
+    sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
+  } catch {
+    // ignore
+  }
+}
+
+function clearStoredUser(): void {
+  try {
+    sessionStorage.removeItem(SESSION_USER_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,14 +52,44 @@ const queryClient = new QueryClient({
 });
 
 function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AdminUser | null>(() => {
-    try {
-      const raw = sessionStorage.getItem('nawy_session');
-      return raw ? (JSON.parse(raw) as AdminUser) : null;
-    } catch {
-      return null;
+  const [user, setUser] = useState<AdminUser | null>(readStoredUser);
+  const [sessionVersion, setSessionVersion] = useState(0);
+
+  useEffect(() => {
+    function handleRefreshed(event: Event) {
+      const refreshedUser = (event as CustomEvent<AdminUser>).detail;
+      setUser(refreshedUser);
+      persistStoredUser(refreshedUser);
+      setSessionVersion((value) => value + 1);
     }
-  });
+    function handleExpired() {
+      setUser(null);
+      clearStoredUser();
+      router.navigate('/login?reason=expired', { replace: true });
+    }
+    window.addEventListener(SESSION_REFRESHED_EVENT, handleRefreshed);
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleExpired);
+    return () => {
+      window.removeEventListener(SESSION_REFRESHED_EVENT, handleRefreshed);
+      window.removeEventListener(SESSION_EXPIRED_EVENT, handleExpired);
+    };
+  }, []);
+
+  // Proactive refresh 90 seconds before expiry, rescheduled by every successful refresh.
+  useEffect(() => {
+    const tokens = readTokenSet();
+    if (!tokens) return;
+    if (isRefreshTokenExpired(tokens.refreshTokenExpiresAtUtc)) {
+      void refreshPlatformSession();
+      return;
+    }
+    const delay = refreshDelayMs(tokens.expiresAtUtc);
+    if (delay === null) return;
+    const timer = window.setTimeout(() => {
+      void refreshPlatformSession();
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [user, sessionVersion]);
 
   async function signIn(email: string, password: string): Promise<PlatformLoginResult> {
     const result = await api.signIn(email, password);
@@ -41,22 +104,14 @@ function AuthProvider({ children }: { children: ReactNode }) {
       refreshTokenExpiresAtUtc: result.session.refreshTokenExpiresAtUtc,
       tokenType: result.session.tokenType,
     });
-    try {
-      sessionStorage.setItem('nawy_session', JSON.stringify(user));
-    } catch {
-      // ignore
-    }
+    persistStoredUser(user);
     return result;
   }
 
   function signOut() {
     setUser(null);
     clearTokenSet();
-    try {
-      sessionStorage.removeItem('nawy_session');
-    } catch {
-      // ignore
-    }
+    clearStoredUser();
   }
 
   return <AuthContext.Provider value={{ user, signIn, signOut }}>{children}</AuthContext.Provider>;

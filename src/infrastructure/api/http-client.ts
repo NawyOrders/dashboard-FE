@@ -64,11 +64,17 @@ export interface HttpRequestOptions<T> {
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
   /** Exact success status the endpoint contract defines, e.g. 202 on tenant create. */
   expectedStatus?: number;
+  /** Auth endpoints set this so a 401 there never starts a refresh loop. */
+  skipAuthRetry?: boolean;
 }
+
+/** Runs once on a 401; resolves with the new access token, or null when the session ended. */
+export type UnauthorizedHandler = () => Promise<string | null>;
 
 export interface HttpClient {
   request<T>(options: HttpRequestOptions<T>): Promise<T>;
   baseUrl: string;
+  setUnauthorizedHandler(handler: UnauthorizedHandler | null): void;
 }
 
 export interface HttpClientOptions {
@@ -82,6 +88,7 @@ export function createHttpClient({
   getAccessToken = readAccessToken,
 }: HttpClientOptions): HttpClient {
   const root = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  let unauthorizedHandler: UnauthorizedHandler | null = null;
 
   async function request<T>({
     path,
@@ -92,6 +99,7 @@ export function createHttpClient({
     signal,
     schema,
     expectedStatus,
+    skipAuthRetry = false,
   }: HttpRequestOptions<T>): Promise<T> {
     const url = new URL(path.replace(/^\/+/, ''), root);
     if (query) {
@@ -101,27 +109,39 @@ export function createHttpClient({
       }
     }
 
-    const requestHeaders = new Headers(headers);
-    requestHeaders.set('Accept', 'application/json');
-    const token = getAccessToken();
-    if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
+    async function send(): Promise<Response> {
+      const requestHeaders = new Headers(headers);
+      requestHeaders.set('Accept', 'application/json');
+      const token = getAccessToken();
+      if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
 
-    const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
-    if (body !== undefined && !isFormData && !requestHeaders.has('Content-Type')) {
-      requestHeaders.set('Content-Type', 'application/json');
+      const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
+      if (body !== undefined && !isFormData && !requestHeaders.has('Content-Type')) {
+        requestHeaders.set('Content-Type', 'application/json');
+      }
+
+      return fetch(url.toString(), {
+        method,
+        headers: requestHeaders,
+        body:
+          body === undefined
+            ? undefined
+            : isFormData
+              ? (body as FormData)
+              : JSON.stringify(body),
+        signal,
+      });
     }
 
-    const response = await fetch(url.toString(), {
-      method,
-      headers: requestHeaders,
-      body:
-        body === undefined
-          ? undefined
-          : isFormData
-            ? (body as FormData)
-            : JSON.stringify(body),
-      signal,
-    });
+    let response = await send();
+    if (response.status === 401 && !skipAuthRetry && unauthorizedHandler) {
+      // One refresh attempt, then one retry of this request (agent.md section 28).
+      const refreshedToken = await unauthorizedHandler();
+      if (!refreshedToken) {
+        throw new ApiError(401, 'Your session has expired. Please sign in again.');
+      }
+      response = await send();
+    }
 
     const payload = parseJson(await response.text());
     const envelope = apiEnvelopeSchema.safeParse(payload);
@@ -162,5 +182,11 @@ export function createHttpClient({
     return schema.parse(envelope.data.data);
   }
 
-  return { request, baseUrl: root };
+  return {
+    request,
+    baseUrl: root,
+    setUnauthorizedHandler(handler) {
+      unauthorizedHandler = handler;
+    },
+  };
 }

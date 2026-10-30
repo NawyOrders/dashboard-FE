@@ -80,6 +80,7 @@ export function createAuthApi(client: HttpClient): AuthApi {
           method: 'POST',
           body: { email, password },
           schema: loginResponseSchema,
+          skipAuthRetry: true,
         });
         const session = toPlatformSession(response);
         if (session.roles.length === 0) {

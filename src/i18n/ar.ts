@@ -45,6 +45,7 @@ export const ar = {
     emailRequired: 'البريد الإلكتروني مطلوب',
     emailInvalid: 'أدخل بريدًا إلكترونيًا صالحًا',
     passwordRequired: 'كلمة المرور مطلوبة',
+    sessionExpired: 'انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى.',
   },
   system: {
     cannotStart: 'تعذر تشغيل لوحة التحكم',

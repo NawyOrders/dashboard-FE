@@ -14,6 +14,7 @@ export function LoginPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const sessionExpired = searchParams.get('reason') === 'expired';
   const [formError, setFormError] = useState<string | null>(null);
 
   const {
@@ -62,6 +63,11 @@ export function LoginPage() {
             <PasswordInput id="password" autoComplete="current-password" {...register('password')} />
             {errors.password ? <p className="mt-1 text-xs text-error">{errors.password.message}</p> : null}
           </div>
+          {sessionExpired && !formError ? (
+            <p role="status" className="text-sm text-error">
+              {en.auth.sessionExpired}
+            </p>
+          ) : null}
           {formError ? <p className="text-sm text-error">{formError}</p> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? en.auth.signingIn : en.auth.signIn}

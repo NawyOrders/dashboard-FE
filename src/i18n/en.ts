@@ -433,6 +433,8 @@ export const en = {
     failed: 'Menu extraction failed',
     timeout: 'Extraction timed out, try again',
     retry: 'Retry extraction',
+    checkAgain: 'Check again',
+    lastStatus: (status: string) => `Last status: ${status}`,
     invalidType: 'Allowed formats: JPG, PNG, or WEBP',
     tooLarge: 'Image is too large. Maximum size is 15 MB.',
     fileRequired: 'Choose a menu image first',

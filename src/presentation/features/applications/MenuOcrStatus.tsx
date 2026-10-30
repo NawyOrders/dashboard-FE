@@ -22,6 +22,7 @@ export interface MenuOcrStatusProps {
   totalCount: number;
   disabled?: boolean;
   onRetry: () => void;
+  onCheckAgain: () => void;
   onViewResult: () => void;
 }
 
@@ -33,11 +34,13 @@ function fileProblemMessage(problem: MenuFileProblem): string {
 
 function FailureRow({
   message,
-  onRetry,
+  actionLabel,
+  onAction,
   disabled,
 }: {
   message: string;
-  onRetry: () => void;
+  actionLabel: string;
+  onAction: () => void;
   disabled?: boolean;
 }) {
   return (
@@ -46,9 +49,9 @@ function FailureRow({
         <AlertTriangle aria-hidden="true" className="size-4" />
         {message}
       </span>
-      <Button variant="secondary" size="sm" onClick={onRetry} disabled={disabled}>
+      <Button variant="secondary" size="sm" onClick={onAction} disabled={disabled}>
         <RotateCcw aria-hidden="true" className="size-4" />
-        {en.menu.retry}
+        {actionLabel}
       </Button>
     </div>
   );
@@ -66,6 +69,7 @@ export function MenuOcrStatus({
   totalCount,
   disabled,
   onRetry,
+  onCheckAgain,
   onViewResult,
 }: MenuOcrStatusProps) {
   const percentage = Math.round(
@@ -109,11 +113,30 @@ export function MenuOcrStatus({
   }
 
   if (phase === 'failed') {
-    return <FailureRow message={en.menu.failed} onRetry={onRetry} disabled={disabled} />;
+    return (
+      <FailureRow
+        message={en.menu.failed}
+        actionLabel={en.menu.retry}
+        onAction={onRetry}
+        disabled={disabled}
+      />
+    );
   }
 
   if (phase === 'timeout') {
-    return <FailureRow message={en.menu.timeout} onRetry={onRetry} disabled={disabled} />;
+    return (
+      <div className="flex flex-col gap-2">
+        <FailureRow
+          message={en.menu.timeout}
+          actionLabel={en.menu.checkAgain}
+          onAction={onCheckAgain}
+          disabled={disabled}
+        />
+        {progress.status ? (
+          <p className="text-2xs text-text-muted">{en.menu.lastStatus(progress.status)}</p>
+        ) : null}
+      </div>
+    );
   }
 
   if (phase === 'empty') {

@@ -40,16 +40,15 @@ const jobStatus = z
   .nullish()
   .transform((value) => (value === null || value === undefined ? '' : String(value)));
 
-const submissionSchema: z.ZodType<Omit<MenuOcrSubmission, 'retryAfterSeconds'>, z.ZodTypeDef, unknown> =
-  z.object({
-    jobId: z.string(),
-    jobType,
-    status: jobStatus,
-    estimatedSeconds: nullableNumber,
-    statusUrl: nullableString,
-    resultUrl: nullableString,
-    submittedAtUtc: nullableString,
-  });
+const submissionSchema: z.ZodType<MenuOcrSubmission, z.ZodTypeDef, unknown> = z.object({
+  jobId: z.string(),
+  jobType,
+  status: jobStatus,
+  estimatedSeconds: nullableNumber,
+  statusUrl: nullableString,
+  resultUrl: nullableString,
+  submittedAtUtc: nullableString,
+});
 
 const statusSchema: z.ZodType<MenuOcrStatus, z.ZodTypeDef, unknown> = z.object({
   jobId: z.string(),
@@ -78,36 +77,21 @@ const resultSchema: z.ZodType<MenuOcrResultPayload, z.ZodTypeDef, unknown> = z.o
   data: z.custom<unknown>(),
 });
 
-/** `Retry-After` is either a number of seconds or an HTTP date. */
-function parseRetryAfter(value: string | null): number | null {
-  if (!value) return null;
-  const seconds = Number(value);
-  if (Number.isFinite(seconds) && seconds >= 0) return seconds;
-  const date = Date.parse(value);
-  if (Number.isNaN(date)) return null;
-  return Math.max(0, Math.ceil((date - Date.now()) / 1_000));
-}
-
 export function createOcrApi(client: HttpClient): MenuOcrPort {
   return {
-    async submit(file, signal) {
+    submit(file, options) {
       const form = new FormData();
       form.append('image', file);
 
-      let retryAfterSeconds: number | null = null;
-      const submission = await client.request({
+      return client.request({
         path: MENU_OCR_PATH,
         method: 'POST',
+        query: { referenceId: options?.referenceId ?? undefined },
         body: form,
-        signal,
+        signal: options?.signal,
         expectedStatus: 202,
-        onResponseHeaders: (headers) => {
-          retryAfterSeconds = parseRetryAfter(headers.get('Retry-After'));
-        },
         schema: submissionSchema,
       });
-
-      return { ...submission, retryAfterSeconds };
     },
 
     getStatus(jobId, signal) {

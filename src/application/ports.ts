@@ -107,8 +107,14 @@ export interface FileUploadRepository {
  * Menu OCR backend (public endpoint, no Bearer token). The polling policy — Retry-After,
  * backoff and the overall timeout — lives in the application layer, not here.
  */
+export interface MenuOcrSubmitOptions {
+  /** Onboarding request the photo belongs to; sent as the `referenceId` query value. */
+  referenceId?: string | null;
+  signal?: AbortSignal;
+}
+
 export interface MenuOcrPort {
-  submit(file: File, signal?: AbortSignal): Promise<MenuOcrSubmission>;
+  submit(file: File, options?: MenuOcrSubmitOptions): Promise<MenuOcrSubmission>;
   getStatus(jobId: string, signal?: AbortSignal): Promise<MenuOcrStatus>;
   getResult(jobId: string, signal?: AbortSignal): Promise<MenuOcrResultPayload>;
 }

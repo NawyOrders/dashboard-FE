@@ -11,8 +11,6 @@ export interface MenuOcrSubmission {
   statusUrl: string | null;
   resultUrl: string | null;
   submittedAtUtc: string | null;
-  /** `Retry-After` of the 202 response, in seconds. */
-  retryAfterSeconds: number | null;
 }
 
 export interface MenuOcrStatus {

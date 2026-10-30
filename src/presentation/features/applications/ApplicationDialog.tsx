@@ -431,7 +431,7 @@ function ApplicationDialogContent({
               />
             </div>
 
-            <MenuOcrSection disabled={!isSuperAdmin} />
+            <MenuOcrSection disabled={!isSuperAdmin} referenceId={tenant.id} />
 
             <RestaurantForm
               steps={schema.steps}

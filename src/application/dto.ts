@@ -100,6 +100,10 @@ export interface MenuExtractionProgress {
 }
 
 export interface ExtractMenuOptions {
+  /** Onboarding request the photo belongs to; sent as the `referenceId` query value. */
+  referenceId?: string | null;
+  /** Resume polling an already submitted job instead of uploading the file again. */
+  jobId?: string;
   signal?: AbortSignal;
   onProgress?: (progress: MenuExtractionProgress) => void;
 }

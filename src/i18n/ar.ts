@@ -433,6 +433,8 @@ export const ar = {
     failed: 'فشل استخراج المنيو',
     timeout: 'انتهت مهلة الاستخراج، حاول مرة أخرى',
     retry: 'إعادة الاستخراج',
+    checkAgain: 'تحقق مرة أخرى',
+    lastStatus: (status: string) => `آخر حالة: ${status}`,
     invalidType: 'الصيغ المسموحة: JPG أو PNG أو WEBP',
     tooLarge: 'حجم الصورة كبير جدًا. الحد الأقصى 15 ميجابايت',
     fileRequired: 'اختر صورة المنيو أولًا',

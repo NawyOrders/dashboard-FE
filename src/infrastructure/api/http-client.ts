@@ -60,8 +60,6 @@ export interface HttpRequestOptions<T> {
   body?: unknown;
   headers?: Record<string, string>;
   signal?: AbortSignal;
-  /** Reads headers of the accepted response, e.g. `Retry-After` on a 202 job. */
-  onResponseHeaders?: (headers: Headers) => void;
   /** Schema of the unwrapped `data` value; input is untrusted JSON. */
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
   /** Exact success status the endpoint contract defines, e.g. 202 on tenant create. */
@@ -92,7 +90,6 @@ export function createHttpClient({
     body,
     headers,
     signal,
-    onResponseHeaders,
     schema,
     expectedStatus,
   }: HttpRequestOptions<T>): Promise<T> {
@@ -125,8 +122,6 @@ export function createHttpClient({
             : JSON.stringify(body),
       signal,
     });
-
-    onResponseHeaders?.(response.headers);
 
     const payload = parseJson(await response.text());
     const envelope = apiEnvelopeSchema.safeParse(payload);

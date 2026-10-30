@@ -274,6 +274,7 @@ export const ar = {
     appliedBrand: 'بيانات العلامة المطبقة',
     primaryColor: 'اللون الأساسي',
     secondaryColor: 'اللون الثانوي',
+    accentColor: 'لون التمييز',
     appEligibility: 'أهلية التطبيقات',
     entitled: 'مشمول في الباقة',
     android: 'تطبيق Android',

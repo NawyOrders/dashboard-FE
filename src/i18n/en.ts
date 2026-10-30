@@ -271,6 +271,7 @@ export const en = {
     appliedBrand: 'Applied brand data',
     primaryColor: 'Primary color',
     secondaryColor: 'Secondary color',
+    accentColor: 'Accent color',
     appEligibility: 'App eligibility',
     entitled: 'Entitled by package',
     android: 'Android app',

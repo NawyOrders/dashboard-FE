@@ -185,7 +185,15 @@ export function createStaticApi(
     // OPEN: endpoint missing in swagger. Analytics charts.
     getMonthlySales: () => run(() => backend.getMonthlySales()),
     listApplications: () => run(() => backend.listApplications()),
-    getApplication: (requestId: string) => run(() => backend.getTenant(requestId)),
+    getApplication: (requestId: string) =>
+      run(() => {
+        const tenant = backend.getTenant(requestId);
+        if (!tenant.logoUrl || tenant.logoAsset) return tenant;
+        return {
+          ...tenant,
+          logoAsset: { assetId: tenant.logoAssetId ?? tenant.id, url: tenant.logoUrl },
+        };
+      }),
     // Static demo fallback; `api` mode uses PATCH /onboarding-requests/{id}.
     updateApplication: (requestId: string, input: UpdateApplicationInput, actor: AdminUser) =>
       run(() => {

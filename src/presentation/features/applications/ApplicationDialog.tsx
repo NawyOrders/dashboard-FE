@@ -12,15 +12,16 @@ import { Input } from '@/presentation/components/ui/Input';
 import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
-import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { queryKeys, useApplication, useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
+import { brandColorOr } from '@/domain/rules/brand-colors';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
+import { tokens } from '@/presentation/theme/tokens';
 import type { Tenant, TenantProvisioning } from '@/domain/entities';
 import {
   isTenantProvisioningActive,
@@ -60,6 +61,45 @@ function provisioningHint(status: string): string {
   if (isTenantProvisioningActive(status)) return en.applications.provisioning.activeHint;
   if (isTenantProvisioningFailed(status)) return en.applications.provisioning.failedHint;
   return en.applications.provisioning.pendingHint;
+}
+
+function logoInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean).slice(0, 2);
+  const value = parts.map((part) => part[0] ?? '').join('').toUpperCase();
+  return value === '' ? '—' : value;
+}
+
+/** Logo preview: the asset URL when readable, otherwise a neutral initials placeholder. */
+function PreviewLogo({ name, src }: { name: string; src: string | null }) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt=""
+        className="size-16 shrink-0 rounded-card border border-border object-cover"
+      />
+    );
+  }
+  return (
+    <span
+      aria-hidden="true"
+      className="flex size-16 shrink-0 items-center justify-center rounded-card border border-border bg-bg-2 text-xl font-semibold text-text-muted"
+    >
+      {logoInitials(name)}
+    </span>
+  );
+}
+
+function PreviewColor({ label, color }: { label: string; color: string }) {
+  return (
+    <span className="inline-flex min-w-0 items-center gap-1.5" title={`${label}: ${color}`}>
+      <span
+        className="size-4 shrink-0 rounded-[4px] border border-border"
+        style={{ backgroundColor: color }}
+      />
+      <span className="font-mono text-micro text-text-muted">{color.toUpperCase()}</span>
+    </span>
+  );
 }
 
 export function ApplicationDialog({ tenant, onClose, onApproved, onRejected, onSaved }: ApplicationDialogProps) {
@@ -172,6 +212,14 @@ function ApplicationDialogContent({
     }
     return meta;
   }, [tenant.branches]);
+
+  const previewColors = {
+    primary: brandColorOr(tenant.brandColors.primary, tokens.colors.primary.DEFAULT),
+    secondary: brandColorOr(tenant.brandColors.secondary, tokens.colors.neutral.fg),
+    accent: brandColorOr(tenant.brandColors.accent, tokens.colors.primary.light),
+  };
+  // OPEN: logo read URL, backend to confirm
+  const logoSrc = tenant.logoAsset?.url ?? null;
 
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
@@ -427,27 +475,21 @@ function ApplicationDialogContent({
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[18rem_minmax(0,1fr)]">
           <aside className="flex flex-col gap-4 md:sticky md:top-0 md:self-start">
-            <div className="flex flex-col items-start gap-3 rounded-card border border-border bg-bg-2/50 p-4">
-              {tenant.logoUrl ? (
-                <img
-                  src={tenant.logoUrl}
-                  alt=""
-                  className="size-16 rounded-card border border-border object-cover"
-                />
-              ) : (
-                <TenantLogo name={tenant.restaurantName} size="lg" />
-              )}
-              <div className="flex flex-col gap-1">
-                <span dir="ltr" className="text-sm font-semibold text-text">
+            <div className="flex w-full min-w-0 flex-col items-start gap-3 rounded-card border border-border bg-bg-2/50 p-4">
+              <PreviewLogo name={tenant.restaurantName} src={logoSrc} />
+              <div className="flex min-w-0 flex-col gap-1">
+                <span dir="ltr" className="max-w-full break-words text-sm font-semibold text-text">
                   {tenant.restaurantName}
                 </span>
                 {tenant.restaurantNameAr ? (
-                  <span dir="rtl" className="text-2xs text-text-muted">
+                  <span dir="rtl" className="max-w-full break-words text-2xs text-text-muted">
                     {tenant.restaurantNameAr}
                   </span>
                 ) : null}
-                <span className="text-2xs text-text-muted">{tenant.contact.email}</span>
-                <span className="font-mono text-2xs text-text-muted">{tenant.tenantId}</span>
+                <span dir="ltr" className="break-all text-2xs text-text-muted">
+                  {tenant.contact.email}
+                </span>
+                <span className="break-all font-mono text-2xs text-text-muted">{tenant.tenantId}</span>
                 <span className="text-2xs text-text-muted">
                   {en.applications.branchCount}: {tenant.branches.length}
                 </span>
@@ -459,6 +501,11 @@ function ApplicationDialogContent({
               <div className="flex flex-wrap items-center gap-2">
                 <PackagePill code={tenant.subscription.packageCode} />
                 <StatusPill meta={paymentStatusMeta(paid ? 'paid' : 'unpaid')} />
+              </div>
+              <div dir="ltr" className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <PreviewColor label={en.details.primaryColor} color={previewColors.primary} />
+                <PreviewColor label={en.details.secondaryColor} color={previewColors.secondary} />
+                <PreviewColor label={en.details.accentColor} color={previewColors.accent} />
               </div>
             </div>
             <nav className="flex flex-col gap-1" aria-label={en.applications.viewTitle}>

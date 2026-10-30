@@ -191,6 +191,7 @@ export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails):
       city: null,
     },
     logoUrl: details.logoAsset?.url ?? null,
+    logoAsset: details.logoAsset,
     brandColors: {
       primary: details.primaryColorHex ?? '',
       secondary: details.secondaryColorHex ?? '',

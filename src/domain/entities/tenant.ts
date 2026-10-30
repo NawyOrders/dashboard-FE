@@ -1,4 +1,5 @@
 import type { BranchStatus, ChannelStatus, AppStatus, RestaurantStatus, Subscription } from './subscription';
+import type { OnboardingAssetReference } from './onboarding';
 
 export interface BranchWorkingHour {
   dayOfWeek: number;
@@ -143,6 +144,11 @@ export interface Tenant {
   /** Stored logo/menu assets of the request (used by the PATCH body). */
   logoAssetId?: string | null;
   menuAssetId?: string | null;
+  /**
+   * Logo asset as the details endpoint returns it. `url` can be null when the backend
+   * only exposes the id, so the preview falls back to the restaurant initials.
+   */
+  logoAsset?: OnboardingAssetReference | null;
   /** Menu extracted for the request; read-only in the view dialog. */
   menuCategories?: TenantMenuCategory[];
   paidAtUtc?: string | null;

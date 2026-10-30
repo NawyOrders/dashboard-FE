@@ -56,7 +56,8 @@ function errorCode(error: unknown): string {
   return PLATFORM_AUTH_ERROR_CODE.invalidCredentials;
 }
 
-function toSession(response: LoginResponse): PlatformLoginResponse {
+/** Maps the login/refresh response to the platform session. Single role filter/mapper. */
+export function toPlatformSession(response: LoginResponse): PlatformLoginResponse {
   return {
     userId: response.userId,
     email: response.email,
@@ -80,7 +81,7 @@ export function createAuthApi(client: HttpClient): AuthApi {
           body: { email, password },
           schema: loginResponseSchema,
         });
-        const session = toSession(response);
+        const session = toPlatformSession(response);
         if (session.roles.length === 0) {
           return {
             ok: false,

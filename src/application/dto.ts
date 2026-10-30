@@ -10,6 +10,7 @@ import type {
   MenuExtractedItem,
   PackageCode,
   PackageFeatureKey,
+  PlatformLoginResponse,
   PlatformLoginResult,
   RestaurantRole,
   RestaurantStatus,
@@ -221,4 +222,6 @@ export interface Api {
    */
   extractMenu(file: File | null, options?: ExtractMenuOptions): Promise<MenuExtractionOutcome>;
   signIn(email: string, password: string): Promise<PlatformLoginResult>;
+  /** `POST /api/v1/auth/refresh-token` with `{ refreshToken }`; returns the login shape. */
+  refreshSession(refreshToken: string): Promise<PlatformLoginResponse>;
 }

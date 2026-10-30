@@ -6,15 +6,7 @@ import { ToastProvider } from '@/presentation/components/ui/Toast';
 import { api } from '@/app/composition';
 import type { AdminUser, PlatformLoginResult, Role } from '@/domain/entities';
 import { adminUserFromPlatformLogin } from '@/domain/rules/platform-auth';
-import { PLATFORM_TOKEN_STORAGE_KEY as TOKEN_STORAGE_KEY } from '@/infrastructure/api/access-token';
-
-interface StoredPlatformTokens {
-  accessToken: string;
-  refreshToken: string;
-  expiresAtUtc: string;
-  refreshTokenExpiresAtUtc: string;
-  tokenType: 'Bearer';
-}
+import { clearTokenSet, saveTokenSet } from '@/infrastructure/api/access-token';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,17 +34,15 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
     const user = adminUserFromPlatformLogin(result.session);
     setUser(user);
-    const tokens: StoredPlatformTokens = {
+    saveTokenSet({
       accessToken: result.session.accessToken,
       refreshToken: result.session.refreshToken,
       expiresAtUtc: result.session.expiresAtUtc,
       refreshTokenExpiresAtUtc: result.session.refreshTokenExpiresAtUtc,
       tokenType: result.session.tokenType,
-    };
+    });
     try {
-      // OPEN: token storage is sessionStorage (owner-confirmed temporary), see agent.md section 19.
       sessionStorage.setItem('nawy_session', JSON.stringify(user));
-      sessionStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(tokens));
     } catch {
       // ignore
     }
@@ -61,9 +51,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   function signOut() {
     setUser(null);
+    clearTokenSet();
     try {
       sessionStorage.removeItem('nawy_session');
-      sessionStorage.removeItem(TOKEN_STORAGE_KEY);
     } catch {
       // ignore
     }

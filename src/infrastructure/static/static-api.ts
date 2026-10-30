@@ -15,6 +15,7 @@ import type {
   AdminUser,
   CreateAdminAccountInput,
   PackageFeatureKey,
+  PlatformLoginResponse,
   RestaurantStatus,
   TenantProvisioning,
   UpdateTenantInput,
@@ -181,5 +182,9 @@ export function createStaticApi(
     }),
     signIn: (email: string, password: string) =>
       run(() => backend.signIn({ email, password })),
+    // Static demo has no backend to refresh against; the session ends at expiresAtUtc.
+    async refreshSession(): Promise<PlatformLoginResponse> {
+      throw new Error('Refresh is not available in the static data source.');
+    },
   };
 }

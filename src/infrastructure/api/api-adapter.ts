@@ -1,8 +1,9 @@
 import type { Api, ListTenantsParams } from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
 import { makeExtractMenu } from '@/application/use-cases/extract-menu';
-import type { Tenant, TenantListItem } from '@/domain/entities';
-import { createAuthApi } from './auth-api';
+import type { PlatformLoginResponse, Tenant, TenantListItem } from '@/domain/entities';
+import { createAuthApi, toPlatformSession } from './auth-api';
+import { loginResponseSchema } from './auth-schemas';
 import { createOcrApi } from './ocr-api';
 import { createOnboardingApi } from './onboarding-api';
 import { mapOnboardingRequestToTenant } from './onboarding-mapping';
@@ -18,10 +19,10 @@ export interface ApiAdapterOptions {
 
 /**
  * API data source (agent.md section 21). Applications, offers, the tenants list and
- * details, provisioning status, retry, plan activation and the menu OCR come from the
- * backend. The screens below have no endpoint in the swagger and keep the static
- * adapter: internal users, tenant accounts, roles, activity logs, analytics charts,
- * KPI counts and refresh.
+ * details, provisioning status, retry, plan activation, session refresh and the menu OCR
+ * come from the backend. The screens below have no endpoint in the swagger and keep the
+ * static adapter: internal users, tenant accounts, roles, activity logs, analytics charts
+ * and KPI counts.
  */
 export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api {
   const onboarding = createOnboardingApi(client);
@@ -49,10 +50,20 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
 
   return {
     // OPEN: endpoint missing in swagger. Internal users, tenant accounts, roles,
-    // activity logs, analytics charts, KPI counts and refresh keep the static adapter.
+    // activity logs, analytics charts and KPI counts keep the static adapter.
     ...staticApi,
 
     signIn: (email, password) => auth.signIn(email, password),
+
+    async refreshSession(refreshToken: string): Promise<PlatformLoginResponse> {
+      const response = await client.request({
+        path: 'api/v1/auth/refresh-token',
+        method: 'POST',
+        body: { refreshToken },
+        schema: loginResponseSchema,
+      });
+      return toPlatformSession(response);
+    },
 
     extractMenu: (file, options) => extractMenu(file, options),
 

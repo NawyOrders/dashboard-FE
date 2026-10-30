@@ -13,6 +13,8 @@ export interface DialogProps {
   children: ReactNode;
   footer?: ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  /** Full-screen panel below the 768px breakpoint, centered card from md up. */
+  mobileFull?: boolean;
 }
 
 const SIZES = {
@@ -29,7 +31,16 @@ const FOCUSABLE =
 /** Open dialogs, in opening order, so Escape closes only the top-most one. */
 const openDialogs: string[] = [];
 
-export function Dialog({ open, onClose, title, description, children, footer, size = 'md' }: DialogProps) {
+export function Dialog({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  size = 'md',
+  mobileFull = false,
+}: DialogProps) {
   const labelId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -88,7 +99,9 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         'fixed inset-0 z-50 flex justify-center',
         size === 'full'
           ? 'items-stretch p-0 sm:items-center sm:p-4'
-          : 'items-end p-4 sm:items-center',
+          : mobileFull
+            ? 'items-stretch p-0 md:items-center md:p-4'
+            : 'items-end p-4 sm:items-center',
       )}
     >
       <div
@@ -106,7 +119,9 @@ export function Dialog({ open, onClose, title, description, children, footer, si
           'relative z-10 w-full bg-card text-text outline-none',
           size === 'full'
             ? 'flex h-full max-h-none flex-col overflow-hidden rounded-none sm:h-auto sm:max-h-[90vh] sm:rounded-card sm:border sm:border-border'
-            : 'overflow-hidden rounded-card border border-border max-h-[90vh] overflow-y-auto',
+            : mobileFull
+              ? 'flex h-full max-h-none flex-col overflow-hidden rounded-none md:h-auto md:max-h-[90vh] md:rounded-card md:border md:border-border'
+              : 'overflow-hidden rounded-card border border-border max-h-[90vh] overflow-y-auto',
           SIZES[size],
         )}
       >
@@ -126,7 +141,14 @@ export function Dialog({ open, onClose, title, description, children, footer, si
             <X aria-hidden="true" className="size-5" />
           </button>
         </div>
-        <div className={cn('p-6', size === 'full' && 'flex-1 overflow-y-auto')}>{children}</div>
+        <div
+          className={cn(
+            'p-6',
+            (size === 'full' || mobileFull) && 'min-h-0 flex-1 overflow-y-auto',
+          )}
+        >
+          {children}
+        </div>
         {footer && (
           <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border p-6">
             {footer}

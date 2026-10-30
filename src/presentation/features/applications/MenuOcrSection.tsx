@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { FileImage } from 'lucide-react';
+import { FileImage, ScanText } from 'lucide-react';
 import { api } from '@/app/composition';
 import type { MenuExtractionProgress } from '@/application/dto';
 import type { MenuFileProblem } from '@/domain/rules/menu-file';
@@ -141,22 +141,32 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
 
   return (
     <section
-      className="flex flex-col gap-3 rounded-card border border-border bg-card p-4"
+      className="flex flex-col gap-4 rounded-card border border-border bg-card p-4"
       aria-label={en.menu.title}
     >
-      <h3 className="text-sm font-semibold text-text">{en.menu.title}</h3>
+      <div className="flex items-start gap-3">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-panel bg-primary/10 text-primary">
+          <ScanText aria-hidden="true" className="size-5" />
+        </span>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <h3 className="text-sm font-semibold text-text">{en.menu.title}</h3>
+          <p className="text-2xs text-text-muted">{en.menu.subtitle}</p>
+        </div>
+      </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col gap-2 md:flex-row md:items-stretch">
         <label
           htmlFor="rf-menu-file"
           className={cn(
-            'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-panel border border-border px-3 text-2xs font-medium text-text',
-            'transition-colors duration-150 hover:bg-bg-2',
+            'flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-panel border border-dashed border-border bg-bg-2/40 px-3 text-2xs font-medium text-text',
+            'transition-colors duration-150 hover:border-border-hover hover:bg-bg-2',
             (disabled || running) && 'pointer-events-none opacity-60',
           )}
         >
-          <FileImage aria-hidden="true" className="size-4" />
-          {en.menu.chooseFile}
+          <FileImage aria-hidden="true" className="size-4 shrink-0 text-primary" />
+          <span className="min-w-0 truncate" title={file?.name ?? en.menu.chooseFile}>
+            {file?.name ?? en.menu.chooseFile}
+          </span>
         </label>
         <input
           id="rf-menu-file"
@@ -166,9 +176,9 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
           disabled={disabled || running}
           onChange={handleFileChange}
         />
-        <span className="max-w-[16rem] truncate text-2xs text-text-muted">{file?.name ?? ''}</span>
         <Button
-          size="sm"
+          size="md"
+          className="w-full md:ms-auto md:w-auto"
           loading={running}
           disabled={disabled || running}
           onClick={() => void run(file)}

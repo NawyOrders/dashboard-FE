@@ -152,7 +152,7 @@ export function ApplicationsPage() {
           setViewing(null);
           applicationsQuery.refetch();
         }}
-        onDeleted={() => {
+        onRejected={() => {
           setViewing(null);
           applicationsQuery.refetch();
         }}

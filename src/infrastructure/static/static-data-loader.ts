@@ -18,7 +18,6 @@ import {
 
 export interface StaticData {
   restaurants: Tenant[];
-  applications: Tenant[];
   sales: SalesRecord[];
   accounts: Account[];
   packages: PackageDefinition[];
@@ -45,16 +44,14 @@ async function readJson<T>(file: string, schema: z.ZodType<T>): Promise<T> {
 export function loadStaticData(): Promise<StaticData> {
   cache ??= Promise.all([
     readJson('restaurants.json', tenantsSchema),
-    readJson('applications.json', tenantsSchema),
     readJson('sales.json', salesSchema),
     readJson('accounts.json', accountsSchema),
     readJson('packages.json', packagesSchema),
     readJson('activity-logs.json', activityLogsSchema),
     readJson('auth/login-fixtures.json', loginFixturesSchema),
   ]).then(
-    ([restaurants, applications, sales, accounts, packages, activityLogs, loginFixtures]) => ({
+    ([restaurants, sales, accounts, packages, activityLogs, loginFixtures]) => ({
       restaurants,
-      applications,
       sales,
       accounts,
       packages,

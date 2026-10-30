@@ -105,20 +105,10 @@ export function createStaticApi(
           actor,
         ),
       ).then(() => undefined),
-    // OPEN: static approve, remove when api is live
-    approveApplication: (
-      tenantId: string,
-      adminPassword: string,
-      actor: AdminUser,
-      subscriptionStartDate: string,
-    ) =>
+    // OPEN: endpoint missing in swagger. Static demo keeps the local approve.
+    approveApplication: (tenantId: string, actor: AdminUser) =>
       run<TenantProvisioning>(async () => {
-        const tenant = await backend.approveApplication(
-          tenantId,
-          adminPassword,
-          actor,
-          subscriptionStartDate,
-        );
+        const tenant = await backend.updateApplication(tenantId, { status: 'approved' }, actor);
         return {
           tenantId: tenant.id,
           slug: toTenantSlug(tenant.restaurantName),
@@ -126,6 +116,11 @@ export function createStaticApi(
           activatedAtUtc: null,
         };
       }),
+    // OPEN: endpoint missing in swagger. Static demo marks the tenant inactive.
+    rejectApplication: (tenantId: string, _reason: string, actor: AdminUser) =>
+      run(() => backend.updateApplication(tenantId, { status: 'inactive' }, actor)).then(
+        () => undefined,
+      ),
     // OPEN: static approve, remove when api is live
     getTenantStatus: (tenantId: string) =>
       run<TenantProvisioning>(() => ({
@@ -148,9 +143,6 @@ export function createStaticApi(
       patch: Partial<import('@/domain/entities').Tenant>,
       actor: AdminUser,
     ) => run(() => backend.updateApplication(tenantId, patch, actor)),
-    // OPEN: endpoint missing in swagger.
-    deleteApplication: (tenantId: string, reason: string, actor: AdminUser) =>
-      run(() => backend.deleteApplication(tenantId, reason, actor)),
     uploadImage: (file: File) => uploads.uploadImage(file),
     // OPEN: menu OCR runs on the backend; the static data source has no API base URL.
     extractMenu: async (): Promise<MenuExtractionOutcome> => ({

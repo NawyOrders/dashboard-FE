@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
@@ -13,15 +12,11 @@ import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
-import { formatDate, formatDateTime } from '@/domain/rules/date';
-import { resolveSubscriptionStart, todayInCairo } from '@/domain/rules/subscription';
-import type { SubscriptionStartProblem } from '@/domain/rules/subscription';
+import { formatDateTime } from '@/domain/rules/date';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import type { Tenant, TenantProvisioning } from '@/domain/entities';
-import type { RegistrationProblem } from '@/domain/rules/registration-validation';
-import { validateRegistrationForApprove } from '@/domain/rules/registration-validation';
 import {
   isTenantProvisioningActive,
   isTenantProvisioningFailed,
@@ -34,67 +29,14 @@ const PROVISIONING_TIMEOUT_MS = 60_000;
 import { MenuOcrSection } from './MenuOcrSection';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
-import { fieldLabelByKey } from '@/presentation/features/restaurant-form/localized-schema';
-import { toTenantPatch } from '@/presentation/features/restaurant-form/form-model';
 import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
 
 interface ApplicationDialogProps {
   tenant: Tenant | null;
   onClose: () => void;
   onApproved: () => void;
-  onDeleted: () => void;
+  onRejected: () => void;
   onSaved: () => void;
-}
-
-function problemMessage(problem: RegistrationProblem): string {
-  if (problem.message) return problem.message;
-  switch (problem.reason) {
-    case 'required':
-      return en.registration.requiredField;
-    case 'maxLength':
-      return en.registration.tooLong(problem.maxLength ?? 0);
-    case 'minLength':
-      return en.registration.tooShort(problem.minLength ?? 0);
-    case 'digits':
-      return en.registration.digitsOnly;
-    case 'range':
-      return en.registration.outOfRange(problem.min ?? 0, problem.max ?? 0);
-    case 'email':
-      return en.registration.invalidEmail;
-    case 'pattern':
-      return en.registration.invalidPhone;
-    case 'option':
-      return en.registration.invalidOption;
-    case 'branchCount':
-      return en.registration.branchCount(problem.min ?? 0, problem.max ?? 0);
-    default:
-      return en.registration.invalidValue;
-  }
-}
-
-/** DOM id of the field a problem belongs to. */
-function problemFieldId(problem: RegistrationProblem): string {  if (problem.fieldKey === 'branches') return FORM_GROUP_IDS.branches;
-  if (problem.scope === 'branch' && problem.branchId) {
-    return `rf-branch-${problem.branchId}-${problem.fieldKey}`;
-  }
-  return `rf-field-${problem.fieldKey}`;
-}
-
-/** The JSON field label is Arabic; the screen shows the label of the active locale. */
-function problemLabel(problem: RegistrationProblem): string {
-  const scope = problem.scope === 'branch' ? 'branch' : 'restaurant';
-  return fieldLabelByKey(problem.fieldKey, scope) ?? problem.label;
-}
-
-function startDateMessage(problem: SubscriptionStartProblem): string {
-  switch (problem) {
-    case 'required':
-      return en.applications.subscriptionStartRequired;
-    case 'invalid':
-      return en.applications.subscriptionStartInvalid;
-    case 'past':
-      return en.applications.subscriptionStartPast;
-  }
 }
 
 function provisioningHint(status: string): string {
@@ -103,14 +45,14 @@ function provisioningHint(status: string): string {
   return en.applications.provisioning.pendingHint;
 }
 
-export function ApplicationDialog({ tenant, onClose, onApproved, onDeleted, onSaved }: ApplicationDialogProps) {
+export function ApplicationDialog({ tenant, onClose, onApproved, onRejected, onSaved }: ApplicationDialogProps) {
   if (!tenant) return null;
   return (
     <ApplicationDialogContent
       tenant={tenant}
       onClose={onClose}
       onApproved={onApproved}
-      onDeleted={onDeleted}
+      onRejected={onRejected}
       onSaved={onSaved}
     />
   );
@@ -120,7 +62,7 @@ function ApplicationDialogContent({
   tenant,
   onClose,
   onApproved,
-  onDeleted,
+  onRejected,
   onSaved,
 }: ApplicationDialogProps & { tenant: Tenant }) {
   const { user } = useCurrentUser();
@@ -134,63 +76,25 @@ function ApplicationDialogContent({
     setBranchField,
     addBranch,
     removeBranch,
-    reset,
     branchLimits,
   } = useRestaurantFormState(tenant);
 
   const offers = useOffers();
 
-  const [problems, setProblems] = useState<RegistrationProblem[]>([]);
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
-  const [today] = useState(() => todayInCairo());
-  const [subscriptionStartDate, setSubscriptionStartDate] = useState(today);
-  const subscriptionStart = useMemo(
-    () =>
-      resolveSubscriptionStart(
-        subscriptionStartDate,
-        tenant.subscription.durationMonths,
-        today,
-      ),
-    [subscriptionStartDate, tenant.subscription.durationMonths, today],
-  );
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteReason, setDeleteReason] = useState('');
-  const [deleting, setDeleting] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [approving, setApproving] = useState(false);
   const [provisioning, setProvisioning] = useState<TenantProvisioning | null>(null);
   const [provisioningDeadline, setProvisioningDeadline] = useState<number | null>(null);
   const [provisioningTimedOut, setProvisioningTimedOut] = useState(false);
   const [statusLoading, setStatusLoading] = useState(false);
   const [retrying, setRetrying] = useState(false);
+  const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectError, setRejectError] = useState<string | null>(null);
+  const [rejecting, setRejecting] = useState(false);
   const provisioningDoneRef = useRef(false);
-
-  const fieldErrors = useMemo(() => {
-    const errors: Record<string, string> = {};
-    for (const problem of problems) {
-      if (problem.scope !== 'field') continue;
-      errors[problem.fieldKey] = problemMessage(problem);
-    }
-    return errors;
-  }, [problems]);
-
-  const branchErrors = useMemo(() => {
-    const errors: Record<string, string> = {};
-    for (const problem of problems) {
-      if (problem.scope !== 'branch' || !problem.branchId) continue;
-      errors[`${problem.branchId}.${problem.fieldKey}`] = problemMessage(problem);
-    }
-    return errors;
-  }, [problems]);
-
-  function focusField(problem: RegistrationProblem) {
-    const element = document.getElementById(problemFieldId(problem));
-    if (!element) return;
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    element.focus({ preventScroll: true });
-  }
 
   function scrollToGroup(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -260,26 +164,6 @@ function ApplicationDialogContent({
     }
   }
 
-  async function handleSave() {
-    if (!user) return;
-    setSaving(true);
-    try {
-      await api.updateApplication(tenant.id, toTenantPatch(values, tenant), user);
-      toast({ title: en.applications.changesSaved, variant: 'success' });
-      onSaved();
-    } catch {
-      toast({ title: en.applications.saveFailed, variant: 'error' });
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  function handleDiscard() {
-    reset();
-    setProblems([]);
-    toast({ title: en.applications.discarded, variant: 'neutral' });
-  }
-
   async function handleApprove() {
     if (!user) return;
     if (!paid) {
@@ -288,42 +172,9 @@ function ApplicationDialogContent({
         ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-    const result = validateRegistrationForApprove(
-      { ...tenant, ...toTenantPatch(values, tenant) } as Tenant,
-      schema,
-      branchLimits,
-      { label: en.applications.adminPasswordLabel, value: adminPassword },
-    );
-    const problems = [...result.problems];
-    if (!subscriptionStart.ok) {
-      problems.push({
-        fieldKey: 'subscriptionStartDate',
-        label: en.applications.subscriptionStartDate,
-        scope: 'field',
-        reason: 'startDate',
-        message: startDateMessage(subscriptionStart.problem),
-      });
-    }
-    if (problems.length > 0) {
-      setProblems(problems);
-      const first = problems[0];
-      if (first) {
-        window.setTimeout(() => focusField(first), 0);
-      }
-      return;
-    }
-    if (!subscriptionStart.ok) return;
-    setProblems([]);
-    const idempotencyKey = crypto.randomUUID();
     setApproving(true);
     try {
-      const next = await api.approveApplication(
-        tenant.id,
-        adminPassword,
-        user,
-        subscriptionStart.startDate,
-        idempotencyKey,
-      );
+      const next = await api.approveApplication(tenant.id, user);
       setAdminPassword('');
       setProvisioning(next);
       if (!isTenantProvisioningFinal(next.status)) {
@@ -335,6 +186,32 @@ function ApplicationDialogContent({
     } finally {
       setApproving(false);
     }
+  }
+
+  async function handleReject() {
+    if (!user) return;
+    const reason = rejectReason.trim();
+    if (reason.length === 0) {
+      setRejectError(en.applications.rejectReasonRequired);
+      return;
+    }
+    setRejecting(true);
+    try {
+      await api.rejectApplication(tenant.id, reason, user);
+      toast({ title: en.applications.rejected, variant: 'success' });
+      setShowRejectConfirm(false);
+      onRejected();
+    } catch {
+      toast({ title: en.applications.rejectFailed, variant: 'error' });
+    } finally {
+      setRejecting(false);
+    }
+  }
+
+  function openRejectConfirm() {
+    setRejectReason('');
+    setRejectError(null);
+    setShowRejectConfirm(true);
   }
 
   async function handleRefreshStatus() {
@@ -375,27 +252,13 @@ function ApplicationDialogContent({
     }
   }
 
-  async function handleDelete() {
-    if (!user) return;
-    if (deleteReason.trim().length < 5) return;
-    setDeleting(true);
-    try {
-      await api.deleteApplication(tenant.id, deleteReason.trim(), user);
-      toast({ title: en.applications.deleted, variant: 'success' });
-      setShowDeleteConfirm(false);
-      onDeleted();
-    } catch {
-      toast({ title: en.applications.deleteFailed, variant: 'error' });
-    } finally {
-      setDeleting(false);
-    }
-  }
-
   const links = [
     { id: FORM_GROUP_IDS.details, label: en.registration.groups.details },
     { id: FORM_GROUP_IDS.branches, label: en.registration.groups.branches },
     { id: FORM_GROUP_IDS.subscription, label: en.registration.groups.subscription },
   ];
+
+  const busy = approving || rejecting || provisioning !== null;
 
   return (
     <>
@@ -405,45 +268,28 @@ function ApplicationDialogContent({
         title={en.applications.viewTitle}
         size="full"
         footer={
-          <>
-            {isSuperAdmin ? (
+          isSuperAdmin ? (
+            <>
               <Button
                 variant="ghost"
                 className="me-auto text-danger-fg"
-                onClick={() => setShowDeleteConfirm(true)}
+                onClick={openRejectConfirm}
+                disabled={busy}
               >
-                {en.applications.delete}
+                {en.applications.reject}
               </Button>
-            ) : null}
-            {isSuperAdmin ? (
-              <>
-                <Button
-                  variant="secondary"
-                  onClick={handleDiscard}
-                  disabled={saving || approving || provisioning !== null}
-                >
-                  {en.applications.discard}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={handleSave}
-                  disabled={saving || approving || provisioning !== null}
-                >
-                  {saving ? en.applications.saving : en.applications.saveChanges}
-                </Button>
-                <Button
-                  onClick={handleApprove}
-                  disabled={approving || saving || provisioning !== null}
-                >
-                  {approving ? en.applications.approving : en.applications.approve}
-                </Button>
-              </>
-            ) : (
-              <Button variant="secondary" onClick={onClose}>
+              <Button variant="secondary" onClick={onClose} disabled={busy}>
                 {en.common.close}
               </Button>
-            )}
-          </>
+              <Button onClick={handleApprove} disabled={busy}>
+                {approving ? en.applications.approving : en.applications.approve}
+              </Button>
+            </>
+          ) : (
+            <Button variant="secondary" onClick={onClose}>
+              {en.common.close}
+            </Button>
+          )
         }
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[18rem_minmax(0,1fr)]">
@@ -572,62 +418,13 @@ function ApplicationDialogContent({
               ) : null}
             </div>
 
-            {problems.length > 0 ? (
-              <div className="flex flex-col gap-2 rounded-card border border-danger bg-danger-bg p-4">
-                <span className="flex items-center gap-2 text-sm font-semibold text-danger-fg">
-                  <AlertTriangle aria-hidden="true" className="size-4" />
-                  {en.applications.validationTitle}
-                </span>
-                <span className="text-2xs text-danger-fg">{en.applications.validationHint}</span>
-                <ul className="flex flex-col gap-1">
-                  {problems.map((problem, index) => (
-                    <li key={`${problem.fieldKey}-${problem.branchId ?? ''}-${index}`}>
-                      <button
-                        type="button"
-                        onClick={() => focusField(problem)}
-                        className="text-start text-2xs text-danger-fg underline underline-offset-2 hover:text-text"
-                      >
-                        {problem.scope === 'branch' && problem.branchIndex !== undefined
-                          ? `${problemLabel(problem)} — ${en.registration.groups.branches} ${problem.branchIndex + 1}`
-                          : problemLabel(problem)}
-                        : {problemMessage(problem)}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-
-            {/* OPEN: send start date to backend when approve accepts it */}
-            <div className="flex flex-col gap-2 rounded-card border border-border bg-card p-4">
-              <Input
-                id="rf-field-subscriptionStartDate"
-                type="date"
-                label={en.applications.subscriptionStartDate}
-                value={subscriptionStartDate}
-                min={today}
-                onChange={(event) => setSubscriptionStartDate(event.target.value)}
-                error={
-                  subscriptionStart.ok
-                    ? undefined
-                    : startDateMessage(subscriptionStart.problem)
-                }
-                disabled={!isSuperAdmin}
-              />
-              <p className="text-2xs text-text-muted">
-                {en.applications.subscriptionEndDate}:{' '}
-                {subscriptionStart.ok ? formatDate(subscriptionStart.endDate) : '—'}
-              </p>
-            </div>
-
-            {/* OPEN: not in submit DTO, backend to confirm. */}
+            {/* OPEN: admin password has no field in approve, backend to confirm */}
             <div className="rounded-card border border-border bg-card p-4">
               <PasswordInput
                 id="rf-field-adminPassword"
                 label={en.applications.adminPasswordLabel}
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
-                error={fieldErrors.adminPassword}
                 hint={en.applications.adminPasswordHint}
                 disabled={!isSuperAdmin || provisioning !== null}
                 autoComplete="new-password"
@@ -641,12 +438,10 @@ function ApplicationDialogContent({
               values={values}
               branchLimits={branchLimits}
               paymentStatus={paid ? 'paid' : 'unpaid'}
-              disabled={!isSuperAdmin}
+              disabled
               offers={offers.data}
               subscriptionReadOnly
               submittedPrice={tenant.agreedPrice}
-              errors={fieldErrors}
-              branchErrors={branchErrors}
               onFieldChange={setField}
               onBranchFieldChange={setBranchField}
               onAddBranch={addBranch}
@@ -657,28 +452,27 @@ function ApplicationDialogContent({
       </Dialog>
 
       <ConfirmDialog
-        open={showDeleteConfirm}
-        title={en.applications.deleteTitle}
-        body={en.applications.deleteBody(tenant.restaurantName)}
-        confirmLabel={en.applications.delete}
+        open={showRejectConfirm}
+        title={en.applications.rejectTitle}
+        body={en.applications.rejectBody(tenant.restaurantName)}
+        confirmLabel={en.applications.reject}
         cancelLabel={en.common.cancel}
-        loading={deleting}
-        onCancel={() => setShowDeleteConfirm(false)}
-        onConfirm={handleDelete}
+        loading={rejecting}
+        onCancel={() => setShowRejectConfirm(false)}
+        onConfirm={() => void handleReject()}
       >
         <div className="mt-3">
-          <label htmlFor="delete-reason" className="mb-1 block text-2xs font-medium text-text">
-            {en.applications.deleteReason}
-          </label>
           <Input
-            id="delete-reason"
-            value={deleteReason}
-            onChange={(event) => setDeleteReason(event.target.value)}
-            placeholder={en.applications.deleteReasonPlaceholder}
+            id="reject-reason"
+            label={en.applications.rejectReason}
+            value={rejectReason}
+            onChange={(event) => {
+              setRejectReason(event.target.value);
+              if (rejectError) setRejectError(null);
+            }}
+            placeholder={en.applications.rejectReasonPlaceholder}
+            error={rejectError ?? undefined}
           />
-          {deleteReason.trim().length > 0 && deleteReason.trim().length < 5 ? (
-            <p className="mt-1 text-2xs text-error">{en.applications.deleteReasonTooShort}</p>
-          ) : null}
         </div>
       </ConfirmDialog>
     </>

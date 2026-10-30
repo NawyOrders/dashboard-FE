@@ -42,9 +42,7 @@ import { makeCreateTenantAccount } from './create-tenant-account';
 import { makeResetTenantAccountPassword } from './reset-tenant-account-password';
 import { makeGetMonthlySales } from './get-monthly-sales';
 import { makeListApplications } from './list-applications';
-import { makeApproveApplication } from './approve-application';
 import { makeUpdateApplication } from './update-application';
-import { makeDeleteApplication } from './delete-application';
 import { makeSignIn } from './sign-in';
 
 /**
@@ -81,14 +79,7 @@ export interface Backend {
   ): Promise<void>;
   getMonthlySales(): SalesMonthBucket[];
   listApplications(): Tenant[];
-  approveApplication(
-    tenantId: string,
-    adminPassword: string,
-    actor: AdminUser,
-    subscriptionStartDate: string,
-  ): Promise<Tenant>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Tenant;
-  deleteApplication(tenantId: string, reason: string, actor: AdminUser): void;
   signIn(input: PlatformLoginRequest): Promise<PlatformLoginResult>;
 }
 
@@ -113,9 +104,7 @@ export function createBackend(deps: UseCaseDeps, currentUser: CurrentUserProvide
     resetTenantAccountPassword: makeResetTenantAccountPassword(deps),
     getMonthlySales: makeGetMonthlySales(deps.sales, deps.clock),
     listApplications: makeListApplications(deps.restaurants),
-    approveApplication: makeApproveApplication(deps),
     updateApplication: makeUpdateApplication(deps),
-    deleteApplication: makeDeleteApplication(deps),
     signIn: (input: PlatformLoginRequest) => signIn(input),
   };
 }

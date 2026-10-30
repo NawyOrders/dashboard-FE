@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type {
+  ApproveOnboardingResponse,
   OnboardingBranch,
   OnboardingRequestListItem,
   OnboardingRequestPage,
@@ -7,6 +8,7 @@ import type {
   OnboardingUploadUrl,
   OnboardingUploadUrlsResponse,
   OnboardingWorkingHour,
+  RejectOnboardingResponse,
   SubmitOnboardingRequest,
   SubmitOnboardingResponse,
   SubscriptionOffer,
@@ -73,6 +75,22 @@ export const submitOnboardingResponseSchema: ResponseSchema<SubmitOnboardingResp
   requestId: z.string().uuid(),
   status: z.number().int(),
   submittedAtUtc: z.string().min(1),
+});
+
+export const approveOnboardingResponseSchema: ResponseSchema<ApproveOnboardingResponse> = z.object({
+  requestId: z.string().uuid(),
+  status: z.number().int(),
+  tenantId: z.string().uuid(),
+  tenantSlug: nullableString,
+  subscriptionStartsAtUtc: nullableString,
+  subscriptionEndsAtUtc: nullableString,
+});
+
+export const rejectOnboardingResponseSchema: ResponseSchema<RejectOnboardingResponse> = z.object({
+  requestId: z.string().uuid(),
+  status: z.number().int(),
+  rejectionReason: nullableString,
+  rejectedAtUtc: z.string().min(1),
 });
 
 export const onboardingWorkingHourSchema: ResponseSchema<OnboardingWorkingHour> = z.object({

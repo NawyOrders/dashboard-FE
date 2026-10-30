@@ -1,18 +1,22 @@
 import type {
+  ApproveOnboardingResponse,
   OnboardingAssetType,
   OnboardingRequestPage,
   OnboardingUploadFile,
   OnboardingUploadUrlsResponse,
+  RejectOnboardingResponse,
   SubmitOnboardingRequest,
   SubmitOnboardingResponse,
   SubscriptionOffer,
 } from '@/domain/entities';
 import type { HttpClient } from './http-client';
 import {
+  approveOnboardingResponseSchema,
   offersResponseSchema,
   onboardingRequestPageSchema,
   onboardingUploadUrlsResponseSchema,
   paymentResponseSchema,
+  rejectOnboardingResponseSchema,
   submitOnboardingResponseSchema,
 } from './onboarding-schemas';
 
@@ -28,6 +32,10 @@ export interface OnboardingApi {
   /** OPEN: backend submit not finished. Do not call this from the UI yet. */
   submitRequest(body: SubmitOnboardingRequest): Promise<SubmitOnboardingResponse>;
   setPayment(requestId: string, paid: boolean): Promise<void>;
+  /** `POST /onboarding-requests/{requestId}/approve`; the backend takes no body. */
+  approveRequest(requestId: string): Promise<ApproveOnboardingResponse>;
+  /** `POST /onboarding-requests/{requestId}/reject` with the required reason. */
+  rejectRequest(requestId: string, rejectionReason: string): Promise<RejectOnboardingResponse>;
   createUploadUrls(files: OnboardingUploadFile[]): Promise<OnboardingUploadUrlsResponse>;
   confirmAsset(assetId: string, uploadToken: string | null): Promise<void>;
   deleteAsset(assetId: string, uploadToken: string | null): Promise<void>;
@@ -90,6 +98,23 @@ export function createOnboardingApi(client: HttpClient): OnboardingApi {
         method: 'PATCH',
         body: { paid },
         schema: paymentResponseSchema,
+      });
+    },
+
+    approveRequest(requestId) {
+      return client.request({
+        path: `${REQUESTS_PATH}/${requestId}/approve`,
+        method: 'POST',
+        schema: approveOnboardingResponseSchema,
+      });
+    },
+
+    rejectRequest(requestId, rejectionReason) {
+      return client.request({
+        path: `${REQUESTS_PATH}/${requestId}/reject`,
+        method: 'POST',
+        body: { rejectionReason },
+        schema: rejectOnboardingResponseSchema,
       });
     },
 

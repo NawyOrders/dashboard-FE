@@ -87,6 +87,24 @@ export interface SubmitOnboardingResponse {
   submittedAtUtc: string;
 }
 
+/** 200 of `POST /api/v1/onboarding-requests/{requestId}/approve`. */
+export interface ApproveOnboardingResponse {
+  requestId: string;
+  status: number;
+  tenantId: string;
+  tenantSlug: string | null;
+  subscriptionStartsAtUtc: string | null;
+  subscriptionEndsAtUtc: string | null;
+}
+
+/** 200 of `POST /api/v1/onboarding-requests/{requestId}/reject`. */
+export interface RejectOnboardingResponse {
+  requestId: string;
+  status: number;
+  rejectionReason: string | null;
+  rejectedAtUtc: string;
+}
+
 /** Swagger values are unnamed: 1 = logo, 2 = menu (assumed from field order). */
 export type OnboardingAssetType = 1 | 2;
 

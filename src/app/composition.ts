@@ -32,10 +32,7 @@ async function buildContainer(): Promise<Api> {
   const data = await loadStaticData();
   const clock = new SystemClock();
   const ids = createSequentialIdGenerator(10_000);
-  const restaurants = new StaticRestaurantRepository([
-    ...data.restaurants,
-    ...data.applications,
-  ]);
+  const restaurants = new StaticRestaurantRepository(data.restaurants);
   const activity = new StaticActivityLogRepository(clock, ids, data.activityLogs);
   const flags = new StaticFeatureFlagRepository();
   const sales = new StaticSalesRepository(data.sales);

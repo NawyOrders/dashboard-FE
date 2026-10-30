@@ -161,30 +161,32 @@ export function useUpdateApplicationPayment() {
 export function useApproveApplication() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      tenantId,
-      adminPassword,
-      actor,
-      subscriptionStartDate,
-      idempotencyKey,
-    }: {
-      tenantId: string;
-      adminPassword: string;
-      actor: AdminUser;
-      subscriptionStartDate: string;
-      idempotencyKey: string;
-    }) =>
-      api.approveApplication(
-        tenantId,
-        adminPassword,
-        actor,
-        subscriptionStartDate,
-        idempotencyKey,
-      ),
+    mutationFn: ({ requestId, actor }: { requestId: string; actor: AdminUser }) =>
+      api.approveApplication(requestId, actor),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
       void queryClient.invalidateQueries({ queryKey: ['tenants'] });
       void queryClient.invalidateQueries({ queryKey: ['overview'] });
+      void queryClient.invalidateQueries({ queryKey: ['activity'] });
+    },
+  });
+}
+
+export function useRejectApplication() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      requestId,
+      rejectionReason,
+      actor,
+    }: {
+      requestId: string;
+      rejectionReason: string;
+      actor: AdminUser;
+    }) => api.rejectApplication(requestId, rejectionReason, actor),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
+      void queryClient.invalidateQueries({ queryKey: ['tenants'] });
       void queryClient.invalidateQueries({ queryKey: ['activity'] });
     },
   });

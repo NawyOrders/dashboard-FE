@@ -189,19 +189,22 @@ export interface Api {
   listOffers(): Promise<SubscriptionOffer[]>;
   /** `PATCH /onboarding-requests/{requestId}/payment`. */
   updateApplicationPayment(requestId: string, paid: boolean, actor: AdminUser): Promise<void>;
-  approveApplication(
-    tenantId: string,
-    adminPassword: string,
+  /**
+   * `POST /onboarding-requests/{requestId}/approve` with no body.
+   * OPEN: admin password has no field in approve, backend to confirm.
+   */
+  approveApplication(requestId: string, actor: AdminUser): Promise<TenantProvisioning>;
+  /** `POST /onboarding-requests/{requestId}/reject` with the required reason. */
+  rejectApplication(
+    requestId: string,
+    rejectionReason: string,
     actor: AdminUser,
-    subscriptionStartDate: string,
-    idempotencyKey: string,
-  ): Promise<TenantProvisioning>;
-  /** `GET /api/v1/tenants/{tenantId}` — tenant provisioning state (agent.md section 26). */
+  ): Promise<void>;
+  /** `GET /api/v1/tenants/{tenantId}/provisioning-status`. */
   getTenantStatus(tenantId: string): Promise<TenantProvisioning>;
   /** `POST /api/v1/tenants/{tenantId}/retry` — retries a failed provisioning. */
   retryTenant(tenantId: string, idempotencyKey: string): Promise<TenantProvisioning>;
   updateApplication(tenantId: string, patch: Partial<Tenant>, actor: AdminUser): Promise<Tenant>;
-  deleteApplication(tenantId: string, reason: string, actor: AdminUser): Promise<void>;
   /** Stores an uploaded image and returns its reference (NW-246). */
   uploadImage(file: File): Promise<string>;
   /**

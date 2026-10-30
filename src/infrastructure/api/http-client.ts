@@ -17,7 +17,24 @@ const apiEnvelopeSchema = z.object({
   timestamp: z.string().optional(),
 });
 
+/** ASP.NET Core ProblemDetails, returned by the approve/reject endpoints on failure. */
+const problemDetailsSchema = z.object({
+  type: z.string().nullish(),
+  title: z.string().nullish(),
+  status: z.number().nullish(),
+  detail: z.string().nullish(),
+  instance: z.string().nullish(),
+  errors: z.record(z.unknown()).nullish(),
+});
+
 export type ApiEnvelope = z.infer<typeof apiEnvelopeSchema>;
+
+/** Human message from a ProblemDetails body; `detail` first, then `title`. */
+function problemDetailsMessage(payload: unknown): string | null {
+  const parsed = problemDetailsSchema.safeParse(payload);
+  if (!parsed.success) return null;
+  return parsed.data.detail?.trim() || parsed.data.title?.trim() || null;
+}
 
 export class ApiError extends Error {
   constructor(
@@ -64,6 +81,11 @@ export interface HttpRequestOptions<T> {
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
   /** Exact success status the endpoint contract defines, e.g. 202 on tenant create. */
   expectedStatus?: number;
+  /**
+   * Endpoint returns the resource directly instead of the ApiResponse envelope and
+   * reports failures as ProblemDetails (approve/reject). Defaults to the envelope.
+   */
+  directBody?: boolean;
   /** Auth endpoints set this so a 401 there never starts a refresh loop. */
   skipAuthRetry?: boolean;
 }
@@ -99,6 +121,7 @@ export function createHttpClient({
     signal,
     schema,
     expectedStatus,
+    directBody = false,
     skipAuthRetry = false,
   }: HttpRequestOptions<T>): Promise<T> {
     const url = new URL(path.replace(/^\/+/, ''), root);
@@ -147,6 +170,14 @@ export function createHttpClient({
     const envelope = apiEnvelopeSchema.safeParse(payload);
 
     if (!response.ok) {
+      if (directBody) {
+        const problem = problemDetailsSchema.safeParse(payload);
+        throw new ApiError(
+          response.status,
+          problemDetailsMessage(payload) ?? `Request failed with HTTP ${response.status}.`,
+          problem.success ? (problem.data.errors ?? null) : null,
+        );
+      }
       const message = envelope.success
         ? (describeErrors(envelope.data.errors) ?? `Request failed with HTTP ${response.status}.`)
         : `Request failed with HTTP ${response.status}.`;
@@ -162,6 +193,10 @@ export function createHttpClient({
         response.status,
         `Expected HTTP ${expectedStatus} but received ${response.status}.`,
       );
+    }
+
+    if (directBody) {
+      return schema.parse(payload);
     }
 
     if (!envelope.success) {

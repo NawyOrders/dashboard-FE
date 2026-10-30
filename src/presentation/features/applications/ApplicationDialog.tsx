@@ -359,8 +359,12 @@ function ApplicationDialogContent({
         setProvisioningTimedOut(false);
         setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
       }
-    } catch {
-      toast({ title: en.applications.approveError, variant: 'error' });
+    } catch (error) {
+      toast({
+        title: en.applications.approveError,
+        ...(error instanceof Error && error.message ? { description: error.message } : {}),
+        variant: 'error',
+      });
     } finally {
       setApproving(false);
     }
@@ -379,8 +383,12 @@ function ApplicationDialogContent({
       toast({ title: en.applications.rejected, variant: 'success' });
       setShowRejectConfirm(false);
       onRejected();
-    } catch {
-      toast({ title: en.applications.rejectFailed, variant: 'error' });
+    } catch (error) {
+      toast({
+        title: en.applications.rejectFailed,
+        ...(error instanceof Error && error.message ? { description: error.message } : {}),
+        variant: 'error',
+      });
     } finally {
       setRejecting(false);
     }

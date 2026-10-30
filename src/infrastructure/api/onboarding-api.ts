@@ -128,18 +128,22 @@ export function createOnboardingApi(client: HttpClient): OnboardingApi {
     },
 
     approveRequest(requestId) {
+      // The contract returns the approval object directly, not inside ApiResponse.
       return client.request({
         path: `${REQUESTS_PATH}/${requestId}/approve`,
         method: 'POST',
+        directBody: true,
         schema: approveOnboardingResponseSchema,
       });
     },
 
     rejectRequest(requestId, rejectionReason) {
+      // The contract returns the rejection object directly, not inside ApiResponse.
       return client.request({
         path: `${REQUESTS_PATH}/${requestId}/reject`,
         method: 'POST',
         body: { rejectionReason },
+        directBody: true,
         schema: rejectOnboardingResponseSchema,
       });
     },

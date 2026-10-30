@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { requireRegistrationSchema } from '@/config/registration-schema';
-import { PACKAGES } from '@/config/packages';
+import { PACKAGE_BRANCH_LIMITS } from '@/domain/rules/packages';
 import type { DurationMonths, PackageCode, Tenant } from '@/domain/entities';
 import { DURATIONS } from '@/domain/entities';
 import {
@@ -68,7 +68,7 @@ export function useRestaurantFormState(tenant: Tenant) {
   }, [schema, tenant]);
 
   const branchLimits = useMemo(
-    () => PACKAGES[values.packageCode].branchLimits,
+    () => PACKAGE_BRANCH_LIMITS[values.packageCode],
     [values.packageCode],
   );
 

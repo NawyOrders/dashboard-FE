@@ -3,7 +3,7 @@ import { api } from '@/app/composition';
 import { Button } from '@/presentation/components/ui/Button';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useToast } from '@/presentation/hooks/useToast';
-import { useActivity, queryKeys } from '@/presentation/hooks/queries';
+import { useActivity, queryKeys, useOffers } from '@/presentation/hooks/queries';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { InfoList, InfoRow } from '@/presentation/components/shared/InfoList';
@@ -11,8 +11,12 @@ import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
 import { formatEgp } from '@/presentation/lib/format';
-import { PACKAGES, PACKAGE_LIST } from '@/config/packages';
-import { DURATIONS } from '@/domain/entities';
+import { packageName } from '@/presentation/lib/package-copy';
+import {
+  durationsFromOffers,
+  packageCodesFromOffers,
+  priceFromOffers,
+} from '@/domain/rules/packages';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
 import { ActivityLogTable } from '@/presentation/features/activity-logs/ActivityLogTable';
@@ -26,6 +30,10 @@ const HISTORY_ACTIONS = [
 
 export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
   const activity = useActivity({ tenantId: tenant.id });
+  const offersQuery = useOffers();
+  const offers = offersQuery.data ?? [];
+  const offerPackages = packageCodesFromOffers(offers);
+  const offerDurations = durationsFromOffers(offers);
   const history = (activity.data ?? []).filter((log) =>
     (HISTORY_ACTIONS as readonly string[]).includes(log.action),
   );
@@ -86,7 +94,7 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
               <StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />
             </InfoRow>
             <InfoRow label={en.details.currentPackage}>
-              {PACKAGES[tenant.subscription.packageCode].name}
+              {packageName(tenant.subscription.packageCode)}
             </InfoRow>
           </InfoList>
         </CardBody>
@@ -100,33 +108,49 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
           </div>
         </CardHeader>
         <CardBody className="pt-0">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[420px] border-collapse text-sm">
-              <caption className="sr-only">{en.details.referencePrices}</caption>
-              <thead>
-                <tr className="border-y border-border text-2xs font-medium text-text-muted">
-                  <th scope="col" className="px-4 py-3 text-start">{en.packages.feature}</th>
-                  {DURATIONS.map((months) => (
-                    <th key={months} scope="col" className="px-4 py-3 text-end">
-                      {en.packages.priceFor(months)}
+          {offerPackages.length === 0 || offerDurations.length === 0 ? (
+            <p className="text-sm text-text-muted">
+              {offersQuery.isLoading ? en.common.loading : en.common.notAvailable}
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[420px] border-collapse text-sm">
+                <caption className="sr-only">{en.details.referencePrices}</caption>
+                <thead>
+                  <tr className="border-y border-border text-2xs font-medium text-text-muted">
+                    <th scope="col" className="px-4 py-3 text-start">
+                      {en.details.subscriptionPackage}
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {PACKAGE_LIST.map((pkg) => (
-                  <tr key={pkg.code} className="border-b border-border last:border-0">
-                    <td className="whitespace-nowrap px-4 py-4 font-medium text-text">{pkg.name}</td>
-                    {DURATIONS.map((months) => (
-                      <td key={months} className="tabular whitespace-nowrap px-4 py-4 text-end text-text">
-                        {formatEgp(pkg.prices[months])}
-                      </td>
+                    {offerDurations.map((months) => (
+                      <th key={months} scope="col" className="px-4 py-3 text-end">
+                        {en.packages.priceFor(months)}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {offerPackages.map((code) => (
+                    <tr key={code} className="border-b border-border last:border-0">
+                      <td className="whitespace-nowrap px-4 py-4 font-medium text-text">
+                        {packageName(code)}
+                      </td>
+                      {offerDurations.map((months) => {
+                        const price = priceFromOffers(offers, code, months);
+                        return (
+                          <td
+                            key={months}
+                            className="tabular whitespace-nowrap px-4 py-4 text-end text-text"
+                          >
+                            {price === null ? en.common.notAvailable : formatEgp(price)}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardBody>
       </Card>
 

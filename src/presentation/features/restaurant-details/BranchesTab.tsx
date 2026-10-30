@@ -3,7 +3,6 @@ import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { branchStatusMeta } from '@/presentation/lib/status';
 import { INCLUDED_BRANCHES } from '@/config/policy';
-import { PACKAGES } from '@/config/packages';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
 
@@ -26,7 +25,7 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
       <CardBody className="pt-0">
         {overIncluded && (
           <p className="mb-4 rounded-panel bg-warning-bg px-4 py-3 text-2xs text-warning-fg">
-            {en.create.branches.limitNote(PACKAGES[tenant.subscription.packageCode].branchLimits.max)}
+            {en.create.branches.limitNote(INCLUDED_BRANCHES)}
           </p>
         )}
 

@@ -7,7 +7,7 @@ import { en } from '@/presentation/i18n/en';
 import { formatDate } from '@/domain/rules/date';
 import { downloadCsv } from '@/presentation/lib/csv';
 import type { CsvColumn } from '@/presentation/lib/csv';
-import { PACKAGES } from '@/config/packages';
+import { packageName } from '@/presentation/lib/package-copy';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { cn } from '@/presentation/lib/cn';
 import { useToast } from '@/presentation/hooks/useToast';
@@ -24,7 +24,7 @@ function csvColumns(): CsvColumn<Tenant>[] {
     { key: 'name', header: en.restaurants.csv.restaurant, value: (t) => t.restaurantName },
     { key: 'business', header: en.restaurants.csv.business, value: (t) => t.businessName },
     { key: 'tenantId', header: en.restaurants.csv.tenantId, value: (t) => t.tenantId },
-    { key: 'package', header: en.restaurants.csv.package, value: (t) => PACKAGES[t.subscription.packageCode].name },
+    { key: 'package', header: en.restaurants.csv.package, value: (t) => packageName(t.subscription.packageCode) },
     { key: 'restaurantStatus', header: en.restaurants.csv.restaurantStatus, value: (t) => t.status },
     { key: 'subscriptionStatus', header: en.restaurants.csv.subscriptionStatus, value: (t) => t.subscription.status },
     { key: 'start', header: en.restaurants.csv.startDate, value: (t) => t.subscription.startDate },

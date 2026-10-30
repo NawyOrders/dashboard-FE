@@ -1,7 +1,6 @@
 import type { UseCaseDeps } from '@/application/ports';
 import type { AdminUser, FeatureFlag, PackageFeatureKey } from '@/domain/entities';
-import { PACKAGES } from '@/config/packages';
-import { canEnableFeature } from '@/domain/rules/packages';
+import { PACKAGE_NAMES, canEnableFeature } from '@/domain/rules/packages';
 
 export function makeSetFeatureFlag(deps: UseCaseDeps) {
   return function setFeatureFlag(
@@ -16,7 +15,7 @@ export function makeSetFeatureFlag(deps: UseCaseDeps) {
 
     if (!canEnableFeature(tenant.subscription.packageCode, key, enabled)) {
       throw new Error(
-        `Feature "${key}" is not available on the ${PACKAGES[tenant.subscription.packageCode].name} package`,
+        `Feature "${key}" is not available on the ${PACKAGE_NAMES[tenant.subscription.packageCode]} package`,
       );
     }
 

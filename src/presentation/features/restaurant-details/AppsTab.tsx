@@ -2,7 +2,7 @@ import { ExternalLink } from 'lucide-react';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { Badge } from '@/presentation/components/ui/Badge';
 import { en } from '@/presentation/i18n/en';
-import { PACKAGES } from '@/config/packages';
+import { packageName } from '@/presentation/lib/package-copy';
 import type { AppStatus, Tenant } from '@/domain/entities';
 import { AppStatusStepper } from './AppStatusStepper';
 
@@ -53,7 +53,7 @@ export function AppsTab({ tenant }: { tenant: Tenant }) {
           </p>
         </div>
         <Badge tone="success" withDot>
-          {PACKAGES[tenant.subscription.packageCode].name} · {en.details.entitled}
+          {packageName(tenant.subscription.packageCode)} · {en.details.entitled}
         </Badge>
       </CardHeader>
       <CardBody className="flex flex-col gap-4 pt-0">

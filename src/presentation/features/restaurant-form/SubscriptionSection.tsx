@@ -1,5 +1,4 @@
 import { Check } from 'lucide-react';
-import { PACKAGE_LIST } from '@/config/packages';
 import type {
   DurationMonths,
   PackageCode,
@@ -7,9 +6,11 @@ import type {
   SubscriptionOffer,
 } from '@/domain/entities';
 import {
+  PACKAGE_BRANCH_LIMITS,
+  PACKAGE_CODES,
+  PACKAGE_FEATURES,
   durationsFromOffers,
-  getReferencePrice,
-  packageCodeOfOffer,
+  packageCodesFromOffers,
   priceFromOffers,
 } from '@/domain/rules/packages';
 import type { RegistrationStep } from '@/domain/rules/registration-schema';
@@ -49,15 +50,15 @@ function ReadOnlySubscription({
   SubscriptionSectionProps,
   'step' | 'packageCode' | 'durationMonths' | 'paymentStatus' | 'offers' | 'submittedPrice'
 >) {
-  const price =
-    submittedPrice ??
-    priceFromOffers(offers, packageCode, durationMonths) ??
-    getReferencePrice(packageCode, durationMonths);
+  const price = submittedPrice ?? priceFromOffers(offers, packageCode, durationMonths);
 
   const fields = [
     { label: en.details.subscriptionPackage, value: packageName(packageCode) },
     { label: en.registration.duration, value: en.registration.months(durationMonths) },
-    { label: en.registration.price, value: formatEgp(price) },
+    {
+      label: en.registration.price,
+      value: price === null ? en.common.notAvailable : formatEgp(price),
+    },
   ];
 
   return (
@@ -120,13 +121,11 @@ export function SubscriptionSection({
   }
 
   const hasOffers = offers !== undefined && offers.length > 0;
-  const offeredPackages = hasOffers
-    ? PACKAGE_LIST.filter((pkg) => offers.some((offer) => packageCodeOfOffer(offer) === pkg.code))
-    : [];
-  const packageOptions = offeredPackages.length > 0 ? offeredPackages : PACKAGE_LIST;
+  const offeredCodes = hasOffers ? packageCodesFromOffers(offers) : [];
+  const packageOptions = offeredCodes.length > 0 ? offeredCodes : PACKAGE_CODES;
   const durationOptions = hasOffers ? durationsFromOffers(offers) : undefined;
   const priceFor = (code: PackageCode, duration: DurationMonths) =>
-    priceFromOffers(offers, code, duration) ?? getReferencePrice(code, duration);
+    priceFromOffers(offers, code, duration);
 
   return (
     <section className="flex flex-col gap-4" aria-label={stepTitle(step)}>
@@ -158,33 +157,34 @@ export function SubscriptionSection({
         aria-label={en.registration.groups.subscription}
         className="grid grid-cols-1 gap-3 sm:grid-cols-2"
       >
-        {packageOptions.map((pkg) => {
-          const selected = pkg.code === packageCode;
-          const price = priceFor(pkg.code, durationMonths);
+        {packageOptions.map((code) => {
+          const selected = code === packageCode;
+          const price = priceFor(code, durationMonths);
+          const branchLimits = PACKAGE_BRANCH_LIMITS[code];
           return (
             <button
-              key={pkg.code}
+              key={code}
               type="button"
               role="radio"
               aria-checked={selected}
               disabled={disabled}
-              onClick={() => onPackageChange?.(pkg.code)}
+              onClick={() => onPackageChange?.(code)}
               className={cn(
                 'flex flex-col gap-2 rounded-panel border p-4 text-start transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60',
                 selected ? 'border-primary bg-bg-2/60' : 'border-border hover:border-primary-light',
               )}
             >
               <span className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-text">{packageName(pkg.code)}</span>
+                <span className="text-sm font-semibold text-text">{packageName(code)}</span>
                 {selected && (
                   <span className="flex size-5 items-center justify-center rounded-full bg-primary text-white">
                     <Check aria-hidden="true" className="size-3" />
                   </span>
                 )}
               </span>
-              <span className="text-2xs text-text-muted">{packageTagline(pkg.code)}</span>
+              <span className="text-2xs text-text-muted">{packageTagline(code)}</span>
               <span className="flex flex-wrap gap-1">
-                {pkg.features.map((feature) => (
+                {PACKAGE_FEATURES[code].map((feature) => (
                   <span
                     key={feature}
                     className="rounded-pill bg-card px-2 py-0.5 text-2xs text-text-muted"
@@ -194,11 +194,13 @@ export function SubscriptionSection({
                 ))}
               </span>
               <span className="flex flex-col gap-0.5">
-                <span className="text-lg font-semibold text-text">{formatEgp(price)}</span>
+                <span className="text-lg font-semibold text-text">
+                  {price === null ? en.common.notAvailable : formatEgp(price)}
+                </span>
                 <span className="text-2xs text-text-muted">{en.registration.durationNote}</span>
               </span>
               <span className="text-2xs text-text-muted">
-                {en.registration.packageBranchRange(pkg.branchLimits.min, pkg.branchLimits.max)}
+                {en.registration.packageBranchRange(branchLimits.min, branchLimits.max)}
               </span>
             </button>
           );

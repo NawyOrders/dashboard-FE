@@ -13,7 +13,7 @@ import { InfoList, InfoRow } from '@/presentation/components/shared/InfoList';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { restaurantStatusMeta, subscriptionStatusMeta, channelStatusMeta, appStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
-import { PACKAGES } from '@/config/packages';
+import { PACKAGE_BRANCH_LIMITS, PACKAGE_FEATURES } from '@/domain/rules/packages';
 import { packageFeatureLabel } from '@/presentation/lib/package-copy';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
@@ -113,7 +113,7 @@ function ProvisioningCard({ tenant }: { tenant: Tenant }) {
 export function OverviewTab({ tenant }: { tenant: Tenant }) {
   const { data } = useTenant(tenant.id);
   const current = data ?? tenant;
-  const pkg = PACKAGES[current.subscription.packageCode];
+  const features = PACKAGE_FEATURES[current.subscription.packageCode];
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -195,7 +195,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
             </InfoRow>
             <InfoRow label={en.packages.feature}>
               <span className="flex flex-wrap gap-1.5">
-                {pkg.features.map((feature) => (
+                {features.map((feature) => (
                   <span key={feature} className="rounded-pill bg-bg-2 px-2.5 py-1 text-2xs text-primary-dark">
                     {packageFeatureLabel(feature)}
                   </span>
@@ -254,7 +254,9 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
           </div>
           {current.branches.length > INCLUDED_BRANCHES && (
             <p className="mt-2 text-2xs text-warning-fg">
-              {en.create.branches.limitNote(PACKAGES[current.subscription.packageCode].branchLimits.max)}
+              {en.create.branches.limitNote(
+                PACKAGE_BRANCH_LIMITS[current.subscription.packageCode].max,
+              )}
             </p>
           )}
         </CardBody>

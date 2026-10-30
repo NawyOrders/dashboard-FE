@@ -1,8 +1,7 @@
 import type { UpdateSubscriptionInput } from '@/application/dto';
 import type { UseCaseDeps } from '@/application/ports';
 import type { AdminUser, Tenant } from '@/domain/entities';
-import { PACKAGES } from '@/config/packages';
-import { packageHasFeature } from '@/domain/rules/packages';
+import { PACKAGE_NAMES, packageHasFeature } from '@/domain/rules/packages';
 
 /**
  * Updates the subscription and writes one ActivityLog per changed aspect
@@ -28,8 +27,8 @@ export function makeUpdateSubscription(deps: UseCaseDeps) {
         actor,
         action: 'package_changed',
         target: { type: 'subscription', tenantId, label },
-        previousValue: PACKAGES[prev.packageCode].name,
-        newValue: PACKAGES[input.packageCode].name,
+        previousValue: PACKAGE_NAMES[prev.packageCode],
+        newValue: PACKAGE_NAMES[input.packageCode],
       });
     }
     if (prev.durationMonths !== input.durationMonths) {

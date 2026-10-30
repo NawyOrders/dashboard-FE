@@ -1,5 +1,5 @@
 import { cn } from '@/presentation/lib/cn';
-import { PACKAGE_DURATIONS } from '@/config/packages';
+import { DURATIONS } from '@/domain/entities';
 import type { DurationMonths } from '@/domain/entities';
 import { en } from '@/presentation/i18n/en';
 
@@ -7,7 +7,7 @@ export interface DurationSegmentedProps {
   value: DurationMonths;
   onChange: (value: DurationMonths) => void;
   disabled?: boolean;
-  /** Durations to offer; defaults to the configured 3/6/12 months. */
+  /** Durations to offer; callers pass the durations sold by `GET /offers`. */
   options?: DurationMonths[];
 }
 
@@ -15,7 +15,7 @@ export function DurationSegmented({
   value,
   onChange,
   disabled,
-  options = PACKAGE_DURATIONS,
+  options = DURATIONS,
 }: DurationSegmentedProps) {
   return (
     <div

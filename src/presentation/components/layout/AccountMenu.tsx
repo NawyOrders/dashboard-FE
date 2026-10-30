@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ChevronDown, LogOut } from 'lucide-react';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { useAuth } from '@/presentation/hooks/useAuth';
@@ -24,7 +23,6 @@ export interface AccountMenuProps {
 export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
   const { user } = useCurrentUser();
   const { signOut } = useAuth();
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -41,14 +39,9 @@ export function AccountMenu({ variant = 'rail' }: AccountMenuProps) {
   if (!user) return <div className="h-16 animate-pulse rounded-panel bg-neutral-bg" />;
 
   function handleSignOut() {
-    signOut();
     setOpen(false);
-    try {
-      navigate('/login', { replace: true });
-    } catch {
-      // ignore
-    }
     toast({ title: en.common.signOut, variant: 'neutral' });
+    void signOut();
   }
 
   return (

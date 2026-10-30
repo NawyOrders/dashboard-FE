@@ -186,5 +186,7 @@ export function createStaticApi(
     async refreshSession(): Promise<PlatformLoginResponse> {
       throw new Error('Refresh is not available in the static data source.');
     },
+    // Static demo has no server session to end.
+    async logout(): Promise<void> {},
   };
 }

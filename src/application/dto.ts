@@ -224,4 +224,6 @@ export interface Api {
   signIn(email: string, password: string): Promise<PlatformLoginResult>;
   /** `POST /api/v1/auth/refresh-token` with `{ refreshToken }`; returns the login shape. */
   refreshSession(refreshToken: string): Promise<PlatformLoginResponse>;
+  /** `POST /api/v1/auth/logout` with `{ refreshToken }` and the bearer header. */
+  logout(refreshToken: string): Promise<void>;
 }

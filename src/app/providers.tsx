@@ -8,7 +8,13 @@ import { router } from '@/app/router';
 import type { AdminUser, PlatformLoginResult, Role } from '@/domain/entities';
 import { adminUserFromPlatformLogin } from '@/domain/rules/platform-auth';
 import { isRefreshTokenExpired, refreshDelayMs } from '@/domain/rules/session';
-import { clearTokenSet, readTokenSet, saveTokenSet } from '@/infrastructure/api/access-token';
+import {
+  clearTokenSet,
+  readRefreshToken,
+  readTokenSet,
+  saveTokenSet,
+  type PlatformTokenSet,
+} from '@/infrastructure/api/access-token';
 import {
   SESSION_EXPIRED_EVENT,
   SESSION_REFRESHED_EVENT,
@@ -53,17 +59,18 @@ const queryClient = new QueryClient({
 
 function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AdminUser | null>(readStoredUser);
-  const [sessionVersion, setSessionVersion] = useState(0);
+  const [tokens, setTokens] = useState<PlatformTokenSet | null>(readTokenSet);
 
   useEffect(() => {
     function handleRefreshed(event: Event) {
       const refreshedUser = (event as CustomEvent<AdminUser>).detail;
       setUser(refreshedUser);
       persistStoredUser(refreshedUser);
-      setSessionVersion((value) => value + 1);
+      setTokens(readTokenSet());
     }
     function handleExpired() {
       setUser(null);
+      setTokens(null);
       clearStoredUser();
       router.navigate('/login?reason=expired', { replace: true });
     }
@@ -77,7 +84,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   // Proactive refresh 90 seconds before expiry, rescheduled by every successful refresh.
   useEffect(() => {
-    const tokens = readTokenSet();
     if (!tokens) return;
     if (isRefreshTokenExpired(tokens.refreshTokenExpiresAtUtc)) {
       void refreshPlatformSession();
@@ -89,7 +95,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       void refreshPlatformSession();
     }, delay);
     return () => window.clearTimeout(timer);
-  }, [user, sessionVersion]);
+  }, [tokens]);
 
   async function signIn(email: string, password: string): Promise<PlatformLoginResult> {
     const result = await api.signIn(email, password);
@@ -104,14 +110,24 @@ function AuthProvider({ children }: { children: ReactNode }) {
       refreshTokenExpiresAtUtc: result.session.refreshTokenExpiresAtUtc,
       tokenType: result.session.tokenType,
     });
+    setTokens(readTokenSet());
     persistStoredUser(user);
     return result;
   }
 
-  function signOut() {
-    setUser(null);
-    clearTokenSet();
-    clearStoredUser();
+  async function signOut(): Promise<void> {
+    const refreshToken = readRefreshToken();
+    try {
+      if (refreshToken) await api.logout(refreshToken);
+    } catch {
+      // The local session is cleared whether or not the server call succeeds.
+    } finally {
+      setUser(null);
+      setTokens(null);
+      clearTokenSet();
+      clearStoredUser();
+    }
+    router.navigate('/login', { replace: true });
   }
 
   return <AuthContext.Provider value={{ user, signIn, signOut }}>{children}</AuthContext.Provider>;

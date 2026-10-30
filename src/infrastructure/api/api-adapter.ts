@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import type { Api, ListTenantsParams } from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
 import { makeExtractMenu } from '@/application/use-cases/extract-menu';
@@ -64,6 +65,16 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
         skipAuthRetry: true,
       });
       return toPlatformSession(response);
+    },
+
+    async logout(refreshToken: string): Promise<void> {
+      await client.request({
+        path: 'api/v1/auth/logout',
+        method: 'POST',
+        body: { refreshToken },
+        schema: z.unknown(),
+        skipAuthRetry: true,
+      });
     },
 
     extractMenu: (file, options) => extractMenu(file, options),

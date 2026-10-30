@@ -24,7 +24,7 @@ export const ToastContext = createContext<ToastContextValue | null>(null);
 export interface AuthContextValue {
   user: AdminUser | null;
   signIn: (email: string, password: string) => Promise<PlatformLoginResult>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

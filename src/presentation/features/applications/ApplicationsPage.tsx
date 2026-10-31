@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Eye, Search } from 'lucide-react';
 import { PageHeader } from '@/presentation/components/shared/PageHeader';
 import { PermissionDenied } from '@/presentation/components/shared/PermissionDenied';
@@ -21,6 +22,7 @@ export function ApplicationsPage() {
   const { allowed } = usePermission('restaurant.create');
   useCurrentUser();
   const applicationsQuery = useApplications();
+  const queryClient = useQueryClient();
   useToast();
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<Tenant | null>(null);
@@ -82,7 +84,10 @@ export function ApplicationsPage() {
         </div>
       ) : rows.length === 0 ? (
         <div className="mt-6">
-          <EmptyState title={en.applications.tableEmpty} />
+          <EmptyState
+            title={en.applications.tableEmpty}
+            description={en.applications.tableEmptyHint}
+          />
         </div>
       ) : (
           <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card">
@@ -151,6 +156,9 @@ export function ApplicationsPage() {
         onApproved={() => {
           setViewing(null);
           applicationsQuery.refetch();
+          // The approved request leaves this list and now appears under Restaurants.
+          void queryClient.invalidateQueries({ queryKey: ['tenants'] });
+          void queryClient.invalidateQueries({ queryKey: ['overview'] });
         }}
         onRejected={() => {
           setViewing(null);

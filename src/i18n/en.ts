@@ -348,6 +348,7 @@ export const en = {
     subtitle: 'Review new restaurant registrations submitted for approval.',
     searchPlaceholder: 'Search applications by name or ID…',
     tableEmpty: 'No applications to review.',
+    tableEmptyHint: 'Approved requests are in Restaurants.',
     approve: 'Approve',
     approveSuccess: 'Application approved',
     approveUnknown: 'The request may have been approved. Refresh the list before trying again.',

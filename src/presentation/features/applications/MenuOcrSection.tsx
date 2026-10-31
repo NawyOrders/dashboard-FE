@@ -39,7 +39,6 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
   const [progress, setProgress] = useState<MenuExtractionProgress>(IDLE_PROGRESS);
   const [items, setItems] = useState<MenuEditableItem[]>([]);
   const [resultOpen, setResultOpen] = useState(false);
-  const [timedOutJobId, setTimedOutJobId] = useState<string | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
   const running = phase === 'submitting' || phase === 'processing';
@@ -58,7 +57,6 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
     controllerRef.current = null;
     setFile(next);
     clearResult();
-    setTimedOutJobId(null);
     setProgress(IDLE_PROGRESS);
 
     const nextProblem = checkMenuFile(next);
@@ -70,9 +68,9 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
     setPhase('idle');
   }
 
-  async function run(selected: File | null, resumeJobId?: string) {
-    const knownProblem = resumeJobId ? null : checkMenuFile(selected);
-    if (!resumeJobId && (knownProblem || !selected)) {
+  async function run(selected: File | null) {
+    const knownProblem = checkMenuFile(selected);
+    if (knownProblem || !selected) {
       setProblem(knownProblem ?? 'required');
       setPhase('invalid');
       return;
@@ -82,14 +80,12 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
     const controller = new AbortController();
     controllerRef.current = controller;
     clearResult();
-    setTimedOutJobId(null);
-    setPhase(resumeJobId ? 'processing' : 'submitting');
-    if (!resumeJobId) setProgress({ status: 'Queued', progressPercentage: 0, stage: null });
+    setPhase('submitting');
+    setProgress({ status: 'Queued', progressPercentage: 0, stage: null });
 
     try {
       const outcome = await api.extractMenu(selected, {
         referenceId,
-        jobId: resumeJobId,
         signal: controller.signal,
         onProgress: (next) => {
           if (controller.signal.aborted) return;
@@ -108,7 +104,6 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
           setPhase('failed');
           break;
         case 'timeout':
-          setTimedOutJobId(outcome.jobId);
           setPhase('timeout');
           break;
         case 'completed': {
@@ -199,7 +194,6 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
         totalCount={items.length}
         disabled={disabled}
         onRetry={() => void run(file)}
-        onCheckAgain={() => void run(file, timedOutJobId ?? undefined)}
         onViewResult={() => setResultOpen(true)}
       />
 

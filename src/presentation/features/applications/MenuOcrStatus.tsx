@@ -32,7 +32,6 @@ export interface MenuOcrStatusProps {
   totalCount: number;
   disabled?: boolean;
   onRetry: () => void;
-  onCheckAgain: () => void;
   onViewResult: () => void;
 }
 
@@ -214,7 +213,6 @@ export function MenuOcrStatus({
   totalCount,
   disabled,
   onRetry,
-  onCheckAgain,
   onViewResult,
 }: MenuOcrStatusProps) {
   const running = phase === 'submitting' || phase === 'processing';
@@ -277,10 +275,9 @@ export function MenuOcrStatus({
     return (
       <FailurePanel
         message={en.menu.timeout}
-        actionLabel={en.menu.checkAgain}
-        onAction={onCheckAgain}
+        actionLabel={en.menu.retry}
+        onAction={onRetry}
         disabled={disabled}
-        hint={progress.status ? en.menu.lastStatus(progress.status) : undefined}
       />
     );
   }

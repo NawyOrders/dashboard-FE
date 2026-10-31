@@ -4,9 +4,19 @@ import { checkMenuFile } from '@/domain/rules/menu-file';
 import { flattenMenuItems } from '@/domain/rules/menu-extraction';
 
 const POLL_INTERVAL_MS = 5_000;
-const TIMEOUT_MS = 120_000;
+const MAX_POLL_INTERVAL_MS = 15_000;
+/** Owner decision (agent.md section 27): the dashboard stops waiting 5 minutes after submit. */
+const TIMEOUT_MS = 5 * 60 * 1000;
 
 const TERMINAL_FAILURES = new Set(['failed', 'cancelled', 'expired']);
+
+// The backend estimate is only a hint for the poll interval; 5 s is the floor and 15 s the
+// ceiling so a short remaining time still polls often enough.
+function pollInterval(estimatedRemainingSeconds: number | null): number {
+  if (estimatedRemainingSeconds === null) return POLL_INTERVAL_MS;
+  const hint = (estimatedRemainingSeconds * 1000) / 4;
+  return Math.min(MAX_POLL_INTERVAL_MS, Math.max(POLL_INTERVAL_MS, hint));
+}
 
 function abortError(): Error {
   return new DOMException('The menu extraction was cancelled.', 'AbortError');
@@ -36,8 +46,8 @@ function normalizeStatus(status: string): string {
 
 /**
  * Menu OCR flow: validate the photo, submit the job, then read the job status every
- * 5 seconds until a final state. The job is read for at most 120 seconds; after that the
- * caller gets the last status and the job id so it can check again without re-uploading.
+ * 5 to 15 seconds until a final state. The job is read for at most 5 minutes; after that
+ * the caller gets a timeout outcome with the job id and offers a fresh retry.
  *
  * The result stays in memory with the caller; nothing is saved or sent with the
  * application submit.
@@ -91,7 +101,10 @@ export function makeExtractMenu(ocr: MenuOcrPort) {
       if (Date.now() >= deadline) {
         return { status: 'timeout', jobId };
       }
-      await wait(Math.min(POLL_INTERVAL_MS, deadline - Date.now()), signal);
+      await wait(
+        Math.min(pollInterval(snapshot.estimatedRemainingSeconds), deadline - Date.now()),
+        signal,
+      );
     }
   };
 }

@@ -515,6 +515,12 @@ export const ar = {
       paletteUnreadable:
         'تعذر قراءة لوحة الألوان. يمكنك ضبط الألوان يدويًا.',
       paletteFailed: 'تعذرت قراءة الألوان من اللوجو.',
+      paletteTitle: 'الألوان المقترحة',
+      paletteDescription: 'وزّع كل لون على خانة، أو عدّل القيمة قبل التطبيق.',
+      suggestedColor: (index: number) => `اللون المقترح ${index}`,
+      assignSlot: 'الخانة',
+      notUsed: 'بدون استخدام',
+      applyPalette: 'تطبيق الألوان',
     },
     chooseImage: 'اختيار صورة',
     removeImage: 'إزالة الصورة',

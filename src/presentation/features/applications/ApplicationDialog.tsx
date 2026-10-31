@@ -41,6 +41,8 @@ import type { BranchExtra } from '@/presentation/features/restaurant-form/Branch
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
 import { BRAND_COLOR_SLOTS } from '@/presentation/features/restaurant-form/brand-color-slots';
+import { PaletteDialog } from '@/presentation/features/restaurant-form/PaletteDialog';
+import type { PaletteSelection } from '@/presentation/features/restaurant-form/PaletteDialog';
 
 interface ApplicationDialogProps {
   tenant: Tenant | null;
@@ -263,6 +265,7 @@ function ApplicationDialogContent({
   const [rejectReason, setRejectReason] = useState('');
   const [rejectError, setRejectError] = useState<string | null>(null);
   const [rejecting, setRejecting] = useState(false);
+  const [paletteColors, setPaletteColors] = useState<string[] | null>(null);
   const provisioningDoneRef = useRef(false);
 
   function scrollToGroup(id: string) {
@@ -333,12 +336,17 @@ function ApplicationDialogContent({
     }
   }
 
-  // The palette fills the slots in the returned order: primary, background, text.
+  // The palette opens in a popup; cancelling it leaves the form untouched.
   function handlePaletteSuggested(colors: string[]) {
-    BRAND_COLOR_SLOTS.forEach((slot, index) => {
-      const color = colors[index];
+    setPaletteColors(colors);
+  }
+
+  function handlePaletteApply(selection: PaletteSelection) {
+    for (const slot of BRAND_COLOR_SLOTS) {
+      const color = selection[slot.key];
       if (color) setField(slot.key, color);
-    });
+    }
+    setPaletteColors(null);
   }
 
   function handleSave() {
@@ -759,6 +767,14 @@ function ApplicationDialogContent({
           />
         </div>
       </ConfirmDialog>
+
+      {paletteColors ? (
+        <PaletteDialog
+          colors={paletteColors}
+          onCancel={() => setPaletteColors(null)}
+          onApply={handlePaletteApply}
+        />
+      ) : null}
     </>
   );
 }

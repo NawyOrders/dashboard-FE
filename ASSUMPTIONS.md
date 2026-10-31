@@ -384,3 +384,73 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
     `SupportDemo123!`. These passwords are fictional, hashed in memory, and must never be
     reused in a real environment. Sign-out clears both `nawy_session` and
     `nawy_platform_tokens` from `sessionStorage`.
+
+## Live API and session (AH-248)
+97. **Session tokens.** The access token lives 15 minutes. The app refreshes it through
+    `POST /api/v1/auth/refresh-token` 90 seconds before `expiresAtUtc`, and retries a request
+    once after a 401. Logout calls `POST /api/v1/auth/logout` and then clears the session
+    whether or not the call succeeds. Tokens stay in `sessionStorage` (owner decision).
+    Earlier notes that refresh and logout were missing are superseded by `swagger-v4.json`.
+98. **Sign-in error copy.** The only sign-in failure message is "Invalid email or password",
+    with no trailing period and no "Please try again". The copy from the login doc is not used.
+    The password field has a show/hide toggle, hidden by default; it never logs or stores the
+    value.
+99. **Approve creates the tenant.** `POST /api/v1/onboarding-requests/{requestId}/approve`
+    takes no body. The server creates the restaurant, so the separate `POST /api/v1/tenants`
+    is no longer used. Approve and reject return their result body without the ApiResponse
+    wrapper and report errors as ProblemDetails.
+100. **Admin password at approve (temporary).** The dialog still shows the admin password
+    field, but the value is not sent, because the approve endpoint has no field for it.
+    Marked OPEN until the backend confirms where it goes.
+101. **Payment gates approval.** The "Payment completed" checkbox writes the paid state through
+    `PATCH .../payment`. Approve stays blocked until the checkbox is checked.
+102. **Reject replaces Delete.** Reject requires a non-empty, trimmed `rejectionReason`. The
+    dashboard has no delete action for applications.
+103. **Onboarding status meaning.** Status 1 is PENDING (owner decision). The Applications page
+    shows only status 1. The list returns the status as a number, and the details endpoint
+    returns it as a string; the mapper accepts both and keeps unknown strings as raw text.
+104. **Subscription offer in details.** The offer identifier in the details response is `offerId`
+    and the whole `subscriptionOffer` is nullable. When it is missing the preview shows "No
+    package selected" instead of failing.
+105. **Packages come from the API.** The package and duration (3, 6 or 12 months) are chosen in
+    the registration form from `GET /api/v1/onboarding-requests/offers`. The view dialog shows
+    the submitted choice read-only. Prices are not taken from `config/packages.ts` any more.
+106. **Branch limit is 2 for every package** (owner decision). The fee for a branch beyond 2 is
+    not defined, so no fee text or amount is shown anywhere.
+107. **Commercial register and admin password are not sent yet** (owner decision: keep as they
+    are). Both remain OPEN in code.
+108. **Cover image is not part of the form.** The JSON field `coverImageUrl` stays hidden and is
+    marked OPEN until the owner confirms it is cancelled.
+109. **Menu OCR limits and storage.** Submit is `POST /api/v1/onboarding/menu-ocr` with the
+    `image` field. Polling reads `/api/v1/ai/jobs/{jobId}/status` and then `/result`.
+    The dashboard stops polling 5 minutes after submit and shows "The extraction took too
+    long and was stopped. Please try again." with a Retry button. The server's
+    `estimatedRemainingSeconds` is only a hint for the poll interval. The OCR result is kept
+    in memory only and is never written to browser storage.
+110. **Preview logo and brand colors (unparked by owner).** The logo comes from `logoAsset`; when
+    no readable URL exists, a placeholder with the restaurant's initials is shown (OPEN until
+    the backend provides a URL). Colors come from `primaryColorHex`, `secondaryColorHex` and
+    `accentColorHex`; an empty or invalid value falls back to the dashboard token for that role.
+111. **Default language is Arabic** (owner decision). The switch changes to English and back,
+    the layout is RTL in Arabic, and restaurant names are shown in both languages.
+112. **Duplicate restaurant names are allowed** (owner decision). Creating a restaurant is not
+    blocked by a name that already exists.
+113. **Branches for approved restaurants (temporary workaround).** `TenantDetailsResponse` has
+    neither `requestId` nor `branches`. The dashboard finds the onboarding request by matching
+    owner email, English name and Arabic name, and then reads its branches. When several
+    requests match, the one closest to the tenant's creation date is used. With no match, the
+    screen says "Branches are not linked yet". Marked WORKAROUND; remove it when the backend
+    adds the link.
+114. **Static fallback only where no endpoint exists.** Internal users, tenant accounts, roles,
+    activity logs, analytics charts, KPI counts and current-user permissions still come from the
+    static source. Each one is marked OPEN in code, and the static data stays read-only on disk
+    as described in item 95.
+
+## Deployment and environment
+115. **Production needs `vercel.json`.** The SPA rewrite `/(.*)` → `/index.html` must exist on the
+    branch that Vercel builds for production. Without it, deep links such as `/login` return
+    404. Production values for `VITE_DATA_SOURCE` and `VITE_API_BASE_URL` are set only in the
+    Vercel project settings; `.env` is local and is never committed.
+116. **Browser access to the API needs CORS.** The backend must allow the local development
+    origin and `https://dashboard.nawyorders.com`. Until it does, sign-in from a browser is
+    blocked, which looks like a network error and not a wrong password.

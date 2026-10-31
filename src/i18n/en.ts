@@ -493,6 +493,15 @@ export const en = {
       description_and_cover: 'Description & cover image',
       brand_colors: 'Brand colors',
     },
+    brandColors: {
+      primary: 'Primary color',
+      background: 'Background color',
+      text: 'Text color',
+      pickColor: 'Pick a color',
+      clear: 'Clear color',
+      invalidHex: 'Enter a hex color in the #RRGGBB format.',
+      usingDefault: (color: string) => `No color set; the design default ${color} is used.`,
+    },
     chooseImage: 'Choose image',
     removeImage: 'Remove image',
     uploading: 'Uploading…',
@@ -556,6 +565,7 @@ export const en = {
         coverImageUrl: { label: 'Cover image' },
         primaryColor: { label: 'Primary color' },
         backgroundColor: { label: 'Background color' },
+        textColor: { label: 'Text color' },
       },
       branch: {
         name: { label: 'Branch name', placeholder: 'Alexandria - Smouha branch' },

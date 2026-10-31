@@ -168,15 +168,46 @@ export function buildApplicationChanges(
     input.ownerPhone = value;
   });
 
-  applyText('primaryColor', values.fields.primaryColor ?? '', tenant.brandColors.primary, (value) => {
-    input.primaryColorHex = value;
-  });
-  applyText(
-    'backgroundColor',
+  function applyColor(
+    nextValue: string,
+    previousValue: string,
+    label: string,
+    apply: (value: string | null) => void,
+  ) {
+    const next = text(nextValue);
+    const previous = text(previousValue);
+    // Hex values are case-insensitive: #AABBCC and #aabbcc are the same color.
+    if ((next ?? '').toLowerCase() === (previous ?? '').toLowerCase()) return;
+    apply(next);
+    changes.push({
+      label,
+      previous,
+      next: next ?? en.common.notAvailable,
+    });
+  }
+
+  applyColor(
+    values.fields.primaryColor ?? '',
+    tenant.brandColors.primary,
+    en.registration.brandColors.primary,
+    (value) => {
+      input.primaryColorHex = value;
+    },
+  );
+  applyColor(
     values.fields.backgroundColor ?? '',
     tenant.brandColors.secondary,
+    en.registration.brandColors.background,
     (value) => {
       input.secondaryColorHex = value;
+    },
+  );
+  applyColor(
+    values.fields.textColor ?? '',
+    tenant.brandColors.accent ?? '',
+    en.registration.brandColors.text,
+    (value) => {
+      input.accentColorHex = value;
     },
   );
 

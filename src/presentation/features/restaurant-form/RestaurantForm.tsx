@@ -9,6 +9,7 @@ import type { RegistrationSection, RegistrationStep } from '@/domain/rules/regis
 import { en } from '@/presentation/i18n/en';
 import { BranchesSection } from './BranchesSection';
 import type { BranchExtra } from './BranchesSection';
+import { BrandColorsSection } from './BrandColorsSection';
 import { SchemaField } from './SchemaField';
 import { SubscriptionSection } from './SubscriptionSection';
 import { FORM_GROUP_IDS } from './form-groups';
@@ -158,6 +159,14 @@ export function RestaurantForm({
           (step.sections ?? []).map((section) =>
             section.editable === false ? (
               <ReadOnlySection key={section.id} section={section} step={step} values={values.fields} />
+            ) : section.id === 'brand_colors' ? (
+              <BrandColorsSection
+                key={section.id}
+                values={values.fields}
+                disabled={disabled}
+                errors={errors}
+                onChange={onFieldChange}
+              />
             ) : (
               <section key={section.id} className="flex flex-col gap-3" aria-label={sectionTitle(section, step)}>
                 <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">

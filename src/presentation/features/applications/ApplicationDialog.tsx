@@ -17,7 +17,7 @@ import { queryKeys, useApplication, useOffers } from '@/presentation/hooks/queri
 import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
-import { brandColorOr } from '@/domain/rules/brand-colors';
+import { brandColorOr, isRgbHexColor } from '@/domain/rules/brand-colors';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -40,6 +40,7 @@ import { RestaurantForm } from '@/presentation/features/restaurant-form/Restaura
 import type { BranchExtra } from '@/presentation/features/restaurant-form/BranchesSection';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
 import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
+import { BRAND_COLOR_SLOTS } from '@/presentation/features/restaurant-form/brand-color-slots';
 
 interface ApplicationDialogProps {
   tenant: Tenant | null;
@@ -209,6 +210,19 @@ function ApplicationDialogContent({
 
   const offers = useOffers();
 
+  // An empty slot is allowed (it clears the value); a typed value must be #RRGGBB.
+  const colorErrors = useMemo(() => {
+    const next: Record<string, string> = {};
+    for (const slot of BRAND_COLOR_SLOTS) {
+      const value = (values.fields[slot.key] ?? '').trim();
+      if (value !== '' && !isRgbHexColor(value)) {
+        next[slot.key] = en.registration.brandColors.invalidHex;
+      }
+    }
+    return next;
+  }, [values.fields]);
+  const hasColorErrors = Object.keys(colorErrors).length > 0;
+
   const branchMeta = useMemo(() => {
     const meta: Record<string, BranchExtra> = {};
     for (const branch of tenant.branches) {
@@ -319,7 +333,7 @@ function ApplicationDialogContent({
   }
 
   function handleSave() {
-    if (!isSuperAdmin || saving) return;
+    if (!isSuperAdmin || saving || hasColorErrors) return;
     const next = buildApplicationChanges(tenant, values, offers.data);
     if (next.changes.length === 0) {
       toast({ title: en.details.noChanges });
@@ -497,7 +511,7 @@ function ApplicationDialogContent({
               <Button variant="secondary" onClick={onClose} disabled={busy}>
                 {en.common.close}
               </Button>
-              <Button variant="secondary" onClick={handleSave} disabled={busy}>
+              <Button variant="secondary" onClick={handleSave} disabled={busy || hasColorErrors}>
                 {saving ? en.applications.saving : en.applications.saveChanges}
               </Button>
               <Button onClick={handleApprove} disabled={busy}>
@@ -679,6 +693,7 @@ function ApplicationDialogContent({
               subscriptionReadOnly
               submittedPrice={tenant.agreedPrice}
               branchMeta={branchMeta}
+              errors={colorErrors}
               onFieldChange={setField}
               onBranchFieldChange={setBranchField}
               onAddBranch={addBranch}

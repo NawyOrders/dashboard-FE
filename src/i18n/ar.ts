@@ -493,6 +493,16 @@ export const ar = {
       description_and_cover: 'الوصف وصورة الغلاف',
       brand_colors: 'ألوان العلامة التجارية',
     },
+    brandColors: {
+      primary: 'اللون الأساسي',
+      background: 'لون الخلفية',
+      text: 'لون الخط',
+      pickColor: 'اختر لونًا',
+      clear: 'مسح اللون',
+      invalidHex: 'أدخل لونًا بالصيغة #RRGGBB.',
+      usingDefault: (color: string) =>
+        `لم يتم اختيار لون؛ يتم استخدام اللون الافتراضي من التصميم ${color}.`,
+    },
     chooseImage: 'اختيار صورة',
     removeImage: 'إزالة الصورة',
     uploading: 'جارٍ الرفع…',
@@ -556,6 +566,7 @@ export const ar = {
         coverImageUrl: { label: 'صورة الغلاف' },
         primaryColor: { label: 'اللون الأساسي' },
         backgroundColor: { label: 'لون الخلفية' },
+        textColor: { label: 'لون الخط' },
       },
       branch: {
         name: { label: 'اسم الفرع', placeholder: 'فرع اسكندرية - سموحة' },

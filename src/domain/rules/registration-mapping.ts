@@ -22,6 +22,8 @@ export const SCHEMA_FIELD_TO_TENANT_PATH: Record<string, string> = {
   logoUrl: 'logoUrl',
   primaryColor: 'brandColors.primary',
   backgroundColor: 'brandColors.secondary',
+  // Owner decision: the text color is stored in the accent field.
+  textColor: 'brandColors.accent',
 };
 
 /** JSON `itemFields` key → path on the branch. */

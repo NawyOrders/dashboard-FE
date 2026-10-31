@@ -127,14 +127,13 @@
         },
         {
           "id": "brand_colors",
-          "editable": false,
-          "source": "backend (future)",
+          "editable": true,
           "fields": [
             {
               "key": "primaryColor",
               "label": "اللون الأساسي",
               "type": "color",
-              "editable": false,
+              "editable": true,
               "previewTarget": "storefront.theme.primary",
               "fallbackToken": "design-system primary"
             },
@@ -142,9 +141,17 @@
               "key": "backgroundColor",
               "label": "لون الخلفية",
               "type": "color",
-              "editable": false,
+              "editable": true,
               "previewTarget": "storefront.theme.background",
               "fallbackToken": "design-system background"
+            },
+            {
+              "key": "textColor",
+              "label": "لون الخط",
+              "type": "color",
+              "editable": true,
+              "previewTarget": "storefront.theme.text",
+              "fallbackToken": "design-system text"
             }
           ]
         }
@@ -297,7 +304,6 @@
     "Figma API or Figma-to-code conversion",
     "Drag-and-drop page builder",
     "Profile page (only customer storefront)",
-    "Editing brand colors (backend later)",
     "Editing logo (comes from Main info page)",
     "Commercial registration number",
     "Custom package",

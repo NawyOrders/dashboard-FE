@@ -151,7 +151,10 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 md:flex-row md:items-stretch">
+      {/* `relative` keeps the sr-only input positioned inside the dialog scroll area. Without
+          it the input is laid out against the dialog panel, and the browser scrolls that
+          overflow-hidden panel on focus, pushing every section off-screen (blank popup). */}
+      <div className="relative flex flex-col gap-2 md:flex-row md:items-stretch">
         <label
           htmlFor="rf-menu-file"
           className={cn(

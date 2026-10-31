@@ -43,7 +43,9 @@ export function ImageUploadField({ label, value, onChange, disabled, id, error }
     <div className="flex flex-col gap-1.5">
       <span className="text-2xs font-medium text-text">{label}</span>
 
-      <div className="flex items-center gap-3">
+      {/* `relative` keeps the sr-only input inside the scroll area; otherwise focusing it
+          scrolls the overflow-hidden dialog panel and blanks the popup. */}
+      <div className="relative flex items-center gap-3">
         <span className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-panel border border-border bg-bg-2">
           {value ? (
             <img src={value} alt="" className="size-full object-cover" />

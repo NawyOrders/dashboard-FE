@@ -225,7 +225,7 @@ function ApplicationDialogContent({
     secondary: brandColorOr(tenant.brandColors.secondary, tokens.colors.neutral.fg),
     accent: brandColorOr(tenant.brandColors.accent, tokens.colors.primary.light),
   };
-  // OPEN: logo read URL, backend to confirm
+  // OPEN: logo read URL, backend to add
   const logoSrc = tenant.logoAsset?.url ?? null;
 
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');

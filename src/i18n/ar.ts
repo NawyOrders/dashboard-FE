@@ -411,6 +411,8 @@ export const ar = {
     workingHours: 'مواعيد العمل',
     closed: 'مغلق',
     menuTitle: 'المنيو',
+    menuNotUploaded: 'لم يتم رفع منيو',
+    menuItemCount: (count: number) => (count === 1 ? 'صنف واحد' : `${count} صنف`),
     menuEmpty: 'لا توجد أصناف في تفاصيل المنيو.',
     menuCategoryEmpty: 'لا توجد أصناف في هذا التصنيف.',
     audit: {

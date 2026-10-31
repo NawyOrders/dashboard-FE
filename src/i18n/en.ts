@@ -411,6 +411,8 @@ export const en = {
     workingHours: 'Working hours',
     closed: 'Closed',
     menuTitle: 'Menu',
+    menuNotUploaded: 'No menu uploaded',
+    menuItemCount: (count: number) => (count === 1 ? '1 item' : `${count} items`),
     menuEmpty: 'No menu items in the details.',
     menuCategoryEmpty: 'No items in this category.',
     audit: {

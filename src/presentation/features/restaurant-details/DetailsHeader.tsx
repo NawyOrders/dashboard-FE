@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/Button';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
-import { CopyableId } from '@/presentation/components/shared/CopyableId';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { paymentStatusMeta, restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
@@ -45,7 +44,6 @@ export function DetailsHeader({ tenant, onEdit }: DetailsHeaderProps) {
             ) : null}
             <p className="mt-0.5 text-sm text-text-muted">{tenant.businessName}</p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <CopyableId value={tenant.tenantId} />
               <PackagePill code={tenant.subscription.packageCode} />
               <StatusPill meta={restaurantStatusMeta(tenant.status)} />
               <StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />

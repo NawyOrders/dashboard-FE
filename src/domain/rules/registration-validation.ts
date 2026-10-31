@@ -82,7 +82,7 @@ export function validateRegistrationForApprove(
 
     if (step.repeatable === true) {
       const branches = tenant.branches ?? [];
-      if (branches.length < limits.min) {
+      if (branches.length < limits.min || branches.length > limits.max) {
         problems.push({
           fieldKey: 'branches',
           label: step.titleEn,

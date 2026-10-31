@@ -1,65 +1,16 @@
 import { z } from 'zod';
 import { readAccessToken } from './access-token';
+import { ApiError, describeApiFailure, unwrapApiResponse } from './response';
 
 /**
  * HTTP client for the backend (agent.md section 21).
  *
- * Every response is the backend `ApiResponse { statusCode, isSuccess, data, errors,
- * timestamp }`. The client unwraps `data`, validates it with the caller's zod schema
- * and throws `ApiError` when the envelope reports a failure.
+ * Every response goes through `unwrapApiResponse`, which returns the `data` value and
+ * throws `ApiError` when the wrapper reports a failure. The client validates the
+ * unwrapped value with the caller's zod schema and turns non-2xx bodies into `ApiError`.
  */
 
-const apiEnvelopeSchema = z.object({
-  statusCode: z.number().int(),
-  isSuccess: z.boolean(),
-  data: z.unknown().optional(),
-  errors: z.record(z.unknown()).nullable().optional(),
-  timestamp: z.string().optional(),
-});
-
-/** ASP.NET Core ProblemDetails, returned by the approve/reject endpoints on failure. */
-const problemDetailsSchema = z.object({
-  type: z.string().nullish(),
-  title: z.string().nullish(),
-  status: z.number().nullish(),
-  detail: z.string().nullish(),
-  instance: z.string().nullish(),
-  errors: z.record(z.unknown()).nullish(),
-});
-
-export type ApiEnvelope = z.infer<typeof apiEnvelopeSchema>;
-
-/** Human message from a ProblemDetails body; `detail` first, then `title`. */
-function problemDetailsMessage(payload: unknown): string | null {
-  const parsed = problemDetailsSchema.safeParse(payload);
-  if (!parsed.success) return null;
-  return parsed.data.detail?.trim() || parsed.data.title?.trim() || null;
-}
-
-export class ApiError extends Error {
-  constructor(
-    readonly status: number,
-    message: string,
-    readonly errors: Record<string, unknown> | null = null,
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
-
-function describeErrors(errors: Record<string, unknown> | null | undefined): string | null {
-  if (!errors) return null;
-  const messages: string[] = [];
-  for (const value of Object.values(errors)) {
-    if (typeof value === 'string') messages.push(value);
-    else if (Array.isArray(value)) {
-      for (const item of value) {
-        if (typeof item === 'string') messages.push(item);
-      }
-    }
-  }
-  return messages.length > 0 ? messages.join(' ') : null;
-}
+export { ApiError } from './response';
 
 function parseJson(text: string): unknown {
   if (text.trim() === '') return null;
@@ -81,11 +32,6 @@ export interface HttpRequestOptions<T> {
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
   /** Exact success status the endpoint contract defines, e.g. 202 on tenant create. */
   expectedStatus?: number;
-  /**
-   * Endpoint returns the resource directly instead of the ApiResponse envelope and
-   * reports failures as ProblemDetails (approve/reject). Defaults to the envelope.
-   */
-  directBody?: boolean;
   /** Auth endpoints set this so a 401 there never starts a refresh loop. */
   skipAuthRetry?: boolean;
 }
@@ -121,7 +67,6 @@ export function createHttpClient({
     signal,
     schema,
     expectedStatus,
-    directBody = false,
     skipAuthRetry = false,
   }: HttpRequestOptions<T>): Promise<T> {
     const url = new URL(path.replace(/^\/+/, ''), root);
@@ -167,24 +112,13 @@ export function createHttpClient({
     }
 
     const payload = parseJson(await response.text());
-    const envelope = apiEnvelopeSchema.safeParse(payload);
 
     if (!response.ok) {
-      if (directBody) {
-        const problem = problemDetailsSchema.safeParse(payload);
-        throw new ApiError(
-          response.status,
-          problemDetailsMessage(payload) ?? `Request failed with HTTP ${response.status}.`,
-          problem.success ? (problem.data.errors ?? null) : null,
-        );
-      }
-      const message = envelope.success
-        ? (describeErrors(envelope.data.errors) ?? `Request failed with HTTP ${response.status}.`)
-        : `Request failed with HTTP ${response.status}.`;
+      const failure = describeApiFailure(payload);
       throw new ApiError(
         response.status,
-        message,
-        envelope.success ? (envelope.data.errors ?? null) : null,
+        failure?.message ?? `Request failed with HTTP ${response.status}.`,
+        failure?.errors ?? null,
       );
     }
 
@@ -195,26 +129,7 @@ export function createHttpClient({
       );
     }
 
-    if (directBody) {
-      return schema.parse(payload);
-    }
-
-    if (!envelope.success) {
-      throw new ApiError(
-        response.status,
-        'The server response is not in the expected ApiResponse shape.',
-      );
-    }
-
-    if (!envelope.data.isSuccess) {
-      throw new ApiError(
-        envelope.data.statusCode || response.status,
-        describeErrors(envelope.data.errors) ?? 'The request was not successful.',
-        envelope.data.errors ?? null,
-      );
-    }
-
-    return schema.parse(envelope.data.data);
+    return schema.parse(unwrapApiResponse(payload, response.status));
   }
 
   return {

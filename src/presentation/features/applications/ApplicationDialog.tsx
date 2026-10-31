@@ -222,8 +222,8 @@ function ApplicationDialogContent({
 
   const previewColors = {
     primary: brandColorOr(tenant.brandColors.primary, tokens.colors.primary.DEFAULT),
-    secondary: brandColorOr(tenant.brandColors.secondary, tokens.colors.neutral.fg),
-    accent: brandColorOr(tenant.brandColors.accent, tokens.colors.primary.light),
+    // Owner decision: the preview background is secondaryColorHex, never accentHex.
+    background: brandColorOr(tenant.brandColors.secondary, tokens.colors.bg[2]),
   };
   // OPEN: logo read URL, backend to add
   const logoSrc = tenant.logoAsset?.url ?? null;
@@ -548,8 +548,7 @@ function ApplicationDialogContent({
               </div>
               <div dir="ltr" className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <PreviewColor label={en.details.primaryColor} color={previewColors.primary} />
-                <PreviewColor label={en.details.secondaryColor} color={previewColors.secondary} />
-                <PreviewColor label={en.details.accentColor} color={previewColors.accent} />
+                <PreviewColor label={en.details.backgroundColor} color={previewColors.background} />
               </div>
             </div>
             <nav className="flex flex-col gap-1" aria-label={en.applications.viewTitle}>

@@ -364,6 +364,7 @@ export const en = {
     appliedOn: 'Applied on',
     submittedAt: 'Submitted at',
     package: 'Package',
+    noPackageSelected: 'No package selected',
     subscriptionDates: 'Subscription dates',
     status: 'Status',
     actions: 'Actions',

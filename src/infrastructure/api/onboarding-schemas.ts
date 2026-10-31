@@ -48,6 +48,44 @@ export const subscriptionOfferSchema: ResponseSchema<SubscriptionOffer> = z.obje
 
 export const offersResponseSchema = z.array(subscriptionOfferSchema);
 
+/**
+ * Details status: swagger says nullable string. A number 1..4 is accepted too so it maps
+ * exactly like the list; unknown text is kept as raw text.
+ */
+const onboardingDetailsStatusSchema = z
+  .union([z.number().int().min(1).max(4), z.string()])
+  .nullish()
+  .transform((value) => value ?? null);
+
+/**
+ * Details offer: swagger names the id `offerId` (the offers list uses `id`). No field is
+ * required, so an absent id or amount must not fail the response; an offer without an id
+ * is treated as "no package selected".
+ */
+const onboardingDetailsOfferSchema: ResponseSchema<SubscriptionOffer | null> = z
+  .object({
+    offerId: z.string().uuid().nullish(),
+    packageCode: nullableString,
+    termCode: nullableString,
+    durationMonths: z.number().int().nullish(),
+    price: z.number().nullish(),
+    currency: nullableString,
+  })
+  .transform((offer) =>
+    offer.offerId
+      ? {
+          id: offer.offerId,
+          packageCode: offer.packageCode,
+          termCode: offer.termCode,
+          // Missing amounts keep the form's 3-month default; the details screen shows the
+          // submitted price from `agreedPrice`, not the offer price.
+          durationMonths: offer.durationMonths ?? 3,
+          price: offer.price ?? 0,
+          currency: offer.currency,
+        }
+      : null,
+  );
+
 export const onboardingRequestListItemSchema: ResponseSchema<OnboardingRequestListItem> = z.object({
   requestId: z.string().uuid(),
   restaurantNameEn: nullableString,
@@ -119,7 +157,11 @@ export const onboardingBranchRequestSchema: ResponseSchema<OnboardingBranch> = z
   longitude: z.number(),
   isPrimary: z.boolean(),
   sortOrder: z.number().int(),
-  workingHours: z.array(onboardingWorkingHourSchema),
+  // Swagger marks the details working hours nullable.
+  workingHours: z
+    .array(onboardingWorkingHourSchema)
+    .nullish()
+    .transform((hours) => hours ?? []),
 });
 
 /**
@@ -167,12 +209,12 @@ export const onboardingRequestDetailsSchema: ResponseSchema<OnboardingRequestDet
   ownerFullName: nullableString,
   ownerEmail: nullableString,
   ownerPhone: nullableString,
-  status: z.number().int(),
+  status: onboardingDetailsStatusSchema,
   paid: z.boolean(),
   agreedPrice: nullableNumber,
   agreedCurrency: nullableString,
   submittedAtUtc: z.string().min(1),
-  subscriptionOffer: subscriptionOfferSchema
+  subscriptionOffer: onboardingDetailsOfferSchema
     .nullish()
     .transform((offer) => offer ?? null),
   branches: z

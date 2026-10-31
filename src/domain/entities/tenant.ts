@@ -137,8 +137,8 @@ export interface Tenant {
   /** Price the request was submitted with, from the onboarding list. */
   agreedPrice?: number | null;
   agreedCurrency?: string | null;
-  /** Raw onboarding status; the dashboard only reviews pending requests for now. */
-  onboardingStatus?: number;
+  /** Raw onboarding status: numeric 1..4 from the list, text from the details endpoint. */
+  onboardingStatus?: number | string;
   /** Offer the request was submitted with. */
   subscriptionOfferId?: string | null;
   /** Stored logo/menu assets of the request (used by the PATCH body). */

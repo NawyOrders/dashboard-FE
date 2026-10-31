@@ -6,6 +6,8 @@
  */
 
 /** Swagger does not name the values: 1..4 are kept as numbers. */
+export type OnboardingRequestStatus = number | string;
+
 export interface OnboardingRequestListItem {
   requestId: string;
   restaurantNameEn: string | null;
@@ -123,7 +125,8 @@ export interface OnboardingRequestDetails {
   ownerFullName: string | null;
   ownerEmail: string | null;
   ownerPhone: string | null;
-  status: number;
+  /** The list uses the numeric 1..4 enum; the details endpoint returns text. */
+  status: OnboardingRequestStatus | null;
   paid: boolean;
   agreedPrice: number | null;
   agreedCurrency: string | null;

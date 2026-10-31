@@ -365,6 +365,7 @@ export const ar = {
     appliedOn: 'تاريخ التقديم',
     submittedAt: 'وقت التقديم',
     package: 'الباقة',
+    noPackageSelected: 'لم يتم اختيار باقة',
     subscriptionDates: 'تواريخ الاشتراك',
     status: 'الحالة',
     actions: 'الإجراءات',

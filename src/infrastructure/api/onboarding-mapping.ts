@@ -234,7 +234,7 @@ export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails):
     submittedAtUtc: details.submittedAtUtc,
     agreedPrice: details.agreedPrice,
     agreedCurrency: details.agreedCurrency ?? offer?.currency ?? null,
-    onboardingStatus: details.status,
+    onboardingStatus: details.status ?? undefined,
     subscriptionOfferId: offer?.id ?? null,
     logoAssetId: details.logoAsset?.assetId ?? null,
     menuAssetId: details.menuAsset?.assetId ?? null,

@@ -507,7 +507,13 @@ function ApplicationDialogContent({
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <PackagePill code={tenant.subscription.packageCode} />
+                {tenant.subscriptionOfferId === null ? (
+                  <span className="rounded-pill border border-border bg-card px-2.5 py-1 text-2xs font-medium text-text-muted">
+                    {en.applications.noPackageSelected}
+                  </span>
+                ) : (
+                  <PackagePill code={tenant.subscription.packageCode} />
+                )}
                 <StatusPill meta={paymentStatusMeta(paid ? 'paid' : 'unpaid')} />
               </div>
               <div dir="ltr" className="flex flex-wrap items-center gap-x-3 gap-y-1">

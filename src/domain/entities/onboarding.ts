@@ -18,7 +18,6 @@ export interface OnboardingRequestListItem {
   status: number;
   paid: boolean;
   agreedPrice: number | null;
-  agreedCurrency: string | null;
   branchCount: number;
   submittedAtUtc: string;
 }
@@ -111,7 +110,6 @@ export interface UpdateOnboardingRequest {
   secondaryColorHex?: string | null;
   accentColorHex?: string | null;
   agreedPrice?: number | null;
-  agreedCurrency?: string | null;
 }
 
 /**
@@ -129,7 +127,6 @@ export interface OnboardingRequestDetails {
   status: OnboardingRequestStatus | null;
   paid: boolean;
   agreedPrice: number | null;
-  agreedCurrency: string | null;
   submittedAtUtc: string;
   subscriptionOffer: SubscriptionOffer | null;
   branches: OnboardingBranch[];

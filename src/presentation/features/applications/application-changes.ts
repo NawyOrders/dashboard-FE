@@ -188,7 +188,6 @@ export function buildApplicationChanges(
     if (offer) {
       input.subscriptionOfferId = offer.id;
       input.agreedPrice = offer.price;
-      input.agreedCurrency = offer.currency;
       if (values.packageCode !== tenant.subscription.packageCode) {
         changes.push({
           label: en.applications.package,

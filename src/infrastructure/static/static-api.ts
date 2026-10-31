@@ -124,7 +124,6 @@ function applicationInputToTenantPatch(
   if (input.logoAssetId !== undefined) patch.logoAssetId = input.logoAssetId;
   if (input.menuAssetId !== undefined) patch.menuAssetId = input.menuAssetId;
   if (input.agreedPrice !== undefined) patch.agreedPrice = input.agreedPrice;
-  if (input.agreedCurrency !== undefined) patch.agreedCurrency = input.agreedCurrency;
 
   return patch;
 }

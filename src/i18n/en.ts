@@ -376,6 +376,8 @@ export const en = {
     saving: 'Saving…',
     changesSaved: 'Changes saved',
     saveFailed: 'Failed to save changes',
+    saveFailedHttp: (status: number, detail: string) =>
+      `Failed to save changes (HTTP ${status})${detail ? `: ${detail}` : '.'}`,
     discard: 'Discard',
     discarded: 'Changes discarded',
     approving: 'Approving…',

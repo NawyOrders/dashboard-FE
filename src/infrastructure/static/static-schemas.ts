@@ -97,7 +97,6 @@ export const tenantSchema: z.ZodType<Tenant> = z.object({
   paymentStatus: paymentStatusSchema.optional(),
   submittedAtUtc: z.string().nullish(),
   agreedPrice: z.number().nullish(),
-  agreedCurrency: z.string().nullish(),
   onboardingStatus: z.number().int().optional(),
 });
 

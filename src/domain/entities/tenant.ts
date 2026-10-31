@@ -136,7 +136,6 @@ export interface Tenant {
   submittedAtUtc?: string | null;
   /** Price the request was submitted with, from the onboarding list. */
   agreedPrice?: number | null;
-  agreedCurrency?: string | null;
   /** Raw onboarding status: numeric 1..4 from the list, text from the details endpoint. */
   onboardingStatus?: number | string;
   /** Offer the request was submitted with. */

@@ -41,11 +41,7 @@ export function findOfferForRequest(
   offers: SubscriptionOffer[],
 ): SubscriptionOffer | null {
   if (item.agreedPrice !== null) {
-    const match = offers.find(
-      (offer) =>
-        offer.price === item.agreedPrice &&
-        (item.agreedCurrency === null || offer.currency === item.agreedCurrency),
-    );
+    const match = offers.find((offer) => offer.price === item.agreedPrice);
     if (match) return match;
   }
   // OPEN: the list does not return the offer id; without a price match the first offer
@@ -117,7 +113,6 @@ export function mapOnboardingRequestToTenant(
     paymentStatus: item.paid ? 'paid' : 'unpaid',
     submittedAtUtc: item.submittedAtUtc,
     agreedPrice: item.agreedPrice,
-    agreedCurrency: item.agreedCurrency,
     onboardingStatus: item.status,
   };
 }
@@ -233,7 +228,6 @@ export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails):
     paymentStatus: details.paid ? 'paid' : 'unpaid',
     submittedAtUtc: details.submittedAtUtc,
     agreedPrice: details.agreedPrice,
-    agreedCurrency: details.agreedCurrency ?? offer?.currency ?? null,
     onboardingStatus: details.status ?? undefined,
     subscriptionOfferId: offer?.id ?? null,
     logoAssetId: details.logoAsset?.assetId ?? null,

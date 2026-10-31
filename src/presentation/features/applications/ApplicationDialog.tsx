@@ -69,6 +69,13 @@ function logoInitials(name: string): string {
   return value === '' ? '—' : value;
 }
 
+/** HTTP status carried by an ApiError, without importing infrastructure into the view. */
+function httpStatusOf(error: unknown): number | null {
+  if (typeof error !== 'object' || error === null || !('status' in error)) return null;
+  const status = (error as { status: unknown }).status;
+  return typeof status === 'number' ? status : null;
+}
+
 /** Logo preview: the asset URL when readable, otherwise a neutral initials placeholder. */
 function PreviewLogo({ name, src }: { name: string; src: string | null }) {
   if (src) {
@@ -224,6 +231,7 @@ function ApplicationDialogContent({
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [pendingChanges, setPendingChanges] = useState<{
     input: UpdateApplicationInput;
     changes: Change[];
@@ -322,6 +330,7 @@ function ApplicationDialogContent({
   async function handleConfirmSave() {
     if (!user || !pendingChanges || saving) return;
     setSaving(true);
+    setSaveError(null);
     try {
       const updated = await api.updateApplication(tenant.id, pendingChanges.input, user);
       // The view dialog refreshes from the PATCH response without closing.
@@ -332,11 +341,14 @@ function ApplicationDialogContent({
       setPendingChanges(null);
       onSaved();
     } catch (error) {
-      toast({
-        title: en.applications.saveFailed,
-        ...(error instanceof Error ? { description: error.message } : {}),
-        variant: 'error',
-      });
+      // The dialog stays open with the user's changes; the form shows the server error.
+      const status = httpStatusOf(error);
+      const detail = error instanceof Error ? error.message.trim() : '';
+      setSaveError(
+        status === null
+          ? en.applications.saveFailed
+          : en.applications.saveFailedHttp(status, detail),
+      );
     } finally {
       setSaving(false);
     }
@@ -555,6 +567,14 @@ function ApplicationDialogContent({
           </aside>
 
           <div className="flex flex-col gap-6">
+            {saveError ? (
+              <p
+                role="alert"
+                className="rounded-panel border border-danger-bg bg-danger-bg/40 px-3 py-2 text-2xs font-medium text-danger-fg"
+              >
+                {saveError}
+              </p>
+            ) : null}
             {provisioning ? (
               <div
                 role="status"
@@ -648,7 +668,6 @@ function ApplicationDialogContent({
               offers={offers.data}
               subscriptionReadOnly
               submittedPrice={tenant.agreedPrice}
-              submittedCurrency={tenant.agreedCurrency}
               branchMeta={branchMeta}
               onFieldChange={setField}
               onBranchFieldChange={setBranchField}

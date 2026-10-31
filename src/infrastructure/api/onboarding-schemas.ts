@@ -96,7 +96,6 @@ export const onboardingRequestListItemSchema: ResponseSchema<OnboardingRequestLi
   status: z.number().int(),
   paid: z.boolean(),
   agreedPrice: nullableNumber,
-  agreedCurrency: nullableString,
   branchCount: z.number().int(),
   submittedAtUtc: z.string().min(1),
 });
@@ -212,7 +211,6 @@ export const onboardingRequestDetailsSchema: ResponseSchema<OnboardingRequestDet
   status: onboardingDetailsStatusSchema,
   paid: z.boolean(),
   agreedPrice: nullableNumber,
-  agreedCurrency: nullableString,
   submittedAtUtc: z.string().min(1),
   subscriptionOffer: onboardingDetailsOfferSchema
     .nullish()

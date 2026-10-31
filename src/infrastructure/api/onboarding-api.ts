@@ -25,6 +25,33 @@ import {
 
 const REQUESTS_PATH = 'api/v1/onboarding-requests';
 
+/**
+ * Fields `PATCH /onboarding-requests/{requestId}` accepts, from
+ * `PatchOnBoardingRequestHttpRequest.properties` in swagger-v4. Anything else is
+ * dropped before the request leaves the dashboard.
+ */
+const PATCH_ALLOWED_FIELDS = new Set<string>([
+  'restaurantNameEn',
+  'restaurantNameAr',
+  'ownerFullName',
+  'ownerEmail',
+  'ownerPhone',
+  'primaryColorHex',
+  'secondaryColorHex',
+  'accentColorHex',
+  'subscriptionOfferId',
+  'agreedPrice',
+  'logoAssetId',
+  'menuAssetId',
+  'menuCurrency',
+  'branches',
+]);
+
+function filterPatchFields(body: UpdateOnboardingRequest): UpdateOnboardingRequest {
+  const entries = Object.entries(body).filter(([key]) => PATCH_ALLOWED_FIELDS.has(key));
+  return Object.fromEntries(entries) as UpdateOnboardingRequest;
+}
+
 function newIdempotencyKey(): string {
   return crypto.randomUUID();
 }
@@ -95,7 +122,7 @@ export function createOnboardingApi(client: HttpClient): OnboardingApi {
       return client.request({
         path: `${REQUESTS_PATH}/${requestId}`,
         method: 'PATCH',
-        body,
+        body: filterPatchFields(body),
         schema: onboardingRequestDetailsSchema,
       });
     },

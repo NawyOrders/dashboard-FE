@@ -122,7 +122,8 @@ export function mapOnboardingRequestToTenant(
   };
 }
 
-function mapDetailsBranch(
+/** Maps one `OnboardingRequestDetailsResponse` branch read-only for the details tab. */
+export function mapOnboardingBranchToBranch(
   branch: OnboardingBranch,
   requestId: string,
   index: number,
@@ -201,7 +202,7 @@ export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails):
     status: restaurantStatusFromOnboarding(),
     createdAt: details.submittedAtUtc,
     branches: details.branches.map((branch, index) =>
-      mapDetailsBranch(branch, details.requestId, index),
+      mapOnboardingBranchToBranch(branch, details.requestId, index),
     ),
     subscription: {
       id: `onboarding-${details.requestId}`,

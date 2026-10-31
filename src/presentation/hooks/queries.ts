@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
 import type { ListActivityParams, ListTenantsParams } from '@/application/dto';
-import type { AdminUser, CreateAdminAccountInput } from '@/domain/entities';
+import type { AdminUser, CreateAdminAccountInput, Tenant } from '@/domain/entities';
 import type { CreateTenantAccountInput, ResetTenantAccountPasswordInput } from '@/application/dto';
 
 export const queryKeys = {
   tenants: (params: ListTenantsParams) => ['tenants', params] as const,
   tenant: (tenantId: string) => ['tenant', tenantId] as const,
+  tenantBranches: (tenantId: string) => ['tenantBranches', tenantId] as const,
   overview: ['overview'] as const,
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
@@ -30,6 +31,18 @@ export function useTenant(tenantId: string) {
     queryKey: queryKeys.tenant(tenantId),
     queryFn: () => api.getTenant(tenantId),
     enabled: Boolean(tenantId),
+  });
+}
+
+/**
+ * WORKAROUND: remove when TenantDetailsResponse has requestId and branches.
+ * Read-only branches of an approved restaurant, found through its onboarding request.
+ */
+export function useTenantBranches(tenant: Tenant | undefined) {
+  return useQuery({
+    queryKey: queryKeys.tenantBranches(tenant?.tenantId ?? ''),
+    queryFn: () => (tenant ? api.getTenantBranches(tenant) : Promise.resolve(null)),
+    enabled: Boolean(tenant?.tenantId),
   });
 }
 

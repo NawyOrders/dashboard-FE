@@ -1,15 +1,22 @@
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
+import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { branchStatusMeta } from '@/presentation/lib/status';
+import { useTenantBranches } from '@/presentation/hooks/queries';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
 import type { Tenant } from '@/domain/entities';
 
-// OPEN: endpoint missing in swagger. The tenant endpoints do not return branches, so this
-// tab is read-only until the backend exposes them.
+// WORKAROUND: remove when TenantDetailsResponse has requestId and branches. The tenant
+// endpoints do not return branches, so the tab reads them from the matching onboarding
+// request. An unmatched request shows the not-linked message, never an error.
 export function BranchesTab({ tenant }: { tenant: Tenant }) {
-  const overIncluded = tenant.branches.length > INCLUDED_BRANCHES;
+  const branchesQuery = useTenantBranches(tenant);
+  const branches = branchesQuery.data ?? [];
+  const notLinked =
+    !branchesQuery.isLoading && (branchesQuery.data ?? null) === null;
+  const overIncluded = branches.length > INCLUDED_BRANCHES;
 
   return (
     <Card>
@@ -17,7 +24,7 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
         <div>
           <h3 className="text-xl font-semibold">{en.create.branches.title}</h3>
           <p className="mt-1 text-2xs text-text-muted">
-            {en.create.branches.included(tenant.branches.length, INCLUDED_BRANCHES)}
+            {en.create.branches.included(branches.length, INCLUDED_BRANCHES)}
           </p>
         </div>
       </CardHeader>
@@ -29,7 +36,15 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
           </p>
         )}
 
-        {tenant.branches.length === 0 ? (
+        {branchesQuery.isLoading ? (
+          <div className="space-y-3">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ) : notLinked ? (
+          <EmptyState title={en.details.branchesNotLinked} />
+        ) : branches.length === 0 ? (
           <EmptyState title={en.details.noBranches} />
         ) : (
           <div className="overflow-x-auto">
@@ -45,7 +60,7 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
                 </tr>
               </thead>
               <tbody>
-                {tenant.branches.map((branch) => (
+                {branches.map((branch) => (
                   <tr key={branch.id} className="border-b border-border last:border-0">
                     <td className="whitespace-nowrap px-4 py-4">
                       <div className="flex flex-col">

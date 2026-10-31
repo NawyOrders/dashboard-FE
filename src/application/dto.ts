@@ -145,6 +145,12 @@ export interface Api {
 
   listTenants(params?: ListTenantsParams): Promise<Tenant[]>;
   getTenant(tenantId: string): Promise<Tenant>;
+  /**
+   * WORKAROUND: remove when TenantDetailsResponse has requestId and branches.
+   * Reads the onboarding request that matches the tenant on owner email and both
+   * restaurant names and returns its branches; `null` when no request matches.
+   */
+  getTenantBranches(tenant: Tenant): Promise<Branch[] | null>;
   getOverviewAnalysis(): Promise<OverviewAnalysis>;
 
 

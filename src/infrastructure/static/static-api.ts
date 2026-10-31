@@ -146,6 +146,8 @@ export function createStaticApi(
     getCurrentUser: () => run(() => backend.getCurrentUser()),
     listTenants: (params?: ListTenantsParams) => run(() => backend.listTenants(params)),
     getTenant: (tenantId: string) => run(() => backend.getTenant(tenantId)),
+    // Static tenants already carry their branches, so the onboarding lookup is not needed.
+    getTenantBranches: (tenant: Tenant) => run(() => tenant.branches),
     // OPEN: endpoint missing in swagger. KPI counts, analytics charts and their refresh
     // read the static overview analysis.
     getOverviewAnalysis: () => run(() => backend.getOverviewAnalysis()),

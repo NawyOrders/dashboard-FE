@@ -407,8 +407,9 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 102. **Reject replaces Delete.** Reject requires a non-empty, trimmed `rejectionReason`. The
     dashboard has no delete action for applications.
 103. **Onboarding status meaning.** Status 1 is PENDING (owner decision). The Applications page
-    shows only status 1. The list returns the status as a number, and the details endpoint
-    returns it as a string; the mapper accepts both and keeps unknown strings as raw text.
+    shows only status 1. The list endpoint has no status parameter, so the filter runs on the
+    client. The list returns the status as a number, and the details endpoint returns it as a
+    string; the mapper accepts both and keeps unknown strings as raw text.
 104. **Subscription offer in details.** The offer identifier in the details response is `offerId`
     and the whole `subscriptionOffer` is nullable. When it is missing the preview shows "No
     package selected" instead of failing.
@@ -436,11 +437,12 @@ Each item is mirrored by a `// ASSUMPTION:` comment in the source.
 112. **Duplicate restaurant names are allowed** (owner decision). Creating a restaurant is not
     blocked by a name that already exists.
 113. **Branches for approved restaurants (temporary workaround).** `TenantDetailsResponse` has
-    neither `requestId` nor `branches`. The dashboard finds the onboarding request by matching
-    owner email, English name and Arabic name, and then reads its branches. When several
-    requests match, the one closest to the tenant's creation date is used. With no match, the
-    screen says "Branches are not linked yet". Marked WORKAROUND; remove it when the backend
-    adds the link.
+    neither `requestId` nor `branches`. The dashboard reads every onboarding page in memory for
+    the screen session, finds the request by matching owner email, English name and Arabic name,
+    and then reads its branches, shown read-only in the Branches tab. When several requests
+    match, the one closest to the tenant's creation date is used. With no match, the screen
+    says "Branches are not linked yet"; an error is never shown. Nothing is written to browser
+    storage. Marked WORKAROUND; remove it when the backend adds the link.
 114. **Static fallback only where no endpoint exists.** Internal users, tenant accounts, roles,
     activity logs, analytics charts, KPI counts and current-user permissions still come from the
     static source. Each one is marked OPEN in code, and the static data stays read-only on disk

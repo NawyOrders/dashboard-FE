@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { FileImage, ScanText } from 'lucide-react';
+import { AlertTriangle, FileImage, RotateCcw, ScanText } from 'lucide-react';
 import { api } from '@/app/composition';
 import type { MenuExtractionProgress } from '@/application/dto';
 import type { MenuFileProblem } from '@/domain/rules/menu-file';
 import { checkMenuFile } from '@/domain/rules/menu-file';
 import { Button } from '@/presentation/components/ui/Button';
+import { Dialog } from '@/presentation/components/ui/Dialog';
+import { ErrorBoundary } from '@/presentation/components/ui/ErrorBoundary';
 import { cn } from '@/presentation/lib/cn';
 import { en } from '@/presentation/i18n/en';
 import { MenuOcrStatus } from './MenuOcrStatus';
@@ -198,13 +200,56 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
         onViewResult={() => setResultOpen(true)}
       />
 
-      <MenuResultDialog
-        open={resultOpen}
-        rows={items}
-        onClose={() => setResultOpen(false)}
-        onEdit={handleEdit}
-        onRemove={handleRemove}
-      />
+      <ErrorBoundary
+        resetKey={resultOpen}
+        fallback={(reset) => (
+          <Dialog
+            open
+            onClose={() => {
+              reset();
+              setResultOpen(false);
+            }}
+            size="xl"
+            mobileFull
+            title={en.menu.title}
+            footer={
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  reset();
+                  setResultOpen(false);
+                }}
+              >
+                {en.common.close}
+              </Button>
+            }
+          >
+            <div role="alert" className="flex flex-col items-center gap-4 px-6 py-10 text-center">
+              <span className="flex size-12 items-center justify-center rounded-avatar bg-danger-bg text-danger-fg">
+                <AlertTriangle aria-hidden="true" className="size-6" />
+              </span>
+              <p className="max-w-sm text-sm font-medium text-text">{en.menu.resultError}</p>
+              <Button
+                onClick={() => {
+                  setResultOpen(true);
+                  reset();
+                }}
+              >
+                <RotateCcw aria-hidden="true" className="size-4" />
+                {en.common.retry}
+              </Button>
+            </div>
+          </Dialog>
+        )}
+      >
+        <MenuResultDialog
+          open={resultOpen}
+          rows={items}
+          onClose={() => setResultOpen(false)}
+          onEdit={handleEdit}
+          onRemove={handleRemove}
+        />
+      </ErrorBoundary>
     </section>
   );
 }

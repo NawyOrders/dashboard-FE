@@ -18,7 +18,7 @@ export interface SalesPerMonthChartProps {
 
 function MonthTable({ buckets }: { buckets: SalesMonthBucket[] }) {
   return (
-    <div className="scrollbar-thin overflow-x-auto">
+    <div className="overflow-x-auto">
       <table className="w-full border-collapse text-sm">
         <caption className="sr-only">{en.overview.salesChartTitle}</caption>
         <thead>

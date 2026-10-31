@@ -90,7 +90,7 @@ export function AccountsPage() {
         ) : rows.length === 0 ? (
           <EmptyState title={en.accounts.tableEmpty} />
         ) : (
-          <div className="scrollbar-thin overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <caption className="sr-only">{en.accounts.title}</caption>
               <thead>

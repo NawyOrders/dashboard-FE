@@ -55,7 +55,7 @@ export function TenantAccountsSection() {
         ) : rows.length === 0 ? (
           <EmptyState title={en.accounts.tenantAccountsEmpty} />
         ) : (
-          <div className="scrollbar-thin overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <caption className="sr-only">{en.accounts.tenantAccountsTitle}</caption>
               <thead>

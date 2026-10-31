@@ -56,7 +56,7 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
   const items = NAV_ITEMS.filter((item) => !item.permission || isAllowed(role, item.permission));
 
   return (
-    <nav aria-label={en.topbar.mainNavigation} className="scrollbar-thin flex flex-1 flex-col gap-1 overflow-y-auto px-3">
+    <nav aria-label={en.topbar.mainNavigation} className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
       {items.map((item) => {
         const label = en.nav[item.label];
         const link = (

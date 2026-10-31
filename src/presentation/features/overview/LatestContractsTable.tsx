@@ -63,7 +63,7 @@ export function LatestContractsTable({
         ) : rows.length === 0 ? (
           <EmptyState title={en.overview.noContractsYet} />
         ) : (
-          <div className="scrollbar-thin overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] border-collapse text-sm">
               <caption className="sr-only">{en.overview.latestTitle}</caption>
               <thead>

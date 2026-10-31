@@ -47,7 +47,7 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
         ) : branches.length === 0 ? (
           <EmptyState title={en.details.noBranches} />
         ) : (
-          <div className="scrollbar-thin overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-sm">
               <caption className="sr-only">{en.create.branches.title}</caption>
               <thead>

@@ -140,7 +140,7 @@ export function RestaurantsTable({
 
         {!query.isLoading && !query.isError && rows.length > 0 && (
           <>
-            <div className="scrollbar-thin overflow-x-auto">
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[1180px] border-collapse text-sm">
                 <caption className="sr-only">{title}</caption>
                 <thead>

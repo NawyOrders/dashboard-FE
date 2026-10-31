@@ -121,7 +121,7 @@ export function Dialog({
             ? 'flex h-full max-h-none flex-col overflow-hidden rounded-none sm:h-auto sm:max-h-[90vh] sm:rounded-card sm:border sm:border-border'
             : mobileFull
               ? 'flex h-full max-h-none flex-col overflow-hidden rounded-none md:h-auto md:max-h-[90vh] md:rounded-card md:border md:border-border'
-              : 'scrollbar-thin overflow-hidden rounded-card border border-border max-h-[90vh] overflow-y-auto',
+              : 'overflow-hidden rounded-card border border-border max-h-[90vh] overflow-y-auto',
           SIZES[size],
         )}
       >
@@ -144,7 +144,7 @@ export function Dialog({
         <div
           className={cn(
             'p-6',
-            (size === 'full' || mobileFull) && 'scrollbar-thin min-h-0 flex-1 overflow-y-auto',
+            (size === 'full' || mobileFull) && 'min-h-0 flex-1 overflow-y-auto',
           )}
         >
           {children}

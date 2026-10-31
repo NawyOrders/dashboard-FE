@@ -11,6 +11,8 @@ export const queryKeys = {
   overview: ['overview'] as const,
   overviewLatestContracts: (listUpdatedAt: number) =>
     ['overview', 'latestContracts', listUpdatedAt] as const,
+  overviewEndingSoon: (listUpdatedAt: number) =>
+    ['overview', 'endingSoon', listUpdatedAt] as const,
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
   adminAccounts: ['adminAccounts'] as const,
@@ -67,6 +69,18 @@ export function useOverviewLatestContracts(
   return useQuery({
     queryKey: queryKeys.overviewLatestContracts(listUpdatedAt),
     queryFn: () => api.getOverviewLatestContracts(tenants ?? []),
+    enabled: Boolean(tenants),
+  });
+}
+
+/**
+ * Subscriptions ending within the configured window. The end date is only in the tenant
+ * details (one call per tenant, cached by the adapter for the session).
+ */
+export function useOverviewEndingSoon(tenants: Tenant[] | undefined, listUpdatedAt: number) {
+  return useQuery({
+    queryKey: queryKeys.overviewEndingSoon(listUpdatedAt),
+    queryFn: () => api.getOverviewEndingSoon(tenants ?? []),
     enabled: Boolean(tenants),
   });
 }

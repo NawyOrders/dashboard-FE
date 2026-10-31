@@ -1,14 +1,27 @@
 import { z } from 'zod';
-import type { Api, ListTenantsParams, OverviewLatestContract } from '@/application/dto';
+import type {
+  Api,
+  ListTenantsParams,
+  OverviewEndingSoonResult,
+  OverviewLatestContract,
+} from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
 import { makeExtractMenu } from '@/application/use-cases/extract-menu';
-import { OVERVIEW_LATEST_CONTRACTS_COUNT } from '@/config/policy';
-import { contractDate, latestContractsByActivation } from '@/domain/rules/overview';
+import {
+  OVERVIEW_ENDING_WITHIN_DAYS,
+  OVERVIEW_LATEST_CONTRACTS_COUNT,
+} from '@/config/policy';
+import {
+  contractDate,
+  endingSoon,
+  latestContractsByActivation,
+} from '@/domain/rules/overview';
 import type {
   Branch,
   OnboardingRequestListItem,
   PlatformLoginResponse,
   Tenant,
+  TenantDetails,
   TenantListItem,
 } from '@/domain/entities';
 import { createAuthApi, toPlatformSession } from './auth-api';
@@ -56,6 +69,11 @@ async function mapWithConcurrency<T, R>(
   return results;
 }
 
+/** "Clearly inactive" plans are not worth a details call for the ending-soon window. */
+function isClearlyInactivePlan(status: string | null | undefined): boolean {
+  return /inactive|deactivat|suspend|cancel/.test((status ?? '').toLowerCase());
+}
+
 /**
  * API data source (agent.md section 21). Applications, offers, the tenants list and
  * details, provisioning status, retry, plan activation, session refresh and the menu OCR
@@ -71,6 +89,45 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
 
   const TENANT_PAGE_SIZE = 100;
   const ONBOARDING_PAGE_SIZE = 100;
+
+  // WORKAROUND: per-tenant details for end dates; remove when TenantListItemResponse has
+  // plan end date. Successful details are kept in memory for the session, failed ones are
+  // dropped so a retry can read them again. The semaphore caps ALL details requests,
+  // including the latest-contracts and ending-soon queries running at the same time.
+  const MAX_CONCURRENT_DETAILS = 5;
+  const tenantDetailsCache = new Map<string, Promise<TenantDetails>>();
+  const detailWaiters: Array<() => void> = [];
+  let activeDetailRequests = 0;
+
+  async function acquireDetailSlot(): Promise<void> {
+    while (activeDetailRequests >= MAX_CONCURRENT_DETAILS) {
+      await new Promise<void>((resolve) => detailWaiters.push(resolve));
+    }
+    activeDetailRequests += 1;
+  }
+
+  function releaseDetailSlot(): void {
+    activeDetailRequests -= 1;
+    detailWaiters.shift()?.();
+  }
+
+  function readTenantDetails(tenantId: string): Promise<TenantDetails> {
+    const cached = tenantDetailsCache.get(tenantId);
+    if (cached) return cached;
+    const request = (async () => {
+      await acquireDetailSlot();
+      try {
+        return await tenants.getTenant(tenantId);
+      } finally {
+        releaseDetailSlot();
+      }
+    })().catch((error: unknown) => {
+      tenantDetailsCache.delete(tenantId);
+      throw error;
+    });
+    tenantDetailsCache.set(tenantId, request);
+    return request;
+  }
 
   async function readAllTenants(): Promise<TenantListItem[]> {
     const first = await tenants.listTenants({ page: 1, pageSize: TENANT_PAGE_SIZE });
@@ -190,7 +247,7 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
       const latest = latestContractsByActivation(items, OVERVIEW_LATEST_CONTRACTS_COUNT);
       const details = await mapWithConcurrency(latest, 5, async (tenant) => {
         try {
-          return await tenants.getTenant(tenant.tenantId);
+          return await readTenantDetails(tenant.tenantId);
         } catch {
           return null;
         }
@@ -207,6 +264,36 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
           contractDate: contractDate(tenant),
         };
       });
+    },
+
+    // WORKAROUND: per-tenant details for end dates; remove when TenantListItemResponse
+    // has plan end date. The list only carries `planStatus`, so each candidate costs one
+    // details call (at most 5 in flight). A failed lookup is skipped and counted.
+    async getOverviewEndingSoon(items): Promise<OverviewEndingSoonResult> {
+      const candidates = items.filter((tenant) => !isClearlyInactivePlan(tenant.planStatus));
+      const details = await mapWithConcurrency(candidates, 5, async (tenant) => {
+        try {
+          return await readTenantDetails(tenant.tenantId);
+        } catch {
+          return null;
+        }
+      });
+
+      let failedCount = 0;
+      const withEndDate: Tenant[] = [];
+      details.forEach((detail) => {
+        if (!detail) {
+          failedCount += 1;
+          return;
+        }
+        if (!detail.plan?.endsAtUtc) return;
+        withEndDate.push(mapTenantDetails(detail));
+      });
+
+      return {
+        entries: endingSoon(withEndDate, new Date(), OVERVIEW_ENDING_WITHIN_DAYS),
+        failedCount,
+      };
     },
 
     async getTenant(tenantId): Promise<Tenant> {
@@ -240,11 +327,13 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
 
     async updateTenant(tenantId, input) {
       await tenants.updateTenant(tenantId, input);
+      tenantDetailsCache.delete(tenantId);
       return mapTenantDetails(await tenants.getTenant(tenantId));
     },
 
     async activatePlan(tenantId) {
       await tenants.activatePlan(tenantId);
+      tenantDetailsCache.delete(tenantId);
     },
 
     // OPEN: the onboarding list has no status filter parameter, so pending requests

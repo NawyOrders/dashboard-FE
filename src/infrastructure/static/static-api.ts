@@ -6,6 +6,7 @@ import type {
   ListActivityParams,
   ListTenantsParams,
   MenuExtractionOutcome,
+  OverviewEndingSoonResult,
   OverviewLatestContract,
   ResetTenantAccountPasswordInput,
   UpdateApplicationInput,
@@ -13,7 +14,10 @@ import type {
 } from '@/application/dto';
 import type { Backend } from '@/application/use-cases';
 import type { FileUploadRepository } from '@/application/ports';
-import { OVERVIEW_LATEST_CONTRACTS_COUNT } from '@/config/policy';
+import {
+  OVERVIEW_ENDING_WITHIN_DAYS,
+  OVERVIEW_LATEST_CONTRACTS_COUNT,
+} from '@/config/policy';
 import type {
   AdminUser,
   Branch,
@@ -25,7 +29,7 @@ import type {
   TenantProvisioning,
   UpdateTenantInput,
 } from '@/domain/entities';
-import { contractDate, latestContractsByActivation } from '@/domain/rules/overview';
+import { contractDate, endingSoon, latestContractsByActivation } from '@/domain/rules/overview';
 import { toTenantSlug } from '@/domain/rules/slug';
 import { STATIC_OFFERS } from './static-offers';
 
@@ -165,6 +169,11 @@ export function createStaticApi(
           contractDate: contractDate(tenant),
         })),
       ),
+    getOverviewEndingSoon: (items: Tenant[]) =>
+      run<OverviewEndingSoonResult>(() => ({
+        entries: endingSoon(items, new Date(), OVERVIEW_ENDING_WITHIN_DAYS),
+        failedCount: 0,
+      })),
     updateSubscription: (tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser) =>
       run(() => backend.updateSubscription(tenantId, input, actor)),
     updateRestaurantStatus: (tenantId: string, status: RestaurantStatus, actor: AdminUser) =>

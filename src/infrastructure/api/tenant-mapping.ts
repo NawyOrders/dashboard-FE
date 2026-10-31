@@ -113,6 +113,7 @@ export function mapTenantListItem(item: TenantListItem): Tenant {
     coverImageUrl: null,
     commercialRegisterNumber: null,
     slug: item.slug,
+    planStatus: item.planStatus,
     activatedAtUtc: item.activatedAtUtc,
     provisioningError: null,
   };
@@ -172,6 +173,7 @@ export function mapTenantDetails(details: TenantDetails): Tenant {
     coverImageUrl: null,
     commercialRegisterNumber: null,
     slug: details.slug,
+    planStatus: plan?.status ?? null,
     activatedAtUtc: details.activatedAtUtc,
     provisioningError: details.provisioningError,
   };

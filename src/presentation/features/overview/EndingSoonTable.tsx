@@ -1,5 +1,7 @@
+import { AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
+import { Button } from '@/presentation/components/ui/Button';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -16,6 +18,9 @@ import type { EndingSoonEntry } from '@/domain/rules/overview';
 export interface EndingSoonTableProps {
   entries: EndingSoonEntry[];
   loading?: boolean;
+  /** Details calls that failed; shown as a warning with a retry action. */
+  failedCount?: number;
+  onRetry?: () => void;
 }
 
 const URGENT_DAYS = 3;
@@ -35,7 +40,12 @@ function DaysRemaining({ days }: { days: number }) {
   );
 }
 
-export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
+export function EndingSoonTable({
+  entries,
+  loading,
+  failedCount = 0,
+  onRetry,
+}: EndingSoonTableProps) {
   return (
     <Card>
       <CardHeader className="items-center">
@@ -50,6 +60,20 @@ export function EndingSoonTable({ entries, loading }: EndingSoonTableProps) {
       </CardHeader>
 
       <CardBody>
+        {failedCount > 0 && !loading && (
+          <div
+            role="alert"
+            className="mb-3 flex flex-wrap items-center gap-3 rounded-panel border border-warning-fg bg-warning-bg px-4 py-3 text-sm text-warning-fg"
+          >
+            <AlertTriangle aria-hidden="true" className="size-4 shrink-0" />
+            <span className="min-w-0 flex-1">{en.overview.endingCheckFailed}</span>
+            {onRetry && (
+              <Button size="sm" variant="secondary" onClick={onRetry}>
+                {en.common.retry}
+              </Button>
+            )}
+          </div>
+        )}
         {loading ? (
           <div className="flex flex-col gap-2" aria-hidden="true">
             {Array.from({ length: URGENT_DAYS }, (_, index) => (

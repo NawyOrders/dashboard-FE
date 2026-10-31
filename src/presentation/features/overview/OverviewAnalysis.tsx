@@ -2,6 +2,7 @@ import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import {
   useMonthlySales,
   useOverviewAnalysis,
+  useOverviewEndingSoon,
   useOverviewLatestContracts,
   useTenants,
 } from '@/presentation/hooks/queries';
@@ -21,6 +22,10 @@ export function OverviewAnalysis() {
   const salesQuery = useMonthlySales();
   const tenantsQuery = useTenants();
   const latestQuery = useOverviewLatestContracts(
+    tenantsQuery.data,
+    tenantsQuery.dataUpdatedAt,
+  );
+  const endingQuery = useOverviewEndingSoon(
     tenantsQuery.data,
     tenantsQuery.dataUpdatedAt,
   );
@@ -53,7 +58,12 @@ export function OverviewAnalysis() {
         loading={tenantsQuery.isLoading || latestQuery.isLoading}
       />
 
-      <EndingSoonTable entries={data?.endingSoon ?? []} loading={loading} />
+      <EndingSoonTable
+        entries={endingQuery.data?.entries ?? []}
+        loading={tenantsQuery.isLoading || endingQuery.isLoading}
+        failedCount={endingQuery.data?.failedCount ?? 0}
+        onRetry={() => void endingQuery.refetch()}
+      />
     </section>
   );
 }

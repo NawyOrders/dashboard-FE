@@ -186,6 +186,7 @@ export const ar = {
     daysLeft: (days: number) => `${days} يومًا متبقيًا`,
     renew: 'تجديد',
     endingEmpty: (days: number) => `لا توجد اشتراكات تنتهي خلال ${days} يومًا القادمة.`,
+    endingCheckFailed: 'تعذر التحقق من بعض الاشتراكات.',
   },
   restaurants: {
     title: 'المطاعم',

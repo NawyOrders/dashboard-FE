@@ -183,6 +183,7 @@ export const en = {
     daysLeft: (days: number) => `${days} day${days === 1 ? '' : 's'} left`,
     renew: 'Renew',
     endingEmpty: (days: number) => `No subscriptions ending in the next ${days} days.`,
+    endingCheckFailed: 'Some subscriptions could not be checked.',
   },
   restaurants: {
     title: 'Restaurants',

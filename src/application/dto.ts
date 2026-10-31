@@ -146,6 +146,12 @@ export interface OverviewLatestContract {
   contractDate: string;
 }
 
+/** The Overview "Subscriptions ending soon" table and the failed details lookups. */
+export interface OverviewEndingSoonResult {
+  entries: EndingSoonEntry[];
+  failedCount: number;
+}
+
 /**
  * The single application contract the presentation layer depends on.
  * The infrastructure adapters (live API or static demo) implement it; components never
@@ -165,6 +171,11 @@ export interface Api {
   getOverviewAnalysis(): Promise<OverviewAnalysis>;
   /** Most recently signed contracts with the package/duration from tenant details. */
   getOverviewLatestContracts(tenants: Tenant[]): Promise<OverviewLatestContract[]>;
+  /**
+   * Subscriptions ending in 0..OVERVIEW_ENDING_WITHIN_DAYS days, read from the plan end
+   * date of each tenant's details. `failedCount` counts the details lookups that failed.
+   */
+  getOverviewEndingSoon(tenants: Tenant[]): Promise<OverviewEndingSoonResult>;
 
 
   updateSubscription(

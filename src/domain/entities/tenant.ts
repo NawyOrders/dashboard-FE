@@ -160,6 +160,8 @@ export interface Tenant {
   rejectionReason?: string | null;
   /** Slug of the tenant on the backend, from the tenant endpoints. */
   slug?: string | null;
+  /** Raw plan status from the tenant list/details (the swagger does not enumerate it). */
+  planStatus?: string | null;
   /** Set once the backend provisioning finishes (live tenant endpoints). */
   activatedAtUtc?: string | null;
   /** Provisioning error reported by the backend, when the tenant failed to activate. */

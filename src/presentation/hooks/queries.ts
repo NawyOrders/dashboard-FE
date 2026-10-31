@@ -9,6 +9,8 @@ export const queryKeys = {
   tenant: (tenantId: string) => ['tenant', tenantId] as const,
   tenantBranches: (tenantId: string) => ['tenantBranches', tenantId] as const,
   overview: ['overview'] as const,
+  overviewLatestContracts: (listUpdatedAt: number) =>
+    ['overview', 'latestContracts', listUpdatedAt] as const,
   activity: (params: ListActivityParams) => ['activity', params] as const,
   flags: (tenantId: string) => ['flags', tenantId] as const,
   adminAccounts: ['adminAccounts'] as const,
@@ -50,6 +52,22 @@ export function useOverviewAnalysis() {
   return useQuery({
     queryKey: queryKeys.overview,
     queryFn: () => api.getOverviewAnalysis(),
+  });
+}
+
+/**
+ * Latest contracts from the live tenant list. `listUpdatedAt` keys the query to the
+ * shared `useTenants` result, so the pages are read once per screen load and the
+ * details are re-read only when the list changes.
+ */
+export function useOverviewLatestContracts(
+  tenants: Tenant[] | undefined,
+  listUpdatedAt: number,
+) {
+  return useQuery({
+    queryKey: queryKeys.overviewLatestContracts(listUpdatedAt),
+    queryFn: () => api.getOverviewLatestContracts(tenants ?? []),
+    enabled: Boolean(tenants),
   });
 }
 

@@ -10,14 +10,15 @@ import { restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib
 import { formatDate } from '@/domain/rules/date';
 import { OVERVIEW_LATEST_CONTRACTS_COUNT } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
-import type { Tenant } from '@/domain/entities';
+import type { OverviewLatestContract } from '@/application/dto';
 
 export interface LatestContractsTableProps {
-  tenants: Tenant[];
+  rows: OverviewLatestContract[];
   loading?: boolean;
 }
 
-export function LatestContractsTable({ tenants, loading }: LatestContractsTableProps) {
+export function LatestContractsTable({ rows, loading }: LatestContractsTableProps) {
+  const count = OVERVIEW_LATEST_CONTRACTS_COUNT;
   const headers = [
     en.restaurants.columns.restaurant,
     en.restaurants.columns.tenantId,
@@ -34,7 +35,7 @@ export function LatestContractsTable({ tenants, loading }: LatestContractsTableP
         <div className="min-w-0">
           <h2 className="text-xl font-semibold text-text">{en.overview.latestTitle}</h2>
           <p className="mt-0.5 text-2xs text-text-muted">
-            {en.overview.latestSubtitle(OVERVIEW_LATEST_CONTRACTS_COUNT)}
+            {en.overview.latestSubtitle(count)}
           </p>
         </div>
         <Link to="/restaurants" className="text-sm font-medium text-primary hover:text-primary-dark">
@@ -45,11 +46,11 @@ export function LatestContractsTable({ tenants, loading }: LatestContractsTableP
       <CardBody className="flex-1">
         {loading ? (
           <div className="flex flex-col gap-2" aria-hidden="true">
-            {Array.from({ length: OVERVIEW_LATEST_CONTRACTS_COUNT }, (_, index) => (
+            {Array.from({ length: count }, (_, index) => (
               <Skeleton key={index} className="h-10 w-full" />
             ))}
           </div>
-        ) : tenants.length === 0 ? (
+        ) : rows.length === 0 ? (
           <EmptyState title={en.overview.noContractsYet} />
         ) : (
           <div className="overflow-x-auto">
@@ -65,7 +66,7 @@ export function LatestContractsTable({ tenants, loading }: LatestContractsTableP
                 </tr>
               </thead>
               <tbody>
-                {tenants.map((tenant) => (
+                {rows.map(({ tenant, packageCode, durationMonths, contractDate }) => (
                   <tr key={tenant.id} className="border-b border-border last:border-0">
                     <td className="whitespace-nowrap px-3 py-3">
                       <div className="flex items-center gap-2.5">
@@ -88,13 +89,19 @@ export function LatestContractsTable({ tenants, loading }: LatestContractsTableP
                       <span className="font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                      <PackagePill code={tenant.subscription.packageCode} />
+                      {packageCode ? (
+                        <PackagePill code={packageCode} />
+                      ) : (
+                        <span className="text-text-muted">{en.common.notAvailable}</span>
+                      )}
                     </td>
                     <td className="tabular whitespace-nowrap px-3 py-3 text-text-muted">
-                      {en.details.months(tenant.subscription.durationMonths)}
+                      {durationMonths === null
+                        ? en.common.notAvailable
+                        : en.details.months(durationMonths)}
                     </td>
                     <td className="tabular whitespace-nowrap px-3 py-3 text-text-muted">
-                      {formatDate(tenant.subscription.startDate)}
+                      {formatDate(contractDate)}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       <StatusPill meta={restaurantStatusMeta(tenant.status)} />

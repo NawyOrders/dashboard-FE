@@ -71,6 +71,29 @@ export function latestContracts(tenants: Tenant[], count: number): Tenant[] {
     .slice(0, Math.max(0, count));
 }
 
+// OPEN: contract date rule (activatedAtUtc vs createdAtUtc), owner to confirm.
+export function contractDate(tenant: Tenant): string {
+  return tenant.activatedAtUtc ?? tenant.createdAt;
+}
+
+function contractTime(tenant: Tenant): number {
+  const time = new Date(contractDate(tenant)).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
+
+/**
+ * Most recently activated contracts (the live tenant list has no plan dates), sorted by
+ * activation date descending and then by Tenant ID descending as a tie-breaker.
+ */
+export function latestContractsByActivation(tenants: Tenant[], count: number): Tenant[] {
+  return [...tenants]
+    .sort((a, b) => {
+      const byDate = contractTime(b) - contractTime(a);
+      return byDate !== 0 ? byDate : b.tenantId.localeCompare(a.tenantId);
+    })
+    .slice(0, Math.max(0, count));
+}
+
 /**
  * Subscriptions with `0 ≤ daysRemaining ≤ days`, sorted by days remaining ascending
  * (most urgent first). Already expired subscriptions (negative remaining) are excluded.

@@ -38,7 +38,7 @@ export function packageCodeFromApi(value: string | null | undefined): PackageCod
   return (value ?? '').toLowerCase().includes('growth') ? 'growth' : 'start';
 }
 
-function durationFromApi(value: number | null | undefined): DurationMonths {
+export function durationFromApi(value: number | null | undefined): DurationMonths {
   return value === 6 || value === 12 ? value : 3;
 }
 

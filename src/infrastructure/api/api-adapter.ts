@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import type { Api, ListTenantsParams } from '@/application/dto';
+import type { Api, ListTenantsParams, OverviewLatestContract } from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
 import { makeExtractMenu } from '@/application/use-cases/extract-menu';
+import { OVERVIEW_LATEST_CONTRACTS_COUNT } from '@/config/policy';
+import { contractDate, latestContractsByActivation } from '@/domain/rules/overview';
 import type {
   Branch,
   OnboardingRequestListItem,
@@ -19,13 +21,39 @@ import {
   mapOnboardingRequestToTenant,
 } from './onboarding-mapping';
 import { createTenantApi } from './tenant-api';
-import { mapTenantDetails, mapTenantListItem } from './tenant-mapping';
+import {
+  durationFromApi,
+  mapTenantDetails,
+  mapTenantListItem,
+  packageCodeFromApi,
+} from './tenant-mapping';
 import type { HttpClient } from './http-client';
 
 export interface ApiAdapterOptions {
   /** Demo implementation for the endpoints the backend does not expose yet. */
   staticApi: Api;
   client: HttpClient;
+}
+
+/** Runs `map` over `items` with at most `limit` requests in flight. */
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  map: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let cursor = 0;
+
+  async function worker(): Promise<void> {
+    while (cursor < items.length) {
+      const index = cursor;
+      cursor += 1;
+      results[index] = await map(items[index]!);
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => worker()));
+  return results;
 }
 
 /**
@@ -153,6 +181,32 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     async listTenants(params?: ListTenantsParams): Promise<Tenant[]> {
       const items = await readAllTenants();
       return applyTenantQuery(items.map(mapTenantListItem), params);
+    },
+
+    // The list is read once by `listTenants`; this method only asks for the plan details
+    // of the selected tenants. A failed details call leaves the package/duration empty,
+    // which the table renders as a dash.
+    async getOverviewLatestContracts(items): Promise<OverviewLatestContract[]> {
+      const latest = latestContractsByActivation(items, OVERVIEW_LATEST_CONTRACTS_COUNT);
+      const details = await mapWithConcurrency(latest, 5, async (tenant) => {
+        try {
+          return await tenants.getTenant(tenant.tenantId);
+        } catch {
+          return null;
+        }
+      });
+
+      return latest.map((tenant, index): OverviewLatestContract => {
+        const detail = details[index] ?? null;
+        return {
+          tenant: detail ? mapTenantDetails(detail) : tenant,
+          packageCode: detail?.plan?.packageCode
+            ? packageCodeFromApi(detail.plan.packageCode)
+            : null,
+          durationMonths: detail?.plan ? durationFromApi(detail.plan.durationMonths) : null,
+          contractDate: contractDate(tenant),
+        };
+      });
     },
 
     async getTenant(tenantId): Promise<Tenant> {

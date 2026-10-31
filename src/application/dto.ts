@@ -135,6 +135,17 @@ export interface OverviewAnalysis {
   endingSoon: EndingSoonEntry[];
 }
 
+/** One row of the Overview "Latest Contracts" table. */
+export interface OverviewLatestContract {
+  tenant: Tenant;
+  /** `null` when the tenant details do not return a plan. */
+  packageCode: PackageCode | null;
+  /** `null` when the tenant details do not return a plan. */
+  durationMonths: DurationMonths | null;
+  /** `activatedAtUtc`, falling back to `createdAtUtc` (owner to confirm). */
+  contractDate: string;
+}
+
 /**
  * The single application contract the presentation layer depends on.
  * The infrastructure adapters (live API or static demo) implement it; components never
@@ -152,6 +163,8 @@ export interface Api {
    */
   getTenantBranches(tenant: Tenant): Promise<Branch[] | null>;
   getOverviewAnalysis(): Promise<OverviewAnalysis>;
+  /** Most recently signed contracts with the package/duration from tenant details. */
+  getOverviewLatestContracts(tenants: Tenant[]): Promise<OverviewLatestContract[]>;
 
 
   updateSubscription(

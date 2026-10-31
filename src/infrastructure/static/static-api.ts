@@ -6,12 +6,14 @@ import type {
   ListActivityParams,
   ListTenantsParams,
   MenuExtractionOutcome,
+  OverviewLatestContract,
   ResetTenantAccountPasswordInput,
   UpdateApplicationInput,
   UpdateSubscriptionInput,
 } from '@/application/dto';
 import type { Backend } from '@/application/use-cases';
 import type { FileUploadRepository } from '@/application/ports';
+import { OVERVIEW_LATEST_CONTRACTS_COUNT } from '@/config/policy';
 import type {
   AdminUser,
   Branch,
@@ -23,6 +25,7 @@ import type {
   TenantProvisioning,
   UpdateTenantInput,
 } from '@/domain/entities';
+import { contractDate, latestContractsByActivation } from '@/domain/rules/overview';
 import { toTenantSlug } from '@/domain/rules/slug';
 import { STATIC_OFFERS } from './static-offers';
 
@@ -151,6 +154,17 @@ export function createStaticApi(
     // OPEN: endpoint missing in swagger. KPI counts, analytics charts and their refresh
     // read the static overview analysis.
     getOverviewAnalysis: () => run(() => backend.getOverviewAnalysis()),
+    // Static demo keeps the same contract as the live adapter; the static tenants
+    // already carry their package and duration.
+    getOverviewLatestContracts: (items: Tenant[]) =>
+      run<OverviewLatestContract[]>(() =>
+        latestContractsByActivation(items, OVERVIEW_LATEST_CONTRACTS_COUNT).map((tenant) => ({
+          tenant,
+          packageCode: tenant.subscription.packageCode ?? null,
+          durationMonths: tenant.subscription.durationMonths ?? null,
+          contractDate: contractDate(tenant),
+        })),
+      ),
     updateSubscription: (tenantId: string, input: UpdateSubscriptionInput, actor: AdminUser) =>
       run(() => backend.updateSubscription(tenantId, input, actor)),
     updateRestaurantStatus: (tenantId: string, status: RestaurantStatus, actor: AdminUser) =>

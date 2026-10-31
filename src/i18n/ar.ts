@@ -378,8 +378,8 @@ export const ar = {
     saving: 'جارٍ الحفظ…',
     changesSaved: 'تم حفظ التغييرات',
     saveFailed: 'تعذر حفظ التغييرات',
-    saveFailedHttp: (status: number, detail: string) =>
-      `تعذر حفظ التغييرات (HTTP ${status})${detail ? `: ${detail}` : '.'}`,
+    saveFailedKept: (status: number) =>
+      `تعذر على الخادم حفظ التغييرات (HTTP ${status}). تم الاحتفاظ بتغييراتك.`,
     discard: 'تراجع',
     discarded: 'تم التراجع عن التغييرات',
     approving: 'جارٍ الموافقة…',

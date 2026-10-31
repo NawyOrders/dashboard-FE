@@ -236,6 +236,7 @@ function ApplicationDialogContent({
     input: UpdateApplicationInput;
     changes: Change[];
   } | null>(null);
+  const [confirmSaveOpen, setConfirmSaveOpen] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [approving, setApproving] = useState(false);
   const [provisioning, setProvisioning] = useState<TenantProvisioning | null>(null);
@@ -324,7 +325,9 @@ function ApplicationDialogContent({
       toast({ title: en.details.noChanges });
       return;
     }
+    setSaveError(null);
     setPendingChanges(next);
+    setConfirmSaveOpen(true);
   }
 
   async function handleConfirmSave() {
@@ -339,15 +342,15 @@ function ApplicationDialogContent({
       void queryClient.invalidateQueries({ queryKey: ['activity'] });
       toast({ title: en.applications.changesSaved, variant: 'success' });
       setPendingChanges(null);
+      setConfirmSaveOpen(false);
       onSaved();
     } catch (error) {
       // The dialog stays open with the user's changes; the form shows the server error.
+      // OPEN: PATCH 500 root cause, backend to confirm with the request id
+      setConfirmSaveOpen(false);
       const status = httpStatusOf(error);
-      const detail = error instanceof Error ? error.message.trim() : '';
       setSaveError(
-        status === null
-          ? en.applications.saveFailed
-          : en.applications.saveFailedHttp(status, detail),
+        status === null ? en.applications.saveFailed : en.applications.saveFailedKept(status),
       );
     } finally {
       setSaving(false);
@@ -568,12 +571,20 @@ function ApplicationDialogContent({
 
           <div className="flex flex-col gap-6">
             {saveError ? (
-              <p
+              <div
                 role="alert"
-                className="rounded-panel border border-danger-bg bg-danger-bg/40 px-3 py-2 text-2xs font-medium text-danger-fg"
+                className="flex flex-wrap items-center justify-between gap-3 rounded-panel border border-danger-bg bg-danger-bg/40 px-3 py-2"
               >
-                {saveError}
-              </p>
+                <p className="text-2xs font-medium text-danger-fg">{saveError}</p>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => void handleConfirmSave()}
+                  disabled={saving || pendingChanges === null}
+                >
+                  {en.common.retry}
+                </Button>
+              </div>
             ) : null}
             {provisioning ? (
               <div
@@ -685,13 +696,16 @@ function ApplicationDialogContent({
       </Dialog>
 
       <ConfirmDialog
-        open={pendingChanges !== null}
+        open={confirmSaveOpen && pendingChanges !== null}
         title={en.applications.saveChanges}
         confirmLabel={en.common.save}
         cancelLabel={en.common.cancel}
         changes={pendingChanges?.changes ?? []}
         loading={saving}
-        onCancel={() => setPendingChanges(null)}
+        onCancel={() => {
+          setConfirmSaveOpen(false);
+          setPendingChanges(null);
+        }}
         onConfirm={() => void handleConfirmSave()}
       />
 

@@ -354,7 +354,17 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     },
 
     async updateApplication(requestId, input) {
-      return mapOnboardingDetailsToTenant(await onboarding.updateRequest(requestId, input));
+      try {
+        return mapOnboardingDetailsToTenant(await onboarding.updateRequest(requestId, input));
+      } catch (error) {
+        if (error instanceof ApiError) {
+          // Never log bodies: only the status and the request path.
+          console.error(
+            `PATCH api/v1/onboarding-requests/${requestId} failed with HTTP ${error.status}.`,
+          );
+        }
+        throw error;
+      }
     },
 
     listOffers: () => onboarding.listOffers(),

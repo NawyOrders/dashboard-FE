@@ -61,7 +61,7 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
   }
 
   // WORKAROUND: remove when TenantDetailsResponse has requestId and branches.
-  async function readAllOnboardingRequests(): Promise<OnboardingRequestListItem[]> {
+  async function loadAllOnboardingRequests(): Promise<OnboardingRequestListItem[]> {
     const first = await onboarding.listRequests({ page: 1, pageSize: ONBOARDING_PAGE_SIZE });
     const items = [...first.items];
     if (first.hasNextPage || first.totalPages > 1) {
@@ -75,6 +75,20 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
       for (const page of rest) items.push(...page.items);
     }
     return items;
+  }
+
+  // WORKAROUND: remove when TenantDetailsResponse has requestId and branches.
+  /** One scan per screen session; a failed scan is not cached so the next tab visit retries. */
+  let onboardingListCache: Promise<OnboardingRequestListItem[]> | null = null;
+
+  function readAllOnboardingRequests(): Promise<OnboardingRequestListItem[]> {
+    if (!onboardingListCache) {
+      onboardingListCache = loadAllOnboardingRequests().catch((error: unknown) => {
+        onboardingListCache = null;
+        throw error;
+      });
+    }
+    return onboardingListCache;
   }
 
   // WORKAROUND: remove when TenantDetailsResponse has requestId and branches.

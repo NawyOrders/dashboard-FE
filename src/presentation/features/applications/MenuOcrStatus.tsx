@@ -160,6 +160,23 @@ function ProcessingPanel({
   );
 }
 
+function IdlePanel() {
+  return (
+    <div
+      role="status"
+      className="flex items-start gap-2.5 rounded-panel border border-border bg-bg-2/50 p-4"
+    >
+      <StateIcon tone="primary">
+        <ScanText aria-hidden="true" className="size-4" />
+      </StateIcon>
+      <div className="flex flex-col gap-0.5">
+        <p className="text-2xs font-semibold text-text">{en.menu.ready}</p>
+        <p className="text-2xs text-text-muted">{en.menu.readyHint}</p>
+      </div>
+    </div>
+  );
+}
+
 function FailurePanel({
   message,
   actionLabel,
@@ -202,8 +219,8 @@ function FailurePanel({
 }
 
 /**
- * Renders the menu job states under the upload controls: validation error, submitting,
- * progress with the stage, failure with retry, timeout, empty and completed.
+ * Renders the menu job states under the upload controls: idle/ready, validation error,
+ * submitting, progress with the stage, failure with retry, timeout, empty and completed.
  */
 export function MenuOcrStatus({
   phase,
@@ -228,10 +245,17 @@ export function MenuOcrStatus({
     return () => window.clearInterval(timer);
   }, [running]);
 
+  const rawPercentage = progress.progressPercentage;
   const percentage =
-    progress.progressPercentage === null
-      ? null
-      : Math.round(Math.min(100, Math.max(0, progress.progressPercentage)));
+    typeof rawPercentage === 'number' && Number.isFinite(rawPercentage)
+      ? Math.round(Math.min(100, Math.max(0, rawPercentage)))
+      : null;
+
+  // Idle is the state while the file picker is open and before a file is chosen. It must
+  // keep the section painted: rendering nothing here is what blanked the dialog.
+  if (phase === 'idle') {
+    return <IdlePanel />;
+  }
 
   if (phase === 'invalid') {
     return (
@@ -325,5 +349,6 @@ export function MenuOcrStatus({
     );
   }
 
-  return null;
+  return <IdlePanel />;
 }
+

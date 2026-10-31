@@ -172,6 +172,7 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
           onChange={handleFileChange}
         />
         <Button
+          type="button"
           size="md"
           className="w-full md:ms-auto md:w-auto"
           loading={running}

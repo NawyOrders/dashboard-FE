@@ -52,7 +52,7 @@ export function ActivityLogTable({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="scrollbar-thin overflow-x-auto">
       <table className="w-full min-w-[820px] border-collapse text-sm">
         <caption className="sr-only">{en.activity.title}</caption>
         <thead>

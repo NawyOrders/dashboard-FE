@@ -113,7 +113,7 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
               {offersQuery.isLoading ? en.common.loading : en.common.notAvailable}
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="scrollbar-thin overflow-x-auto">
               <table className="w-full min-w-[420px] border-collapse text-sm">
                 <caption className="sr-only">{en.details.referencePrices}</caption>
                 <thead>

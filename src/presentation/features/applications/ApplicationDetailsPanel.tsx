@@ -110,7 +110,7 @@ export function ApplicationDetailsPanel({
               <X aria-hidden="true" className="size-5" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-6">{details}</div>
+          <div className="scrollbar-thin flex-1 overflow-y-auto p-6">{details}</div>
         </aside>
       </>
     );

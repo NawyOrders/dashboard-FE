@@ -90,7 +90,7 @@ export function ApplicationsPage() {
           />
         </div>
       ) : (
-          <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card">
+          <div className="scrollbar-thin mt-6 overflow-x-auto rounded-card border border-border bg-card">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-start text-2xs uppercase tracking-wide text-text-muted">

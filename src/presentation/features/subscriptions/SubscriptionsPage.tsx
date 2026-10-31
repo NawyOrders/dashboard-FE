@@ -146,7 +146,7 @@ export function SubscriptionsPage() {
 
         {query.isSuccess && pageRows.length > 0 && (
           <>
-            <div className="overflow-x-auto">
+            <div className="scrollbar-thin overflow-x-auto">
               <table className="w-full min-w-[900px] border-collapse text-sm">
                 <thead>
                   <tr className="border-y border-border text-start text-2xs font-medium text-text-muted">

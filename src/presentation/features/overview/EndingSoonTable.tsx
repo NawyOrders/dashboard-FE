@@ -91,7 +91,7 @@ export function EndingSoonTable({
             ) : entries.length === 0 ? (
               <EmptyState title={en.overview.endingEmpty(days)} />
             ) : (
-          <div className="overflow-x-auto">
+          <div className="scrollbar-thin overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-sm">
               <caption className="sr-only">{en.overview.endingTitle(days)}</caption>
               <thead>

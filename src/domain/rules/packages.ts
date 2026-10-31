@@ -86,8 +86,11 @@ export function canEnableFeature(
 }
 
 /** OPEN: `GET /offers` returns the raw package code (`Start`/`Growth`), not the dashboard code. */
-export function packageCodeOfOffer(offer: SubscriptionOffer): PackageCode {
-  return (offer.packageCode ?? '').toLowerCase().includes('growth') ? 'growth' : 'start';
+export function packageCodeOfOffer(offer: SubscriptionOffer): PackageCode | null {
+  const code = (offer.packageCode ?? '').toLowerCase();
+  if (code.includes('growth')) return 'growth';
+  if (code.includes('start')) return 'start';
+  return null;
 }
 
 /** OPEN: the form supports 3/6/12 months; an unexpected offer duration falls back to 3. */

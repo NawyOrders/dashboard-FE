@@ -67,10 +67,15 @@ export function useRestaurantFormState(tenant: Tenant) {
     setValues(buildFormValues(schema, tenant));
   }, [schema, tenant]);
 
-  const branchLimits = useMemo(
-    () => PACKAGE_BRANCH_LIMITS[values.packageCode],
-    [values.packageCode],
-  );
+  const branchLimits = useMemo(() => {
+    if (values.packageCode) return PACKAGE_BRANCH_LIMITS[values.packageCode];
+    // No package yet: the branch editor uses the union of the configured policy limits.
+    const limits = Object.values(PACKAGE_BRANCH_LIMITS);
+    return {
+      min: Math.min(...limits.map((item) => item.min)),
+      max: Math.max(...limits.map((item) => item.max)),
+    };
+  }, [values.packageCode]);
 
   const itemFields = useMemo(() => repeatableStep(schema)?.itemFields ?? [], [schema]);
 

@@ -113,7 +113,9 @@ function ProvisioningCard({ tenant }: { tenant: Tenant }) {
 export function OverviewTab({ tenant }: { tenant: Tenant }) {
   const { data } = useTenant(tenant.id);
   const current = data ?? tenant;
-  const features = PACKAGE_FEATURES[current.subscription.packageCode];
+  const packageCode = current.subscription.packageCode;
+  const features = packageCode ? PACKAGE_FEATURES[packageCode] : [];
+  const branchLimit = packageCode ? PACKAGE_BRANCH_LIMITS[packageCode].max : INCLUDED_BRANCHES;
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -195,11 +197,13 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
             </InfoRow>
             <InfoRow label={en.packages.feature}>
               <span className="flex flex-wrap gap-1.5">
-                {features.map((feature) => (
-                  <span key={feature} className="rounded-pill bg-bg-2 px-2.5 py-1 text-2xs text-primary-dark">
-                    {packageFeatureLabel(feature)}
-                  </span>
-                ))}
+                {features.length === 0
+                  ? en.common.notAvailable
+                  : features.map((feature) => (
+                      <span key={feature} className="rounded-pill bg-bg-2 px-2.5 py-1 text-2xs text-primary-dark">
+                        {packageFeatureLabel(feature)}
+                      </span>
+                    ))}
               </span>
             </InfoRow>
           </InfoList>
@@ -254,9 +258,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
           </div>
           {current.branches.length > INCLUDED_BRANCHES && (
             <p className="mt-2 text-2xs text-warning-fg">
-              {en.create.branches.limitNote(
-                PACKAGE_BRANCH_LIMITS[current.subscription.packageCode].max,
-              )}
+              {en.create.branches.limitNote(branchLimit)}
             </p>
           )}
         </CardBody>

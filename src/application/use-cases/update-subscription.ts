@@ -27,7 +27,7 @@ export function makeUpdateSubscription(deps: UseCaseDeps) {
         actor,
         action: 'package_changed',
         target: { type: 'subscription', tenantId, label },
-        previousValue: PACKAGE_NAMES[prev.packageCode],
+        previousValue: prev.packageCode ? PACKAGE_NAMES[prev.packageCode] : null,
         newValue: PACKAGE_NAMES[input.packageCode],
       });
     }

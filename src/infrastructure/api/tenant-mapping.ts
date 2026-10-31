@@ -34,8 +34,11 @@ export function restaurantStatusFromApi(
 }
 
 /** OPEN: `GET /tenants` returns the raw package code, not the dashboard code. */
-export function packageCodeFromApi(value: string | null | undefined): PackageCode {
-  return (value ?? '').toLowerCase().includes('growth') ? 'growth' : 'start';
+export function packageCodeFromApi(value: string | null | undefined): PackageCode | null {
+  const code = (value ?? '').toLowerCase();
+  if (code.includes('growth')) return 'growth';
+  if (code.includes('start')) return 'start';
+  return null;
 }
 
 export function durationFromApi(value: number | null | undefined): DurationMonths {
@@ -88,8 +91,8 @@ export function mapTenantListItem(item: TenantListItem): Tenant {
     subscription: {
       id: `tenant-${item.tenantId}-plan`,
       tenantId: item.tenantId,
-      // OPEN: the list does not return the package; the details screen shows the plan.
-      packageCode: 'start',
+      // OPEN: package in tenant list, backend to add packageCode
+      packageCode: null,
       durationMonths: 3,
       status: (item.planStatus ?? '').toLowerCase().includes('active') ? 'active' : 'not_started',
       startDate: dateOnly(item.activatedAtUtc),

@@ -87,7 +87,7 @@ export function mapOnboardingRequestToTenant(
     subscription: {
       id: `onboarding-${item.requestId}`,
       tenantId: item.requestId,
-      packageCode: offer ? packageCodeOfOffer(offer) : 'start',
+      packageCode: offer ? packageCodeOfOffer(offer) : null,
       durationMonths,
       status: 'not_started',
       startDate,
@@ -202,7 +202,7 @@ export function mapOnboardingDetailsToTenant(details: OnboardingRequestDetails):
     subscription: {
       id: `onboarding-${details.requestId}`,
       tenantId: details.requestId,
-      packageCode: offer ? packageCodeOfOffer(offer) : 'start',
+      packageCode: offer ? packageCodeOfOffer(offer) : null,
       durationMonths,
       status: 'not_started',
       startDate,

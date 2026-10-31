@@ -183,7 +183,7 @@ export function buildApplicationChanges(
   const subscriptionChanged =
     values.packageCode !== tenant.subscription.packageCode ||
     values.durationMonths !== tenant.subscription.durationMonths;
-  if (subscriptionChanged && offers) {
+  if (subscriptionChanged && offers && values.packageCode) {
     const offer = offerForSelection(offers, values.packageCode, values.durationMonths);
     if (offer) {
       input.subscriptionOfferId = offer.id;

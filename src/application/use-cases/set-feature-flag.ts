@@ -13,9 +13,11 @@ export function makeSetFeatureFlag(deps: UseCaseDeps) {
     const tenant = restaurants.findById(tenantId);
     if (!tenant) throw new Error(`Tenant not found: ${tenantId}`);
 
-    if (!canEnableFeature(tenant.subscription.packageCode, key, enabled)) {
+    const packageCode = tenant.subscription.packageCode;
+    if (!packageCode) throw new Error('This tenant has no package.');
+    if (!canEnableFeature(packageCode, key, enabled)) {
       throw new Error(
-        `Feature "${key}" is not available on the ${PACKAGE_NAMES[tenant.subscription.packageCode]} package`,
+        `Feature "${key}" is not available on the ${PACKAGE_NAMES[packageCode]} package`,
       );
     }
 

@@ -25,7 +25,7 @@ import { stepSubtitle, stepTitle } from './localized-schema';
 
 export interface SubscriptionSectionProps {
   step: RegistrationStep;
-  packageCode: PackageCode;
+  packageCode: PackageCode | null;
   durationMonths: DurationMonths;
   paymentStatus?: PaymentStatus;
   onPackageChange?: (code: PackageCode) => void;
@@ -59,7 +59,7 @@ function ReadOnlySubscription({
   | 'submittedPrice'
   | 'submittedCurrency'
 >) {
-  const price = submittedPrice ?? priceFromOffers(offers, packageCode, durationMonths);
+  const price = submittedPrice ?? (packageCode ? priceFromOffers(offers, packageCode, durationMonths) : null);
 
   const fields = [
     { label: en.details.subscriptionPackage, value: packageName(packageCode) },

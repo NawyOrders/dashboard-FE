@@ -29,7 +29,9 @@ export class StaticFeatureFlagRepository implements FeatureFlagRepository {
     const list: FeatureFlag[] = TOGGLEABLE_FEATURES.map((key) => ({
       tenantId: tenant.id,
       key,
-      enabled: packageHasFeature(tenant.subscription.packageCode, key),
+      enabled: tenant.subscription.packageCode
+        ? packageHasFeature(tenant.subscription.packageCode, key)
+        : false,
       updatedAt: tenant.subscription.updatedAt,
     }));
     this.flags.set(tenant.id, list);

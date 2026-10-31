@@ -26,7 +26,7 @@ export interface RestaurantFormValues {
   /** Top-level values keyed by the JSON field key. */
   fields: Record<string, string>;
   branches: BranchFormValue[];
-  packageCode: PackageCode;
+  packageCode: PackageCode | null;
   durationMonths: DurationMonths;
 }
 

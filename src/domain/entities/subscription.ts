@@ -28,7 +28,8 @@ export type AppStatus = 'not_started' | 'in_preparation' | 'submitted_to_store' 
 export interface Subscription {
   id: string;
   tenantId: string;
-  packageCode: PackageCode;
+  /** `null` when the backend has no plan for the tenant; never defaulted to Start. */
+  packageCode: PackageCode | null;
   durationMonths: DurationMonths;
   status: SubscriptionStatus;
   /** ISO date string (yyyy-mm-dd). Chosen manually — no automatic rule. */

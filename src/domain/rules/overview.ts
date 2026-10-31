@@ -58,19 +58,6 @@ export function contractsPerMonth(tenants: Tenant[], now: Date, months: number):
   return buckets;
 }
 
-/**
- * Most recently signed contracts, sorted by contract date descending and then by
- * Tenant ID descending as a tie-breaker.
- */
-export function latestContracts(tenants: Tenant[], count: number): Tenant[] {
-  return [...tenants]
-    .sort((a, b) => {
-      const byDate = b.subscription.startDate.localeCompare(a.subscription.startDate);
-      return byDate !== 0 ? byDate : b.tenantId.localeCompare(a.tenantId);
-    })
-    .slice(0, Math.max(0, count));
-}
-
 // OPEN: contract date rule (activatedAtUtc vs createdAtUtc), owner to confirm.
 export function contractDate(tenant: Tenant): string {
   return tenant.activatedAtUtc ?? tenant.createdAt;

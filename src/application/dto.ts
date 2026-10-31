@@ -128,11 +128,9 @@ export type MenuExtractionOutcome =
   | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
   | { status: 'timeout'; jobId: string };
 
-/** Everything the Overview analysis section (Phase 3b) needs, in one payload. */
+/** Overview chart data that still comes from the static data source (agent.md §28). */
 export interface OverviewAnalysis {
   contractsPerMonth: MonthBucket[];
-  latestContracts: Tenant[];
-  endingSoon: EndingSoonEntry[];
 }
 
 /** One row of the Overview "Latest Contracts" table. */

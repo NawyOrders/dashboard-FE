@@ -98,12 +98,16 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
       await tenants.activatePlan(tenantId);
     },
 
+    // OPEN: the onboarding list has no status filter parameter, so pending requests
+    // (status 1) are filtered on the client.
     async listApplications(): Promise<Tenant[]> {
       const [page, offers] = await Promise.all([
         onboarding.listRequests({ page: 1, pageSize: 100 }),
         onboarding.listOffers(),
       ]);
-      return page.items.map((item) => mapOnboardingRequestToTenant(item, offers));
+      return page.items
+        .filter((item) => item.status === 1)
+        .map((item) => mapOnboardingRequestToTenant(item, offers));
     },
 
     async getApplication(requestId) {

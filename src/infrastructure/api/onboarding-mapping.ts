@@ -16,8 +16,8 @@ import type {
  * part of it, so those parts are empty/defaulted instead of being invented.
  */
 
-// OPEN: swagger does not name the onboarding status values. The Applications page
-// reviews pending requests, so every listed request is treated as pending approval.
+// Owner decision: onboarding status 1 is PENDING and the Applications page lists only
+// status 1, so every mapped row is pending approval.
 function restaurantStatusFromOnboarding(): Tenant['status'] {
   return 'pending_approval';
 }

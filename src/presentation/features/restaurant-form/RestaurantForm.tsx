@@ -43,6 +43,14 @@ export interface RestaurantFormProps {
   errors?: Record<string, string>;
   /** Validation messages keyed by `${branchId}.${fieldKey}`. */
   branchErrors?: Record<string, string>;
+  /** Existing logo URL from the application details. */
+  logoSrc?: string | null;
+  /** Onboarding request used as the logo palette job reference. */
+  referenceId?: string;
+  /** Receives the uploaded logo asset id so the save sends `logoAssetId`. */
+  onLogoAssetChange?: (assetId: string) => void;
+  /** Receives the suggested palette; the caller opens the assignment dialog. */
+  onPaletteSuggested?: (colors: string[]) => void;
 }
 
 function sectionTitle(section: RegistrationSection, step: RegistrationStep): string {
@@ -147,6 +155,10 @@ export function RestaurantForm({
   branchMeta,
   errors,
   branchErrors,
+  logoSrc,
+  referenceId,
+  onLogoAssetChange,
+  onPaletteSuggested,
 }: RestaurantFormProps) {
   const detailsSteps = steps.filter((step) => step.sections && step.sections.length > 0);
   const branchesStep = steps.find((step) => step.repeatable === true);
@@ -165,6 +177,10 @@ export function RestaurantForm({
                 values={values.fields}
                 disabled={disabled}
                 errors={errors}
+                logoSrc={logoSrc}
+                referenceId={referenceId}
+                onLogoAssetChange={onLogoAssetChange}
+                onPaletteSuggested={onPaletteSuggested}
                 onChange={onFieldChange}
               />
             ) : (

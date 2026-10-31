@@ -28,6 +28,8 @@ export interface RestaurantFormValues {
   branches: BranchFormValue[];
   packageCode: PackageCode | null;
   durationMonths: DurationMonths;
+  /** Uploaded logo asset; `null` keeps the stored logo untouched. */
+  logoAssetId: string | null;
 }
 
 function setPath(target: Record<string, unknown>, path: string, value: unknown): void {
@@ -84,6 +86,7 @@ export function buildFormValues(schema: RegistrationSchema, tenant: Tenant): Res
     branches,
     packageCode: tenant.subscription.packageCode,
     durationMonths: tenant.subscription.durationMonths,
+    logoAssetId: tenant.logoAssetId ?? null,
   };
 }
 

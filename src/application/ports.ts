@@ -5,6 +5,8 @@ import type {
   AdminUser,
   FeatureFlag,
   InternalAccount,
+  LogoPaletteResultPayload,
+  LogoPaletteSubmission,
   MenuOcrResultPayload,
   MenuOcrStatus,
   MenuOcrSubmission,
@@ -117,6 +119,22 @@ export interface MenuOcrPort {
   submit(file: File, options?: MenuOcrSubmitOptions): Promise<MenuOcrSubmission>;
   getStatus(jobId: string, signal?: AbortSignal): Promise<MenuOcrStatus>;
   getResult(jobId: string, signal?: AbortSignal): Promise<MenuOcrResultPayload>;
+}
+
+export interface LogoPaletteSubmitOptions {
+  /** Onboarding request the logo belongs to; sent as the `referenceId` query value. */
+  referenceId?: string | null;
+  signal?: AbortSignal;
+}
+
+/**
+ * Logo palette backend. It shares the AI job status/result routes with the menu OCR;
+ * the overall polling policy lives in the application layer.
+ */
+export interface LogoPalettePort {
+  submit(file: File, options?: LogoPaletteSubmitOptions): Promise<LogoPaletteSubmission>;
+  getStatus(jobId: string, signal?: AbortSignal): Promise<MenuOcrStatus>;
+  getResult(jobId: string, signal?: AbortSignal): Promise<LogoPaletteResultPayload>;
 }
 
 /** Injectable time source so business rules and tests are deterministic. */

@@ -7,6 +7,7 @@ import type {
 } from '@/application/dto';
 import { applyTenantQuery } from '@/application/use-cases';
 import { makeExtractMenu } from '@/application/use-cases/extract-menu';
+import { makeSuggestLogoPalette } from '@/application/use-cases/suggest-logo-palette';
 import {
   OVERVIEW_ENDING_WITHIN_DAYS,
   OVERVIEW_LATEST_CONTRACTS_COUNT,
@@ -24,9 +25,10 @@ import type {
   TenantDetails,
   TenantListItem,
 } from '@/domain/entities';
+import { ONBOARDING_ASSET_TYPE } from '@/domain/entities';
 import { createAuthApi, toPlatformSession } from './auth-api';
 import { loginResponseSchema } from './auth-schemas';
-import { createOcrApi } from './ocr-api';
+import { createLogoPaletteApi, createOcrApi } from './ocr-api';
 import { createOnboardingApi } from './onboarding-api';
 import {
   mapOnboardingBranchToBranch,
@@ -87,6 +89,7 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
   const tenants = createTenantApi(client);
   const auth = createAuthApi(client);
   const extractMenu = makeExtractMenu(createOcrApi(client));
+  const suggestLogoPalette = makeSuggestLogoPalette(createLogoPaletteApi(client));
 
   const TENANT_PAGE_SIZE = 100;
   const ONBOARDING_PAGE_SIZE = 100;
@@ -234,6 +237,13 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     },
 
     extractMenu: (file, options) => extractMenu(file, options),
+
+    async uploadApplicationLogo(file: File): Promise<string> {
+      const asset = await onboarding.uploadAsset(file, ONBOARDING_ASSET_TYPE.logo);
+      return asset.assetId;
+    },
+
+    suggestLogoPalette: (file, options) => suggestLogoPalette(file, options),
 
     // OPEN: GET /tenants has no search or filter parameters; they run on the client.
     async listTenants(params?: ListTenantsParams): Promise<Tenant[]> {

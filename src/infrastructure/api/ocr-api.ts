@@ -1,6 +1,8 @@
 import { z } from 'zod';
-import type { MenuOcrPort } from '@/application/ports';
+import type { LogoPalettePort, MenuOcrPort } from '@/application/ports';
 import type {
+  LogoPaletteResultPayload,
+  LogoPaletteSubmission,
   MenuOcrResultPayload,
   MenuOcrStatus,
   MenuOcrSubmission,
@@ -18,6 +20,7 @@ import type { HttpClient } from './http-client';
  */
 
 const MENU_OCR_PATH = 'api/v1/onboarding/menu-ocr';
+const LOGO_PALETTE_PATH = 'api/v1/onboarding/logo-palette';
 const JOBS_PATH = 'api/v1/ai/jobs';
 
 const nullableString = z
@@ -77,6 +80,29 @@ const resultSchema: z.ZodType<MenuOcrResultPayload, z.ZodTypeDef, unknown> = z.o
   data: z.custom<unknown>(),
 });
 
+const logoPaletteSubmissionSchema: z.ZodType<
+  LogoPaletteSubmission,
+  z.ZodTypeDef,
+  unknown
+> = z.object({
+  jobId: z.string(),
+  jobType,
+  status: jobStatus,
+  estimatedSeconds: nullableNumber,
+  statusUrl: nullableString,
+  resultUrl: nullableString,
+  submittedAtUtc: nullableString,
+});
+
+const logoPaletteResultSchema: z.ZodType<LogoPaletteResultPayload, z.ZodTypeDef, unknown> =
+  z.object({
+    jobId: z.string(),
+    jobType,
+    completedAtUtc: nullableString,
+    // OPEN: logo palette result shape, backend to confirm.
+    data: z.custom<unknown>(),
+  });
+
 export function createOcrApi(client: HttpClient): MenuOcrPort {
   return {
     submit(file, options) {
@@ -107,6 +133,45 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/result`,
         signal,
         schema: resultSchema,
+      });
+    },
+  };
+}
+
+/**
+ * `POST /api/v1/onboarding/logo-palette` takes the logo as the multipart field `file`
+ * and answers 202 with an AI job; status and result share the OCR job routes.
+ */
+export function createLogoPaletteApi(client: HttpClient): LogoPalettePort {
+  return {
+    submit(file, options) {
+      const form = new FormData();
+      form.append('file', file);
+
+      return client.request({
+        path: LOGO_PALETTE_PATH,
+        method: 'POST',
+        query: { referenceId: options?.referenceId ?? undefined },
+        body: form,
+        signal: options?.signal,
+        expectedStatus: 202,
+        schema: logoPaletteSubmissionSchema,
+      });
+    },
+
+    getStatus(jobId, signal) {
+      return client.request({
+        path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/status`,
+        signal,
+        schema: statusSchema,
+      });
+    },
+
+    getResult(jobId, signal) {
+      return client.request({
+        path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/result`,
+        signal,
+        schema: logoPaletteResultSchema,
       });
     },
   };

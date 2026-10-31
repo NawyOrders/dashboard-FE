@@ -211,6 +211,16 @@ export function buildApplicationChanges(
     },
   );
 
+  const previousLogoAssetId = tenant.logoAssetId ?? null;
+  if (values.logoAssetId && values.logoAssetId !== previousLogoAssetId) {
+    input.logoAssetId = values.logoAssetId;
+    changes.push({
+      label: en.registration.brandColors.logo,
+      previous: previousLogoAssetId ? en.registration.brandColors.currentLogo : null,
+      next: en.registration.brandColors.newLogo,
+    });
+  }
+
   const subscriptionChanged =
     values.packageCode !== tenant.subscription.packageCode ||
     values.durationMonths !== tenant.subscription.durationMonths;

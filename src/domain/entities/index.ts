@@ -10,3 +10,4 @@ export * from './sales';
 export * from './onboarding';
 export * from './tenant-provisioning';
 export * from './menu-ocr';
+export * from './logo-palette';

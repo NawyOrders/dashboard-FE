@@ -63,6 +63,10 @@ export function useRestaurantFormState(tenant: Tenant) {
     setValues((current) => ({ ...current, durationMonths }));
   }, []);
 
+  const setLogoAsset = useCallback((logoAssetId: string | null) => {
+    setValues((current) => ({ ...current, logoAssetId }));
+  }, []);
+
   const reset = useCallback(() => {
     setValues(buildFormValues(schema, tenant));
   }, [schema, tenant]);
@@ -88,6 +92,7 @@ export function useRestaurantFormState(tenant: Tenant) {
     removeBranch,
     setPackageCode,
     setDurationMonths,
+    setLogoAsset,
     reset,
     branchLimits,
     itemFields,

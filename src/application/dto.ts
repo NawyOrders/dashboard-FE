@@ -129,6 +129,29 @@ export type MenuExtractionOutcome =
   | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
   | { status: 'timeout'; jobId: string };
 
+/** Live state of a logo palette job, pushed to the form while it is polled. */
+export interface LogoPaletteProgress {
+  status: string;
+  progressPercentage: number | null;
+}
+
+export interface SuggestLogoPaletteOptions {
+  /** Onboarding request the logo belongs to; sent as the `referenceId` query value. */
+  referenceId?: string | null;
+  signal?: AbortSignal;
+  onProgress?: (progress: LogoPaletteProgress) => void;
+}
+
+/**
+ * Outcome of the logo palette job. `unreadable` means the job finished but the result
+ * shape was not a list of hex colors; the manual color inputs stay available.
+ */
+export type LogoPaletteOutcome =
+  | { status: 'completed'; colors: string[] }
+  | { status: 'unreadable' }
+  | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
+  | { status: 'timeout' };
+
 /** Overview chart data that still comes from the static data source (agent.md §28). */
 export interface OverviewAnalysis {
   contractsPerMonth: MonthBucket[];
@@ -257,6 +280,13 @@ export interface Api {
   activatePlan(tenantId: string, actor: AdminUser): Promise<void>;
   /** Stores an uploaded image and returns its reference (NW-246). */
   uploadImage(file: File): Promise<string>;
+  /** Uploads a logo through the onboarding asset flow; returns the id saved by the PATCH. */
+  uploadApplicationLogo(file: File): Promise<string>;
+  /**
+   * Logo palette job: submits the image, polls the job and returns the suggested hex
+   * colors. The colors are applied to the form only after the admin confirms them.
+   */
+  suggestLogoPalette(file: File, options?: SuggestLogoPaletteOptions): Promise<LogoPaletteOutcome>;
   /**
    * Menu OCR (public endpoint): validates the file, submits the job, polls it and
    * returns the extracted rows. The result is kept in the page only.

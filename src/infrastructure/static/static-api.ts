@@ -5,6 +5,7 @@ import type {
   CreateTenantAccountInput,
   ListActivityParams,
   ListTenantsParams,
+  LogoPaletteOutcome,
   MenuExtractionOutcome,
   OverviewEndingSoonResult,
   OverviewLatestContract,
@@ -303,6 +304,16 @@ export function createStaticApi(
     uploadImage: (file: File) => uploads.uploadImage(file),
     // OPEN: menu OCR runs on the backend; the static data source has no API base URL.
     extractMenu: async (): Promise<MenuExtractionOutcome> => ({
+      status: 'failed',
+      errorCode: 'StaticDataSource',
+      errorMessage: null,
+    }),
+    // OPEN: the onboarding asset upload runs on the backend; not available in static mode.
+    uploadApplicationLogo: async (): Promise<string> => {
+      throw new Error('Logo upload is not available in the static data source.');
+    },
+    // OPEN: the logo palette job runs on the backend; the static data source cannot submit it.
+    suggestLogoPalette: async (): Promise<LogoPaletteOutcome> => ({
       status: 'failed',
       errorCode: 'StaticDataSource',
       errorMessage: null,

@@ -11,6 +11,15 @@ export function isRgbHexColor(value: string | null | undefined): value is string
   return typeof value === 'string' && RGB_HEX_COLOR.test(value.trim());
 }
 
+/** `#RGB`/`#RRGGBB` → uppercase `#RRGGBB`; `null` when the value is not a hex color. */
+export function normalizeHexColor(value: string): string | null {
+  const trimmed = value.trim();
+  if (!isHexColor(trimmed)) return null;
+  const hex = trimmed.slice(1);
+  const full = hex.length === 3 ? [...hex].map((char) => char + char).join('') : hex;
+  return `#${full.toUpperCase()}`;
+}
+
 /** The request value when it is a valid hex color, otherwise the caller's token. */
 export function brandColorOr(value: string | null | undefined, fallback: string): string {
   return isHexColor(value) ? value.trim() : fallback;

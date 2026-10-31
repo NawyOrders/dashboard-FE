@@ -206,6 +206,7 @@ function ApplicationDialogContent({
     addBranch,
     removeBranch,
     branchLimits,
+    setLogoAsset,
   } = useRestaurantFormState(tenant);
 
   const offers = useOffers();
@@ -332,9 +333,16 @@ function ApplicationDialogContent({
     }
   }
 
+  // The palette fills the slots in the returned order: primary, background, text.
+  function handlePaletteSuggested(colors: string[]) {
+    BRAND_COLOR_SLOTS.forEach((slot, index) => {
+      const color = colors[index];
+      if (color) setField(slot.key, color);
+    });
+  }
+
   function handleSave() {
-    if (!isSuperAdmin || saving || hasColorErrors) return;
-    const next = buildApplicationChanges(tenant, values, offers.data);
+    if (!isSuperAdmin || saving || hasColorErrors) return;    const next = buildApplicationChanges(tenant, values, offers.data);
     if (next.changes.length === 0) {
       toast({ title: en.details.noChanges });
       return;
@@ -694,6 +702,10 @@ function ApplicationDialogContent({
               submittedPrice={tenant.agreedPrice}
               branchMeta={branchMeta}
               errors={colorErrors}
+              logoSrc={logoSrc}
+              referenceId={tenant.id}
+              onLogoAssetChange={setLogoAsset}
+              onPaletteSuggested={handlePaletteSuggested}
               onFieldChange={setField}
               onBranchFieldChange={setBranchField}
               onAddBranch={addBranch}

@@ -31,38 +31,65 @@ export function OverviewAnalysis() {
   );
   const data = query.data;
   const loading = query.isLoading;
+  const chartsError = query.isError || salesQuery.isError;
 
-  if (query.isError || salesQuery.isError) {
-    return (
-      <div className="mb-6">
-        <ErrorState
-          error={query.error ?? salesQuery.error}
-          onRetry={() => {
-            if (query.isError) void query.refetch();
-            if (salesQuery.isError) void salesQuery.refetch();
-          }}
-        />
-      </div>
-    );
+  // The tables share the tenant list query; when it fails, both show its error and their
+  // retry re-reads the list instead of running the details query with an empty array.
+  const latestError = tenantsQuery.isError
+    ? tenantsQuery.error
+    : latestQuery.isError
+      ? latestQuery.error
+      : undefined;
+  const endingError = tenantsQuery.isError
+    ? tenantsQuery.error
+    : endingQuery.isError
+      ? endingQuery.error
+      : undefined;
+
+  function retryLatest() {
+    if (tenantsQuery.isError) void tenantsQuery.refetch();
+    else void latestQuery.refetch();
+  }
+
+  function retryEnding() {
+    if (tenantsQuery.isError) void tenantsQuery.refetch();
+    else void endingQuery.refetch();
   }
 
   return (
     <section className="mb-6 flex flex-col gap-6" aria-label={en.overview.analysisLabel}>
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <ContractsPerMonthChart buckets={data?.contractsPerMonth ?? []} loading={loading} />
-        <SalesPerMonthChart buckets={salesQuery.data ?? []} loading={salesQuery.isLoading} />
-      </div>
+      {chartsError ? (
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <div className="xl:col-span-2">
+            <ErrorState
+              error={query.error ?? salesQuery.error}
+              onRetry={() => {
+                if (query.isError) void query.refetch();
+                if (salesQuery.isError) void salesQuery.refetch();
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <ContractsPerMonthChart buckets={data?.contractsPerMonth ?? []} loading={loading} />
+          <SalesPerMonthChart buckets={salesQuery.data ?? []} loading={salesQuery.isLoading} />
+        </div>
+      )}
 
       <LatestContractsTable
         rows={latestQuery.data ?? []}
         loading={tenantsQuery.isLoading || latestQuery.isLoading}
+        error={latestError}
+        onRetry={retryLatest}
       />
 
       <EndingSoonTable
         entries={endingQuery.data?.entries ?? []}
         loading={tenantsQuery.isLoading || endingQuery.isLoading}
+        error={endingError}
         failedCount={endingQuery.data?.failedCount ?? 0}
-        onRetry={() => void endingQuery.refetch()}
+        onRetry={retryEnding}
       />
     </section>
   );

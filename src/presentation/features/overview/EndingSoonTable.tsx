@@ -2,6 +2,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { Button } from '@/presentation/components/ui/Button';
+import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -18,6 +19,7 @@ import type { EndingSoonEntry } from '@/domain/rules/overview';
 export interface EndingSoonTableProps {
   entries: EndingSoonEntry[];
   loading?: boolean;
+  error?: unknown;
   /** Details calls that failed; shown as a warning with a retry action. */
   failedCount?: number;
   onRetry?: () => void;
@@ -43,49 +45,55 @@ function DaysRemaining({ days }: { days: number }) {
 export function EndingSoonTable({
   entries,
   loading,
+  error,
   failedCount = 0,
   onRetry,
 }: EndingSoonTableProps) {
+  const days = OVERVIEW_ENDING_WITHIN_DAYS;
   return (
     <Card>
       <CardHeader className="items-center">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold text-text">
-            {en.overview.endingTitle(OVERVIEW_ENDING_WITHIN_DAYS)}
+            {en.overview.endingTitle(days)}
           </h2>
           <p className="mt-0.5 text-2xs text-text-muted">
-            {en.overview.endingSubtitle(OVERVIEW_ENDING_WITHIN_DAYS)}
+            {en.overview.endingSubtitle(days)}
           </p>
         </div>
       </CardHeader>
 
       <CardBody>
-        {failedCount > 0 && !loading && (
-          <div
-            role="alert"
-            className="mb-3 flex flex-wrap items-center gap-3 rounded-panel border border-warning-fg bg-warning-bg px-4 py-3 text-sm text-warning-fg"
-          >
-            <AlertTriangle aria-hidden="true" className="size-4 shrink-0" />
-            <span className="min-w-0 flex-1">{en.overview.endingCheckFailed}</span>
-            {onRetry && (
-              <Button size="sm" variant="secondary" onClick={onRetry}>
-                {en.common.retry}
-              </Button>
-            )}
-          </div>
-        )}
-        {loading ? (
-          <div className="flex flex-col gap-2" aria-hidden="true">
-            {Array.from({ length: URGENT_DAYS }, (_, index) => (
-              <Skeleton key={index} className="h-10 w-full" />
-            ))}
-          </div>
-        ) : entries.length === 0 ? (
-          <EmptyState title={en.overview.endingEmpty(OVERVIEW_ENDING_WITHIN_DAYS)} />
+        {error !== undefined && error !== null ? (
+          <ErrorState error={error} onRetry={onRetry} />
         ) : (
+          <>
+            {failedCount > 0 && !loading && (
+              <div
+                role="alert"
+                className="mb-3 flex flex-wrap items-center gap-3 rounded-panel border border-warning-fg bg-warning-bg px-4 py-3 text-sm text-warning-fg"
+              >
+                <AlertTriangle aria-hidden="true" className="size-4 shrink-0" />
+                <span className="min-w-0 flex-1">{en.overview.endingCheckFailed}</span>
+                {onRetry && (
+                  <Button size="sm" variant="secondary" onClick={onRetry}>
+                    {en.common.retry}
+                  </Button>
+                )}
+              </div>
+            )}
+            {loading ? (
+              <div className="flex flex-col gap-2" aria-hidden="true">
+                {Array.from({ length: URGENT_DAYS }, (_, index) => (
+                  <Skeleton key={index} className="h-10 w-full" />
+                ))}
+              </div>
+            ) : entries.length === 0 ? (
+              <EmptyState title={en.overview.endingEmpty(days)} />
+            ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-sm">
-              <caption className="sr-only">{en.overview.endingTitle(OVERVIEW_ENDING_WITHIN_DAYS)}</caption>
+              <caption className="sr-only">{en.overview.endingTitle(days)}</caption>
               <thead>
                 <tr className="border-b border-border text-2xs font-medium text-text-muted">
                   <th scope="col" className="whitespace-nowrap px-3 py-3 text-start">
@@ -148,6 +156,8 @@ export function EndingSoonTable({
               </tbody>
             </table>
           </div>
+            )}
+          </>
         )}
       </CardBody>
     </Card>

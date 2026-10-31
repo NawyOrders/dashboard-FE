@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
+import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -15,9 +16,16 @@ import type { OverviewLatestContract } from '@/application/dto';
 export interface LatestContractsTableProps {
   rows: OverviewLatestContract[];
   loading?: boolean;
+  error?: unknown;
+  onRetry?: () => void;
 }
 
-export function LatestContractsTable({ rows, loading }: LatestContractsTableProps) {
+export function LatestContractsTable({
+  rows,
+  loading,
+  error,
+  onRetry,
+}: LatestContractsTableProps) {
   const count = OVERVIEW_LATEST_CONTRACTS_COUNT;
   const headers = [
     en.restaurants.columns.restaurant,
@@ -44,7 +52,9 @@ export function LatestContractsTable({ rows, loading }: LatestContractsTableProp
       </CardHeader>
 
       <CardBody className="flex-1">
-        {loading ? (
+        {error !== undefined && error !== null ? (
+          <ErrorState error={error} onRetry={onRetry} />
+        ) : loading ? (
           <div className="flex flex-col gap-2" aria-hidden="true">
             {Array.from({ length: count }, (_, index) => (
               <Skeleton key={index} className="h-10 w-full" />

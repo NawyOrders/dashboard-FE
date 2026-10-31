@@ -351,6 +351,7 @@ export const ar = {
     tableEmpty: 'لا توجد طلبات تسجيل للمراجعة.',
     approve: 'موافقة',
     approveSuccess: 'تمت الموافقة على طلب التسجيل',
+    approveUnknown: 'ربما تمت الموافقة على الطلب. حدّث القائمة قبل المحاولة مرة أخرى.',
     approveError: 'تعذرت الموافقة على طلب التسجيل.',
     approveConfirmTitle: 'الموافقة على طلب التسجيل',
     approveConfirmBody: (name: string) =>
@@ -422,9 +423,10 @@ export const ar = {
     provisioning: {
       title: 'تهيئة المطعم',
       statusLabel: 'الحالة',
-      // OPEN: status values from backend
+      // OPEN: status values from backend; 3 is the live approve value.
       statusValue: (status: string) => {
         const labels: Record<string, string> = {
+          '3': 'معتمد',
           active: 'نشط',
           failed: 'فشل',
           provisioning: 'جارٍ التهيئة',

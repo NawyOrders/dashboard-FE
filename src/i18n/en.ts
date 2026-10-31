@@ -350,6 +350,7 @@ export const en = {
     tableEmpty: 'No applications to review.',
     approve: 'Approve',
     approveSuccess: 'Application approved',
+    approveUnknown: 'The request may have been approved. Refresh the list before trying again.',
     approveError: 'Could not approve the application.',
     approveConfirmTitle: 'Approve application',
     approveConfirmBody: (name: string) =>
@@ -422,9 +423,10 @@ export const en = {
     provisioning: {
       title: 'Restaurant provisioning',
       statusLabel: 'Status',
-      // OPEN: status values from backend
+      // OPEN: status values from backend; 3 is the live approve value.
       statusValue: (status: string) => {
         const labels: Record<string, string> = {
+          '3': 'Approved',
           active: 'Active',
           failed: 'Failed',
           provisioning: 'Provisioning',

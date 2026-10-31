@@ -41,6 +41,7 @@ import {
   packageCodeFromApi,
 } from './tenant-mapping';
 import type { HttpClient } from './http-client';
+import { ApiError } from './response';
 
 export interface ApiAdapterOptions {
   /** Demo implementation for the endpoints the backend does not expose yet. */
@@ -364,15 +365,20 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
 
     // OPEN: admin password has no field in approve, backend to confirm.
     async approveApplication(requestId) {
-      const response = await onboarding.approveRequest(requestId);
-      // OPEN: status values from backend (the approve response does not name them).
-      // The dialog reads the named status from the provisioning-status endpoint.
-      return {
-        tenantId: response.tenantId,
-        slug: response.tenantSlug,
-        status: 'provisioning',
-        activatedAtUtc: null,
-      };
+      try {
+        const response = await onboarding.approveRequest(requestId);
+        // OPEN: approve status value names, backend to confirm (live response sends 3).
+        return {
+          outcome: 'approved',
+          status: String(response.status),
+          tenantId: response.tenantId,
+          slug: response.tenantSlug,
+        };
+      } catch (error) {
+        // A 2xx whose body could not be parsed does not mean the approval failed.
+        if (error instanceof ApiError) throw error;
+        return { outcome: 'unknown' };
+      }
     },
 
     async rejectApplication(requestId, rejectionReason) {

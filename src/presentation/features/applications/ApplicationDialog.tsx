@@ -352,10 +352,25 @@ function ApplicationDialogContent({
     }
     setApproving(true);
     try {
-      const next = await api.approveApplication(tenant.id, user);
+      const result = await api.approveApplication(tenant.id, user);
       setAdminPassword('');
-      setProvisioning(next);
-      if (!isTenantProvisioningFinal(next.status)) {
+      if (result.outcome === 'unknown') {
+        // The server answered but the body could not be read: refresh instead of failing.
+        toast({ title: en.applications.approveUnknown, variant: 'neutral' });
+        onApproved();
+        return;
+      }
+      setProvisioning({
+        tenantId: result.tenantId,
+        slug: result.slug,
+        status: result.status,
+      });
+      toast({
+        title: en.applications.approveSuccess,
+        description: `${en.applications.tenantId}: ${result.tenantId}`,
+        variant: 'success',
+      });
+      if (!isTenantProvisioningFinal(result.status)) {
         setProvisioningTimedOut(false);
         setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
       }

@@ -2,6 +2,7 @@ import type {
   ActivityAction,
   ActivityLog,
   AdminUser,
+  ApproveApplicationResult,
   Branch,
   CreateAdminAccountInput,
   DurationMonths,
@@ -239,7 +240,7 @@ export interface Api {
    * `POST /onboarding-requests/{requestId}/approve` with no body.
    * OPEN: admin password has no field in approve, backend to confirm.
    */
-  approveApplication(requestId: string, actor: AdminUser): Promise<TenantProvisioning>;
+  approveApplication(requestId: string, actor: AdminUser): Promise<ApproveApplicationResult>;
   /** `POST /onboarding-requests/{requestId}/reject` with the required reason. */
   rejectApplication(
     requestId: string,

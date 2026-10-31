@@ -20,6 +20,7 @@ import {
 } from '@/config/policy';
 import type {
   AdminUser,
+  ApproveApplicationResult,
   Branch,
   CreateAdminAccountInput,
   PackageFeatureKey,
@@ -240,13 +241,13 @@ export function createStaticApi(
       ).then(() => undefined),
     // Static demo fallback; `api` mode uses POST /onboarding-requests/{id}/approve.
     approveApplication: (tenantId: string, actor: AdminUser) =>
-      run<TenantProvisioning>(async () => {
+      run<ApproveApplicationResult>(async () => {
         const tenant = await backend.updateApplication(tenantId, { status: 'approved' }, actor);
         return {
+          outcome: 'approved',
+          status: 'active',
           tenantId: tenant.id,
           slug: toTenantSlug(tenant.restaurantName),
-          status: 'active',
-          activatedAtUtc: null,
         };
       }),
     // Static demo fallback; `api` mode uses POST /onboarding-requests/{id}/reject.

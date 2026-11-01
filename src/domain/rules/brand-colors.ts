@@ -24,3 +24,33 @@ export function normalizeHexColor(value: string): string | null {
 export function brandColorOr(value: string | null | undefined, fallback: string): string {
   return isHexColor(value) ? value.trim() : fallback;
 }
+
+/** WCAG 2.1 minimum contrast for normal text (4.5:1). */
+export const MIN_TEXT_CONTRAST_ON_WHITE = 4.5;
+
+function channelToLinear(channel: number): number {
+  const value = channel / 255;
+  return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+}
+
+function relativeLuminance(hex: string): number | null {
+  const normalized = normalizeHexColor(hex);
+  if (!normalized) return null;
+  const red = channelToLinear(parseInt(normalized.slice(1, 3), 16));
+  const green = channelToLinear(parseInt(normalized.slice(3, 5), 16));
+  const blue = channelToLinear(parseInt(normalized.slice(5, 7), 16));
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+/** Contrast ratio of a hex color against a white background; `null` for a non-hex value. */
+export function contrastRatioOnWhite(hex: string): number | null {
+  const luminance = relativeLuminance(hex);
+  if (luminance === null) return null;
+  return 1.05 / (luminance + 0.05);
+}
+
+/** True when a color is too light to be read as text on a white background. */
+export function isTooLightOnWhite(hex: string): boolean {
+  const ratio = contrastRatioOnWhite(hex);
+  return ratio !== null && ratio < MIN_TEXT_CONTRAST_ON_WHITE;
+}

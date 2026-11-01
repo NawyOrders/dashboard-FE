@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { LogoPaletteOutcome, SuggestLogoPaletteOptions } from '@/application/dto';
 import type { LogoPalettePort } from '@/application/ports';
-import { normalizeHexColor } from '@/domain/rules/brand-colors';
+import { isTooLightOnWhite, normalizeHexColor } from '@/domain/rules/brand-colors';
 
 const POLL_INTERVAL_MS = 5_000;
 /** Same wait limit as the menu OCR (agent.md section 27): 5 minutes after submit. */
@@ -9,21 +9,77 @@ const TIMEOUT_MS = 5 * 60 * 1000;
 
 const TERMINAL_FAILURES = new Set(['failed', 'cancelled', 'expired']);
 
-// OPEN: logo palette result shape, backend to confirm.
-const paletteSchema = z.union([
-  z.object({ colors: z.array(z.string()) }),
-  z.array(z.string()),
-]);
+const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 
-/** Reads a list of hex colors from the job data; `null` means the shape is unknown. */
-function parsePalette(data: unknown): string[] | null {
-  const parsed = paletteSchema.safeParse(data);
+/**
+ * `data.data` of the job result. Only `palette` is required; `tokens` and `meta` carry
+ * the contrast hint and the warnings the popup shows.
+ *
+ * OPEN: the "too light for white" signal inside `meta`/`tokens` is not documented, so the
+ * WCAG 4.5:1 ratio against white decides, and `tokens.accent.textOnWhite` is the color
+ * suggested in that case. Backend to confirm the contrast fields.
+ */
+const paletteSchema = z.object({
+  primary: z.string().regex(HEX_COLOR),
+  secondary: z.string().regex(HEX_COLOR),
+  accent: z.string().regex(HEX_COLOR),
+  neutrals: z.array(z.string().regex(HEX_COLOR)).optional(),
+});
+
+const analysisSchema = z.object({
+  palette: paletteSchema,
+  tokens: z.unknown().optional(),
+  meta: z.unknown().optional(),
+});
+
+/** Best-effort reads of the contrast hint and the warnings; a bad shape never hides the palette. */
+const tokensSchema = z.object({
+  accent: z.object({ textOnWhite: z.string() }).partial().optional(),
+});
+
+const metaSchema = z.object({
+  warnings: z.array(z.string()).optional(),
+});
+
+interface ParsedPalette {
+  /** Swatch order: primary, secondary, text suggestion, then the neutrals. */
+  colors: string[];
+  warnings: string[];
+}
+
+/** Reads the palette from the job data; `null` means the result is missing or invalid. */
+function parsePalette(data: unknown): ParsedPalette | null {
+  const parsed = analysisSchema.safeParse(data);
   if (!parsed.success) return null;
-  const raw = Array.isArray(parsed.data) ? parsed.data : parsed.data.colors;
-  const colors = raw
-    .map((color) => normalizeHexColor(color))
-    .filter((color): color is string => color !== null);
-  return colors.length > 0 ? [...new Set(colors)] : null;
+
+  const { palette, tokens, meta } = parsed.data;
+  const primary = normalizeHexColor(palette.primary);
+  const secondary = normalizeHexColor(palette.secondary);
+  const accent = normalizeHexColor(palette.accent);
+  if (!primary || !secondary || !accent) return null;
+
+  // Accent doubles as the text color, so a too-light accent gets the token's text color.
+  const tokensResult = tokensSchema.safeParse(tokens);
+  const accentToken = tokensResult.success ? tokensResult.data.accent : undefined;
+  const textOnWhite = accentToken?.textOnWhite
+    ? normalizeHexColor(accentToken.textOnWhite)
+    : null;
+  const text = textOnWhite && isTooLightOnWhite(accent) ? textOnWhite : accent;
+
+  const neutrals: string[] = [];
+  for (const neutral of palette.neutrals ?? []) {
+    const color = normalizeHexColor(neutral);
+    if (color && ![primary, secondary, text, ...neutrals].includes(color)) {
+      neutrals.push(color);
+    }
+  }
+
+  const parsedMeta = metaSchema.safeParse(meta);
+  const warnings = (parsedMeta.success ? (parsedMeta.data.warnings ?? []) : [])
+    .map((warning) => warning.trim())
+    .filter((warning) => warning.length > 0);
+
+  return { colors: [primary, secondary, text, ...neutrals], warnings };
 }
 
 function abortError(): Error {
@@ -51,7 +107,7 @@ function wait(ms: number, signal?: AbortSignal): Promise<void> {
 /**
  * Logo palette flow: submit the logo, read the job status every 5 seconds and return the
  * suggested hex colors. The job is read for at most 5 minutes; after that the caller gets
- * a timeout outcome. A finished job whose result is not a list of hex colors is
+ * a timeout outcome. A finished job whose result has no readable `palette` is
  * `unreadable`, so the form keeps the manual color inputs.
  */
 export function makeSuggestLogoPalette(palette: LogoPalettePort) {
@@ -76,8 +132,10 @@ export function makeSuggestLogoPalette(palette: LogoPalettePort) {
       const status = snapshot.status.trim().toLowerCase();
       if (status === 'completed') {
         const result = await palette.getResult(submission.jobId, signal);
-        const colors = parsePalette(result.data);
-        return colors ? { status: 'completed', colors } : { status: 'unreadable' };
+        const parsed = parsePalette(result.data);
+        return parsed
+          ? { status: 'completed', colors: parsed.colors, warnings: parsed.warnings }
+          : { status: 'unreadable' };
       }
       if (TERMINAL_FAILURES.has(status)) {
         return {

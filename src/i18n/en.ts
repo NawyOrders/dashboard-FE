@@ -515,6 +515,7 @@ export const en = {
       paletteFailed: 'The colors could not be read from the logo.',
       paletteTitle: 'Suggested colors',
       paletteDescription: 'Assign each color to a slot, or edit the hex before applying.',
+      paletteWarnings: 'Notes from the logo analysis',
       suggestedColor: (index: number) => `Suggested color ${index}`,
       assignSlot: 'Slot',
       notUsed: 'Not used',

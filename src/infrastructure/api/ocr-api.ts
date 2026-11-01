@@ -99,7 +99,8 @@ const logoPaletteResultSchema: z.ZodType<LogoPaletteResultPayload, z.ZodTypeDef,
     jobId: z.string(),
     jobType,
     completedAtUtc: nullableString,
-    // OPEN: logo palette result shape, backend to confirm.
+    durationSeconds: nullableNumber,
+    // The analysis object (palette/tokens/meta) is validated by the use case.
     data: z.custom<unknown>(),
   });
 

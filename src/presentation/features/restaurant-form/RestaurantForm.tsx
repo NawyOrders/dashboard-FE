@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import type { LogoPaletteSuggestion } from '@/application/dto';
 import type {
   DurationMonths,
   PackageCode,
@@ -49,8 +50,8 @@ export interface RestaurantFormProps {
   referenceId?: string;
   /** Receives the uploaded logo asset id so the save sends `logoAssetId`. */
   onLogoAssetChange?: (assetId: string) => void;
-  /** Receives the suggested palette; the caller opens the assignment dialog. */
-  onPaletteSuggested?: (colors: string[]) => void;
+  /** Receives the suggested palette and its warnings; the caller opens the assignment dialog. */
+  onPaletteSuggested?: (suggestion: LogoPaletteSuggestion) => void;
 }
 
 function sectionTitle(section: RegistrationSection, step: RegistrationStep): string {

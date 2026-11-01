@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Info } from 'lucide-react';
 import { isRgbHexColor, normalizeHexColor } from '@/domain/rules/brand-colors';
 import { Button } from '@/presentation/components/ui/Button';
 import { Dialog } from '@/presentation/components/ui/Dialog';
@@ -21,6 +22,8 @@ export type PaletteSelection = Partial<Record<SlotKey, string>>;
 
 export interface PaletteDialogProps {
   colors: string[];
+  /** `meta.warnings` from the job; rendered only when not empty. */
+  warnings?: string[];
   onCancel: () => void;
   onApply: (selection: PaletteSelection) => void;
 }
@@ -30,7 +33,7 @@ export interface PaletteDialogProps {
  * hex can be edited. Default assignment follows the returned order: primary, background,
  * text. Nothing reaches the form until the admin confirms.
  */
-export function PaletteDialog({ colors, onCancel, onApply }: PaletteDialogProps) {
+export function PaletteDialog({ colors, warnings = [], onCancel, onApply }: PaletteDialogProps) {
   const [entries, setEntries] = useState<PaletteEntry[]>(() =>
     colors.map((color, index) => ({
       id: `palette-${index}`,
@@ -94,6 +97,21 @@ export function PaletteDialog({ colors, onCancel, onApply }: PaletteDialogProps)
       }
     >
       <div className="flex flex-col gap-3">
+        {warnings.length > 0 ? (
+          <div className="flex gap-2 rounded-panel bg-warning-bg px-3 py-2 text-2xs text-warning-fg">
+            <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+            <div className="flex flex-col gap-1">
+              <span className="font-medium">
+                {en.registration.brandColors.paletteWarnings}
+              </span>
+              <ul className="flex list-disc flex-col gap-0.5 ps-4">
+                {warnings.map((warning, index) => (
+                  <li key={`${index}-${warning}`}>{warning}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
         {entries.map((entry, index) => {
           const valid = isRgbHexColor(entry.color);
           return (

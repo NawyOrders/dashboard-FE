@@ -517,6 +517,7 @@ export const ar = {
       paletteFailed: 'تعذرت قراءة الألوان من اللوجو.',
       paletteTitle: 'الألوان المقترحة',
       paletteDescription: 'وزّع كل لون على خانة، أو عدّل القيمة قبل التطبيق.',
+      paletteWarnings: 'ملاحظات من تحليل اللوجو',
       suggestedColor: (index: number) => `اللون المقترح ${index}`,
       assignSlot: 'الخانة',
       notUsed: 'بدون استخدام',

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
-import type { UpdateApplicationInput } from '@/application/dto';
+import type { LogoPaletteSuggestion, UpdateApplicationInput } from '@/application/dto';
 import { Button } from '@/presentation/components/ui/Button';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { ConfirmDialog } from '@/presentation/components/ui/ConfirmDialog';
@@ -267,7 +267,7 @@ function ApplicationDialogContent({
   const [rejectReason, setRejectReason] = useState('');
   const [rejectError, setRejectError] = useState<string | null>(null);
   const [rejecting, setRejecting] = useState(false);
-  const [paletteColors, setPaletteColors] = useState<string[] | null>(null);
+  const [paletteSuggestion, setPaletteSuggestion] = useState<LogoPaletteSuggestion | null>(null);
   const provisioningDoneRef = useRef(false);
 
   function scrollToGroup(id: string) {
@@ -339,8 +339,8 @@ function ApplicationDialogContent({
   }
 
   // The palette opens in a popup; cancelling it leaves the form untouched.
-  function handlePaletteSuggested(colors: string[]) {
-    setPaletteColors(colors);
+  function handlePaletteSuggested(suggestion: LogoPaletteSuggestion) {
+    setPaletteSuggestion(suggestion);
   }
 
   function handlePaletteApply(selection: PaletteSelection) {
@@ -348,11 +348,12 @@ function ApplicationDialogContent({
       const color = selection[slot.key];
       if (color) setField(slot.key, color);
     }
-    setPaletteColors(null);
+    setPaletteSuggestion(null);
   }
 
   function handleSave() {
-    if (!isSuperAdmin || saving || hasColorErrors) return;    const next = buildApplicationChanges(tenant, values, offers.data);
+    if (!isSuperAdmin || saving || hasColorErrors) return;
+    const next = buildApplicationChanges(tenant, values, offers.data);
     if (next.changes.length === 0) {
       toast({ title: en.details.noChanges });
       return;
@@ -774,10 +775,11 @@ function ApplicationDialogContent({
         </div>
       </ConfirmDialog>
 
-      {paletteColors ? (
+      {paletteSuggestion ? (
         <PaletteDialog
-          colors={paletteColors}
-          onCancel={() => setPaletteColors(null)}
+          colors={paletteSuggestion.colors}
+          warnings={paletteSuggestion.warnings}
+          onCancel={() => setPaletteSuggestion(null)}
           onApply={handlePaletteApply}
         />
       ) : null}

@@ -1,8 +1,10 @@
 /**
  * Logo palette contract (swagger). `POST /api/v1/onboarding/logo-palette` answers 202
- * with an AI job; the suggested colors are read from `GET /api/v1/ai/jobs/{jobId}/result`.
+ * with an AI job; the analysis is read from `GET /api/v1/ai/jobs/{jobId}/result`.
  *
- * OPEN: logo palette result shape, backend to confirm.
+ * Result envelope: `ApiResponse.data = { jobId, jobType, completedAtUtc, durationSeconds, data }`.
+ * The palette lives in `data.palette` and the contrast hints in `data.tokens`/`data.meta`;
+ * the use case validates `data.palette` before using it.
  */
 
 export interface LogoPaletteSubmission {
@@ -19,6 +21,7 @@ export interface LogoPaletteResultPayload {
   jobId: string;
   jobType: string;
   completedAtUtc: string | null;
-  /** OPEN: the palette shape is not confirmed; it is parsed in the use case. */
+  durationSeconds: number | null;
+  /** The AI analysis object; validated in the use case (`data.palette`). */
   data?: unknown;
 }

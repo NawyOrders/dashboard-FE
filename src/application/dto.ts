@@ -143,11 +143,21 @@ export interface SuggestLogoPaletteOptions {
 }
 
 /**
- * Outcome of the logo palette job. `unreadable` means the job finished but the result
- * shape was not a list of hex colors; the manual color inputs stay available.
+ * Logo palette job result. The swatch order is primary, secondary, text suggestion
+ * (the accent, or `tokens.accent.textOnWhite` when the accent is too light on white),
+ * then the neutrals. `warnings` is `meta.warnings` from the job.
+ */
+export interface LogoPaletteSuggestion {
+  colors: string[];
+  warnings: string[];
+}
+
+/**
+ * Outcome of the logo palette job. `unreadable` means the job finished but `data.palette`
+ * was missing or invalid; the manual color inputs stay available.
  */
 export type LogoPaletteOutcome =
-  | { status: 'completed'; colors: string[] }
+  | ({ status: 'completed' } & LogoPaletteSuggestion)
   | { status: 'unreadable' }
   | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
   | { status: 'timeout' };

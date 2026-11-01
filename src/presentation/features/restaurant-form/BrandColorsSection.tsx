@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { ImageUp, X } from 'lucide-react';
 import { api } from '@/app/composition';
+import type { LogoPaletteSuggestion } from '@/application/dto';
 import { isRgbHexColor } from '@/domain/rules/brand-colors';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
@@ -21,8 +22,8 @@ export interface BrandColorsSectionProps {
   referenceId?: string;
   /** Called with the new asset id after the logo upload resolves. */
   onLogoAssetChange?: (assetId: string) => void;
-  /** Called with the palette when the job completes; the caller opens the picker. */
-  onPaletteSuggested?: (colors: string[]) => void;
+  /** Called with the palette and its warnings when the job completes; the caller opens the picker. */
+  onPaletteSuggested?: (suggestion: LogoPaletteSuggestion) => void;
 }
 
 /**
@@ -110,7 +111,7 @@ export function BrandColorsSection({
 
       switch (outcome.status) {
         case 'completed':
-          onPaletteSuggested(outcome.colors);
+          onPaletteSuggested({ colors: outcome.colors, warnings: outcome.warnings });
           break;
         case 'unreadable':
           setPaletteError(en.registration.brandColors.paletteUnreadable);

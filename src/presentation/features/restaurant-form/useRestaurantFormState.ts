@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { requireRegistrationSchema } from '@/config/registration-schema';
 import { PACKAGE_BRANCH_LIMITS } from '@/domain/rules/packages';
 import type { DurationMonths, PackageCode, Tenant } from '@/domain/entities';
@@ -23,6 +23,16 @@ export function useRestaurantFormState(tenant: Tenant) {
     buildFormValues(schema, tenant),
   );
   const branchCounter = useRef(values.branches.length);
+  const logoPreviewRef = useRef<string | null>(null);
+
+  useEffect(
+    () => () => {
+      if (!logoPreviewRef.current) return;
+      URL.revokeObjectURL(logoPreviewRef.current);
+      logoPreviewRef.current = null;
+    },
+    [],
+  );
 
   const setField = useCallback((key: string, value: string) => {
     setValues((current) => ({ ...current, fields: { ...current.fields, [key]: value } }));
@@ -67,7 +77,20 @@ export function useRestaurantFormState(tenant: Tenant) {
     setValues((current) => ({ ...current, logoAssetId }));
   }, []);
 
+  /** Keeps a local preview URL for the picked file; the previous one is revoked. */
+  const setLogoPreviewFile = useCallback((file: File | null) => {
+    const next = file ? URL.createObjectURL(file) : null;
+    const previous = logoPreviewRef.current;
+    logoPreviewRef.current = next;
+    setValues((current) => ({ ...current, logoPreviewUrl: next }));
+    if (previous) URL.revokeObjectURL(previous);
+  }, []);
+
   const reset = useCallback(() => {
+    if (logoPreviewRef.current) {
+      URL.revokeObjectURL(logoPreviewRef.current);
+      logoPreviewRef.current = null;
+    }
     setValues(buildFormValues(schema, tenant));
   }, [schema, tenant]);
 
@@ -93,6 +116,7 @@ export function useRestaurantFormState(tenant: Tenant) {
     setPackageCode,
     setDurationMonths,
     setLogoAsset,
+    setLogoPreviewFile,
     reset,
     branchLimits,
     itemFields,

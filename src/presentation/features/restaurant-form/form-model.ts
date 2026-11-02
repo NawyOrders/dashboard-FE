@@ -30,6 +30,12 @@ export interface RestaurantFormValues {
   durationMonths: DurationMonths;
   /** Uploaded logo asset; `null` keeps the stored logo untouched. */
   logoAssetId: string | null;
+  /**
+   * Local object URL of the picked logo for the preview only. Never saved or persisted;
+   * after a reload the stored logo (if readable) or the placeholder returns.
+   * OPEN: logo read URL, backend to add
+   */
+  logoPreviewUrl: string | null;
 }
 
 function setPath(target: Record<string, unknown>, path: string, value: unknown): void {
@@ -87,6 +93,7 @@ export function buildFormValues(schema: RegistrationSchema, tenant: Tenant): Res
     packageCode: tenant.subscription.packageCode,
     durationMonths: tenant.subscription.durationMonths,
     logoAssetId: tenant.logoAssetId ?? null,
+    logoPreviewUrl: null,
   };
 }
 

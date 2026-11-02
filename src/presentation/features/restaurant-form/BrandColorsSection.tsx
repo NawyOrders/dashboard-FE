@@ -18,10 +18,14 @@ export interface BrandColorsSectionProps {
   onChange: (key: string, value: string) => void;
   /** Existing logo URL from the application details. */
   logoSrc?: string | null;
+  /** Local object URL of the picked logo, owned by the form state. */
+  logoPreviewUrl?: string | null;
+  /** Called with the picked file so the form state can hold (and release) its preview URL. */
+  onLogoPreviewChange?: (file: File | null) => void;
   /** Onboarding request, sent as `referenceId` to the palette job. */
   referenceId?: string;
   /** Called with the new asset id after the logo upload resolves. */
-  onLogoAssetChange?: (assetId: string) => void;
+  onLogoAssetChange?: (assetId: string | null) => void;
   /** Called with the palette and its warnings when the job completes; the caller opens the picker. */
   onPaletteSuggested?: (suggestion: LogoPaletteSuggestion) => void;
 }
@@ -39,23 +43,19 @@ export function BrandColorsSection({
   errors,
   onChange,
   logoSrc,
+  logoPreviewUrl,
+  onLogoPreviewChange,
   referenceId,
   onLogoAssetChange,
   onPaletteSuggested,
 }: BrandColorsSectionProps) {
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [logoError, setLogoError] = useState<string | null>(null);
   const [paletteRunning, setPaletteRunning] = useState(false);
   const [paletteProgress, setPaletteProgress] = useState<number | null>(null);
   const [paletteError, setPaletteError] = useState<string | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    if (!logoPreview) return;
-    return () => URL.revokeObjectURL(logoPreview);
-  }, [logoPreview]);
 
   useEffect(() => () => controllerRef.current?.abort(), []);
 
@@ -71,7 +71,7 @@ export function BrandColorsSection({
     setPaletteError(null);
     setLogoError(null);
     setLogoFile(file);
-    setLogoPreview(URL.createObjectURL(file));
+    onLogoPreviewChange?.(file);
 
     if (!onLogoAssetChange) return;
     setUploadingLogo(true);
@@ -83,6 +83,13 @@ export function BrandColorsSection({
     } finally {
       setUploadingLogo(false);
     }
+  }
+
+  function handleRemoveLogo() {
+    onLogoPreviewChange?.(null);
+    onLogoAssetChange?.(null);
+    setLogoFile(null);
+    setLogoError(null);
   }
 
   async function handleSuggest() {
@@ -136,7 +143,7 @@ export function BrandColorsSection({
     }
   }
 
-  const previewSrc = logoPreview ?? logoSrc ?? null;
+  const previewSrc = logoPreviewUrl ?? logoSrc ?? null;
   const logoLabel = logoFile?.name ?? (logoSrc ? en.registration.brandColors.currentLogo : en.common.notAvailable);
 
   return (
@@ -190,6 +197,18 @@ export function BrandColorsSection({
                 disabled={disabled || uploadingLogo}
                 onChange={(event) => void handleLogoChange(event)}
               />
+              {logoPreviewUrl ? (
+                <button
+                  type="button"
+                  onClick={handleRemoveLogo}
+                  disabled={disabled || uploadingLogo || paletteRunning}
+                  aria-label={en.registration.removeImage}
+                  title={en.registration.removeImage}
+                  className="flex size-9 shrink-0 items-center justify-center rounded-panel border border-border bg-card text-text-muted transition-colors duration-150 hover:bg-bg-2 hover:text-text disabled:cursor-not-allowed disabled:bg-neutral-bg"
+                >
+                  <X className="size-4" aria-hidden="true" />
+                </button>
+              ) : null}
               {onPaletteSuggested ? (
                 <Button
                   type="button"

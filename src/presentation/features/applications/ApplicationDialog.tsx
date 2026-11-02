@@ -86,7 +86,7 @@ function PreviewLogo({ name, src }: { name: string; src: string | null }) {
       <img
         src={src}
         alt=""
-        className="size-16 shrink-0 rounded-card border border-border object-cover"
+        className="size-16 shrink-0 rounded-card border border-border object-contain"
       />
     );
   }
@@ -209,6 +209,7 @@ function ApplicationDialogContent({
     removeBranch,
     branchLimits,
     setLogoAsset,
+    setLogoPreviewFile,
   } = useRestaurantFormState(tenant);
 
   const offers = useOffers();
@@ -246,6 +247,8 @@ function ApplicationDialogContent({
   };
   // OPEN: logo read URL, backend to add
   const logoSrc = tenant.logoAsset?.url ?? null;
+  // A picked file shows its local object URL until the page reloads.
+  const previewLogoSrc = values.logoPreviewUrl ?? logoSrc;
 
   const [paid, setPaid] = useState(tenant.paymentStatus === 'paid');
   const [paymentSaving, setPaymentSaving] = useState(false);
@@ -547,7 +550,7 @@ function ApplicationDialogContent({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[18rem_minmax(0,1fr)]">
           <aside className="flex flex-col gap-4 md:sticky md:top-0 md:self-start">
             <div className="flex w-full min-w-0 flex-col items-start gap-3 rounded-card border border-border bg-bg-2/50 p-4">
-              <PreviewLogo name={tenant.restaurantName} src={logoSrc} />
+              <PreviewLogo name={tenant.restaurantName} src={previewLogoSrc} />
               <div className="flex min-w-0 flex-col gap-1">
                 <span dir="ltr" className="max-w-full break-words text-sm font-semibold text-text">
                   {tenant.restaurantName}
@@ -718,6 +721,8 @@ function ApplicationDialogContent({
               branchMeta={branchMeta}
               errors={colorErrors}
               logoSrc={logoSrc}
+              logoPreviewUrl={values.logoPreviewUrl}
+              onLogoPreviewChange={setLogoPreviewFile}
               referenceId={tenant.id}
               onLogoAssetChange={setLogoAsset}
               onPaletteSuggested={handlePaletteSuggested}

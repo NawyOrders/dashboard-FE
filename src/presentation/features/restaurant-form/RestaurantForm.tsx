@@ -46,10 +46,14 @@ export interface RestaurantFormProps {
   branchErrors?: Record<string, string>;
   /** Existing logo URL from the application details. */
   logoSrc?: string | null;
+  /** Local object URL of the picked logo, owned by the form state. */
+  logoPreviewUrl?: string | null;
+  /** Receives the picked logo file so the form state can hold its local preview URL. */
+  onLogoPreviewChange?: (file: File | null) => void;
   /** Onboarding request used as the logo palette job reference. */
   referenceId?: string;
   /** Receives the uploaded logo asset id so the save sends `logoAssetId`. */
-  onLogoAssetChange?: (assetId: string) => void;
+  onLogoAssetChange?: (assetId: string | null) => void;
   /** Receives the suggested palette and its warnings; the caller opens the assignment dialog. */
   onPaletteSuggested?: (suggestion: LogoPaletteSuggestion) => void;
 }
@@ -157,6 +161,8 @@ export function RestaurantForm({
   errors,
   branchErrors,
   logoSrc,
+  logoPreviewUrl,
+  onLogoPreviewChange,
   referenceId,
   onLogoAssetChange,
   onPaletteSuggested,
@@ -179,6 +185,8 @@ export function RestaurantForm({
                 disabled={disabled}
                 errors={errors}
                 logoSrc={logoSrc}
+                logoPreviewUrl={logoPreviewUrl}
+                onLogoPreviewChange={onLogoPreviewChange}
                 referenceId={referenceId}
                 onLogoAssetChange={onLogoAssetChange}
                 onPaletteSuggested={onPaletteSuggested}

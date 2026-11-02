@@ -1,11 +1,10 @@
 import { z } from 'zod';
 import type { LogoPaletteOutcome, SuggestLogoPaletteOptions } from '@/application/dto';
 import type { LogoPalettePort } from '@/application/ports';
+import { LOGO_PALETTE_WAIT_MS } from '@/config/ai-jobs';
 import { isTooLightOnWhite, normalizeHexColor } from '@/domain/rules/brand-colors';
 
 const POLL_INTERVAL_MS = 5_000;
-/** Same wait limit as the menu OCR (agent.md section 27): 5 minutes after submit. */
-const TIMEOUT_MS = 5 * 60 * 1000;
 
 const TERMINAL_FAILURES = new Set(['failed', 'cancelled', 'expired']);
 
@@ -104,11 +103,28 @@ function wait(ms: number, signal?: AbortSignal): Promise<void> {
   });
 }
 
+/** One HTTP call timed out (`AbortSignal.timeout`); the job itself keeps going. */
+function isRequestTimeout(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'TimeoutError';
+}
+
+function isCancelled(signal: AbortSignal | undefined): boolean {
+  return signal?.aborted === true;
+}
+
+function remainingMs(deadline: number): number {
+  return Math.max(0, deadline - Date.now());
+}
+
 /**
  * Logo palette flow: submit the logo, read the job status every 5 seconds and return the
- * suggested hex colors. The job is read for at most 5 minutes; after that the caller gets
- * a timeout outcome. A finished job whose result has no readable `palette` is
- * `unreadable`, so the form keeps the manual color inputs.
+ * suggested hex colors. The job is read for at most five minutes (`LOGO_PALETTE_WAIT_MS`)
+ * from submit; after that the caller gets a timeout outcome.
+ *
+ * Each HTTP call has its own short timeout. A submit, status poll or result read that
+ * times out is retried until the wait limit, so an HTTP timeout never ends the job and
+ * never shows the timeout message. A finished job whose result has no readable `palette`
+ * is `unreadable`, so the form keeps the manual color inputs.
  */
 export function makeSuggestLogoPalette(palette: LogoPalettePort) {
   return async function suggestLogoPalette(
@@ -116,14 +132,37 @@ export function makeSuggestLogoPalette(palette: LogoPalettePort) {
     options: SuggestLogoPaletteOptions = {},
   ): Promise<LogoPaletteOutcome> {
     const { signal, onProgress, referenceId } = options;
+    const deadline = Date.now() + LOGO_PALETTE_WAIT_MS;
 
-    const submission = await palette.submit(file, { referenceId, signal });
-    onProgress?.({ status: submission.status, progressPercentage: 0 });
+    let jobId: string | null = null;
+    for (;;) {
+      try {
+        const submission = await palette.submit(file, { referenceId, signal });
+        jobId = submission.jobId;
+        onProgress?.({ status: submission.status, progressPercentage: 0 });
+        break;
+      } catch (error) {
+        if (isCancelled(signal) || !isRequestTimeout(error)) throw error;
+        if (Date.now() >= deadline) return { status: 'timeout' };
+        await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
+      }
+    }
 
-    const deadline = Date.now() + TIMEOUT_MS;
+    if (jobId === null) return { status: 'timeout' };
 
     for (;;) {
-      const snapshot = await palette.getStatus(submission.jobId, signal);
+      if (Date.now() >= deadline) return { status: 'timeout' };
+
+      let snapshot;
+      try {
+        snapshot = await palette.getStatus(jobId, signal);
+      } catch (error) {
+        if (isCancelled(signal) || !isRequestTimeout(error)) throw error;
+        if (Date.now() >= deadline) return { status: 'timeout' };
+        await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
+        continue;
+      }
+
       onProgress?.({
         status: snapshot.status,
         progressPercentage: snapshot.progressPercentage,
@@ -131,11 +170,19 @@ export function makeSuggestLogoPalette(palette: LogoPalettePort) {
 
       const status = snapshot.status.trim().toLowerCase();
       if (status === 'completed') {
-        const result = await palette.getResult(submission.jobId, signal);
-        const parsed = parsePalette(result.data);
-        return parsed
-          ? { status: 'completed', colors: parsed.colors, warnings: parsed.warnings }
-          : { status: 'unreadable' };
+        for (;;) {
+          try {
+            const result = await palette.getResult(jobId, signal);
+            const parsed = parsePalette(result.data);
+            return parsed
+              ? { status: 'completed', colors: parsed.colors, warnings: parsed.warnings }
+              : { status: 'unreadable' };
+          } catch (error) {
+            if (isCancelled(signal) || !isRequestTimeout(error)) throw error;
+            if (Date.now() >= deadline) return { status: 'timeout' };
+            await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
+          }
+        }
       }
       if (TERMINAL_FAILURES.has(status)) {
         return {
@@ -148,7 +195,7 @@ export function makeSuggestLogoPalette(palette: LogoPalettePort) {
       if (Date.now() >= deadline) {
         return { status: 'timeout' };
       }
-      await wait(POLL_INTERVAL_MS, signal);
+      await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
     }
   };
 }

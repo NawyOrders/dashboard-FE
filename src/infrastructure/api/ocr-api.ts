@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { LogoPalettePort, MenuOcrPort } from '@/application/ports';
+import { AI_JOB_REQUEST_TIMEOUT_MS } from '@/config/ai-jobs';
 import type {
   LogoPaletteResultPayload,
   LogoPaletteSubmission,
@@ -117,6 +118,7 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
         body: form,
         signal: options?.signal,
         expectedStatus: 202,
+        timeoutMs: AI_JOB_REQUEST_TIMEOUT_MS,
         schema: submissionSchema,
       });
     },
@@ -125,6 +127,7 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
       return client.request({
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/status`,
         signal,
+        timeoutMs: AI_JOB_REQUEST_TIMEOUT_MS,
         schema: statusSchema,
       });
     },
@@ -133,6 +136,7 @@ export function createOcrApi(client: HttpClient): MenuOcrPort {
       return client.request({
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/result`,
         signal,
+        timeoutMs: AI_JOB_REQUEST_TIMEOUT_MS,
         schema: resultSchema,
       });
     },
@@ -156,6 +160,7 @@ export function createLogoPaletteApi(client: HttpClient): LogoPalettePort {
         body: form,
         signal: options?.signal,
         expectedStatus: 202,
+        timeoutMs: AI_JOB_REQUEST_TIMEOUT_MS,
         schema: logoPaletteSubmissionSchema,
       });
     },
@@ -164,6 +169,7 @@ export function createLogoPaletteApi(client: HttpClient): LogoPalettePort {
       return client.request({
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/status`,
         signal,
+        timeoutMs: AI_JOB_REQUEST_TIMEOUT_MS,
         schema: statusSchema,
       });
     },
@@ -172,6 +178,7 @@ export function createLogoPaletteApi(client: HttpClient): LogoPalettePort {
       return client.request({
         path: `${JOBS_PATH}/${encodeURIComponent(jobId)}/result`,
         signal,
+        timeoutMs: AI_JOB_REQUEST_TIMEOUT_MS,
         schema: logoPaletteResultSchema,
       });
     },

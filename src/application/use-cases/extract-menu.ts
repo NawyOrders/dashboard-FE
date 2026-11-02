@@ -1,12 +1,11 @@
 import type { ExtractMenuOptions, MenuExtractionOutcome } from '@/application/dto';
 import type { MenuOcrPort } from '@/application/ports';
+import { MENU_OCR_WAIT_MS } from '@/config/ai-jobs';
 import { checkMenuFile } from '@/domain/rules/menu-file';
 import { flattenMenuItems } from '@/domain/rules/menu-extraction';
 
 const POLL_INTERVAL_MS = 5_000;
 const MAX_POLL_INTERVAL_MS = 15_000;
-/** Owner decision (agent.md section 27): the dashboard stops waiting 5 minutes after submit. */
-const TIMEOUT_MS = 5 * 60 * 1000;
 
 const TERMINAL_FAILURES = new Set(['failed', 'cancelled', 'expired']);
 
@@ -44,10 +43,28 @@ function normalizeStatus(status: string): string {
   return status.trim().toLowerCase();
 }
 
+/** One HTTP call timed out (`AbortSignal.timeout`); the job itself keeps going. */
+function isRequestTimeout(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'TimeoutError';
+}
+
+function isCancelled(signal: AbortSignal | undefined): boolean {
+  return signal?.aborted === true;
+}
+
+function remainingMs(deadline: number): number {
+  return Math.max(0, deadline - Date.now());
+}
+
 /**
  * Menu OCR flow: validate the photo, submit the job, then read the job status every
- * 5 to 15 seconds until a final state. The job is read for at most 5 minutes; after that
- * the caller gets a timeout outcome with the job id and offers a fresh retry.
+ * 5 to 15 seconds until a final state. The job is read for at most five minutes
+ * (`MENU_OCR_WAIT_MS`) from submit; after that the caller gets a timeout outcome with the
+ * job id and offers a fresh retry.
+ *
+ * Each HTTP call has its own short timeout. A submit, status poll or result read that
+ * times out is retried until the wait limit, so an HTTP timeout never ends the job and
+ * never shows the timeout message.
  *
  * The result stays in memory with the caller; nothing is saved or sent with the
  * application submit.
@@ -58,21 +75,42 @@ export function makeExtractMenu(ocr: MenuOcrPort) {
     options: ExtractMenuOptions = {},
   ): Promise<MenuExtractionOutcome> {
     const { signal, onProgress, referenceId, jobId: resumeJobId } = options;
+    const deadline = Date.now() + MENU_OCR_WAIT_MS;
 
     let jobId = resumeJobId ?? null;
     if (!jobId) {
       const problem = checkMenuFile(file);
       if (problem || !file) return { status: 'invalid-file', problem: problem ?? 'required' };
 
-      const submission = await ocr.submit(file, { referenceId, signal });
-      jobId = submission.jobId;
-      onProgress?.({ status: submission.status, progressPercentage: 0, stage: null });
+      for (;;) {
+        try {
+          const submission = await ocr.submit(file, { referenceId, signal });
+          jobId = submission.jobId;
+          onProgress?.({ status: submission.status, progressPercentage: 0, stage: null });
+          break;
+        } catch (error) {
+          if (isCancelled(signal) || !isRequestTimeout(error)) throw error;
+          if (Date.now() >= deadline) return { status: 'timeout', jobId: null };
+          await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
+        }
+      }
     }
 
-    const deadline = Date.now() + TIMEOUT_MS;
+    if (jobId === null) return { status: 'timeout', jobId: null };
 
     for (;;) {
-      const snapshot = await ocr.getStatus(jobId, signal);
+      if (Date.now() >= deadline) return { status: 'timeout', jobId };
+
+      let snapshot;
+      try {
+        snapshot = await ocr.getStatus(jobId, signal);
+      } catch (error) {
+        if (isCancelled(signal) || !isRequestTimeout(error)) throw error;
+        if (Date.now() >= deadline) return { status: 'timeout', jobId };
+        await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
+        continue;
+      }
+
       const progress = {
         status: snapshot.status,
         progressPercentage: snapshot.progressPercentage,
@@ -82,13 +120,21 @@ export function makeExtractMenu(ocr: MenuOcrPort) {
 
       const status = normalizeStatus(snapshot.status);
       if (status === 'completed') {
-        const result = await ocr.getResult(jobId, signal);
-        return {
-          status: 'completed',
-          jobId,
-          items: flattenMenuItems(result.data),
-          completedAtUtc: result.completedAtUtc,
-        };
+        for (;;) {
+          try {
+            const result = await ocr.getResult(jobId, signal);
+            return {
+              status: 'completed',
+              jobId,
+              items: flattenMenuItems(result.data),
+              completedAtUtc: result.completedAtUtc,
+            };
+          } catch (error) {
+            if (isCancelled(signal) || !isRequestTimeout(error)) throw error;
+            if (Date.now() >= deadline) return { status: 'timeout', jobId };
+            await wait(Math.min(POLL_INTERVAL_MS, remainingMs(deadline)), signal);
+          }
+        }
       }
       if (TERMINAL_FAILURES.has(status)) {
         return {
@@ -102,7 +148,7 @@ export function makeExtractMenu(ocr: MenuOcrPort) {
         return { status: 'timeout', jobId };
       }
       await wait(
-        Math.min(pollInterval(snapshot.estimatedRemainingSeconds), deadline - Date.now()),
+        Math.min(pollInterval(snapshot.estimatedRemainingSeconds), remainingMs(deadline)),
         signal,
       );
     }

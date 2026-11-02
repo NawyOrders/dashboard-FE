@@ -127,7 +127,7 @@ export type MenuExtractionOutcome =
     }
   | { status: 'invalid-file'; problem: MenuFileProblem }
   | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
-  | { status: 'timeout'; jobId: string };
+  | { status: 'timeout'; jobId: string | null };
 
 /** Live state of a logo palette job, pushed to the form while it is polled. */
 export interface LogoPaletteProgress {

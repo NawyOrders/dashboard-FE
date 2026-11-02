@@ -34,6 +34,11 @@ export interface HttpRequestOptions<T> {
   expectedStatus?: number;
   /** Auth endpoints set this so a 401 there never starts a refresh loop. */
   skipAuthRetry?: boolean;
+  /**
+   * Per-call timeout. A timeout rejects with a `DOMException` named `TimeoutError` so
+   * callers can retry it; an abort by the caller keeps its own reason.
+   */
+  timeoutMs?: number;
 }
 
 /** Runs once on a 401; resolves with the new access token, or null when the session ended. */
@@ -68,6 +73,7 @@ export function createHttpClient({
     schema,
     expectedStatus,
     skipAuthRetry = false,
+    timeoutMs,
   }: HttpRequestOptions<T>): Promise<T> {
     const url = new URL(path.replace(/^\/+/, ''), root);
     if (query) {
@@ -76,6 +82,13 @@ export function createHttpClient({
         url.searchParams.set(key, String(value));
       }
     }
+
+    const requestSignal =
+      timeoutMs === undefined
+        ? signal
+        : signal
+          ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
+          : AbortSignal.timeout(timeoutMs);
 
     async function send(): Promise<Response> {
       const requestHeaders = new Headers(headers);
@@ -97,7 +110,7 @@ export function createHttpClient({
             : isFormData
               ? (body as FormData)
               : JSON.stringify(body),
-        signal,
+        signal: requestSignal,
       });
     }
 

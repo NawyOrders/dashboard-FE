@@ -39,7 +39,7 @@ export const tokens = {
       mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
     },
     fontSize: {
-      h1: { size: '62px', lineHeight: '1.1', weight: '800' },
+      h1: { size: '40px', lineHeight: '48px', weight: '800' },
       caption: { size: '46px', lineHeight: '1.1', weight: '500' },
       '2xs': { size: '12px', lineHeight: '1.3333' },
       xs: { size: '12px', lineHeight: '1.3333' },

@@ -245,7 +245,8 @@ function ApplicationDialogContent({
     // Owner decision: the text color is stored in accentColorHex.
     text: brandColorOr(values.fields.textColor, tokens.colors.text.DEFAULT),
   };
-  // OPEN: logo read URL, backend to add
+  // OPEN: pending-request logo read URL, backend to add logoUrl to OnBoardingRequestDetailsResponse
+  // Until then a pending request shows the picked file or the initials placeholder.
   const logoSrc = tenant.logoAsset?.url ?? null;
   // A picked file shows its local object URL until the page reloads.
   const previewLogoSrc = values.logoPreviewUrl ?? logoSrc;

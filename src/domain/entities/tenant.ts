@@ -116,6 +116,8 @@ export interface Tenant {
   restaurantNameAr?: string | null;
   contact: TenantContact;
   logoUrl: string | null;
+  /** Menu image from the tenant details endpoint; null when no menu was uploaded. */
+  menuImageUrl?: string | null;
   brandColors: BrandColors;
   socialLinks: SocialLinks;
   status: RestaurantStatus;

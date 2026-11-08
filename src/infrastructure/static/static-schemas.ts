@@ -55,6 +55,7 @@ export const tenantSchema: z.ZodType<Tenant> = z.object({
     city: z.string().nullish(),
   }),
   logoUrl: z.string().nullable(),
+  menuImageUrl: z.string().nullish(),
   brandColors: z.object({
     primary: z.string(),
     secondary: z.string(),

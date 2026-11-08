@@ -55,6 +55,10 @@ export interface TenantDetails {
   createdAtUtc: string;
   activatedAtUtc: string | null;
   provisioningError: string | null;
+  /** Readable logo URL; null when the restaurant has no logo yet. */
+  logoUrl: string | null;
+  /** Readable menu image URL; null when no menu was uploaded. */
+  menuImageUrl: string | null;
   plan: TenantPlan | null;
 }
 

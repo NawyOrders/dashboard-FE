@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { cn } from '@/presentation/lib/cn';
 import { tokens } from '@/presentation/theme/tokens';
 
 export interface TenantLogoProps {
   name: string;
   color?: string;
+  /** Readable logo URL; initials are shown while it is null or fails to load. */
+  src?: string | null;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -19,14 +22,36 @@ function initials(name: string): string {
   return parts.map((part) => part[0] ?? '').join('').toUpperCase();
 }
 
-export function TenantLogo({ name, color = tokens.colors.primary.DEFAULT, size = 'sm', className }: TenantLogoProps) {
+export function TenantLogo({
+  name,
+  color = tokens.colors.primary.DEFAULT,
+  src = null,
+  size = 'sm',
+  className,
+}: TenantLogoProps) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const imageSrc = src && src !== failedSrc ? src : null;
+
   return (
     <span
       aria-hidden="true"
-      className={cn('flex shrink-0 items-center justify-center font-semibold text-white', SIZES[size], className)}
+      className={cn(
+        'flex shrink-0 items-center justify-center overflow-hidden font-semibold text-white',
+        SIZES[size],
+        className,
+      )}
       style={{ backgroundColor: color }}
     >
-      {initials(name)}
+      {imageSrc ? (
+        <img
+          src={imageSrc}
+          alt=""
+          className="size-full object-contain"
+          onError={() => setFailedSrc(imageSrc)}
+        />
+      ) : (
+        initials(name)
+      )}
     </span>
   );
 }

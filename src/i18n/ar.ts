@@ -267,6 +267,8 @@ export const ar = {
     statuses: 'الحالات',
     branchUsage: 'استخدام الفروع',
     branchUsageValue: (used: number, included: number) => `${used} من ${included} مشمول`,
+    menuTitle: 'المنيو',
+    menuNotUploaded: 'لم يتم رفع منيو',
     websiteStatusLabel: 'حالة الموقع',
     pwaStatusLabel: 'حالة PWA',
     websiteUrl: 'رابط الموقع',

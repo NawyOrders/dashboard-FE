@@ -264,6 +264,8 @@ export const en = {
     statuses: 'Statuses',
     branchUsage: 'Branch usage',
     branchUsageValue: (used: number, included: number) => `${used} of ${included} included`,
+    menuTitle: 'Menu',
+    menuNotUploaded: 'No menu uploaded',
     websiteStatusLabel: 'Website status',
     pwaStatusLabel: 'PWA status',
     websiteUrl: 'Website URL',

@@ -73,6 +73,8 @@ export const tenantDetailsSchema: ResponseSchema<TenantDetails> = z.object({
   createdAtUtc: z.string().min(1),
   activatedAtUtc: nullableString,
   provisioningError: nullableString,
+  logoUrl: nullableString,
+  menuImageUrl: nullableString,
   plan: tenantPlanSchema
     .nullish()
     .transform((plan) => plan ?? null),

@@ -32,7 +32,12 @@ export function DetailsHeader({ tenant, onEdit }: DetailsHeaderProps) {
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-4">
-          <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} size="lg" />
+          <TenantLogo
+            name={tenant.restaurantName}
+            color={tenant.brandColors.primary}
+            src={tenant.logoUrl}
+            size="lg"
+          />
           <div className="min-w-0">
             <h1 dir="ltr" className="text-start text-2xl font-semibold text-text">
               {tenant.restaurantName}

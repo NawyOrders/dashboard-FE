@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTenant } from '@/presentation/hooks/queries';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/composition';
@@ -29,6 +30,23 @@ function ColorSwatch({ color }: { color: string }) {
       <span className="size-6 rounded-[8px] border border-border" style={{ backgroundColor: color }} />
       <span className="font-mono text-mono text-text-muted">{color.toUpperCase()}</span>
     </span>
+  );
+}
+
+function MenuPreview({ url, restaurantName }: { url: string | null; restaurantName: string }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+
+  if (!url || failedUrl === url) {
+    return <p className="text-sm text-text-muted">{en.details.menuNotUploaded}</p>;
+  }
+
+  return (
+    <img
+      src={url}
+      alt={`${restaurantName} — ${en.details.menuTitle}`}
+      className="h-80 w-full rounded-panel border border-border bg-bg-2 object-contain"
+      onError={() => setFailedUrl(url)}
+    />
   );
 }
 
@@ -123,7 +141,12 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
         <CardHeader><h3 className="text-xl font-semibold">{en.details.brand}</h3></CardHeader>
         <CardBody className="pt-0">
           <div className="mb-4 flex items-center gap-4">
-            <TenantLogo name={current.restaurantName} color={current.brandColors.primary} size="lg" />
+            <TenantLogo
+              name={current.restaurantName}
+              color={current.brandColors.primary}
+              src={current.logoUrl}
+              size="lg"
+            />
             <div className="min-w-0">
               <RestaurantName
                 name={current.restaurantName}
@@ -239,6 +262,13 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
               <StatusPill meta={appStatusMeta(current.apps.ios)} />
             </div>
           </div>
+        </CardBody>
+      </Card>
+
+      <Card className="lg:col-span-2">
+        <CardHeader><h3 className="text-xl font-semibold">{en.details.menuTitle}</h3></CardHeader>
+        <CardBody className="pt-0">
+          <MenuPreview url={current.menuImageUrl ?? null} restaurantName={current.restaurantName} />
         </CardBody>
       </Card>
 

@@ -20,6 +20,19 @@ const nullableString = z
   .nullish()
   .transform((value) => value ?? null);
 
+/**
+ * Image URLs from the tenant details: absolute `https` URLs or null. Any other value
+ * becomes null so one bad URL cannot fail the whole response.
+ */
+const nullableHttpsUrl = z.unknown().transform((value) => {
+  if (typeof value !== 'string') return null;
+  try {
+    return new URL(value).protocol === 'https:' ? value : null;
+  } catch {
+    return null;
+  }
+});
+
 export const tenantListItemSchema: ResponseSchema<TenantListItem> = z.object({
   tenantId: z.string().uuid(),
   slug: nullableString,
@@ -73,8 +86,8 @@ export const tenantDetailsSchema: ResponseSchema<TenantDetails> = z.object({
   createdAtUtc: z.string().min(1),
   activatedAtUtc: nullableString,
   provisioningError: nullableString,
-  logoUrl: nullableString,
-  menuImageUrl: nullableString,
+  logoUrl: nullableHttpsUrl,
+  menuImageUrl: nullableHttpsUrl,
   plan: tenantPlanSchema
     .nullish()
     .transform((plan) => plan ?? null),

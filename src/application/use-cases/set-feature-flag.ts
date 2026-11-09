@@ -1,0 +1,43 @@
+import type { UseCaseDeps } from '@/application/ports';
+import type { AdminUser, FeatureFlag, PackageFeatureKey } from '@/domain/entities';
+import { PACKAGE_NAMES, canEnableFeature } from '@/domain/rules/packages';
+
+export function makeSetFeatureFlag(deps: UseCaseDeps) {
+  return function setFeatureFlag(
+    tenantId: string,
+    key: PackageFeatureKey,
+    enabled: boolean,
+    actor: AdminUser,
+  ): FeatureFlag {
+    const { restaurants, flags, activity, clock } = deps;
+    const tenant = restaurants.findById(tenantId);
+    if (!tenant) throw new Error(`Tenant not found: ${tenantId}`);
+
+    const packageCode = tenant.subscription.packageCode;
+    if (!packageCode) throw new Error('This tenant has no package.');
+    if (!canEnableFeature(packageCode, key, enabled)) {
+      throw new Error(
+        `Feature "${key}" is not available on the ${PACKAGE_NAMES[packageCode]} package`,
+      );
+    }
+
+    const existing = flags.findByTenant(tenantId).find((flag) => flag.key === key);
+    const previous = existing?.enabled ?? false;
+    const next: FeatureFlag = {
+      tenantId,
+      key,
+      enabled,
+      updatedAt: clock.nowIso(),
+    };
+    flags.save(next);
+
+    activity.append({
+      actor,
+      action: 'feature_toggled',
+      target: { type: 'feature', tenantId, label: `${tenant.restaurantName} — ${key}` },
+      previousValue: previous ? 'Enabled' : 'Disabled',
+      newValue: enabled ? 'Enabled' : 'Disabled',
+    });
+    return next;
+  };
+}

@@ -1,0 +1,4916 @@
+[
+  {
+    "id": "sal_1_0",
+    "tenantId": "t_2",
+    "date": "2026-10-25",
+    "amountEgp": 2130
+  },
+  {
+    "id": "sal_1_1",
+    "tenantId": "t_11",
+    "date": "2026-10-25",
+    "amountEgp": 8260
+  },
+  {
+    "id": "sal_1_2",
+    "tenantId": "t_21",
+    "date": "2026-10-25",
+    "amountEgp": 14390
+  },
+  {
+    "id": "sal_2_0",
+    "tenantId": "t_3",
+    "date": "2026-10-24",
+    "amountEgp": 3860
+  },
+  {
+    "id": "sal_2_1",
+    "tenantId": "t_14",
+    "date": "2026-10-24",
+    "amountEgp": 9990
+  },
+  {
+    "id": "sal_2_2",
+    "tenantId": "t_22",
+    "date": "2026-10-24",
+    "amountEgp": 16120
+  },
+  {
+    "id": "sal_3_0",
+    "tenantId": "t_6",
+    "date": "2026-10-23",
+    "amountEgp": 5590
+  },
+  {
+    "id": "sal_3_1",
+    "tenantId": "t_15",
+    "date": "2026-10-23",
+    "amountEgp": 11720
+  },
+  {
+    "id": "sal_3_2",
+    "tenantId": "t_25",
+    "date": "2026-10-23",
+    "amountEgp": 17850
+  },
+  {
+    "id": "sal_5_0",
+    "tenantId": "t_8",
+    "date": "2026-10-21",
+    "amountEgp": 9050
+  },
+  {
+    "id": "sal_5_1",
+    "tenantId": "t_18",
+    "date": "2026-10-21",
+    "amountEgp": 15180
+  },
+  {
+    "id": "sal_5_2",
+    "tenantId": "t_1",
+    "date": "2026-10-21",
+    "amountEgp": 3310
+  },
+  {
+    "id": "sal_6_0",
+    "tenantId": "t_11",
+    "date": "2026-10-20",
+    "amountEgp": 10780
+  },
+  {
+    "id": "sal_6_1",
+    "tenantId": "t_21",
+    "date": "2026-10-20",
+    "amountEgp": 16910
+  },
+  {
+    "id": "sal_6_2",
+    "tenantId": "t_2",
+    "date": "2026-10-20",
+    "amountEgp": 5040
+  },
+  {
+    "id": "sal_7_0",
+    "tenantId": "t_14",
+    "date": "2026-10-19",
+    "amountEgp": 12510
+  },
+  {
+    "id": "sal_7_1",
+    "tenantId": "t_22",
+    "date": "2026-10-19",
+    "amountEgp": 640
+  },
+  {
+    "id": "sal_7_2",
+    "tenantId": "t_3",
+    "date": "2026-10-19",
+    "amountEgp": 6770
+  },
+  {
+    "id": "sal_9_0",
+    "tenantId": "t_17",
+    "date": "2026-10-17",
+    "amountEgp": 15970
+  },
+  {
+    "id": "sal_9_1",
+    "tenantId": "t_26",
+    "date": "2026-10-17",
+    "amountEgp": 4100
+  },
+  {
+    "id": "sal_9_2",
+    "tenantId": "t_7",
+    "date": "2026-10-17",
+    "amountEgp": 10230
+  },
+  {
+    "id": "sal_10_0",
+    "tenantId": "t_18",
+    "date": "2026-10-16",
+    "amountEgp": 17700
+  },
+  {
+    "id": "sal_10_1",
+    "tenantId": "t_1",
+    "date": "2026-10-16",
+    "amountEgp": 5830
+  },
+  {
+    "id": "sal_10_2",
+    "tenantId": "t_8",
+    "date": "2026-10-16",
+    "amountEgp": 11960
+  },
+  {
+    "id": "sal_11_0",
+    "tenantId": "t_21",
+    "date": "2026-10-15",
+    "amountEgp": 1430
+  },
+  {
+    "id": "sal_11_1",
+    "tenantId": "t_2",
+    "date": "2026-10-15",
+    "amountEgp": 7560
+  },
+  {
+    "id": "sal_11_2",
+    "tenantId": "t_11",
+    "date": "2026-10-15",
+    "amountEgp": 13690
+  },
+  {
+    "id": "sal_13_0",
+    "tenantId": "t_25",
+    "date": "2026-10-13",
+    "amountEgp": 4890
+  },
+  {
+    "id": "sal_13_1",
+    "tenantId": "t_6",
+    "date": "2026-10-13",
+    "amountEgp": 11020
+  },
+  {
+    "id": "sal_13_2",
+    "tenantId": "t_15",
+    "date": "2026-10-13",
+    "amountEgp": 17150
+  },
+  {
+    "id": "sal_14_0",
+    "tenantId": "t_26",
+    "date": "2026-10-12",
+    "amountEgp": 6620
+  },
+  {
+    "id": "sal_14_1",
+    "tenantId": "t_7",
+    "date": "2026-10-12",
+    "amountEgp": 12750
+  },
+  {
+    "id": "sal_14_2",
+    "tenantId": "t_17",
+    "date": "2026-10-12",
+    "amountEgp": 880
+  },
+  {
+    "id": "sal_15_0",
+    "tenantId": "t_1",
+    "date": "2026-10-11",
+    "amountEgp": 8350
+  },
+  {
+    "id": "sal_15_1",
+    "tenantId": "t_8",
+    "date": "2026-10-11",
+    "amountEgp": 14480
+  },
+  {
+    "id": "sal_15_2",
+    "tenantId": "t_18",
+    "date": "2026-10-11",
+    "amountEgp": 2610
+  },
+  {
+    "id": "sal_17_0",
+    "tenantId": "t_3",
+    "date": "2026-10-09",
+    "amountEgp": 11810
+  },
+  {
+    "id": "sal_17_1",
+    "tenantId": "t_14",
+    "date": "2026-10-09",
+    "amountEgp": 17940
+  },
+  {
+    "id": "sal_17_2",
+    "tenantId": "t_22",
+    "date": "2026-10-09",
+    "amountEgp": 6070
+  },
+  {
+    "id": "sal_18_0",
+    "tenantId": "t_6",
+    "date": "2026-10-08",
+    "amountEgp": 13540
+  },
+  {
+    "id": "sal_18_1",
+    "tenantId": "t_15",
+    "date": "2026-10-08",
+    "amountEgp": 1670
+  },
+  {
+    "id": "sal_18_2",
+    "tenantId": "t_25",
+    "date": "2026-10-08",
+    "amountEgp": 7800
+  },
+  {
+    "id": "sal_19_0",
+    "tenantId": "t_7",
+    "date": "2026-10-07",
+    "amountEgp": 15270
+  },
+  {
+    "id": "sal_19_1",
+    "tenantId": "t_17",
+    "date": "2026-10-07",
+    "amountEgp": 3400
+  },
+  {
+    "id": "sal_19_2",
+    "tenantId": "t_26",
+    "date": "2026-10-07",
+    "amountEgp": 9530
+  },
+  {
+    "id": "sal_21_0",
+    "tenantId": "t_11",
+    "date": "2026-10-05",
+    "amountEgp": 730
+  },
+  {
+    "id": "sal_21_1",
+    "tenantId": "t_21",
+    "date": "2026-10-05",
+    "amountEgp": 6860
+  },
+  {
+    "id": "sal_21_2",
+    "tenantId": "t_2",
+    "date": "2026-10-05",
+    "amountEgp": 12990
+  },
+  {
+    "id": "sal_22_0",
+    "tenantId": "t_14",
+    "date": "2026-10-04",
+    "amountEgp": 2460
+  },
+  {
+    "id": "sal_22_1",
+    "tenantId": "t_22",
+    "date": "2026-10-04",
+    "amountEgp": 8590
+  },
+  {
+    "id": "sal_22_2",
+    "tenantId": "t_3",
+    "date": "2026-10-04",
+    "amountEgp": 14720
+  },
+  {
+    "id": "sal_23_0",
+    "tenantId": "t_15",
+    "date": "2026-10-03",
+    "amountEgp": 4190
+  },
+  {
+    "id": "sal_23_1",
+    "tenantId": "t_25",
+    "date": "2026-10-03",
+    "amountEgp": 10320
+  },
+  {
+    "id": "sal_23_2",
+    "tenantId": "t_6",
+    "date": "2026-10-03",
+    "amountEgp": 16450
+  },
+  {
+    "id": "sal_25_0",
+    "tenantId": "t_18",
+    "date": "2026-10-01",
+    "amountEgp": 7650
+  },
+  {
+    "id": "sal_25_1",
+    "tenantId": "t_1",
+    "date": "2026-10-01",
+    "amountEgp": 13780
+  },
+  {
+    "id": "sal_25_2",
+    "tenantId": "t_8",
+    "date": "2026-10-01",
+    "amountEgp": 1910
+  },
+  {
+    "id": "sal_26_0",
+    "tenantId": "t_21",
+    "date": "2026-09-30",
+    "amountEgp": 9380
+  },
+  {
+    "id": "sal_26_1",
+    "tenantId": "t_2",
+    "date": "2026-09-30",
+    "amountEgp": 15510
+  },
+  {
+    "id": "sal_26_2",
+    "tenantId": "t_11",
+    "date": "2026-09-30",
+    "amountEgp": 3640
+  },
+  {
+    "id": "sal_27_0",
+    "tenantId": "t_22",
+    "date": "2026-09-29",
+    "amountEgp": 11110
+  },
+  {
+    "id": "sal_27_1",
+    "tenantId": "t_3",
+    "date": "2026-09-29",
+    "amountEgp": 17240
+  },
+  {
+    "id": "sal_27_2",
+    "tenantId": "t_14",
+    "date": "2026-09-29",
+    "amountEgp": 5370
+  },
+  {
+    "id": "sal_29_0",
+    "tenantId": "t_26",
+    "date": "2026-09-27",
+    "amountEgp": 14570
+  },
+  {
+    "id": "sal_29_1",
+    "tenantId": "t_7",
+    "date": "2026-09-27",
+    "amountEgp": 2700
+  },
+  {
+    "id": "sal_29_2",
+    "tenantId": "t_17",
+    "date": "2026-09-27",
+    "amountEgp": 8830
+  },
+  {
+    "id": "sal_30_0",
+    "tenantId": "t_1",
+    "date": "2026-09-26",
+    "amountEgp": 16300
+  },
+  {
+    "id": "sal_30_1",
+    "tenantId": "t_8",
+    "date": "2026-09-26",
+    "amountEgp": 4430
+  },
+  {
+    "id": "sal_30_2",
+    "tenantId": "t_18",
+    "date": "2026-09-26",
+    "amountEgp": 10560
+  },
+  {
+    "id": "sal_31_0",
+    "tenantId": "t_2",
+    "date": "2026-09-25",
+    "amountEgp": 18030
+  },
+  {
+    "id": "sal_31_1",
+    "tenantId": "t_11",
+    "date": "2026-09-25",
+    "amountEgp": 6160
+  },
+  {
+    "id": "sal_31_2",
+    "tenantId": "t_21",
+    "date": "2026-09-25",
+    "amountEgp": 12290
+  },
+  {
+    "id": "sal_33_0",
+    "tenantId": "t_6",
+    "date": "2026-09-23",
+    "amountEgp": 3490
+  },
+  {
+    "id": "sal_33_1",
+    "tenantId": "t_15",
+    "date": "2026-09-23",
+    "amountEgp": 9620
+  },
+  {
+    "id": "sal_33_2",
+    "tenantId": "t_25",
+    "date": "2026-09-23",
+    "amountEgp": 15750
+  },
+  {
+    "id": "sal_34_0",
+    "tenantId": "t_7",
+    "date": "2026-09-22",
+    "amountEgp": 5220
+  },
+  {
+    "id": "sal_34_1",
+    "tenantId": "t_17",
+    "date": "2026-09-22",
+    "amountEgp": 11350
+  },
+  {
+    "id": "sal_34_2",
+    "tenantId": "t_26",
+    "date": "2026-09-22",
+    "amountEgp": 17480
+  },
+  {
+    "id": "sal_35_0",
+    "tenantId": "t_8",
+    "date": "2026-09-21",
+    "amountEgp": 6950
+  },
+  {
+    "id": "sal_35_1",
+    "tenantId": "t_18",
+    "date": "2026-09-21",
+    "amountEgp": 13080
+  },
+  {
+    "id": "sal_35_2",
+    "tenantId": "t_1",
+    "date": "2026-09-21",
+    "amountEgp": 1210
+  },
+  {
+    "id": "sal_37_0",
+    "tenantId": "t_14",
+    "date": "2026-09-19",
+    "amountEgp": 10410
+  },
+  {
+    "id": "sal_37_1",
+    "tenantId": "t_22",
+    "date": "2026-09-19",
+    "amountEgp": 16540
+  },
+  {
+    "id": "sal_37_2",
+    "tenantId": "t_3",
+    "date": "2026-09-19",
+    "amountEgp": 4670
+  },
+  {
+    "id": "sal_38_0",
+    "tenantId": "t_15",
+    "date": "2026-09-18",
+    "amountEgp": 12140
+  },
+  {
+    "id": "sal_38_1",
+    "tenantId": "t_25",
+    "date": "2026-09-18",
+    "amountEgp": 18270
+  },
+  {
+    "id": "sal_38_2",
+    "tenantId": "t_6",
+    "date": "2026-09-18",
+    "amountEgp": 6400
+  },
+  {
+    "id": "sal_39_0",
+    "tenantId": "t_17",
+    "date": "2026-09-17",
+    "amountEgp": 13870
+  },
+  {
+    "id": "sal_39_1",
+    "tenantId": "t_26",
+    "date": "2026-09-17",
+    "amountEgp": 2000
+  },
+  {
+    "id": "sal_39_2",
+    "tenantId": "t_7",
+    "date": "2026-09-17",
+    "amountEgp": 8130
+  },
+  {
+    "id": "sal_41_0",
+    "tenantId": "t_21",
+    "date": "2026-09-15",
+    "amountEgp": 17330
+  },
+  {
+    "id": "sal_41_1",
+    "tenantId": "t_2",
+    "date": "2026-09-15",
+    "amountEgp": 5460
+  },
+  {
+    "id": "sal_41_2",
+    "tenantId": "t_11",
+    "date": "2026-09-15",
+    "amountEgp": 11590
+  },
+  {
+    "id": "sal_42_0",
+    "tenantId": "t_22",
+    "date": "2026-09-14",
+    "amountEgp": 1060
+  },
+  {
+    "id": "sal_42_1",
+    "tenantId": "t_3",
+    "date": "2026-09-14",
+    "amountEgp": 7190
+  },
+  {
+    "id": "sal_42_2",
+    "tenantId": "t_14",
+    "date": "2026-09-14",
+    "amountEgp": 13320
+  },
+  {
+    "id": "sal_43_0",
+    "tenantId": "t_25",
+    "date": "2026-09-13",
+    "amountEgp": 2790
+  },
+  {
+    "id": "sal_43_1",
+    "tenantId": "t_6",
+    "date": "2026-09-13",
+    "amountEgp": 8920
+  },
+  {
+    "id": "sal_43_2",
+    "tenantId": "t_15",
+    "date": "2026-09-13",
+    "amountEgp": 15050
+  },
+  {
+    "id": "sal_45_0",
+    "tenantId": "t_1",
+    "date": "2026-09-11",
+    "amountEgp": 6250
+  },
+  {
+    "id": "sal_45_1",
+    "tenantId": "t_8",
+    "date": "2026-09-11",
+    "amountEgp": 12380
+  },
+  {
+    "id": "sal_45_2",
+    "tenantId": "t_18",
+    "date": "2026-09-11",
+    "amountEgp": 510
+  },
+  {
+    "id": "sal_46_0",
+    "tenantId": "t_2",
+    "date": "2026-09-10",
+    "amountEgp": 7980
+  },
+  {
+    "id": "sal_46_1",
+    "tenantId": "t_11",
+    "date": "2026-09-10",
+    "amountEgp": 14110
+  },
+  {
+    "id": "sal_46_2",
+    "tenantId": "t_21",
+    "date": "2026-09-10",
+    "amountEgp": 2240
+  },
+  {
+    "id": "sal_47_0",
+    "tenantId": "t_3",
+    "date": "2026-09-09",
+    "amountEgp": 9710
+  },
+  {
+    "id": "sal_47_1",
+    "tenantId": "t_14",
+    "date": "2026-09-09",
+    "amountEgp": 15840
+  },
+  {
+    "id": "sal_47_2",
+    "tenantId": "t_22",
+    "date": "2026-09-09",
+    "amountEgp": 3970
+  },
+  {
+    "id": "sal_49_0",
+    "tenantId": "t_7",
+    "date": "2026-09-07",
+    "amountEgp": 13170
+  },
+  {
+    "id": "sal_49_1",
+    "tenantId": "t_17",
+    "date": "2026-09-07",
+    "amountEgp": 1300
+  },
+  {
+    "id": "sal_49_2",
+    "tenantId": "t_26",
+    "date": "2026-09-07",
+    "amountEgp": 7430
+  },
+  {
+    "id": "sal_50_0",
+    "tenantId": "t_8",
+    "date": "2026-09-06",
+    "amountEgp": 14900
+  },
+  {
+    "id": "sal_50_1",
+    "tenantId": "t_18",
+    "date": "2026-09-06",
+    "amountEgp": 3030
+  },
+  {
+    "id": "sal_50_2",
+    "tenantId": "t_1",
+    "date": "2026-09-06",
+    "amountEgp": 9160
+  },
+  {
+    "id": "sal_51_0",
+    "tenantId": "t_11",
+    "date": "2026-09-05",
+    "amountEgp": 16630
+  },
+  {
+    "id": "sal_51_1",
+    "tenantId": "t_21",
+    "date": "2026-09-05",
+    "amountEgp": 4760
+  },
+  {
+    "id": "sal_51_2",
+    "tenantId": "t_2",
+    "date": "2026-09-05",
+    "amountEgp": 10890
+  },
+  {
+    "id": "sal_53_0",
+    "tenantId": "t_15",
+    "date": "2026-09-03",
+    "amountEgp": 2090
+  },
+  {
+    "id": "sal_53_1",
+    "tenantId": "t_25",
+    "date": "2026-09-03",
+    "amountEgp": 8220
+  },
+  {
+    "id": "sal_53_2",
+    "tenantId": "t_6",
+    "date": "2026-09-03",
+    "amountEgp": 14350
+  },
+  {
+    "id": "sal_54_0",
+    "tenantId": "t_17",
+    "date": "2026-09-02",
+    "amountEgp": 3820
+  },
+  {
+    "id": "sal_54_1",
+    "tenantId": "t_26",
+    "date": "2026-09-02",
+    "amountEgp": 9950
+  },
+  {
+    "id": "sal_54_2",
+    "tenantId": "t_7",
+    "date": "2026-09-02",
+    "amountEgp": 16080
+  },
+  {
+    "id": "sal_55_0",
+    "tenantId": "t_18",
+    "date": "2026-09-01",
+    "amountEgp": 5550
+  },
+  {
+    "id": "sal_55_1",
+    "tenantId": "t_1",
+    "date": "2026-09-01",
+    "amountEgp": 11680
+  },
+  {
+    "id": "sal_55_2",
+    "tenantId": "t_8",
+    "date": "2026-09-01",
+    "amountEgp": 17810
+  },
+  {
+    "id": "sal_57_0",
+    "tenantId": "t_22",
+    "date": "2026-08-30",
+    "amountEgp": 9010
+  },
+  {
+    "id": "sal_57_1",
+    "tenantId": "t_3",
+    "date": "2026-08-30",
+    "amountEgp": 15140
+  },
+  {
+    "id": "sal_57_2",
+    "tenantId": "t_14",
+    "date": "2026-08-30",
+    "amountEgp": 3270
+  },
+  {
+    "id": "sal_58_0",
+    "tenantId": "t_25",
+    "date": "2026-08-29",
+    "amountEgp": 10740
+  },
+  {
+    "id": "sal_58_1",
+    "tenantId": "t_6",
+    "date": "2026-08-29",
+    "amountEgp": 16870
+  },
+  {
+    "id": "sal_58_2",
+    "tenantId": "t_15",
+    "date": "2026-08-29",
+    "amountEgp": 5000
+  },
+  {
+    "id": "sal_59_0",
+    "tenantId": "t_26",
+    "date": "2026-08-28",
+    "amountEgp": 12470
+  },
+  {
+    "id": "sal_59_1",
+    "tenantId": "t_7",
+    "date": "2026-08-28",
+    "amountEgp": 600
+  },
+  {
+    "id": "sal_59_2",
+    "tenantId": "t_17",
+    "date": "2026-08-28",
+    "amountEgp": 6730
+  },
+  {
+    "id": "sal_61_0",
+    "tenantId": "t_2",
+    "date": "2026-08-26",
+    "amountEgp": 15930
+  },
+  {
+    "id": "sal_61_1",
+    "tenantId": "t_11",
+    "date": "2026-08-26",
+    "amountEgp": 4060
+  },
+  {
+    "id": "sal_61_2",
+    "tenantId": "t_21",
+    "date": "2026-08-26",
+    "amountEgp": 10190
+  },
+  {
+    "id": "sal_62_0",
+    "tenantId": "t_3",
+    "date": "2026-08-25",
+    "amountEgp": 17660
+  },
+  {
+    "id": "sal_62_1",
+    "tenantId": "t_14",
+    "date": "2026-08-25",
+    "amountEgp": 5790
+  },
+  {
+    "id": "sal_62_2",
+    "tenantId": "t_22",
+    "date": "2026-08-25",
+    "amountEgp": 11920
+  },
+  {
+    "id": "sal_63_0",
+    "tenantId": "t_6",
+    "date": "2026-08-24",
+    "amountEgp": 1390
+  },
+  {
+    "id": "sal_63_1",
+    "tenantId": "t_15",
+    "date": "2026-08-24",
+    "amountEgp": 7520
+  },
+  {
+    "id": "sal_63_2",
+    "tenantId": "t_25",
+    "date": "2026-08-24",
+    "amountEgp": 13650
+  },
+  {
+    "id": "sal_65_0",
+    "tenantId": "t_8",
+    "date": "2026-08-22",
+    "amountEgp": 4850
+  },
+  {
+    "id": "sal_65_1",
+    "tenantId": "t_18",
+    "date": "2026-08-22",
+    "amountEgp": 10980
+  },
+  {
+    "id": "sal_65_2",
+    "tenantId": "t_1",
+    "date": "2026-08-22",
+    "amountEgp": 17110
+  },
+  {
+    "id": "sal_66_0",
+    "tenantId": "t_11",
+    "date": "2026-08-21",
+    "amountEgp": 6580
+  },
+  {
+    "id": "sal_66_1",
+    "tenantId": "t_21",
+    "date": "2026-08-21",
+    "amountEgp": 12710
+  },
+  {
+    "id": "sal_66_2",
+    "tenantId": "t_2",
+    "date": "2026-08-21",
+    "amountEgp": 840
+  },
+  {
+    "id": "sal_67_0",
+    "tenantId": "t_14",
+    "date": "2026-08-20",
+    "amountEgp": 8310
+  },
+  {
+    "id": "sal_67_1",
+    "tenantId": "t_22",
+    "date": "2026-08-20",
+    "amountEgp": 14440
+  },
+  {
+    "id": "sal_67_2",
+    "tenantId": "t_3",
+    "date": "2026-08-20",
+    "amountEgp": 2570
+  },
+  {
+    "id": "sal_69_0",
+    "tenantId": "t_17",
+    "date": "2026-08-18",
+    "amountEgp": 11770
+  },
+  {
+    "id": "sal_69_1",
+    "tenantId": "t_26",
+    "date": "2026-08-18",
+    "amountEgp": 17900
+  },
+  {
+    "id": "sal_69_2",
+    "tenantId": "t_7",
+    "date": "2026-08-18",
+    "amountEgp": 6030
+  },
+  {
+    "id": "sal_70_0",
+    "tenantId": "t_18",
+    "date": "2026-08-17",
+    "amountEgp": 13500
+  },
+  {
+    "id": "sal_70_1",
+    "tenantId": "t_1",
+    "date": "2026-08-17",
+    "amountEgp": 1630
+  },
+  {
+    "id": "sal_70_2",
+    "tenantId": "t_8",
+    "date": "2026-08-17",
+    "amountEgp": 7760
+  },
+  {
+    "id": "sal_71_0",
+    "tenantId": "t_21",
+    "date": "2026-08-16",
+    "amountEgp": 15230
+  },
+  {
+    "id": "sal_71_1",
+    "tenantId": "t_2",
+    "date": "2026-08-16",
+    "amountEgp": 3360
+  },
+  {
+    "id": "sal_71_2",
+    "tenantId": "t_11",
+    "date": "2026-08-16",
+    "amountEgp": 9490
+  },
+  {
+    "id": "sal_73_0",
+    "tenantId": "t_25",
+    "date": "2026-08-14",
+    "amountEgp": 690
+  },
+  {
+    "id": "sal_73_1",
+    "tenantId": "t_6",
+    "date": "2026-08-14",
+    "amountEgp": 6820
+  },
+  {
+    "id": "sal_73_2",
+    "tenantId": "t_15",
+    "date": "2026-08-14",
+    "amountEgp": 12950
+  },
+  {
+    "id": "sal_74_0",
+    "tenantId": "t_26",
+    "date": "2026-08-13",
+    "amountEgp": 2420
+  },
+  {
+    "id": "sal_74_1",
+    "tenantId": "t_7",
+    "date": "2026-08-13",
+    "amountEgp": 8550
+  },
+  {
+    "id": "sal_74_2",
+    "tenantId": "t_17",
+    "date": "2026-08-13",
+    "amountEgp": 14680
+  },
+  {
+    "id": "sal_75_0",
+    "tenantId": "t_1",
+    "date": "2026-08-12",
+    "amountEgp": 4150
+  },
+  {
+    "id": "sal_75_1",
+    "tenantId": "t_8",
+    "date": "2026-08-12",
+    "amountEgp": 10280
+  },
+  {
+    "id": "sal_75_2",
+    "tenantId": "t_18",
+    "date": "2026-08-12",
+    "amountEgp": 16410
+  },
+  {
+    "id": "sal_77_0",
+    "tenantId": "t_3",
+    "date": "2026-08-10",
+    "amountEgp": 7610
+  },
+  {
+    "id": "sal_77_1",
+    "tenantId": "t_14",
+    "date": "2026-08-10",
+    "amountEgp": 13740
+  },
+  {
+    "id": "sal_77_2",
+    "tenantId": "t_22",
+    "date": "2026-08-10",
+    "amountEgp": 1870
+  },
+  {
+    "id": "sal_78_0",
+    "tenantId": "t_6",
+    "date": "2026-08-09",
+    "amountEgp": 9340
+  },
+  {
+    "id": "sal_78_1",
+    "tenantId": "t_15",
+    "date": "2026-08-09",
+    "amountEgp": 15470
+  },
+  {
+    "id": "sal_78_2",
+    "tenantId": "t_25",
+    "date": "2026-08-09",
+    "amountEgp": 3600
+  },
+  {
+    "id": "sal_79_0",
+    "tenantId": "t_7",
+    "date": "2026-08-08",
+    "amountEgp": 11070
+  },
+  {
+    "id": "sal_79_1",
+    "tenantId": "t_17",
+    "date": "2026-08-08",
+    "amountEgp": 17200
+  },
+  {
+    "id": "sal_79_2",
+    "tenantId": "t_26",
+    "date": "2026-08-08",
+    "amountEgp": 5330
+  },
+  {
+    "id": "sal_81_0",
+    "tenantId": "t_11",
+    "date": "2026-08-06",
+    "amountEgp": 14530
+  },
+  {
+    "id": "sal_81_1",
+    "tenantId": "t_21",
+    "date": "2026-08-06",
+    "amountEgp": 2660
+  },
+  {
+    "id": "sal_81_2",
+    "tenantId": "t_2",
+    "date": "2026-08-06",
+    "amountEgp": 8790
+  },
+  {
+    "id": "sal_82_0",
+    "tenantId": "t_14",
+    "date": "2026-08-05",
+    "amountEgp": 16260
+  },
+  {
+    "id": "sal_82_1",
+    "tenantId": "t_22",
+    "date": "2026-08-05",
+    "amountEgp": 4390
+  },
+  {
+    "id": "sal_82_2",
+    "tenantId": "t_3",
+    "date": "2026-08-05",
+    "amountEgp": 10520
+  },
+  {
+    "id": "sal_83_0",
+    "tenantId": "t_15",
+    "date": "2026-08-04",
+    "amountEgp": 17990
+  },
+  {
+    "id": "sal_83_1",
+    "tenantId": "t_25",
+    "date": "2026-08-04",
+    "amountEgp": 6120
+  },
+  {
+    "id": "sal_83_2",
+    "tenantId": "t_6",
+    "date": "2026-08-04",
+    "amountEgp": 12250
+  },
+  {
+    "id": "sal_85_0",
+    "tenantId": "t_18",
+    "date": "2026-08-02",
+    "amountEgp": 3450
+  },
+  {
+    "id": "sal_85_1",
+    "tenantId": "t_1",
+    "date": "2026-08-02",
+    "amountEgp": 9580
+  },
+  {
+    "id": "sal_85_2",
+    "tenantId": "t_8",
+    "date": "2026-08-02",
+    "amountEgp": 15710
+  },
+  {
+    "id": "sal_86_0",
+    "tenantId": "t_21",
+    "date": "2026-08-01",
+    "amountEgp": 5180
+  },
+  {
+    "id": "sal_86_1",
+    "tenantId": "t_2",
+    "date": "2026-08-01",
+    "amountEgp": 11310
+  },
+  {
+    "id": "sal_86_2",
+    "tenantId": "t_11",
+    "date": "2026-08-01",
+    "amountEgp": 17440
+  },
+  {
+    "id": "sal_87_0",
+    "tenantId": "t_22",
+    "date": "2026-07-31",
+    "amountEgp": 6910
+  },
+  {
+    "id": "sal_87_1",
+    "tenantId": "t_3",
+    "date": "2026-07-31",
+    "amountEgp": 13040
+  },
+  {
+    "id": "sal_87_2",
+    "tenantId": "t_14",
+    "date": "2026-07-31",
+    "amountEgp": 1170
+  },
+  {
+    "id": "sal_89_0",
+    "tenantId": "t_26",
+    "date": "2026-07-29",
+    "amountEgp": 10370
+  },
+  {
+    "id": "sal_89_1",
+    "tenantId": "t_7",
+    "date": "2026-07-29",
+    "amountEgp": 16500
+  },
+  {
+    "id": "sal_89_2",
+    "tenantId": "t_17",
+    "date": "2026-07-29",
+    "amountEgp": 4630
+  },
+  {
+    "id": "sal_90_0",
+    "tenantId": "t_1",
+    "date": "2026-07-28",
+    "amountEgp": 12100
+  },
+  {
+    "id": "sal_90_1",
+    "tenantId": "t_8",
+    "date": "2026-07-28",
+    "amountEgp": 18230
+  },
+  {
+    "id": "sal_90_2",
+    "tenantId": "t_18",
+    "date": "2026-07-28",
+    "amountEgp": 6360
+  },
+  {
+    "id": "sal_91_0",
+    "tenantId": "t_2",
+    "date": "2026-07-27",
+    "amountEgp": 13830
+  },
+  {
+    "id": "sal_91_1",
+    "tenantId": "t_11",
+    "date": "2026-07-27",
+    "amountEgp": 1960
+  },
+  {
+    "id": "sal_91_2",
+    "tenantId": "t_21",
+    "date": "2026-07-27",
+    "amountEgp": 8090
+  },
+  {
+    "id": "sal_93_0",
+    "tenantId": "t_6",
+    "date": "2026-07-25",
+    "amountEgp": 17290
+  },
+  {
+    "id": "sal_93_1",
+    "tenantId": "t_15",
+    "date": "2026-07-25",
+    "amountEgp": 5420
+  },
+  {
+    "id": "sal_93_2",
+    "tenantId": "t_25",
+    "date": "2026-07-25",
+    "amountEgp": 11550
+  },
+  {
+    "id": "sal_94_0",
+    "tenantId": "t_7",
+    "date": "2026-07-24",
+    "amountEgp": 1020
+  },
+  {
+    "id": "sal_94_1",
+    "tenantId": "t_17",
+    "date": "2026-07-24",
+    "amountEgp": 7150
+  },
+  {
+    "id": "sal_94_2",
+    "tenantId": "t_26",
+    "date": "2026-07-24",
+    "amountEgp": 13280
+  },
+  {
+    "id": "sal_95_0",
+    "tenantId": "t_8",
+    "date": "2026-07-23",
+    "amountEgp": 2750
+  },
+  {
+    "id": "sal_95_1",
+    "tenantId": "t_18",
+    "date": "2026-07-23",
+    "amountEgp": 8880
+  },
+  {
+    "id": "sal_95_2",
+    "tenantId": "t_1",
+    "date": "2026-07-23",
+    "amountEgp": 15010
+  },
+  {
+    "id": "sal_97_0",
+    "tenantId": "t_14",
+    "date": "2026-07-21",
+    "amountEgp": 6210
+  },
+  {
+    "id": "sal_97_1",
+    "tenantId": "t_22",
+    "date": "2026-07-21",
+    "amountEgp": 12340
+  },
+  {
+    "id": "sal_97_2",
+    "tenantId": "t_3",
+    "date": "2026-07-21",
+    "amountEgp": 470
+  },
+  {
+    "id": "sal_98_0",
+    "tenantId": "t_15",
+    "date": "2026-07-20",
+    "amountEgp": 7940
+  },
+  {
+    "id": "sal_98_1",
+    "tenantId": "t_25",
+    "date": "2026-07-20",
+    "amountEgp": 14070
+  },
+  {
+    "id": "sal_98_2",
+    "tenantId": "t_6",
+    "date": "2026-07-20",
+    "amountEgp": 2200
+  },
+  {
+    "id": "sal_99_0",
+    "tenantId": "t_17",
+    "date": "2026-07-19",
+    "amountEgp": 9670
+  },
+  {
+    "id": "sal_99_1",
+    "tenantId": "t_26",
+    "date": "2026-07-19",
+    "amountEgp": 15800
+  },
+  {
+    "id": "sal_99_2",
+    "tenantId": "t_7",
+    "date": "2026-07-19",
+    "amountEgp": 3930
+  },
+  {
+    "id": "sal_101_0",
+    "tenantId": "t_21",
+    "date": "2026-07-17",
+    "amountEgp": 13130
+  },
+  {
+    "id": "sal_101_1",
+    "tenantId": "t_2",
+    "date": "2026-07-17",
+    "amountEgp": 1260
+  },
+  {
+    "id": "sal_101_2",
+    "tenantId": "t_11",
+    "date": "2026-07-17",
+    "amountEgp": 7390
+  },
+  {
+    "id": "sal_102_0",
+    "tenantId": "t_22",
+    "date": "2026-07-16",
+    "amountEgp": 14860
+  },
+  {
+    "id": "sal_102_1",
+    "tenantId": "t_3",
+    "date": "2026-07-16",
+    "amountEgp": 2990
+  },
+  {
+    "id": "sal_102_2",
+    "tenantId": "t_14",
+    "date": "2026-07-16",
+    "amountEgp": 9120
+  },
+  {
+    "id": "sal_103_0",
+    "tenantId": "t_25",
+    "date": "2026-07-15",
+    "amountEgp": 16590
+  },
+  {
+    "id": "sal_103_1",
+    "tenantId": "t_6",
+    "date": "2026-07-15",
+    "amountEgp": 4720
+  },
+  {
+    "id": "sal_103_2",
+    "tenantId": "t_15",
+    "date": "2026-07-15",
+    "amountEgp": 10850
+  },
+  {
+    "id": "sal_105_0",
+    "tenantId": "t_1",
+    "date": "2026-07-13",
+    "amountEgp": 2050
+  },
+  {
+    "id": "sal_105_1",
+    "tenantId": "t_8",
+    "date": "2026-07-13",
+    "amountEgp": 8180
+  },
+  {
+    "id": "sal_105_2",
+    "tenantId": "t_18",
+    "date": "2026-07-13",
+    "amountEgp": 14310
+  },
+  {
+    "id": "sal_106_0",
+    "tenantId": "t_2",
+    "date": "2026-07-12",
+    "amountEgp": 3780
+  },
+  {
+    "id": "sal_106_1",
+    "tenantId": "t_11",
+    "date": "2026-07-12",
+    "amountEgp": 9910
+  },
+  {
+    "id": "sal_106_2",
+    "tenantId": "t_21",
+    "date": "2026-07-12",
+    "amountEgp": 16040
+  },
+  {
+    "id": "sal_107_0",
+    "tenantId": "t_3",
+    "date": "2026-07-11",
+    "amountEgp": 5510
+  },
+  {
+    "id": "sal_107_1",
+    "tenantId": "t_14",
+    "date": "2026-07-11",
+    "amountEgp": 11640
+  },
+  {
+    "id": "sal_107_2",
+    "tenantId": "t_22",
+    "date": "2026-07-11",
+    "amountEgp": 17770
+  },
+  {
+    "id": "sal_109_0",
+    "tenantId": "t_7",
+    "date": "2026-07-09",
+    "amountEgp": 8970
+  },
+  {
+    "id": "sal_109_1",
+    "tenantId": "t_17",
+    "date": "2026-07-09",
+    "amountEgp": 15100
+  },
+  {
+    "id": "sal_109_2",
+    "tenantId": "t_26",
+    "date": "2026-07-09",
+    "amountEgp": 3230
+  },
+  {
+    "id": "sal_110_0",
+    "tenantId": "t_8",
+    "date": "2026-07-08",
+    "amountEgp": 10700
+  },
+  {
+    "id": "sal_110_1",
+    "tenantId": "t_18",
+    "date": "2026-07-08",
+    "amountEgp": 16830
+  },
+  {
+    "id": "sal_110_2",
+    "tenantId": "t_1",
+    "date": "2026-07-08",
+    "amountEgp": 4960
+  },
+  {
+    "id": "sal_111_0",
+    "tenantId": "t_11",
+    "date": "2026-07-07",
+    "amountEgp": 12430
+  },
+  {
+    "id": "sal_111_1",
+    "tenantId": "t_21",
+    "date": "2026-07-07",
+    "amountEgp": 560
+  },
+  {
+    "id": "sal_111_2",
+    "tenantId": "t_2",
+    "date": "2026-07-07",
+    "amountEgp": 6690
+  },
+  {
+    "id": "sal_113_0",
+    "tenantId": "t_15",
+    "date": "2026-07-05",
+    "amountEgp": 15890
+  },
+  {
+    "id": "sal_113_1",
+    "tenantId": "t_25",
+    "date": "2026-07-05",
+    "amountEgp": 4020
+  },
+  {
+    "id": "sal_113_2",
+    "tenantId": "t_6",
+    "date": "2026-07-05",
+    "amountEgp": 10150
+  },
+  {
+    "id": "sal_114_0",
+    "tenantId": "t_17",
+    "date": "2026-07-04",
+    "amountEgp": 17620
+  },
+  {
+    "id": "sal_114_1",
+    "tenantId": "t_26",
+    "date": "2026-07-04",
+    "amountEgp": 5750
+  },
+  {
+    "id": "sal_114_2",
+    "tenantId": "t_7",
+    "date": "2026-07-04",
+    "amountEgp": 11880
+  },
+  {
+    "id": "sal_115_0",
+    "tenantId": "t_18",
+    "date": "2026-07-03",
+    "amountEgp": 1350
+  },
+  {
+    "id": "sal_115_1",
+    "tenantId": "t_1",
+    "date": "2026-07-03",
+    "amountEgp": 7480
+  },
+  {
+    "id": "sal_115_2",
+    "tenantId": "t_8",
+    "date": "2026-07-03",
+    "amountEgp": 13610
+  },
+  {
+    "id": "sal_117_0",
+    "tenantId": "t_22",
+    "date": "2026-07-01",
+    "amountEgp": 4810
+  },
+  {
+    "id": "sal_117_1",
+    "tenantId": "t_3",
+    "date": "2026-07-01",
+    "amountEgp": 10940
+  },
+  {
+    "id": "sal_117_2",
+    "tenantId": "t_14",
+    "date": "2026-07-01",
+    "amountEgp": 17070
+  },
+  {
+    "id": "sal_118_0",
+    "tenantId": "t_25",
+    "date": "2026-06-30",
+    "amountEgp": 6540
+  },
+  {
+    "id": "sal_118_1",
+    "tenantId": "t_6",
+    "date": "2026-06-30",
+    "amountEgp": 12670
+  },
+  {
+    "id": "sal_118_2",
+    "tenantId": "t_15",
+    "date": "2026-06-30",
+    "amountEgp": 800
+  },
+  {
+    "id": "sal_119_0",
+    "tenantId": "t_26",
+    "date": "2026-06-29",
+    "amountEgp": 8270
+  },
+  {
+    "id": "sal_119_1",
+    "tenantId": "t_7",
+    "date": "2026-06-29",
+    "amountEgp": 14400
+  },
+  {
+    "id": "sal_119_2",
+    "tenantId": "t_17",
+    "date": "2026-06-29",
+    "amountEgp": 2530
+  },
+  {
+    "id": "sal_121_0",
+    "tenantId": "t_2",
+    "date": "2026-06-27",
+    "amountEgp": 11730
+  },
+  {
+    "id": "sal_121_1",
+    "tenantId": "t_11",
+    "date": "2026-06-27",
+    "amountEgp": 17860
+  },
+  {
+    "id": "sal_121_2",
+    "tenantId": "t_21",
+    "date": "2026-06-27",
+    "amountEgp": 5990
+  },
+  {
+    "id": "sal_122_0",
+    "tenantId": "t_3",
+    "date": "2026-06-26",
+    "amountEgp": 13460
+  },
+  {
+    "id": "sal_122_1",
+    "tenantId": "t_14",
+    "date": "2026-06-26",
+    "amountEgp": 1590
+  },
+  {
+    "id": "sal_122_2",
+    "tenantId": "t_22",
+    "date": "2026-06-26",
+    "amountEgp": 7720
+  },
+  {
+    "id": "sal_123_0",
+    "tenantId": "t_6",
+    "date": "2026-06-25",
+    "amountEgp": 15190
+  },
+  {
+    "id": "sal_123_1",
+    "tenantId": "t_15",
+    "date": "2026-06-25",
+    "amountEgp": 3320
+  },
+  {
+    "id": "sal_123_2",
+    "tenantId": "t_25",
+    "date": "2026-06-25",
+    "amountEgp": 9450
+  },
+  {
+    "id": "sal_125_0",
+    "tenantId": "t_8",
+    "date": "2026-06-23",
+    "amountEgp": 650
+  },
+  {
+    "id": "sal_125_1",
+    "tenantId": "t_18",
+    "date": "2026-06-23",
+    "amountEgp": 6780
+  },
+  {
+    "id": "sal_125_2",
+    "tenantId": "t_1",
+    "date": "2026-06-23",
+    "amountEgp": 12910
+  },
+  {
+    "id": "sal_126_0",
+    "tenantId": "t_11",
+    "date": "2026-06-22",
+    "amountEgp": 2380
+  },
+  {
+    "id": "sal_126_1",
+    "tenantId": "t_21",
+    "date": "2026-06-22",
+    "amountEgp": 8510
+  },
+  {
+    "id": "sal_126_2",
+    "tenantId": "t_2",
+    "date": "2026-06-22",
+    "amountEgp": 14640
+  },
+  {
+    "id": "sal_127_0",
+    "tenantId": "t_14",
+    "date": "2026-06-21",
+    "amountEgp": 4110
+  },
+  {
+    "id": "sal_127_1",
+    "tenantId": "t_22",
+    "date": "2026-06-21",
+    "amountEgp": 10240
+  },
+  {
+    "id": "sal_127_2",
+    "tenantId": "t_3",
+    "date": "2026-06-21",
+    "amountEgp": 16370
+  },
+  {
+    "id": "sal_129_0",
+    "tenantId": "t_17",
+    "date": "2026-06-19",
+    "amountEgp": 7570
+  },
+  {
+    "id": "sal_129_1",
+    "tenantId": "t_26",
+    "date": "2026-06-19",
+    "amountEgp": 13700
+  },
+  {
+    "id": "sal_129_2",
+    "tenantId": "t_7",
+    "date": "2026-06-19",
+    "amountEgp": 1830
+  },
+  {
+    "id": "sal_130_0",
+    "tenantId": "t_18",
+    "date": "2026-06-18",
+    "amountEgp": 9300
+  },
+  {
+    "id": "sal_130_1",
+    "tenantId": "t_1",
+    "date": "2026-06-18",
+    "amountEgp": 15430
+  },
+  {
+    "id": "sal_130_2",
+    "tenantId": "t_8",
+    "date": "2026-06-18",
+    "amountEgp": 3560
+  },
+  {
+    "id": "sal_131_0",
+    "tenantId": "t_21",
+    "date": "2026-06-17",
+    "amountEgp": 11030
+  },
+  {
+    "id": "sal_131_1",
+    "tenantId": "t_2",
+    "date": "2026-06-17",
+    "amountEgp": 17160
+  },
+  {
+    "id": "sal_131_2",
+    "tenantId": "t_11",
+    "date": "2026-06-17",
+    "amountEgp": 5290
+  },
+  {
+    "id": "sal_133_0",
+    "tenantId": "t_25",
+    "date": "2026-06-15",
+    "amountEgp": 14490
+  },
+  {
+    "id": "sal_133_1",
+    "tenantId": "t_6",
+    "date": "2026-06-15",
+    "amountEgp": 2620
+  },
+  {
+    "id": "sal_133_2",
+    "tenantId": "t_15",
+    "date": "2026-06-15",
+    "amountEgp": 8750
+  },
+  {
+    "id": "sal_134_0",
+    "tenantId": "t_26",
+    "date": "2026-06-14",
+    "amountEgp": 16220
+  },
+  {
+    "id": "sal_134_1",
+    "tenantId": "t_7",
+    "date": "2026-06-14",
+    "amountEgp": 4350
+  },
+  {
+    "id": "sal_134_2",
+    "tenantId": "t_17",
+    "date": "2026-06-14",
+    "amountEgp": 10480
+  },
+  {
+    "id": "sal_135_0",
+    "tenantId": "t_1",
+    "date": "2026-06-13",
+    "amountEgp": 17950
+  },
+  {
+    "id": "sal_135_1",
+    "tenantId": "t_8",
+    "date": "2026-06-13",
+    "amountEgp": 6080
+  },
+  {
+    "id": "sal_135_2",
+    "tenantId": "t_18",
+    "date": "2026-06-13",
+    "amountEgp": 12210
+  },
+  {
+    "id": "sal_137_0",
+    "tenantId": "t_3",
+    "date": "2026-06-11",
+    "amountEgp": 3410
+  },
+  {
+    "id": "sal_137_1",
+    "tenantId": "t_14",
+    "date": "2026-06-11",
+    "amountEgp": 9540
+  },
+  {
+    "id": "sal_137_2",
+    "tenantId": "t_22",
+    "date": "2026-06-11",
+    "amountEgp": 15670
+  },
+  {
+    "id": "sal_138_0",
+    "tenantId": "t_6",
+    "date": "2026-06-10",
+    "amountEgp": 5140
+  },
+  {
+    "id": "sal_138_1",
+    "tenantId": "t_15",
+    "date": "2026-06-10",
+    "amountEgp": 11270
+  },
+  {
+    "id": "sal_138_2",
+    "tenantId": "t_25",
+    "date": "2026-06-10",
+    "amountEgp": 17400
+  },
+  {
+    "id": "sal_139_0",
+    "tenantId": "t_7",
+    "date": "2026-06-09",
+    "amountEgp": 6870
+  },
+  {
+    "id": "sal_139_1",
+    "tenantId": "t_17",
+    "date": "2026-06-09",
+    "amountEgp": 13000
+  },
+  {
+    "id": "sal_139_2",
+    "tenantId": "t_26",
+    "date": "2026-06-09",
+    "amountEgp": 1130
+  },
+  {
+    "id": "sal_141_0",
+    "tenantId": "t_11",
+    "date": "2026-06-07",
+    "amountEgp": 10330
+  },
+  {
+    "id": "sal_141_1",
+    "tenantId": "t_21",
+    "date": "2026-06-07",
+    "amountEgp": 16460
+  },
+  {
+    "id": "sal_141_2",
+    "tenantId": "t_2",
+    "date": "2026-06-07",
+    "amountEgp": 4590
+  },
+  {
+    "id": "sal_142_0",
+    "tenantId": "t_14",
+    "date": "2026-06-06",
+    "amountEgp": 12060
+  },
+  {
+    "id": "sal_142_1",
+    "tenantId": "t_22",
+    "date": "2026-06-06",
+    "amountEgp": 18190
+  },
+  {
+    "id": "sal_142_2",
+    "tenantId": "t_3",
+    "date": "2026-06-06",
+    "amountEgp": 6320
+  },
+  {
+    "id": "sal_143_0",
+    "tenantId": "t_15",
+    "date": "2026-06-05",
+    "amountEgp": 13790
+  },
+  {
+    "id": "sal_143_1",
+    "tenantId": "t_25",
+    "date": "2026-06-05",
+    "amountEgp": 1920
+  },
+  {
+    "id": "sal_143_2",
+    "tenantId": "t_6",
+    "date": "2026-06-05",
+    "amountEgp": 8050
+  },
+  {
+    "id": "sal_145_0",
+    "tenantId": "t_18",
+    "date": "2026-06-03",
+    "amountEgp": 17250
+  },
+  {
+    "id": "sal_145_1",
+    "tenantId": "t_1",
+    "date": "2026-06-03",
+    "amountEgp": 5380
+  },
+  {
+    "id": "sal_145_2",
+    "tenantId": "t_8",
+    "date": "2026-06-03",
+    "amountEgp": 11510
+  },
+  {
+    "id": "sal_146_0",
+    "tenantId": "t_21",
+    "date": "2026-06-02",
+    "amountEgp": 980
+  },
+  {
+    "id": "sal_146_1",
+    "tenantId": "t_2",
+    "date": "2026-06-02",
+    "amountEgp": 7110
+  },
+  {
+    "id": "sal_146_2",
+    "tenantId": "t_11",
+    "date": "2026-06-02",
+    "amountEgp": 13240
+  },
+  {
+    "id": "sal_147_0",
+    "tenantId": "t_22",
+    "date": "2026-06-01",
+    "amountEgp": 2710
+  },
+  {
+    "id": "sal_147_1",
+    "tenantId": "t_3",
+    "date": "2026-06-01",
+    "amountEgp": 8840
+  },
+  {
+    "id": "sal_147_2",
+    "tenantId": "t_14",
+    "date": "2026-06-01",
+    "amountEgp": 14970
+  },
+  {
+    "id": "sal_149_0",
+    "tenantId": "t_26",
+    "date": "2026-05-30",
+    "amountEgp": 6170
+  },
+  {
+    "id": "sal_149_1",
+    "tenantId": "t_7",
+    "date": "2026-05-30",
+    "amountEgp": 12300
+  },
+  {
+    "id": "sal_149_2",
+    "tenantId": "t_17",
+    "date": "2026-05-30",
+    "amountEgp": 430
+  },
+  {
+    "id": "sal_150_0",
+    "tenantId": "t_1",
+    "date": "2026-05-29",
+    "amountEgp": 7900
+  },
+  {
+    "id": "sal_150_1",
+    "tenantId": "t_8",
+    "date": "2026-05-29",
+    "amountEgp": 14030
+  },
+  {
+    "id": "sal_150_2",
+    "tenantId": "t_18",
+    "date": "2026-05-29",
+    "amountEgp": 2160
+  },
+  {
+    "id": "sal_151_0",
+    "tenantId": "t_2",
+    "date": "2026-05-28",
+    "amountEgp": 9630
+  },
+  {
+    "id": "sal_151_1",
+    "tenantId": "t_11",
+    "date": "2026-05-28",
+    "amountEgp": 15760
+  },
+  {
+    "id": "sal_151_2",
+    "tenantId": "t_21",
+    "date": "2026-05-28",
+    "amountEgp": 3890
+  },
+  {
+    "id": "sal_153_0",
+    "tenantId": "t_6",
+    "date": "2026-05-26",
+    "amountEgp": 13090
+  },
+  {
+    "id": "sal_153_1",
+    "tenantId": "t_15",
+    "date": "2026-05-26",
+    "amountEgp": 1220
+  },
+  {
+    "id": "sal_153_2",
+    "tenantId": "t_25",
+    "date": "2026-05-26",
+    "amountEgp": 7350
+  },
+  {
+    "id": "sal_154_0",
+    "tenantId": "t_7",
+    "date": "2026-05-25",
+    "amountEgp": 14820
+  },
+  {
+    "id": "sal_154_1",
+    "tenantId": "t_17",
+    "date": "2026-05-25",
+    "amountEgp": 2950
+  },
+  {
+    "id": "sal_154_2",
+    "tenantId": "t_26",
+    "date": "2026-05-25",
+    "amountEgp": 9080
+  },
+  {
+    "id": "sal_155_0",
+    "tenantId": "t_8",
+    "date": "2026-05-24",
+    "amountEgp": 16550
+  },
+  {
+    "id": "sal_155_1",
+    "tenantId": "t_18",
+    "date": "2026-05-24",
+    "amountEgp": 4680
+  },
+  {
+    "id": "sal_155_2",
+    "tenantId": "t_1",
+    "date": "2026-05-24",
+    "amountEgp": 10810
+  },
+  {
+    "id": "sal_157_0",
+    "tenantId": "t_14",
+    "date": "2026-05-22",
+    "amountEgp": 2010
+  },
+  {
+    "id": "sal_157_1",
+    "tenantId": "t_22",
+    "date": "2026-05-22",
+    "amountEgp": 8140
+  },
+  {
+    "id": "sal_157_2",
+    "tenantId": "t_3",
+    "date": "2026-05-22",
+    "amountEgp": 14270
+  },
+  {
+    "id": "sal_158_0",
+    "tenantId": "t_15",
+    "date": "2026-05-21",
+    "amountEgp": 3740
+  },
+  {
+    "id": "sal_158_1",
+    "tenantId": "t_25",
+    "date": "2026-05-21",
+    "amountEgp": 9870
+  },
+  {
+    "id": "sal_158_2",
+    "tenantId": "t_6",
+    "date": "2026-05-21",
+    "amountEgp": 16000
+  },
+  {
+    "id": "sal_159_0",
+    "tenantId": "t_17",
+    "date": "2026-05-20",
+    "amountEgp": 5470
+  },
+  {
+    "id": "sal_159_1",
+    "tenantId": "t_26",
+    "date": "2026-05-20",
+    "amountEgp": 11600
+  },
+  {
+    "id": "sal_159_2",
+    "tenantId": "t_7",
+    "date": "2026-05-20",
+    "amountEgp": 17730
+  },
+  {
+    "id": "sal_161_0",
+    "tenantId": "t_21",
+    "date": "2026-05-18",
+    "amountEgp": 8930
+  },
+  {
+    "id": "sal_161_1",
+    "tenantId": "t_2",
+    "date": "2026-05-18",
+    "amountEgp": 15060
+  },
+  {
+    "id": "sal_161_2",
+    "tenantId": "t_11",
+    "date": "2026-05-18",
+    "amountEgp": 3190
+  },
+  {
+    "id": "sal_162_0",
+    "tenantId": "t_22",
+    "date": "2026-05-17",
+    "amountEgp": 10660
+  },
+  {
+    "id": "sal_162_1",
+    "tenantId": "t_3",
+    "date": "2026-05-17",
+    "amountEgp": 16790
+  },
+  {
+    "id": "sal_162_2",
+    "tenantId": "t_14",
+    "date": "2026-05-17",
+    "amountEgp": 4920
+  },
+  {
+    "id": "sal_163_0",
+    "tenantId": "t_25",
+    "date": "2026-05-16",
+    "amountEgp": 12390
+  },
+  {
+    "id": "sal_163_1",
+    "tenantId": "t_6",
+    "date": "2026-05-16",
+    "amountEgp": 520
+  },
+  {
+    "id": "sal_163_2",
+    "tenantId": "t_15",
+    "date": "2026-05-16",
+    "amountEgp": 6650
+  },
+  {
+    "id": "sal_165_0",
+    "tenantId": "t_1",
+    "date": "2026-05-14",
+    "amountEgp": 15850
+  },
+  {
+    "id": "sal_165_1",
+    "tenantId": "t_8",
+    "date": "2026-05-14",
+    "amountEgp": 3980
+  },
+  {
+    "id": "sal_165_2",
+    "tenantId": "t_18",
+    "date": "2026-05-14",
+    "amountEgp": 10110
+  },
+  {
+    "id": "sal_166_0",
+    "tenantId": "t_2",
+    "date": "2026-05-13",
+    "amountEgp": 17580
+  },
+  {
+    "id": "sal_166_1",
+    "tenantId": "t_11",
+    "date": "2026-05-13",
+    "amountEgp": 5710
+  },
+  {
+    "id": "sal_166_2",
+    "tenantId": "t_21",
+    "date": "2026-05-13",
+    "amountEgp": 11840
+  },
+  {
+    "id": "sal_167_0",
+    "tenantId": "t_3",
+    "date": "2026-05-12",
+    "amountEgp": 1310
+  },
+  {
+    "id": "sal_167_1",
+    "tenantId": "t_14",
+    "date": "2026-05-12",
+    "amountEgp": 7440
+  },
+  {
+    "id": "sal_167_2",
+    "tenantId": "t_22",
+    "date": "2026-05-12",
+    "amountEgp": 13570
+  },
+  {
+    "id": "sal_169_0",
+    "tenantId": "t_7",
+    "date": "2026-05-10",
+    "amountEgp": 4770
+  },
+  {
+    "id": "sal_169_1",
+    "tenantId": "t_17",
+    "date": "2026-05-10",
+    "amountEgp": 10900
+  },
+  {
+    "id": "sal_169_2",
+    "tenantId": "t_26",
+    "date": "2026-05-10",
+    "amountEgp": 17030
+  },
+  {
+    "id": "sal_170_0",
+    "tenantId": "t_8",
+    "date": "2026-05-09",
+    "amountEgp": 6500
+  },
+  {
+    "id": "sal_170_1",
+    "tenantId": "t_18",
+    "date": "2026-05-09",
+    "amountEgp": 12630
+  },
+  {
+    "id": "sal_170_2",
+    "tenantId": "t_1",
+    "date": "2026-05-09",
+    "amountEgp": 760
+  },
+  {
+    "id": "sal_171_0",
+    "tenantId": "t_11",
+    "date": "2026-05-08",
+    "amountEgp": 8230
+  },
+  {
+    "id": "sal_171_1",
+    "tenantId": "t_21",
+    "date": "2026-05-08",
+    "amountEgp": 14360
+  },
+  {
+    "id": "sal_171_2",
+    "tenantId": "t_2",
+    "date": "2026-05-08",
+    "amountEgp": 2490
+  },
+  {
+    "id": "sal_173_0",
+    "tenantId": "t_15",
+    "date": "2026-05-06",
+    "amountEgp": 11690
+  },
+  {
+    "id": "sal_173_1",
+    "tenantId": "t_25",
+    "date": "2026-05-06",
+    "amountEgp": 17820
+  },
+  {
+    "id": "sal_173_2",
+    "tenantId": "t_6",
+    "date": "2026-05-06",
+    "amountEgp": 5950
+  },
+  {
+    "id": "sal_174_0",
+    "tenantId": "t_17",
+    "date": "2026-05-05",
+    "amountEgp": 13420
+  },
+  {
+    "id": "sal_174_1",
+    "tenantId": "t_26",
+    "date": "2026-05-05",
+    "amountEgp": 1550
+  },
+  {
+    "id": "sal_174_2",
+    "tenantId": "t_7",
+    "date": "2026-05-05",
+    "amountEgp": 7680
+  },
+  {
+    "id": "sal_175_0",
+    "tenantId": "t_18",
+    "date": "2026-05-04",
+    "amountEgp": 15150
+  },
+  {
+    "id": "sal_175_1",
+    "tenantId": "t_1",
+    "date": "2026-05-04",
+    "amountEgp": 3280
+  },
+  {
+    "id": "sal_175_2",
+    "tenantId": "t_8",
+    "date": "2026-05-04",
+    "amountEgp": 9410
+  },
+  {
+    "id": "sal_177_0",
+    "tenantId": "t_22",
+    "date": "2026-05-02",
+    "amountEgp": 610
+  },
+  {
+    "id": "sal_177_1",
+    "tenantId": "t_3",
+    "date": "2026-05-02",
+    "amountEgp": 6740
+  },
+  {
+    "id": "sal_177_2",
+    "tenantId": "t_14",
+    "date": "2026-05-02",
+    "amountEgp": 12870
+  },
+  {
+    "id": "sal_178_0",
+    "tenantId": "t_25",
+    "date": "2026-05-01",
+    "amountEgp": 2340
+  },
+  {
+    "id": "sal_178_1",
+    "tenantId": "t_6",
+    "date": "2026-05-01",
+    "amountEgp": 8470
+  },
+  {
+    "id": "sal_178_2",
+    "tenantId": "t_15",
+    "date": "2026-05-01",
+    "amountEgp": 14600
+  },
+  {
+    "id": "sal_179_0",
+    "tenantId": "t_26",
+    "date": "2026-04-30",
+    "amountEgp": 4070
+  },
+  {
+    "id": "sal_179_1",
+    "tenantId": "t_7",
+    "date": "2026-04-30",
+    "amountEgp": 10200
+  },
+  {
+    "id": "sal_179_2",
+    "tenantId": "t_17",
+    "date": "2026-04-30",
+    "amountEgp": 16330
+  },
+  {
+    "id": "sal_181_0",
+    "tenantId": "t_2",
+    "date": "2026-04-28",
+    "amountEgp": 7530
+  },
+  {
+    "id": "sal_181_1",
+    "tenantId": "t_11",
+    "date": "2026-04-28",
+    "amountEgp": 13660
+  },
+  {
+    "id": "sal_181_2",
+    "tenantId": "t_21",
+    "date": "2026-04-28",
+    "amountEgp": 1790
+  },
+  {
+    "id": "sal_182_0",
+    "tenantId": "t_3",
+    "date": "2026-04-27",
+    "amountEgp": 9260
+  },
+  {
+    "id": "sal_182_1",
+    "tenantId": "t_14",
+    "date": "2026-04-27",
+    "amountEgp": 15390
+  },
+  {
+    "id": "sal_182_2",
+    "tenantId": "t_22",
+    "date": "2026-04-27",
+    "amountEgp": 3520
+  },
+  {
+    "id": "sal_183_0",
+    "tenantId": "t_6",
+    "date": "2026-04-26",
+    "amountEgp": 10990
+  },
+  {
+    "id": "sal_183_1",
+    "tenantId": "t_15",
+    "date": "2026-04-26",
+    "amountEgp": 17120
+  },
+  {
+    "id": "sal_183_2",
+    "tenantId": "t_25",
+    "date": "2026-04-26",
+    "amountEgp": 5250
+  },
+  {
+    "id": "sal_185_0",
+    "tenantId": "t_8",
+    "date": "2026-04-24",
+    "amountEgp": 14450
+  },
+  {
+    "id": "sal_185_1",
+    "tenantId": "t_18",
+    "date": "2026-04-24",
+    "amountEgp": 2580
+  },
+  {
+    "id": "sal_185_2",
+    "tenantId": "t_1",
+    "date": "2026-04-24",
+    "amountEgp": 8710
+  },
+  {
+    "id": "sal_186_0",
+    "tenantId": "t_11",
+    "date": "2026-04-23",
+    "amountEgp": 16180
+  },
+  {
+    "id": "sal_186_1",
+    "tenantId": "t_21",
+    "date": "2026-04-23",
+    "amountEgp": 4310
+  },
+  {
+    "id": "sal_186_2",
+    "tenantId": "t_2",
+    "date": "2026-04-23",
+    "amountEgp": 10440
+  },
+  {
+    "id": "sal_187_0",
+    "tenantId": "t_14",
+    "date": "2026-04-22",
+    "amountEgp": 17910
+  },
+  {
+    "id": "sal_187_1",
+    "tenantId": "t_22",
+    "date": "2026-04-22",
+    "amountEgp": 6040
+  },
+  {
+    "id": "sal_187_2",
+    "tenantId": "t_3",
+    "date": "2026-04-22",
+    "amountEgp": 12170
+  },
+  {
+    "id": "sal_189_0",
+    "tenantId": "t_17",
+    "date": "2026-04-20",
+    "amountEgp": 3370
+  },
+  {
+    "id": "sal_189_1",
+    "tenantId": "t_26",
+    "date": "2026-04-20",
+    "amountEgp": 9500
+  },
+  {
+    "id": "sal_189_2",
+    "tenantId": "t_7",
+    "date": "2026-04-20",
+    "amountEgp": 15630
+  },
+  {
+    "id": "sal_190_0",
+    "tenantId": "t_18",
+    "date": "2026-04-19",
+    "amountEgp": 5100
+  },
+  {
+    "id": "sal_190_1",
+    "tenantId": "t_1",
+    "date": "2026-04-19",
+    "amountEgp": 11230
+  },
+  {
+    "id": "sal_190_2",
+    "tenantId": "t_8",
+    "date": "2026-04-19",
+    "amountEgp": 17360
+  },
+  {
+    "id": "sal_191_0",
+    "tenantId": "t_21",
+    "date": "2026-04-18",
+    "amountEgp": 6830
+  },
+  {
+    "id": "sal_191_1",
+    "tenantId": "t_2",
+    "date": "2026-04-18",
+    "amountEgp": 12960
+  },
+  {
+    "id": "sal_191_2",
+    "tenantId": "t_11",
+    "date": "2026-04-18",
+    "amountEgp": 1090
+  },
+  {
+    "id": "sal_193_0",
+    "tenantId": "t_25",
+    "date": "2026-04-16",
+    "amountEgp": 10290
+  },
+  {
+    "id": "sal_193_1",
+    "tenantId": "t_6",
+    "date": "2026-04-16",
+    "amountEgp": 16420
+  },
+  {
+    "id": "sal_193_2",
+    "tenantId": "t_15",
+    "date": "2026-04-16",
+    "amountEgp": 4550
+  },
+  {
+    "id": "sal_194_0",
+    "tenantId": "t_26",
+    "date": "2026-04-15",
+    "amountEgp": 12020
+  },
+  {
+    "id": "sal_194_1",
+    "tenantId": "t_7",
+    "date": "2026-04-15",
+    "amountEgp": 18150
+  },
+  {
+    "id": "sal_194_2",
+    "tenantId": "t_17",
+    "date": "2026-04-15",
+    "amountEgp": 6280
+  },
+  {
+    "id": "sal_195_0",
+    "tenantId": "t_1",
+    "date": "2026-04-14",
+    "amountEgp": 13750
+  },
+  {
+    "id": "sal_195_1",
+    "tenantId": "t_8",
+    "date": "2026-04-14",
+    "amountEgp": 1880
+  },
+  {
+    "id": "sal_195_2",
+    "tenantId": "t_18",
+    "date": "2026-04-14",
+    "amountEgp": 8010
+  },
+  {
+    "id": "sal_197_0",
+    "tenantId": "t_3",
+    "date": "2026-04-12",
+    "amountEgp": 17210
+  },
+  {
+    "id": "sal_197_1",
+    "tenantId": "t_14",
+    "date": "2026-04-12",
+    "amountEgp": 5340
+  },
+  {
+    "id": "sal_197_2",
+    "tenantId": "t_22",
+    "date": "2026-04-12",
+    "amountEgp": 11470
+  },
+  {
+    "id": "sal_198_0",
+    "tenantId": "t_6",
+    "date": "2026-04-11",
+    "amountEgp": 940
+  },
+  {
+    "id": "sal_198_1",
+    "tenantId": "t_15",
+    "date": "2026-04-11",
+    "amountEgp": 7070
+  },
+  {
+    "id": "sal_198_2",
+    "tenantId": "t_25",
+    "date": "2026-04-11",
+    "amountEgp": 13200
+  },
+  {
+    "id": "sal_199_0",
+    "tenantId": "t_7",
+    "date": "2026-04-10",
+    "amountEgp": 2670
+  },
+  {
+    "id": "sal_199_1",
+    "tenantId": "t_17",
+    "date": "2026-04-10",
+    "amountEgp": 8800
+  },
+  {
+    "id": "sal_199_2",
+    "tenantId": "t_26",
+    "date": "2026-04-10",
+    "amountEgp": 14930
+  },
+  {
+    "id": "sal_201_0",
+    "tenantId": "t_11",
+    "date": "2026-04-08",
+    "amountEgp": 6130
+  },
+  {
+    "id": "sal_201_1",
+    "tenantId": "t_21",
+    "date": "2026-04-08",
+    "amountEgp": 12260
+  },
+  {
+    "id": "sal_201_2",
+    "tenantId": "t_2",
+    "date": "2026-04-08",
+    "amountEgp": 18390
+  },
+  {
+    "id": "sal_202_0",
+    "tenantId": "t_14",
+    "date": "2026-04-07",
+    "amountEgp": 7860
+  },
+  {
+    "id": "sal_202_1",
+    "tenantId": "t_22",
+    "date": "2026-04-07",
+    "amountEgp": 13990
+  },
+  {
+    "id": "sal_202_2",
+    "tenantId": "t_3",
+    "date": "2026-04-07",
+    "amountEgp": 2120
+  },
+  {
+    "id": "sal_203_0",
+    "tenantId": "t_15",
+    "date": "2026-04-06",
+    "amountEgp": 9590
+  },
+  {
+    "id": "sal_203_1",
+    "tenantId": "t_25",
+    "date": "2026-04-06",
+    "amountEgp": 15720
+  },
+  {
+    "id": "sal_203_2",
+    "tenantId": "t_6",
+    "date": "2026-04-06",
+    "amountEgp": 3850
+  },
+  {
+    "id": "sal_205_0",
+    "tenantId": "t_18",
+    "date": "2026-04-04",
+    "amountEgp": 13050
+  },
+  {
+    "id": "sal_205_1",
+    "tenantId": "t_1",
+    "date": "2026-04-04",
+    "amountEgp": 1180
+  },
+  {
+    "id": "sal_205_2",
+    "tenantId": "t_8",
+    "date": "2026-04-04",
+    "amountEgp": 7310
+  },
+  {
+    "id": "sal_206_0",
+    "tenantId": "t_21",
+    "date": "2026-04-03",
+    "amountEgp": 14780
+  },
+  {
+    "id": "sal_206_1",
+    "tenantId": "t_2",
+    "date": "2026-04-03",
+    "amountEgp": 2910
+  },
+  {
+    "id": "sal_206_2",
+    "tenantId": "t_11",
+    "date": "2026-04-03",
+    "amountEgp": 9040
+  },
+  {
+    "id": "sal_207_0",
+    "tenantId": "t_22",
+    "date": "2026-04-02",
+    "amountEgp": 16510
+  },
+  {
+    "id": "sal_207_1",
+    "tenantId": "t_3",
+    "date": "2026-04-02",
+    "amountEgp": 4640
+  },
+  {
+    "id": "sal_207_2",
+    "tenantId": "t_14",
+    "date": "2026-04-02",
+    "amountEgp": 10770
+  },
+  {
+    "id": "sal_209_0",
+    "tenantId": "t_26",
+    "date": "2026-03-31",
+    "amountEgp": 1970
+  },
+  {
+    "id": "sal_209_1",
+    "tenantId": "t_7",
+    "date": "2026-03-31",
+    "amountEgp": 8100
+  },
+  {
+    "id": "sal_209_2",
+    "tenantId": "t_17",
+    "date": "2026-03-31",
+    "amountEgp": 14230
+  },
+  {
+    "id": "sal_210_0",
+    "tenantId": "t_1",
+    "date": "2026-03-30",
+    "amountEgp": 3700
+  },
+  {
+    "id": "sal_210_1",
+    "tenantId": "t_8",
+    "date": "2026-03-30",
+    "amountEgp": 9830
+  },
+  {
+    "id": "sal_210_2",
+    "tenantId": "t_18",
+    "date": "2026-03-30",
+    "amountEgp": 15960
+  },
+  {
+    "id": "sal_211_0",
+    "tenantId": "t_2",
+    "date": "2026-03-29",
+    "amountEgp": 5430
+  },
+  {
+    "id": "sal_211_1",
+    "tenantId": "t_11",
+    "date": "2026-03-29",
+    "amountEgp": 11560
+  },
+  {
+    "id": "sal_211_2",
+    "tenantId": "t_21",
+    "date": "2026-03-29",
+    "amountEgp": 17690
+  },
+  {
+    "id": "sal_213_0",
+    "tenantId": "t_6",
+    "date": "2026-03-27",
+    "amountEgp": 8890
+  },
+  {
+    "id": "sal_213_1",
+    "tenantId": "t_15",
+    "date": "2026-03-27",
+    "amountEgp": 15020
+  },
+  {
+    "id": "sal_213_2",
+    "tenantId": "t_25",
+    "date": "2026-03-27",
+    "amountEgp": 3150
+  },
+  {
+    "id": "sal_214_0",
+    "tenantId": "t_7",
+    "date": "2026-03-26",
+    "amountEgp": 10620
+  },
+  {
+    "id": "sal_214_1",
+    "tenantId": "t_17",
+    "date": "2026-03-26",
+    "amountEgp": 16750
+  },
+  {
+    "id": "sal_214_2",
+    "tenantId": "t_26",
+    "date": "2026-03-26",
+    "amountEgp": 4880
+  },
+  {
+    "id": "sal_215_0",
+    "tenantId": "t_8",
+    "date": "2026-03-25",
+    "amountEgp": 12350
+  },
+  {
+    "id": "sal_215_1",
+    "tenantId": "t_18",
+    "date": "2026-03-25",
+    "amountEgp": 480
+  },
+  {
+    "id": "sal_215_2",
+    "tenantId": "t_1",
+    "date": "2026-03-25",
+    "amountEgp": 6610
+  },
+  {
+    "id": "sal_217_0",
+    "tenantId": "t_14",
+    "date": "2026-03-23",
+    "amountEgp": 15810
+  },
+  {
+    "id": "sal_217_1",
+    "tenantId": "t_22",
+    "date": "2026-03-23",
+    "amountEgp": 3940
+  },
+  {
+    "id": "sal_217_2",
+    "tenantId": "t_3",
+    "date": "2026-03-23",
+    "amountEgp": 10070
+  },
+  {
+    "id": "sal_218_0",
+    "tenantId": "t_15",
+    "date": "2026-03-22",
+    "amountEgp": 17540
+  },
+  {
+    "id": "sal_218_1",
+    "tenantId": "t_25",
+    "date": "2026-03-22",
+    "amountEgp": 5670
+  },
+  {
+    "id": "sal_218_2",
+    "tenantId": "t_6",
+    "date": "2026-03-22",
+    "amountEgp": 11800
+  },
+  {
+    "id": "sal_219_0",
+    "tenantId": "t_17",
+    "date": "2026-03-21",
+    "amountEgp": 1270
+  },
+  {
+    "id": "sal_219_1",
+    "tenantId": "t_26",
+    "date": "2026-03-21",
+    "amountEgp": 7400
+  },
+  {
+    "id": "sal_219_2",
+    "tenantId": "t_7",
+    "date": "2026-03-21",
+    "amountEgp": 13530
+  },
+  {
+    "id": "sal_221_0",
+    "tenantId": "t_21",
+    "date": "2026-03-19",
+    "amountEgp": 4730
+  },
+  {
+    "id": "sal_221_1",
+    "tenantId": "t_2",
+    "date": "2026-03-19",
+    "amountEgp": 10860
+  },
+  {
+    "id": "sal_221_2",
+    "tenantId": "t_11",
+    "date": "2026-03-19",
+    "amountEgp": 16990
+  },
+  {
+    "id": "sal_222_0",
+    "tenantId": "t_22",
+    "date": "2026-03-18",
+    "amountEgp": 6460
+  },
+  {
+    "id": "sal_222_1",
+    "tenantId": "t_3",
+    "date": "2026-03-18",
+    "amountEgp": 12590
+  },
+  {
+    "id": "sal_222_2",
+    "tenantId": "t_14",
+    "date": "2026-03-18",
+    "amountEgp": 720
+  },
+  {
+    "id": "sal_223_0",
+    "tenantId": "t_25",
+    "date": "2026-03-17",
+    "amountEgp": 8190
+  },
+  {
+    "id": "sal_223_1",
+    "tenantId": "t_6",
+    "date": "2026-03-17",
+    "amountEgp": 14320
+  },
+  {
+    "id": "sal_223_2",
+    "tenantId": "t_15",
+    "date": "2026-03-17",
+    "amountEgp": 2450
+  },
+  {
+    "id": "sal_225_0",
+    "tenantId": "t_1",
+    "date": "2026-03-15",
+    "amountEgp": 11650
+  },
+  {
+    "id": "sal_225_1",
+    "tenantId": "t_8",
+    "date": "2026-03-15",
+    "amountEgp": 17780
+  },
+  {
+    "id": "sal_225_2",
+    "tenantId": "t_18",
+    "date": "2026-03-15",
+    "amountEgp": 5910
+  },
+  {
+    "id": "sal_226_0",
+    "tenantId": "t_2",
+    "date": "2026-03-14",
+    "amountEgp": 13380
+  },
+  {
+    "id": "sal_226_1",
+    "tenantId": "t_11",
+    "date": "2026-03-14",
+    "amountEgp": 1510
+  },
+  {
+    "id": "sal_226_2",
+    "tenantId": "t_21",
+    "date": "2026-03-14",
+    "amountEgp": 7640
+  },
+  {
+    "id": "sal_227_0",
+    "tenantId": "t_3",
+    "date": "2026-03-13",
+    "amountEgp": 15110
+  },
+  {
+    "id": "sal_227_1",
+    "tenantId": "t_14",
+    "date": "2026-03-13",
+    "amountEgp": 3240
+  },
+  {
+    "id": "sal_227_2",
+    "tenantId": "t_22",
+    "date": "2026-03-13",
+    "amountEgp": 9370
+  },
+  {
+    "id": "sal_229_0",
+    "tenantId": "t_7",
+    "date": "2026-03-11",
+    "amountEgp": 570
+  },
+  {
+    "id": "sal_229_1",
+    "tenantId": "t_17",
+    "date": "2026-03-11",
+    "amountEgp": 6700
+  },
+  {
+    "id": "sal_229_2",
+    "tenantId": "t_26",
+    "date": "2026-03-11",
+    "amountEgp": 12830
+  },
+  {
+    "id": "sal_230_0",
+    "tenantId": "t_8",
+    "date": "2026-03-10",
+    "amountEgp": 2300
+  },
+  {
+    "id": "sal_230_1",
+    "tenantId": "t_18",
+    "date": "2026-03-10",
+    "amountEgp": 8430
+  },
+  {
+    "id": "sal_230_2",
+    "tenantId": "t_1",
+    "date": "2026-03-10",
+    "amountEgp": 14560
+  },
+  {
+    "id": "sal_231_0",
+    "tenantId": "t_11",
+    "date": "2026-03-09",
+    "amountEgp": 4030
+  },
+  {
+    "id": "sal_231_1",
+    "tenantId": "t_21",
+    "date": "2026-03-09",
+    "amountEgp": 10160
+  },
+  {
+    "id": "sal_231_2",
+    "tenantId": "t_2",
+    "date": "2026-03-09",
+    "amountEgp": 16290
+  },
+  {
+    "id": "sal_233_0",
+    "tenantId": "t_15",
+    "date": "2026-03-07",
+    "amountEgp": 7490
+  },
+  {
+    "id": "sal_233_1",
+    "tenantId": "t_25",
+    "date": "2026-03-07",
+    "amountEgp": 13620
+  },
+  {
+    "id": "sal_233_2",
+    "tenantId": "t_6",
+    "date": "2026-03-07",
+    "amountEgp": 1750
+  },
+  {
+    "id": "sal_234_0",
+    "tenantId": "t_17",
+    "date": "2026-03-06",
+    "amountEgp": 9220
+  },
+  {
+    "id": "sal_234_1",
+    "tenantId": "t_26",
+    "date": "2026-03-06",
+    "amountEgp": 15350
+  },
+  {
+    "id": "sal_234_2",
+    "tenantId": "t_7",
+    "date": "2026-03-06",
+    "amountEgp": 3480
+  },
+  {
+    "id": "sal_235_0",
+    "tenantId": "t_18",
+    "date": "2026-03-05",
+    "amountEgp": 10950
+  },
+  {
+    "id": "sal_235_1",
+    "tenantId": "t_1",
+    "date": "2026-03-05",
+    "amountEgp": 17080
+  },
+  {
+    "id": "sal_235_2",
+    "tenantId": "t_8",
+    "date": "2026-03-05",
+    "amountEgp": 5210
+  },
+  {
+    "id": "sal_237_0",
+    "tenantId": "t_22",
+    "date": "2026-03-03",
+    "amountEgp": 14410
+  },
+  {
+    "id": "sal_237_1",
+    "tenantId": "t_3",
+    "date": "2026-03-03",
+    "amountEgp": 2540
+  },
+  {
+    "id": "sal_237_2",
+    "tenantId": "t_14",
+    "date": "2026-03-03",
+    "amountEgp": 8670
+  },
+  {
+    "id": "sal_238_0",
+    "tenantId": "t_25",
+    "date": "2026-03-02",
+    "amountEgp": 16140
+  },
+  {
+    "id": "sal_238_1",
+    "tenantId": "t_6",
+    "date": "2026-03-02",
+    "amountEgp": 4270
+  },
+  {
+    "id": "sal_238_2",
+    "tenantId": "t_15",
+    "date": "2026-03-02",
+    "amountEgp": 10400
+  },
+  {
+    "id": "sal_239_0",
+    "tenantId": "t_26",
+    "date": "2026-03-01",
+    "amountEgp": 17870
+  },
+  {
+    "id": "sal_239_1",
+    "tenantId": "t_7",
+    "date": "2026-03-01",
+    "amountEgp": 6000
+  },
+  {
+    "id": "sal_239_2",
+    "tenantId": "t_17",
+    "date": "2026-03-01",
+    "amountEgp": 12130
+  },
+  {
+    "id": "sal_241_0",
+    "tenantId": "t_2",
+    "date": "2026-02-27",
+    "amountEgp": 3330
+  },
+  {
+    "id": "sal_241_1",
+    "tenantId": "t_11",
+    "date": "2026-02-27",
+    "amountEgp": 9460
+  },
+  {
+    "id": "sal_241_2",
+    "tenantId": "t_21",
+    "date": "2026-02-27",
+    "amountEgp": 15590
+  },
+  {
+    "id": "sal_242_0",
+    "tenantId": "t_3",
+    "date": "2026-02-26",
+    "amountEgp": 5060
+  },
+  {
+    "id": "sal_242_1",
+    "tenantId": "t_14",
+    "date": "2026-02-26",
+    "amountEgp": 11190
+  },
+  {
+    "id": "sal_242_2",
+    "tenantId": "t_22",
+    "date": "2026-02-26",
+    "amountEgp": 17320
+  },
+  {
+    "id": "sal_243_0",
+    "tenantId": "t_6",
+    "date": "2026-02-25",
+    "amountEgp": 6790
+  },
+  {
+    "id": "sal_243_1",
+    "tenantId": "t_15",
+    "date": "2026-02-25",
+    "amountEgp": 12920
+  },
+  {
+    "id": "sal_243_2",
+    "tenantId": "t_25",
+    "date": "2026-02-25",
+    "amountEgp": 1050
+  },
+  {
+    "id": "sal_245_0",
+    "tenantId": "t_8",
+    "date": "2026-02-23",
+    "amountEgp": 10250
+  },
+  {
+    "id": "sal_245_1",
+    "tenantId": "t_18",
+    "date": "2026-02-23",
+    "amountEgp": 16380
+  },
+  {
+    "id": "sal_245_2",
+    "tenantId": "t_1",
+    "date": "2026-02-23",
+    "amountEgp": 4510
+  },
+  {
+    "id": "sal_246_0",
+    "tenantId": "t_11",
+    "date": "2026-02-22",
+    "amountEgp": 11980
+  },
+  {
+    "id": "sal_246_1",
+    "tenantId": "t_21",
+    "date": "2026-02-22",
+    "amountEgp": 18110
+  },
+  {
+    "id": "sal_246_2",
+    "tenantId": "t_2",
+    "date": "2026-02-22",
+    "amountEgp": 6240
+  },
+  {
+    "id": "sal_247_0",
+    "tenantId": "t_14",
+    "date": "2026-02-21",
+    "amountEgp": 13710
+  },
+  {
+    "id": "sal_247_1",
+    "tenantId": "t_22",
+    "date": "2026-02-21",
+    "amountEgp": 1840
+  },
+  {
+    "id": "sal_247_2",
+    "tenantId": "t_3",
+    "date": "2026-02-21",
+    "amountEgp": 7970
+  },
+  {
+    "id": "sal_249_0",
+    "tenantId": "t_17",
+    "date": "2026-02-19",
+    "amountEgp": 17170
+  },
+  {
+    "id": "sal_249_1",
+    "tenantId": "t_26",
+    "date": "2026-02-19",
+    "amountEgp": 5300
+  },
+  {
+    "id": "sal_249_2",
+    "tenantId": "t_7",
+    "date": "2026-02-19",
+    "amountEgp": 11430
+  },
+  {
+    "id": "sal_250_0",
+    "tenantId": "t_18",
+    "date": "2026-02-18",
+    "amountEgp": 900
+  },
+  {
+    "id": "sal_250_1",
+    "tenantId": "t_1",
+    "date": "2026-02-18",
+    "amountEgp": 7030
+  },
+  {
+    "id": "sal_250_2",
+    "tenantId": "t_8",
+    "date": "2026-02-18",
+    "amountEgp": 13160
+  },
+  {
+    "id": "sal_251_0",
+    "tenantId": "t_21",
+    "date": "2026-02-17",
+    "amountEgp": 2630
+  },
+  {
+    "id": "sal_251_1",
+    "tenantId": "t_2",
+    "date": "2026-02-17",
+    "amountEgp": 8760
+  },
+  {
+    "id": "sal_251_2",
+    "tenantId": "t_11",
+    "date": "2026-02-17",
+    "amountEgp": 14890
+  },
+  {
+    "id": "sal_253_0",
+    "tenantId": "t_25",
+    "date": "2026-02-15",
+    "amountEgp": 6090
+  },
+  {
+    "id": "sal_253_1",
+    "tenantId": "t_6",
+    "date": "2026-02-15",
+    "amountEgp": 12220
+  },
+  {
+    "id": "sal_253_2",
+    "tenantId": "t_15",
+    "date": "2026-02-15",
+    "amountEgp": 18350
+  },
+  {
+    "id": "sal_254_0",
+    "tenantId": "t_26",
+    "date": "2026-02-14",
+    "amountEgp": 7820
+  },
+  {
+    "id": "sal_254_1",
+    "tenantId": "t_7",
+    "date": "2026-02-14",
+    "amountEgp": 13950
+  },
+  {
+    "id": "sal_254_2",
+    "tenantId": "t_17",
+    "date": "2026-02-14",
+    "amountEgp": 2080
+  },
+  {
+    "id": "sal_255_0",
+    "tenantId": "t_1",
+    "date": "2026-02-13",
+    "amountEgp": 9550
+  },
+  {
+    "id": "sal_255_1",
+    "tenantId": "t_8",
+    "date": "2026-02-13",
+    "amountEgp": 15680
+  },
+  {
+    "id": "sal_255_2",
+    "tenantId": "t_18",
+    "date": "2026-02-13",
+    "amountEgp": 3810
+  },
+  {
+    "id": "sal_257_0",
+    "tenantId": "t_3",
+    "date": "2026-02-11",
+    "amountEgp": 13010
+  },
+  {
+    "id": "sal_257_1",
+    "tenantId": "t_14",
+    "date": "2026-02-11",
+    "amountEgp": 1140
+  },
+  {
+    "id": "sal_257_2",
+    "tenantId": "t_22",
+    "date": "2026-02-11",
+    "amountEgp": 7270
+  },
+  {
+    "id": "sal_258_0",
+    "tenantId": "t_6",
+    "date": "2026-02-10",
+    "amountEgp": 14740
+  },
+  {
+    "id": "sal_258_1",
+    "tenantId": "t_15",
+    "date": "2026-02-10",
+    "amountEgp": 2870
+  },
+  {
+    "id": "sal_258_2",
+    "tenantId": "t_25",
+    "date": "2026-02-10",
+    "amountEgp": 9000
+  },
+  {
+    "id": "sal_259_0",
+    "tenantId": "t_7",
+    "date": "2026-02-09",
+    "amountEgp": 16470
+  },
+  {
+    "id": "sal_259_1",
+    "tenantId": "t_17",
+    "date": "2026-02-09",
+    "amountEgp": 4600
+  },
+  {
+    "id": "sal_259_2",
+    "tenantId": "t_26",
+    "date": "2026-02-09",
+    "amountEgp": 10730
+  },
+  {
+    "id": "sal_261_0",
+    "tenantId": "t_11",
+    "date": "2026-02-07",
+    "amountEgp": 1930
+  },
+  {
+    "id": "sal_261_1",
+    "tenantId": "t_21",
+    "date": "2026-02-07",
+    "amountEgp": 8060
+  },
+  {
+    "id": "sal_261_2",
+    "tenantId": "t_2",
+    "date": "2026-02-07",
+    "amountEgp": 14190
+  },
+  {
+    "id": "sal_262_0",
+    "tenantId": "t_14",
+    "date": "2026-02-06",
+    "amountEgp": 3660
+  },
+  {
+    "id": "sal_262_1",
+    "tenantId": "t_22",
+    "date": "2026-02-06",
+    "amountEgp": 9790
+  },
+  {
+    "id": "sal_262_2",
+    "tenantId": "t_3",
+    "date": "2026-02-06",
+    "amountEgp": 15920
+  },
+  {
+    "id": "sal_263_0",
+    "tenantId": "t_15",
+    "date": "2026-02-05",
+    "amountEgp": 5390
+  },
+  {
+    "id": "sal_263_1",
+    "tenantId": "t_25",
+    "date": "2026-02-05",
+    "amountEgp": 11520
+  },
+  {
+    "id": "sal_263_2",
+    "tenantId": "t_6",
+    "date": "2026-02-05",
+    "amountEgp": 17650
+  },
+  {
+    "id": "sal_265_0",
+    "tenantId": "t_18",
+    "date": "2026-02-03",
+    "amountEgp": 8850
+  },
+  {
+    "id": "sal_265_1",
+    "tenantId": "t_1",
+    "date": "2026-02-03",
+    "amountEgp": 14980
+  },
+  {
+    "id": "sal_265_2",
+    "tenantId": "t_8",
+    "date": "2026-02-03",
+    "amountEgp": 3110
+  },
+  {
+    "id": "sal_266_0",
+    "tenantId": "t_21",
+    "date": "2026-02-02",
+    "amountEgp": 10580
+  },
+  {
+    "id": "sal_266_1",
+    "tenantId": "t_2",
+    "date": "2026-02-02",
+    "amountEgp": 16710
+  },
+  {
+    "id": "sal_266_2",
+    "tenantId": "t_11",
+    "date": "2026-02-02",
+    "amountEgp": 4840
+  },
+  {
+    "id": "sal_267_0",
+    "tenantId": "t_22",
+    "date": "2026-02-01",
+    "amountEgp": 12310
+  },
+  {
+    "id": "sal_267_1",
+    "tenantId": "t_3",
+    "date": "2026-02-01",
+    "amountEgp": 440
+  },
+  {
+    "id": "sal_267_2",
+    "tenantId": "t_14",
+    "date": "2026-02-01",
+    "amountEgp": 6570
+  },
+  {
+    "id": "sal_269_0",
+    "tenantId": "t_26",
+    "date": "2026-01-30",
+    "amountEgp": 15770
+  },
+  {
+    "id": "sal_269_1",
+    "tenantId": "t_7",
+    "date": "2026-01-30",
+    "amountEgp": 3900
+  },
+  {
+    "id": "sal_269_2",
+    "tenantId": "t_17",
+    "date": "2026-01-30",
+    "amountEgp": 10030
+  },
+  {
+    "id": "sal_270_0",
+    "tenantId": "t_1",
+    "date": "2026-01-29",
+    "amountEgp": 17500
+  },
+  {
+    "id": "sal_270_1",
+    "tenantId": "t_8",
+    "date": "2026-01-29",
+    "amountEgp": 5630
+  },
+  {
+    "id": "sal_270_2",
+    "tenantId": "t_18",
+    "date": "2026-01-29",
+    "amountEgp": 11760
+  },
+  {
+    "id": "sal_271_0",
+    "tenantId": "t_2",
+    "date": "2026-01-28",
+    "amountEgp": 1230
+  },
+  {
+    "id": "sal_271_1",
+    "tenantId": "t_11",
+    "date": "2026-01-28",
+    "amountEgp": 7360
+  },
+  {
+    "id": "sal_271_2",
+    "tenantId": "t_21",
+    "date": "2026-01-28",
+    "amountEgp": 13490
+  },
+  {
+    "id": "sal_273_0",
+    "tenantId": "t_6",
+    "date": "2026-01-26",
+    "amountEgp": 4690
+  },
+  {
+    "id": "sal_273_1",
+    "tenantId": "t_15",
+    "date": "2026-01-26",
+    "amountEgp": 10820
+  },
+  {
+    "id": "sal_273_2",
+    "tenantId": "t_25",
+    "date": "2026-01-26",
+    "amountEgp": 16950
+  },
+  {
+    "id": "sal_274_0",
+    "tenantId": "t_7",
+    "date": "2026-01-25",
+    "amountEgp": 6420
+  },
+  {
+    "id": "sal_274_1",
+    "tenantId": "t_17",
+    "date": "2026-01-25",
+    "amountEgp": 12550
+  },
+  {
+    "id": "sal_274_2",
+    "tenantId": "t_26",
+    "date": "2026-01-25",
+    "amountEgp": 680
+  },
+  {
+    "id": "sal_275_0",
+    "tenantId": "t_8",
+    "date": "2026-01-24",
+    "amountEgp": 8150
+  },
+  {
+    "id": "sal_275_1",
+    "tenantId": "t_18",
+    "date": "2026-01-24",
+    "amountEgp": 14280
+  },
+  {
+    "id": "sal_275_2",
+    "tenantId": "t_1",
+    "date": "2026-01-24",
+    "amountEgp": 2410
+  },
+  {
+    "id": "sal_277_0",
+    "tenantId": "t_14",
+    "date": "2026-01-22",
+    "amountEgp": 11610
+  },
+  {
+    "id": "sal_277_1",
+    "tenantId": "t_22",
+    "date": "2026-01-22",
+    "amountEgp": 17740
+  },
+  {
+    "id": "sal_277_2",
+    "tenantId": "t_3",
+    "date": "2026-01-22",
+    "amountEgp": 5870
+  },
+  {
+    "id": "sal_278_0",
+    "tenantId": "t_15",
+    "date": "2026-01-21",
+    "amountEgp": 13340
+  },
+  {
+    "id": "sal_278_1",
+    "tenantId": "t_25",
+    "date": "2026-01-21",
+    "amountEgp": 1470
+  },
+  {
+    "id": "sal_278_2",
+    "tenantId": "t_6",
+    "date": "2026-01-21",
+    "amountEgp": 7600
+  },
+  {
+    "id": "sal_279_0",
+    "tenantId": "t_17",
+    "date": "2026-01-20",
+    "amountEgp": 15070
+  },
+  {
+    "id": "sal_279_1",
+    "tenantId": "t_26",
+    "date": "2026-01-20",
+    "amountEgp": 3200
+  },
+  {
+    "id": "sal_279_2",
+    "tenantId": "t_7",
+    "date": "2026-01-20",
+    "amountEgp": 9330
+  },
+  {
+    "id": "sal_281_0",
+    "tenantId": "t_21",
+    "date": "2026-01-18",
+    "amountEgp": 530
+  },
+  {
+    "id": "sal_281_1",
+    "tenantId": "t_2",
+    "date": "2026-01-18",
+    "amountEgp": 6660
+  },
+  {
+    "id": "sal_281_2",
+    "tenantId": "t_11",
+    "date": "2026-01-18",
+    "amountEgp": 12790
+  },
+  {
+    "id": "sal_282_0",
+    "tenantId": "t_22",
+    "date": "2026-01-17",
+    "amountEgp": 2260
+  },
+  {
+    "id": "sal_282_1",
+    "tenantId": "t_3",
+    "date": "2026-01-17",
+    "amountEgp": 8390
+  },
+  {
+    "id": "sal_282_2",
+    "tenantId": "t_14",
+    "date": "2026-01-17",
+    "amountEgp": 14520
+  },
+  {
+    "id": "sal_283_0",
+    "tenantId": "t_25",
+    "date": "2026-01-16",
+    "amountEgp": 3990
+  },
+  {
+    "id": "sal_283_1",
+    "tenantId": "t_6",
+    "date": "2026-01-16",
+    "amountEgp": 10120
+  },
+  {
+    "id": "sal_283_2",
+    "tenantId": "t_15",
+    "date": "2026-01-16",
+    "amountEgp": 16250
+  },
+  {
+    "id": "sal_285_0",
+    "tenantId": "t_1",
+    "date": "2026-01-14",
+    "amountEgp": 7450
+  },
+  {
+    "id": "sal_285_1",
+    "tenantId": "t_8",
+    "date": "2026-01-14",
+    "amountEgp": 13580
+  },
+  {
+    "id": "sal_285_2",
+    "tenantId": "t_18",
+    "date": "2026-01-14",
+    "amountEgp": 1710
+  },
+  {
+    "id": "sal_286_0",
+    "tenantId": "t_2",
+    "date": "2026-01-13",
+    "amountEgp": 9180
+  },
+  {
+    "id": "sal_286_1",
+    "tenantId": "t_11",
+    "date": "2026-01-13",
+    "amountEgp": 15310
+  },
+  {
+    "id": "sal_286_2",
+    "tenantId": "t_21",
+    "date": "2026-01-13",
+    "amountEgp": 3440
+  },
+  {
+    "id": "sal_287_0",
+    "tenantId": "t_3",
+    "date": "2026-01-12",
+    "amountEgp": 10910
+  },
+  {
+    "id": "sal_287_1",
+    "tenantId": "t_14",
+    "date": "2026-01-12",
+    "amountEgp": 17040
+  },
+  {
+    "id": "sal_287_2",
+    "tenantId": "t_22",
+    "date": "2026-01-12",
+    "amountEgp": 5170
+  },
+  {
+    "id": "sal_289_0",
+    "tenantId": "t_7",
+    "date": "2026-01-10",
+    "amountEgp": 14370
+  },
+  {
+    "id": "sal_289_1",
+    "tenantId": "t_17",
+    "date": "2026-01-10",
+    "amountEgp": 2500
+  },
+  {
+    "id": "sal_289_2",
+    "tenantId": "t_26",
+    "date": "2026-01-10",
+    "amountEgp": 8630
+  },
+  {
+    "id": "sal_290_0",
+    "tenantId": "t_8",
+    "date": "2026-01-09",
+    "amountEgp": 16100
+  },
+  {
+    "id": "sal_290_1",
+    "tenantId": "t_18",
+    "date": "2026-01-09",
+    "amountEgp": 4230
+  },
+  {
+    "id": "sal_290_2",
+    "tenantId": "t_1",
+    "date": "2026-01-09",
+    "amountEgp": 10360
+  },
+  {
+    "id": "sal_291_0",
+    "tenantId": "t_11",
+    "date": "2026-01-08",
+    "amountEgp": 17830
+  },
+  {
+    "id": "sal_291_1",
+    "tenantId": "t_21",
+    "date": "2026-01-08",
+    "amountEgp": 5960
+  },
+  {
+    "id": "sal_291_2",
+    "tenantId": "t_2",
+    "date": "2026-01-08",
+    "amountEgp": 12090
+  },
+  {
+    "id": "sal_293_0",
+    "tenantId": "t_15",
+    "date": "2026-01-06",
+    "amountEgp": 3290
+  },
+  {
+    "id": "sal_293_1",
+    "tenantId": "t_25",
+    "date": "2026-01-06",
+    "amountEgp": 9420
+  },
+  {
+    "id": "sal_293_2",
+    "tenantId": "t_6",
+    "date": "2026-01-06",
+    "amountEgp": 15550
+  },
+  {
+    "id": "sal_294_0",
+    "tenantId": "t_17",
+    "date": "2026-01-05",
+    "amountEgp": 5020
+  },
+  {
+    "id": "sal_294_1",
+    "tenantId": "t_26",
+    "date": "2026-01-05",
+    "amountEgp": 11150
+  },
+  {
+    "id": "sal_294_2",
+    "tenantId": "t_7",
+    "date": "2026-01-05",
+    "amountEgp": 17280
+  },
+  {
+    "id": "sal_295_0",
+    "tenantId": "t_18",
+    "date": "2026-01-04",
+    "amountEgp": 6750
+  },
+  {
+    "id": "sal_295_1",
+    "tenantId": "t_1",
+    "date": "2026-01-04",
+    "amountEgp": 12880
+  },
+  {
+    "id": "sal_295_2",
+    "tenantId": "t_8",
+    "date": "2026-01-04",
+    "amountEgp": 1010
+  },
+  {
+    "id": "sal_297_0",
+    "tenantId": "t_22",
+    "date": "2026-01-02",
+    "amountEgp": 10210
+  },
+  {
+    "id": "sal_297_1",
+    "tenantId": "t_3",
+    "date": "2026-01-02",
+    "amountEgp": 16340
+  },
+  {
+    "id": "sal_297_2",
+    "tenantId": "t_14",
+    "date": "2026-01-02",
+    "amountEgp": 4470
+  },
+  {
+    "id": "sal_298_0",
+    "tenantId": "t_25",
+    "date": "2026-01-01",
+    "amountEgp": 11940
+  },
+  {
+    "id": "sal_298_1",
+    "tenantId": "t_6",
+    "date": "2026-01-01",
+    "amountEgp": 18070
+  },
+  {
+    "id": "sal_298_2",
+    "tenantId": "t_15",
+    "date": "2026-01-01",
+    "amountEgp": 6200
+  },
+  {
+    "id": "sal_299_0",
+    "tenantId": "t_26",
+    "date": "2025-12-31",
+    "amountEgp": 13670
+  },
+  {
+    "id": "sal_299_1",
+    "tenantId": "t_7",
+    "date": "2025-12-31",
+    "amountEgp": 1800
+  },
+  {
+    "id": "sal_299_2",
+    "tenantId": "t_17",
+    "date": "2025-12-31",
+    "amountEgp": 7930
+  },
+  {
+    "id": "sal_301_0",
+    "tenantId": "t_2",
+    "date": "2025-12-29",
+    "amountEgp": 17130
+  },
+  {
+    "id": "sal_301_1",
+    "tenantId": "t_11",
+    "date": "2025-12-29",
+    "amountEgp": 5260
+  },
+  {
+    "id": "sal_301_2",
+    "tenantId": "t_21",
+    "date": "2025-12-29",
+    "amountEgp": 11390
+  },
+  {
+    "id": "sal_302_0",
+    "tenantId": "t_3",
+    "date": "2025-12-28",
+    "amountEgp": 860
+  },
+  {
+    "id": "sal_302_1",
+    "tenantId": "t_14",
+    "date": "2025-12-28",
+    "amountEgp": 6990
+  },
+  {
+    "id": "sal_302_2",
+    "tenantId": "t_22",
+    "date": "2025-12-28",
+    "amountEgp": 13120
+  },
+  {
+    "id": "sal_303_0",
+    "tenantId": "t_6",
+    "date": "2025-12-27",
+    "amountEgp": 2590
+  },
+  {
+    "id": "sal_303_1",
+    "tenantId": "t_15",
+    "date": "2025-12-27",
+    "amountEgp": 8720
+  },
+  {
+    "id": "sal_303_2",
+    "tenantId": "t_25",
+    "date": "2025-12-27",
+    "amountEgp": 14850
+  },
+  {
+    "id": "sal_305_0",
+    "tenantId": "t_8",
+    "date": "2025-12-25",
+    "amountEgp": 6050
+  },
+  {
+    "id": "sal_305_1",
+    "tenantId": "t_18",
+    "date": "2025-12-25",
+    "amountEgp": 12180
+  },
+  {
+    "id": "sal_305_2",
+    "tenantId": "t_1",
+    "date": "2025-12-25",
+    "amountEgp": 18310
+  },
+  {
+    "id": "sal_306_0",
+    "tenantId": "t_11",
+    "date": "2025-12-24",
+    "amountEgp": 7780
+  },
+  {
+    "id": "sal_306_1",
+    "tenantId": "t_21",
+    "date": "2025-12-24",
+    "amountEgp": 13910
+  },
+  {
+    "id": "sal_306_2",
+    "tenantId": "t_2",
+    "date": "2025-12-24",
+    "amountEgp": 2040
+  },
+  {
+    "id": "sal_307_0",
+    "tenantId": "t_14",
+    "date": "2025-12-23",
+    "amountEgp": 9510
+  },
+  {
+    "id": "sal_307_1",
+    "tenantId": "t_22",
+    "date": "2025-12-23",
+    "amountEgp": 15640
+  },
+  {
+    "id": "sal_307_2",
+    "tenantId": "t_3",
+    "date": "2025-12-23",
+    "amountEgp": 3770
+  },
+  {
+    "id": "sal_309_0",
+    "tenantId": "t_17",
+    "date": "2025-12-21",
+    "amountEgp": 12970
+  },
+  {
+    "id": "sal_309_1",
+    "tenantId": "t_26",
+    "date": "2025-12-21",
+    "amountEgp": 1100
+  },
+  {
+    "id": "sal_309_2",
+    "tenantId": "t_7",
+    "date": "2025-12-21",
+    "amountEgp": 7230
+  },
+  {
+    "id": "sal_310_0",
+    "tenantId": "t_18",
+    "date": "2025-12-20",
+    "amountEgp": 14700
+  },
+  {
+    "id": "sal_310_1",
+    "tenantId": "t_1",
+    "date": "2025-12-20",
+    "amountEgp": 2830
+  },
+  {
+    "id": "sal_310_2",
+    "tenantId": "t_8",
+    "date": "2025-12-20",
+    "amountEgp": 8960
+  },
+  {
+    "id": "sal_311_0",
+    "tenantId": "t_21",
+    "date": "2025-12-19",
+    "amountEgp": 16430
+  },
+  {
+    "id": "sal_311_1",
+    "tenantId": "t_2",
+    "date": "2025-12-19",
+    "amountEgp": 4560
+  },
+  {
+    "id": "sal_311_2",
+    "tenantId": "t_11",
+    "date": "2025-12-19",
+    "amountEgp": 10690
+  },
+  {
+    "id": "sal_313_0",
+    "tenantId": "t_25",
+    "date": "2025-12-17",
+    "amountEgp": 1890
+  },
+  {
+    "id": "sal_313_1",
+    "tenantId": "t_6",
+    "date": "2025-12-17",
+    "amountEgp": 8020
+  },
+  {
+    "id": "sal_313_2",
+    "tenantId": "t_15",
+    "date": "2025-12-17",
+    "amountEgp": 14150
+  },
+  {
+    "id": "sal_314_0",
+    "tenantId": "t_26",
+    "date": "2025-12-16",
+    "amountEgp": 3620
+  },
+  {
+    "id": "sal_314_1",
+    "tenantId": "t_7",
+    "date": "2025-12-16",
+    "amountEgp": 9750
+  },
+  {
+    "id": "sal_314_2",
+    "tenantId": "t_17",
+    "date": "2025-12-16",
+    "amountEgp": 15880
+  },
+  {
+    "id": "sal_315_0",
+    "tenantId": "t_1",
+    "date": "2025-12-15",
+    "amountEgp": 5350
+  },
+  {
+    "id": "sal_315_1",
+    "tenantId": "t_8",
+    "date": "2025-12-15",
+    "amountEgp": 11480
+  },
+  {
+    "id": "sal_315_2",
+    "tenantId": "t_18",
+    "date": "2025-12-15",
+    "amountEgp": 17610
+  },
+  {
+    "id": "sal_317_0",
+    "tenantId": "t_3",
+    "date": "2025-12-13",
+    "amountEgp": 8810
+  },
+  {
+    "id": "sal_317_1",
+    "tenantId": "t_14",
+    "date": "2025-12-13",
+    "amountEgp": 14940
+  },
+  {
+    "id": "sal_317_2",
+    "tenantId": "t_22",
+    "date": "2025-12-13",
+    "amountEgp": 3070
+  },
+  {
+    "id": "sal_318_0",
+    "tenantId": "t_6",
+    "date": "2025-12-12",
+    "amountEgp": 10540
+  },
+  {
+    "id": "sal_318_1",
+    "tenantId": "t_15",
+    "date": "2025-12-12",
+    "amountEgp": 16670
+  },
+  {
+    "id": "sal_318_2",
+    "tenantId": "t_25",
+    "date": "2025-12-12",
+    "amountEgp": 4800
+  },
+  {
+    "id": "sal_319_0",
+    "tenantId": "t_7",
+    "date": "2025-12-11",
+    "amountEgp": 12270
+  },
+  {
+    "id": "sal_319_1",
+    "tenantId": "t_17",
+    "date": "2025-12-11",
+    "amountEgp": 400
+  },
+  {
+    "id": "sal_319_2",
+    "tenantId": "t_26",
+    "date": "2025-12-11",
+    "amountEgp": 6530
+  },
+  {
+    "id": "sal_321_0",
+    "tenantId": "t_11",
+    "date": "2025-12-09",
+    "amountEgp": 15730
+  },
+  {
+    "id": "sal_321_1",
+    "tenantId": "t_21",
+    "date": "2025-12-09",
+    "amountEgp": 3860
+  },
+  {
+    "id": "sal_321_2",
+    "tenantId": "t_2",
+    "date": "2025-12-09",
+    "amountEgp": 9990
+  },
+  {
+    "id": "sal_322_0",
+    "tenantId": "t_14",
+    "date": "2025-12-08",
+    "amountEgp": 17460
+  },
+  {
+    "id": "sal_322_1",
+    "tenantId": "t_22",
+    "date": "2025-12-08",
+    "amountEgp": 5590
+  },
+  {
+    "id": "sal_322_2",
+    "tenantId": "t_3",
+    "date": "2025-12-08",
+    "amountEgp": 11720
+  },
+  {
+    "id": "sal_323_0",
+    "tenantId": "t_15",
+    "date": "2025-12-07",
+    "amountEgp": 1190
+  },
+  {
+    "id": "sal_323_1",
+    "tenantId": "t_25",
+    "date": "2025-12-07",
+    "amountEgp": 7320
+  },
+  {
+    "id": "sal_323_2",
+    "tenantId": "t_6",
+    "date": "2025-12-07",
+    "amountEgp": 13450
+  },
+  {
+    "id": "sal_325_0",
+    "tenantId": "t_18",
+    "date": "2025-12-05",
+    "amountEgp": 4650
+  },
+  {
+    "id": "sal_325_1",
+    "tenantId": "t_1",
+    "date": "2025-12-05",
+    "amountEgp": 10780
+  },
+  {
+    "id": "sal_325_2",
+    "tenantId": "t_8",
+    "date": "2025-12-05",
+    "amountEgp": 16910
+  },
+  {
+    "id": "sal_326_0",
+    "tenantId": "t_21",
+    "date": "2025-12-04",
+    "amountEgp": 6380
+  },
+  {
+    "id": "sal_326_1",
+    "tenantId": "t_2",
+    "date": "2025-12-04",
+    "amountEgp": 12510
+  },
+  {
+    "id": "sal_326_2",
+    "tenantId": "t_11",
+    "date": "2025-12-04",
+    "amountEgp": 640
+  },
+  {
+    "id": "sal_327_0",
+    "tenantId": "t_22",
+    "date": "2025-12-03",
+    "amountEgp": 8110
+  },
+  {
+    "id": "sal_327_1",
+    "tenantId": "t_3",
+    "date": "2025-12-03",
+    "amountEgp": 14240
+  },
+  {
+    "id": "sal_327_2",
+    "tenantId": "t_14",
+    "date": "2025-12-03",
+    "amountEgp": 2370
+  },
+  {
+    "id": "sal_329_0",
+    "tenantId": "t_26",
+    "date": "2025-12-01",
+    "amountEgp": 11570
+  },
+  {
+    "id": "sal_329_1",
+    "tenantId": "t_7",
+    "date": "2025-12-01",
+    "amountEgp": 17700
+  },
+  {
+    "id": "sal_329_2",
+    "tenantId": "t_17",
+    "date": "2025-12-01",
+    "amountEgp": 5830
+  },
+  {
+    "id": "sal_330_0",
+    "tenantId": "t_1",
+    "date": "2025-11-30",
+    "amountEgp": 13300
+  },
+  {
+    "id": "sal_330_1",
+    "tenantId": "t_8",
+    "date": "2025-11-30",
+    "amountEgp": 1430
+  },
+  {
+    "id": "sal_330_2",
+    "tenantId": "t_18",
+    "date": "2025-11-30",
+    "amountEgp": 7560
+  },
+  {
+    "id": "sal_331_0",
+    "tenantId": "t_2",
+    "date": "2025-11-29",
+    "amountEgp": 15030
+  },
+  {
+    "id": "sal_331_1",
+    "tenantId": "t_11",
+    "date": "2025-11-29",
+    "amountEgp": 3160
+  },
+  {
+    "id": "sal_331_2",
+    "tenantId": "t_21",
+    "date": "2025-11-29",
+    "amountEgp": 9290
+  },
+  {
+    "id": "sal_333_0",
+    "tenantId": "t_6",
+    "date": "2025-11-27",
+    "amountEgp": 490
+  },
+  {
+    "id": "sal_333_1",
+    "tenantId": "t_15",
+    "date": "2025-11-27",
+    "amountEgp": 6620
+  },
+  {
+    "id": "sal_333_2",
+    "tenantId": "t_25",
+    "date": "2025-11-27",
+    "amountEgp": 12750
+  },
+  {
+    "id": "sal_334_0",
+    "tenantId": "t_7",
+    "date": "2025-11-26",
+    "amountEgp": 2220
+  },
+  {
+    "id": "sal_334_1",
+    "tenantId": "t_17",
+    "date": "2025-11-26",
+    "amountEgp": 8350
+  },
+  {
+    "id": "sal_334_2",
+    "tenantId": "t_26",
+    "date": "2025-11-26",
+    "amountEgp": 14480
+  },
+  {
+    "id": "sal_335_0",
+    "tenantId": "t_8",
+    "date": "2025-11-25",
+    "amountEgp": 3950
+  },
+  {
+    "id": "sal_335_1",
+    "tenantId": "t_18",
+    "date": "2025-11-25",
+    "amountEgp": 10080
+  },
+  {
+    "id": "sal_335_2",
+    "tenantId": "t_1",
+    "date": "2025-11-25",
+    "amountEgp": 16210
+  },
+  {
+    "id": "sal_337_0",
+    "tenantId": "t_14",
+    "date": "2025-11-23",
+    "amountEgp": 7410
+  },
+  {
+    "id": "sal_337_1",
+    "tenantId": "t_22",
+    "date": "2025-11-23",
+    "amountEgp": 13540
+  },
+  {
+    "id": "sal_337_2",
+    "tenantId": "t_3",
+    "date": "2025-11-23",
+    "amountEgp": 1670
+  },
+  {
+    "id": "sal_338_0",
+    "tenantId": "t_15",
+    "date": "2025-11-22",
+    "amountEgp": 9140
+  },
+  {
+    "id": "sal_338_1",
+    "tenantId": "t_25",
+    "date": "2025-11-22",
+    "amountEgp": 15270
+  },
+  {
+    "id": "sal_338_2",
+    "tenantId": "t_6",
+    "date": "2025-11-22",
+    "amountEgp": 3400
+  },
+  {
+    "id": "sal_339_0",
+    "tenantId": "t_17",
+    "date": "2025-11-21",
+    "amountEgp": 10870
+  },
+  {
+    "id": "sal_339_1",
+    "tenantId": "t_26",
+    "date": "2025-11-21",
+    "amountEgp": 17000
+  },
+  {
+    "id": "sal_339_2",
+    "tenantId": "t_7",
+    "date": "2025-11-21",
+    "amountEgp": 5130
+  },
+  {
+    "id": "sal_341_0",
+    "tenantId": "t_21",
+    "date": "2025-11-19",
+    "amountEgp": 14330
+  },
+  {
+    "id": "sal_341_1",
+    "tenantId": "t_2",
+    "date": "2025-11-19",
+    "amountEgp": 2460
+  },
+  {
+    "id": "sal_341_2",
+    "tenantId": "t_11",
+    "date": "2025-11-19",
+    "amountEgp": 8590
+  },
+  {
+    "id": "sal_342_0",
+    "tenantId": "t_22",
+    "date": "2025-11-18",
+    "amountEgp": 16060
+  },
+  {
+    "id": "sal_342_1",
+    "tenantId": "t_3",
+    "date": "2025-11-18",
+    "amountEgp": 4190
+  },
+  {
+    "id": "sal_342_2",
+    "tenantId": "t_14",
+    "date": "2025-11-18",
+    "amountEgp": 10320
+  },
+  {
+    "id": "sal_343_0",
+    "tenantId": "t_25",
+    "date": "2025-11-17",
+    "amountEgp": 17790
+  },
+  {
+    "id": "sal_343_1",
+    "tenantId": "t_6",
+    "date": "2025-11-17",
+    "amountEgp": 5920
+  },
+  {
+    "id": "sal_343_2",
+    "tenantId": "t_15",
+    "date": "2025-11-17",
+    "amountEgp": 12050
+  },
+  {
+    "id": "sal_345_0",
+    "tenantId": "t_1",
+    "date": "2025-11-15",
+    "amountEgp": 3250
+  },
+  {
+    "id": "sal_345_1",
+    "tenantId": "t_8",
+    "date": "2025-11-15",
+    "amountEgp": 9380
+  },
+  {
+    "id": "sal_345_2",
+    "tenantId": "t_18",
+    "date": "2025-11-15",
+    "amountEgp": 15510
+  },
+  {
+    "id": "sal_346_0",
+    "tenantId": "t_2",
+    "date": "2025-11-14",
+    "amountEgp": 4980
+  },
+  {
+    "id": "sal_346_1",
+    "tenantId": "t_11",
+    "date": "2025-11-14",
+    "amountEgp": 11110
+  },
+  {
+    "id": "sal_346_2",
+    "tenantId": "t_21",
+    "date": "2025-11-14",
+    "amountEgp": 17240
+  },
+  {
+    "id": "sal_347_0",
+    "tenantId": "t_3",
+    "date": "2025-11-13",
+    "amountEgp": 6710
+  },
+  {
+    "id": "sal_347_1",
+    "tenantId": "t_14",
+    "date": "2025-11-13",
+    "amountEgp": 12840
+  },
+  {
+    "id": "sal_347_2",
+    "tenantId": "t_22",
+    "date": "2025-11-13",
+    "amountEgp": 970
+  },
+  {
+    "id": "sal_349_0",
+    "tenantId": "t_7",
+    "date": "2025-11-11",
+    "amountEgp": 10170
+  },
+  {
+    "id": "sal_349_1",
+    "tenantId": "t_17",
+    "date": "2025-11-11",
+    "amountEgp": 16300
+  },
+  {
+    "id": "sal_349_2",
+    "tenantId": "t_26",
+    "date": "2025-11-11",
+    "amountEgp": 4430
+  },
+  {
+    "id": "sal_350_0",
+    "tenantId": "t_8",
+    "date": "2025-11-10",
+    "amountEgp": 11900
+  },
+  {
+    "id": "sal_350_1",
+    "tenantId": "t_18",
+    "date": "2025-11-10",
+    "amountEgp": 18030
+  },
+  {
+    "id": "sal_350_2",
+    "tenantId": "t_1",
+    "date": "2025-11-10",
+    "amountEgp": 6160
+  },
+  {
+    "id": "sal_351_0",
+    "tenantId": "t_11",
+    "date": "2025-11-09",
+    "amountEgp": 13630
+  },
+  {
+    "id": "sal_351_1",
+    "tenantId": "t_21",
+    "date": "2025-11-09",
+    "amountEgp": 1760
+  },
+  {
+    "id": "sal_351_2",
+    "tenantId": "t_2",
+    "date": "2025-11-09",
+    "amountEgp": 7890
+  },
+  {
+    "id": "sal_353_0",
+    "tenantId": "t_15",
+    "date": "2025-11-07",
+    "amountEgp": 17090
+  },
+  {
+    "id": "sal_353_1",
+    "tenantId": "t_25",
+    "date": "2025-11-07",
+    "amountEgp": 5220
+  },
+  {
+    "id": "sal_353_2",
+    "tenantId": "t_6",
+    "date": "2025-11-07",
+    "amountEgp": 11350
+  },
+  {
+    "id": "sal_354_0",
+    "tenantId": "t_17",
+    "date": "2025-11-06",
+    "amountEgp": 820
+  },
+  {
+    "id": "sal_354_1",
+    "tenantId": "t_26",
+    "date": "2025-11-06",
+    "amountEgp": 6950
+  },
+  {
+    "id": "sal_354_2",
+    "tenantId": "t_7",
+    "date": "2025-11-06",
+    "amountEgp": 13080
+  },
+  {
+    "id": "sal_355_0",
+    "tenantId": "t_18",
+    "date": "2025-11-05",
+    "amountEgp": 2550
+  },
+  {
+    "id": "sal_355_1",
+    "tenantId": "t_1",
+    "date": "2025-11-05",
+    "amountEgp": 8680
+  },
+  {
+    "id": "sal_355_2",
+    "tenantId": "t_8",
+    "date": "2025-11-05",
+    "amountEgp": 14810
+  },
+  {
+    "id": "sal_357_0",
+    "tenantId": "t_22",
+    "date": "2025-11-03",
+    "amountEgp": 6010
+  },
+  {
+    "id": "sal_357_1",
+    "tenantId": "t_3",
+    "date": "2025-11-03",
+    "amountEgp": 12140
+  },
+  {
+    "id": "sal_357_2",
+    "tenantId": "t_14",
+    "date": "2025-11-03",
+    "amountEgp": 18270
+  },
+  {
+    "id": "sal_358_0",
+    "tenantId": "t_25",
+    "date": "2025-11-02",
+    "amountEgp": 7740
+  },
+  {
+    "id": "sal_358_1",
+    "tenantId": "t_6",
+    "date": "2025-11-02",
+    "amountEgp": 13870
+  },
+  {
+    "id": "sal_358_2",
+    "tenantId": "t_15",
+    "date": "2025-11-02",
+    "amountEgp": 2000
+  },
+  {
+    "id": "sal_359_0",
+    "tenantId": "t_26",
+    "date": "2025-11-01",
+    "amountEgp": 9470
+  },
+  {
+    "id": "sal_359_1",
+    "tenantId": "t_7",
+    "date": "2025-11-01",
+    "amountEgp": 15600
+  },
+  {
+    "id": "sal_359_2",
+    "tenantId": "t_17",
+    "date": "2025-11-01",
+    "amountEgp": 3730
+  },
+  {
+    "id": "sal_361_0",
+    "tenantId": "t_2",
+    "date": "2025-10-30",
+    "amountEgp": 12930
+  },
+  {
+    "id": "sal_361_1",
+    "tenantId": "t_11",
+    "date": "2025-10-30",
+    "amountEgp": 1060
+  },
+  {
+    "id": "sal_361_2",
+    "tenantId": "t_21",
+    "date": "2025-10-30",
+    "amountEgp": 7190
+  },
+  {
+    "id": "sal_362_0",
+    "tenantId": "t_3",
+    "date": "2025-10-29",
+    "amountEgp": 14660
+  },
+  {
+    "id": "sal_362_1",
+    "tenantId": "t_14",
+    "date": "2025-10-29",
+    "amountEgp": 2790
+  },
+  {
+    "id": "sal_362_2",
+    "tenantId": "t_22",
+    "date": "2025-10-29",
+    "amountEgp": 8920
+  },
+  {
+    "id": "sal_363_0",
+    "tenantId": "t_6",
+    "date": "2025-10-28",
+    "amountEgp": 16390
+  },
+  {
+    "id": "sal_363_1",
+    "tenantId": "t_15",
+    "date": "2025-10-28",
+    "amountEgp": 4520
+  },
+  {
+    "id": "sal_363_2",
+    "tenantId": "t_25",
+    "date": "2025-10-28",
+    "amountEgp": 10650
+  }
+]

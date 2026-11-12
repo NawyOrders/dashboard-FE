@@ -119,7 +119,7 @@ export function MenuResultDialog({
                 <div className="flex items-center justify-between gap-2">
                   <h3
                     dir="auto"
-                    className="truncate text-2xs font-semibold uppercase tracking-wide text-text-muted"
+                    className="truncate text-2xs font-semibold text-text-muted"
                   >
                     {label || en.common.notAvailable}
                   </h3>

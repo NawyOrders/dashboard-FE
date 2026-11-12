@@ -105,7 +105,7 @@ export function MenuViewDialog({ open, requestId, onClose }: MenuViewDialogProps
                 <div className="flex items-center justify-between gap-2">
                   <h3
                     dir="auto"
-                    className="truncate text-2xs font-semibold uppercase tracking-wide text-text-muted"
+                    className="truncate text-2xs font-semibold text-text-muted"
                   >
                     {label}
                   </h3>
@@ -163,7 +163,9 @@ export function MenuViewDialog({ open, requestId, onClose }: MenuViewDialogProps
                                   className="rounded-pill bg-bg-2 px-2 py-0.5 text-micro font-medium text-text-muted"
                                 >
                                   {variantName}
-                                  {variantPrice ? ` · ${variantPrice}` : null}
+                                  {variantPrice && (
+                                    <span className="ms-1">{variantPrice}</span>
+                                  )}
                                 </span>
                               );
                             })}

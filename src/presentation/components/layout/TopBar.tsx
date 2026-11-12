@@ -224,7 +224,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
               aria-label={en.topbar.notifications}
               className="absolute end-0 top-[calc(100%+6px)] z-30 w-80 overflow-hidden rounded-panel border border-border bg-card py-1"
             >
-              <p className="px-3 py-2 text-2xs font-semibold uppercase tracking-wide text-text-muted">
+              <p className="px-3 py-2 text-2xs font-semibold text-text-muted">
                 {en.topbar.notifications}
               </p>
               {pendingCount === 0 ? (

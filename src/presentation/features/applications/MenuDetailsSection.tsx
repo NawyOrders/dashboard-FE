@@ -20,7 +20,7 @@ function categoryName(category: TenantMenuCategory): string {
 export function MenuDetailsSection({ categories, emptyMessage }: MenuDetailsSectionProps) {
   return (
     <section className="flex flex-col gap-3" aria-label={en.applications.menuTitle}>
-      <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">
+      <h4 className="text-2xs font-semibold text-text-muted">
         {en.applications.menuTitle}
       </h4>
 

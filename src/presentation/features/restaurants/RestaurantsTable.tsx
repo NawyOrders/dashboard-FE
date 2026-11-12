@@ -87,7 +87,7 @@ export function RestaurantsTable({
       <CardHeader className="flex-col gap-4 lg:flex-row lg:items-start">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold text-text">{title}</h2>
-          <p className="mt-0.5 text-2xs font-medium text-primary">{subtitle}</p>
+          <p className="mt-0.5 text-2xs text-text-muted">{subtitle}</p>
         </div>
         <RestaurantToolbar
           directory={directory}

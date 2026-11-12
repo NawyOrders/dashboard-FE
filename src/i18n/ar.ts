@@ -345,7 +345,7 @@ export const ar = {
     subtitle: 'العقود والمبيعات شهريًا من البيانات التجريبية.',
     powerBiTitle: 'تقارير Power BI',
     powerBiBody: 'ستُعرض تقارير Power BI التفاعلية هنا بعد ربط مساحة التقارير.',
-    demoNote: 'بيانات تجريبية — الأرقام محسوبة من مجموعة بيانات تجريبية ثابتة وليست مبيعات حقيقية.',
+    demoNote: 'الأرقام محسوبة من مجموعة بيانات تجريبية ثابتة وليست مبيعات حقيقية.',
   },
   applications: {
     title: 'طلبات تسجيل المطاعم',
@@ -823,7 +823,7 @@ export const ar = {
   manageFeatures: {
     title: 'إدارة الميزات',
     subtitle: 'فعّل أو عطّل القنوات لهذا المطعم.',
-    lockedForStart: 'مقفلة — تتطلب باقة Growth',
+    lockedForStart: 'تتطلب باقة Growth',
     enabled: 'مفعّلة',
     disabled: 'معطّلة',
     entitlementNote: 'الأهلية تأتي من الباقة. وتُتابع حالة التوصيل بشكل منفصل.',

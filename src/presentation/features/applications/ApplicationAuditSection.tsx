@@ -31,7 +31,7 @@ export function ApplicationAuditSection({ tenant }: ApplicationAuditSectionProps
 
   return (
     <section className="flex flex-col gap-3" aria-label={en.applications.audit.title}>
-      <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">
+      <h4 className="text-2xs font-semibold text-text-muted">
         {en.applications.audit.title}
       </h4>
       <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

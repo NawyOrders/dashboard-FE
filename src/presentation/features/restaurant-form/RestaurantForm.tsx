@@ -82,7 +82,7 @@ function ReadOnlySection({
 }) {
   return (
     <section className="flex flex-col gap-3" aria-label={sectionTitle(section, step)}>
-      <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">
+      <h4 className="text-2xs font-semibold text-text-muted">
         {sectionTitle(section, step)}
       </h4>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -194,7 +194,7 @@ export function RestaurantForm({
               />
             ) : (
               <section key={section.id} className="flex flex-col gap-3" aria-label={sectionTitle(section, step)}>
-                <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">
+                <h4 className="text-2xs font-semibold text-text-muted">
                   {sectionTitle(section, step)}
                 </h4>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -17,9 +17,12 @@ export function PermissionDenied({ action }: { action?: string }) {
       <p className="max-w-md text-sm text-text-muted">
         {en.permissions.deniedBody} {action ? `(${action})` : ''}
       </p>
-      <p className="text-2xs text-text-muted">
-        {user ? `${user.name} · ${user.role}` : ''}
-      </p>
+      {user && (
+        <p className="text-2xs text-text-muted">
+          <span className="block">{user.name}</span>
+          <span className="block">{user.role}</span>
+        </p>
+      )}
     </div>
   );
 }

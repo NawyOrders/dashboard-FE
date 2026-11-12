@@ -24,7 +24,7 @@ function useIsWideScreen() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-2xs uppercase tracking-wide text-text-muted">{label}</dt>
+      <dt className="text-2xs text-text-muted">{label}</dt>
       <dd className="mt-0.5 text-sm font-medium text-text">{children}</dd>
     </div>
   );

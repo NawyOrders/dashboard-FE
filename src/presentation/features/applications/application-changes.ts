@@ -286,7 +286,7 @@ export function buildApplicationChanges(
         const next = formBranch.fields[key] ?? '';
         if (sameDisplayValue(key, previous, next)) continue;
         changes.push({
-          label: `${en.registration.groups.branches} ${index + 1} · ${labelFor(key, 'branch')}`,
+          label: `${en.registration.groups.branches} ${index + 1}: ${labelFor(key, 'branch')}`,
           previous: previous.trim() || null,
           next: next.trim() || en.common.notAvailable,
         });
@@ -295,7 +295,7 @@ export function buildApplicationChanges(
 
     for (const branch of removedBranches) {
       changes.push({
-        label: `${en.registration.groups.branches} · ${branch.name || branch.id}`,
+        label: `${en.registration.groups.branches}: ${branch.name || branch.id}`,
         previous: branch.name || null,
         next: en.common.none,
       });

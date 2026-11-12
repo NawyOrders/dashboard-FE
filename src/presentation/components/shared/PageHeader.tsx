@@ -16,7 +16,7 @@ export interface PageHeaderProps {
  */
 export function PageHeader({ title, subtitle, actions, showDemoBadge, demoBadgeTitle }: PageHeaderProps) {
   return (
-    <header className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
+    <header className="page-reveal mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
       <div className="min-w-0 border-s-[3px] border-s-primary ps-4">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-h1 font-h1 text-text">{title}</h1>

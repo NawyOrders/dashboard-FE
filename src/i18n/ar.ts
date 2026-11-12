@@ -418,6 +418,15 @@ export const ar = {
     menuItemCount: (count: number) => (count === 1 ? 'صنف واحد' : `${count} صنف`),
     menuEmpty: 'لا توجد أصناف في تفاصيل المنيو.',
     menuCategoryEmpty: 'لا توجد أصناف في هذا التصنيف.',
+    slugLabel: 'الرابط المختصر',
+    slugRequired: 'الرابط المختصر مطلوب.',
+    slugTooShort: (min: number) => `يجب ألا يقل الرابط المختصر عن ${min} أحرف.`,
+    slugTooLong: (max: number) => `يجب ألا يزيد الرابط المختصر عن ${max} حرفًا.`,
+    slugSpace: 'المسافات غير مسموحة. اكتب شرطة (-) بدلًا منها.',
+    slugInvalidCharacters:
+      'يُسمح بالحروف الإنجليزية الصغيرة (a-z) والأرقام (0-9) والشرطات (-) فقط.',
+    slugEdgeHyphen: 'لا يمكن أن يبدأ الرابط المختصر أو ينتهي بشرطة (-).',
+    slugReserved: 'هذا الاسم محجوز',
     audit: {
       title: 'سجل المراجعة',
       paidAt: 'تاريخ الدفع',

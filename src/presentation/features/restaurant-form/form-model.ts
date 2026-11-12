@@ -1,5 +1,6 @@
 import type { DurationMonths, PackageCode, Tenant } from '@/domain/entities';
 import type { RegistrationField, RegistrationSchema, RegistrationStep } from '@/domain/rules/registration-schema';
+import { toTenantSlug } from '@/domain/rules/slug';
 import {
   NUMERIC_BRANCH_FIELDS,
   SCHEMA_BRANCH_FIELD_TO_PATH,
@@ -30,6 +31,10 @@ export interface RestaurantFormValues {
   durationMonths: DurationMonths;
   /** Uploaded logo asset; `null` keeps the stored logo untouched. */
   logoAssetId: string | null;
+  /** Preview-only slug, defaulting to the English restaurant name without any id. */
+  // OPEN: slug field is not in submit or patch; backend to add it and enforce uniqueness
+  // OPEN: do not call PUT /api/v1/tenants/{tenantId} for the slug from this screen; timing against approve provisioning is undefined
+  slug: string;
   /**
    * Local object URL of the picked logo for the preview only. Never saved or persisted;
    * after a reload the stored logo (if readable) or the placeholder returns.
@@ -94,6 +99,7 @@ export function buildFormValues(schema: RegistrationSchema, tenant: Tenant): Res
     durationMonths: tenant.subscription.durationMonths,
     logoAssetId: tenant.logoAssetId ?? null,
     logoPreviewUrl: null,
+    slug: toTenantSlug(tenant.restaurantName),
   };
 }
 

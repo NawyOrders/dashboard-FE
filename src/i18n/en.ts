@@ -418,6 +418,15 @@ export const en = {
     menuItemCount: (count: number) => (count === 1 ? '1 item' : `${count} items`),
     menuEmpty: 'No menu items in the details.',
     menuCategoryEmpty: 'No items in this category.',
+    slugLabel: 'Slug',
+    slugRequired: 'Slug is required.',
+    slugTooShort: (min: number) => `Slug must be at least ${min} characters.`,
+    slugTooLong: (max: number) => `Slug must be at most ${max} characters.`,
+    slugSpace: 'Spaces are not allowed. Type a hyphen (-) instead.',
+    slugInvalidCharacters:
+      'Only lowercase letters (a-z), numbers (0-9) and hyphens (-) are allowed.',
+    slugEdgeHyphen: 'The slug cannot start or end with a hyphen.',
+    slugReserved: 'This name is reserved',
     audit: {
       title: 'Review audit',
       paidAt: 'Paid at',

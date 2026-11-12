@@ -18,6 +18,9 @@ import { useToast } from '@/presentation/hooks/useToast';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
 import { brandColorOr, isRgbHexColor } from '@/domain/rules/brand-colors';
+import { validateTenantSlug } from '@/domain/rules/slug';
+import type { SlugProblem } from '@/domain/rules/slug';
+import { SLUG_MAX_LENGTH, SLUG_MIN_LENGTH } from '@/config/slug';
 import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
@@ -77,6 +80,25 @@ function httpStatusOf(error: unknown): number | null {
   if (typeof error !== 'object' || error === null || !('status' in error)) return null;
   const status = (error as { status: unknown }).status;
   return typeof status === 'number' ? status : null;
+}
+
+function slugMessage(problem: SlugProblem): string {
+  switch (problem) {
+    case 'required':
+      return en.applications.slugRequired;
+    case 'too-short':
+      return en.applications.slugTooShort(SLUG_MIN_LENGTH);
+    case 'too-long':
+      return en.applications.slugTooLong(SLUG_MAX_LENGTH);
+    case 'space':
+      return en.applications.slugSpace;
+    case 'invalid-characters':
+      return en.applications.slugInvalidCharacters;
+    case 'edge-hyphen':
+      return en.applications.slugEdgeHyphen;
+    case 'reserved':
+      return en.applications.slugReserved;
+  }
 }
 
 /** Logo preview: the asset URL when readable, otherwise a neutral initials placeholder. */
@@ -210,7 +232,11 @@ function ApplicationDialogContent({
     branchLimits,
     setLogoAsset,
     setLogoPreviewFile,
+    setSlug,
   } = useRestaurantFormState(tenant);
+
+  const slugProblem = validateTenantSlug(values.slug);
+  const slugError = slugProblem ? slugMessage(slugProblem) : null;
 
   const offers = useOffers();
 
@@ -572,6 +598,19 @@ function ApplicationDialogContent({
                   {en.applications.submittedAt}:{' '}
                   {formatDateTime(tenant.submittedAtUtc ?? tenant.createdAt)}
                 </span>
+              </div>
+              <div dir="ltr" className="flex w-full min-w-0 flex-col gap-2">
+                <Input
+                  id="rf-field-slug"
+                  label={en.applications.slugLabel}
+                  value={values.slug}
+                  onChange={(event) => setSlug(event.target.value.toLowerCase())}
+                  error={slugError ?? undefined}
+                  className="font-mono"
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                />
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {tenant.subscriptionOfferId === null ? (

@@ -179,7 +179,7 @@ export function BranchesSection({
                   type="button"
                   onClick={() => toggleBranch(branch.id)}
                   aria-expanded={open}
-                  className="flex items-center gap-2 text-2xs font-semibold uppercase tracking-wide text-text-muted transition-colors duration-150 hover:text-text"
+                  className="flex items-center gap-2 text-2xs font-semibold text-text-muted transition-colors duration-150 hover:text-text"
                 >
                   <ChevronDown
                     aria-hidden="true"

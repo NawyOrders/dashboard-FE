@@ -51,7 +51,7 @@ export function SalesPerMonthChart({ buckets, loading }: SalesPerMonthChartProps
   const allZero = computeMax(buckets) <= 0;
 
   return (
-    <Card>
+    <Card className="shadow-surface">
       <CardHeader>
         <div className="min-w-0">
           <h2 className="text-lg font-semibold text-text">{en.overview.salesChartTitle}</h2>

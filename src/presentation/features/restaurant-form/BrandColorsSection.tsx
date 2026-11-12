@@ -151,7 +151,7 @@ export function BrandColorsSection({
       className="flex flex-col gap-3"
       aria-label={en.registration.sections.brand_colors}
     >
-      <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">
+      <h4 className="text-2xs font-semibold text-text-muted">
         {en.registration.sections.brand_colors}
       </h4>
 

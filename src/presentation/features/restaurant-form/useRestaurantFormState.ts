@@ -77,6 +77,11 @@ export function useRestaurantFormState(tenant: Tenant) {
     setValues((current) => ({ ...current, logoAssetId }));
   }, []);
 
+  /** Preview-only slug; kept in form state and never sent with submit or PATCH. */
+  const setSlug = useCallback((slug: string) => {
+    setValues((current) => ({ ...current, slug }));
+  }, []);
+
   /** Keeps a local preview URL for the picked file; the previous one is revoked. */
   const setLogoPreviewFile = useCallback((file: File | null) => {
     const next = file ? URL.createObjectURL(file) : null;
@@ -117,6 +122,7 @@ export function useRestaurantFormState(tenant: Tenant) {
     setDurationMonths,
     setLogoAsset,
     setLogoPreviewFile,
+    setSlug,
     reset,
     branchLimits,
     itemFields,

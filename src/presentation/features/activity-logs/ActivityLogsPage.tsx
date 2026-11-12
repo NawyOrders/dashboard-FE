@@ -61,7 +61,7 @@ export function ActivityLogsPage() {
         actions={<Badge tone="neutral">{en.activity.readOnly}</Badge>}
       />
 
-      <Card>
+      <Card className="shadow-surface">
         <CardHeader className="flex-col items-stretch gap-4 lg:flex-row lg:items-end">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Select

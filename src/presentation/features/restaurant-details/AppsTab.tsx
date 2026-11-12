@@ -53,7 +53,8 @@ export function AppsTab({ tenant }: { tenant: Tenant }) {
           </p>
         </div>
         <Badge tone="success" withDot>
-          {packageName(tenant.subscription.packageCode)} · {en.details.entitled}
+          {packageName(tenant.subscription.packageCode)}
+          <span className="ms-1 font-normal">{en.details.entitled}</span>
         </Badge>
       </CardHeader>
       <CardBody className="flex flex-col gap-4 pt-0">

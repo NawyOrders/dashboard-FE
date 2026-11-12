@@ -175,11 +175,22 @@ export const onboardingAssetReferenceSchema: ResponseSchema<OnboardingAssetRefer
   })
   .transform(({ assetId, url, readUrl }) => ({ assetId, url: url ?? readUrl ?? null }));
 
-export const onboardingMenuVariantSchema: ResponseSchema<OnboardingMenuVariant> = z.object({
-  nameEn: nullableString,
-  nameAr: nullableString,
-  price: nullableNumber,
-});
+/**
+ * Swagger returns a variant with a single `name`; bilingual fields are accepted as well so
+ * the label never renders empty.
+ */
+export const onboardingMenuVariantSchema: ResponseSchema<OnboardingMenuVariant> = z
+  .object({
+    name: nullableString,
+    nameEn: nullableString,
+    nameAr: nullableString,
+    price: nullableNumber,
+  })
+  .transform(({ name, nameEn, nameAr, price }) => ({
+    nameEn: nameEn ?? name ?? null,
+    nameAr: nameAr ?? name ?? null,
+    price,
+  }));
 
 export const onboardingMenuItemSchema: ResponseSchema<OnboardingMenuItem> = z.object({
   nameEn: nullableString,

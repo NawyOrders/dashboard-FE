@@ -25,7 +25,7 @@ import { cn } from '@/presentation/lib/cn';
 import { paymentStatusMeta } from '@/presentation/lib/status';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { tokens } from '@/presentation/theme/tokens';
-import type { Tenant, TenantProvisioning } from '@/domain/entities';
+import type { Tenant, TenantMenuCategory, TenantProvisioning } from '@/domain/entities';
 import {
   isTenantProvisioningActive,
   isTenantProvisioningFailed,
@@ -39,6 +39,7 @@ import { ApplicationAuditSection } from './ApplicationAuditSection';
 import { buildApplicationChanges } from './application-changes';
 import { MenuDetailsSection } from './MenuDetailsSection';
 import { MenuOcrSection } from './MenuOcrSection';
+import { MenuViewDialog } from './MenuViewDialog';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import type { BranchExtra } from '@/presentation/features/restaurant-form/BranchesSection';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
@@ -298,6 +299,11 @@ function ApplicationDialogContent({
   const [rejectError, setRejectError] = useState<string | null>(null);
   const [rejecting, setRejecting] = useState(false);
   const [paletteSuggestion, setPaletteSuggestion] = useState<LogoPaletteSuggestion | null>(null);
+  const [menuCategories, setMenuCategories] = useState<TenantMenuCategory[]>(
+    tenant.menuCategories ?? [],
+  );
+  const [menuExtractionRan, setMenuExtractionRan] = useState(false);
+  const [menuViewOpen, setMenuViewOpen] = useState(false);
   const provisioningDoneRef = useRef(false);
 
   function scrollToGroup(id: string) {
@@ -371,6 +377,22 @@ function ApplicationDialogContent({
   // The palette opens in a popup; cancelling it leaves the form untouched.
   function handlePaletteSuggested(suggestion: LogoPaletteSuggestion) {
     setPaletteSuggestion(suggestion);
+  }
+
+  /**
+   * Reloads the request after an OCR job so the menu section reads the stored catalog.
+   * The query cache is left alone: updating it remounts this keyed dialog and would drop
+   * the OCR state.
+   */
+  async function handleMenuOcrCompleted() {
+    setMenuExtractionRan(true);
+    // OPEN: confirm the backend stores OCR catalog on the request when referenceId is sent
+    try {
+      const refreshed = await api.getApplication(tenant.id);
+      setMenuCategories(refreshed.menuCategories ?? []);
+    } catch {
+      // The extraction result stays on screen; the stored catalog keeps its last value.
+    }
   }
 
   function handlePaletteApply(selection: PaletteSelection) {
@@ -772,9 +794,20 @@ function ApplicationDialogContent({
               onRemoveBranch={removeBranch}
             />
 
-            <MenuDetailsSection categories={tenant.menuCategories ?? []} />
+            <MenuDetailsSection
+              categories={menuCategories}
+              emptyMessage={
+                menuExtractionRan ? en.applications.menuExtractedEmpty : undefined
+              }
+            />
 
-            <MenuOcrSection disabled={!isSuperAdmin} referenceId={tenant.id} />
+            <MenuOcrSection
+              disabled={!isSuperAdmin}
+              referenceId={tenant.id}
+              canViewMenu={menuCategories.some((category) => category.items.length > 0)}
+              onViewMenu={() => setMenuViewOpen(true)}
+              onCompleted={() => void handleMenuOcrCompleted()}
+            />
 
             <ApplicationAuditSection tenant={tenant} />
           </div>
@@ -828,6 +861,12 @@ function ApplicationDialogContent({
           onApply={handlePaletteApply}
         />
       ) : null}
+
+      <MenuViewDialog
+        open={menuViewOpen}
+        requestId={tenant.id}
+        onClose={() => setMenuViewOpen(false)}
+      />
     </>
   );
 }

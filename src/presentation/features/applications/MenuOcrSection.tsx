@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { AlertTriangle, FileImage, RotateCcw, ScanText } from 'lucide-react';
+import { AlertTriangle, Eye, FileImage, RotateCcw, ScanText } from 'lucide-react';
 import { api } from '@/app/composition';
 import type { MenuExtractionProgress } from '@/application/dto';
 import type { MenuFileProblem } from '@/domain/rules/menu-file';
@@ -27,6 +27,11 @@ export interface MenuOcrSectionProps {
   disabled?: boolean;
   /** Onboarding request the photo belongs to; sent as `referenceId` to the OCR endpoint. */
   referenceId?: string;
+  /** Fired after a job completes, so the request details can be reloaded. */
+  onCompleted?: () => void;
+  /** Enabled when the request details hold at least one extracted item. */
+  canViewMenu?: boolean;
+  onViewMenu?: () => void;
 }
 
 /**
@@ -34,7 +39,13 @@ export interface MenuOcrSectionProps {
  * `extractMenu` use case only and renders the job states; the result lives in this
  * component and disappears when the dialog closes.
  */
-export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
+export function MenuOcrSection({
+  disabled,
+  referenceId,
+  onCompleted,
+  canViewMenu = false,
+  onViewMenu,
+}: MenuOcrSectionProps) {
   const [file, setFile] = useState<File | null>(null);
   const [phase, setPhase] = useState<MenuPhase>('idle');
   const [problem, setProblem] = useState<MenuFileProblem>('required');
@@ -116,6 +127,7 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
           setItems(rows);
           setPhase(rows.length === 0 ? 'empty' : 'completed');
           setResultOpen(rows.length > 0);
+          onCompleted?.();
           break;
         }
       }
@@ -189,6 +201,17 @@ export function MenuOcrSection({ disabled, referenceId }: MenuOcrSectionProps) {
             : phase === 'processing'
               ? en.menu.processing
               : en.menu.extract}
+        </Button>
+        <Button
+          type="button"
+          size="md"
+          variant="secondary"
+          className="w-full md:w-auto"
+          disabled={disabled || !canViewMenu}
+          onClick={onViewMenu}
+        >
+          <Eye aria-hidden="true" className="size-4" />
+          {en.applications.viewMenu}
         </Button>
       </div>
 

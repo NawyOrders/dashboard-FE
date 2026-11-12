@@ -3,6 +3,8 @@ import { en } from '@/presentation/i18n/en';
 
 export interface MenuDetailsSectionProps {
   categories: TenantMenuCategory[];
+  /** Shown instead of the default "no menu" text when the catalog is known to be empty. */
+  emptyMessage?: string;
 }
 
 function categoryName(category: TenantMenuCategory): string {
@@ -15,7 +17,7 @@ function categoryName(category: TenantMenuCategory): string {
  * stays local and nothing here is sent back with the request.
  */
 // OPEN: menu preview content, owner to confirm
-export function MenuDetailsSection({ categories }: MenuDetailsSectionProps) {
+export function MenuDetailsSection({ categories, emptyMessage }: MenuDetailsSectionProps) {
   return (
     <section className="flex flex-col gap-3" aria-label={en.applications.menuTitle}>
       <h4 className="text-2xs font-semibold uppercase tracking-wide text-text-muted">
@@ -23,7 +25,7 @@ export function MenuDetailsSection({ categories }: MenuDetailsSectionProps) {
       </h4>
 
       {categories.length === 0 ? (
-        <p className="text-sm text-text-muted">{en.applications.menuNotUploaded}</p>
+        <p className="text-sm text-text-muted">{emptyMessage ?? en.applications.menuNotUploaded}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-border rounded-panel border border-border bg-bg-2/40">
           {categories.map((category, index) => (

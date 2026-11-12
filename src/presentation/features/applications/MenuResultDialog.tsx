@@ -1,6 +1,5 @@
 import { AlertTriangle, ImageOff, ListChecks, ScanText, Trash2 } from 'lucide-react';
 import { useLocale } from '@/i18n';
-import type { Locale } from '@/i18n';
 import type { MenuExtractedItem } from '@/domain/entities';
 import { Button } from '@/presentation/components/ui/Button';
 import { Dialog } from '@/presentation/components/ui/Dialog';
@@ -8,6 +7,7 @@ import { Input } from '@/presentation/components/ui/Input';
 import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { cn } from '@/presentation/lib/cn';
 import { en } from '@/presentation/i18n/en';
+import { formatMenuPrice } from './menu-price';
 
 export interface MenuEditableItem extends MenuExtractedItem {
   id: string;
@@ -30,18 +30,6 @@ interface MenuGroup {
   labelAr: string;
   labelEn: string;
   rows: MenuEditableItem[];
-}
-
-const PRICE_FORMATTERS: Record<Locale, Intl.NumberFormat> = {
-  en: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EGP' }),
-  ar: new Intl.NumberFormat('ar-EG', { style: 'currency', currency: 'EGP' }),
-};
-
-function formatPrice(value: string, locale: Locale): string | null {
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  const amount = Number(trimmed);
-  return Number.isFinite(amount) ? PRICE_FORMATTERS[locale].format(amount) : trimmed;
 }
 
 function groupByCategory(rows: MenuEditableItem[]): MenuGroup[] {
@@ -146,7 +134,7 @@ export function MenuResultDialog({
                       locale === 'ar'
                         ? row.nameAr || row.nameEn
                         : row.nameEn || row.nameAr;
-                    const priceText = formatPrice(row.price, locale);
+                    const priceText = formatMenuPrice(row.price, locale);
                     const variants = row.variants ?? [];
 
                     return (

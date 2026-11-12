@@ -15,7 +15,7 @@ export function PageHeader({ title, subtitle, actions, showDemoBadge, demoBadgeT
     <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <h1 className="text-h1 font-extrabold text-text">{title}</h1>
+          <h1 className="text-h1 font-h1 text-text">{title}</h1>
           {showDemoBadge && (
             <Badge tone="warning" title={demoBadgeTitle ?? en.app.demoBadgeTitle}>
               {en.app.demoBadge}

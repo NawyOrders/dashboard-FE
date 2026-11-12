@@ -50,7 +50,7 @@ export function AnalyticsPage() {
         </div>
       )}
 
-      <Card className="mt-6">
+      <Card className="mt-6 shadow-surface">
         <CardHeader className="items-start">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-neutral-bg text-neutral-fg">
             <BarChart3 aria-hidden="true" className="size-6" />

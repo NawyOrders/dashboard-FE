@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Store, Inbox, CreditCard, BarChart3, Users, ScrollText, Settings, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Store, Inbox, CreditCard, BarChart3, Users, ScrollText, Settings, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/presentation/lib/cn';
 import nawyOrdersLogo from '@/assets/nawy-orders-logo.png';
@@ -69,33 +69,20 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
               cn(
                 'group relative flex h-12 w-full items-center gap-3 rounded-panel px-3 text-sm font-medium transition-colors duration-150',
                 isActive
-                  ? 'bg-primary text-white'
+                  ? 'bg-bg-2 font-semibold text-text before:absolute before:inset-y-2 before:start-0 before:w-[3px] before:rounded-pill before:bg-primary'
                   : 'text-text-muted hover:bg-bg-2 hover:text-text',
               )
             }
           >
-            {({ isActive }) => (
-              <>
-                <span className="shrink-0">{item.icon}</span>
-                <span
-                  className={cn(
-                    'whitespace-nowrap',
-                    variant === 'drawer' ? 'min-w-0 flex-1 truncate' : 'hidden xl:inline',
-                  )}
-                >
-                  {label}
-                </span>
-                {isActive && (
-                  <ChevronRight
-                    aria-hidden="true"
-                    className={cn(
-                      'absolute end-2 size-4 rtl:rotate-180',
-                      variant === 'drawer' ? 'block' : 'hidden xl:block',
-                    )}
-                  />
-                )}
-              </>
-            )}
+            <span className="shrink-0">{item.icon}</span>
+            <span
+              className={cn(
+                'whitespace-nowrap',
+                variant === 'drawer' ? 'min-w-0 flex-1 truncate' : 'hidden xl:inline',
+              )}
+            >
+              {label}
+            </span>
           </NavLink>
         );
 

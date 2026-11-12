@@ -90,19 +90,17 @@ export function ApplicationsPage() {
           />
         </div>
       ) : (
-          <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card">
+          <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card shadow-surface">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-start text-2xs uppercase tracking-wide text-text-muted">
-                <th className="px-4 py-3 text-start font-medium">{en.applications.restaurant}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.tenantId}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.ownerEmail}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.phone}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.branchCount}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.payment}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.submittedAt}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.status}</th>
-                <th className="px-4 py-3 text-start font-medium">{en.applications.actions}</th>
+              <tr className="border-b border-border text-start text-2xs font-medium text-text-muted">
+                <th className="px-4 py-3 text-start">{en.applications.restaurant}</th>
+                <th className="px-4 py-3 text-start">{en.applications.owner}</th>
+                <th className="hidden px-4 py-3 text-start md:table-cell">{en.applications.branchCount}</th>
+                <th className="px-4 py-3 text-start">{en.applications.payment}</th>
+                <th className="px-4 py-3 text-start">{en.applications.submittedAt}</th>
+                <th className="px-4 py-3 text-start">{en.applications.status}</th>
+                <th className="px-4 py-3 text-start">{en.applications.actions}</th>
               </tr>
             </thead>
             <tbody>
@@ -116,12 +114,18 @@ export function ApplicationsPage() {
                       <span dir="rtl" className="text-2xs text-text-muted">
                         {tenant.restaurantNameAr || en.common.notAvailable}
                       </span>
+                      <span dir="ltr" className="mt-1 font-mono text-micro text-text-muted">
+                        {tenant.tenantId}
+                      </span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs text-text-muted">{tenant.tenantId}</td>
-                  <td className="px-4 py-3 text-text-muted">{tenant.contact.email}</td>
-                  <td className="px-4 py-3 text-text-muted">{tenant.contact.phone}</td>
-                  <td className="px-4 py-3 text-text-muted">{tenant.branches.length}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col">
+                      <span dir="ltr" className="text-text">{tenant.contact.email}</span>
+                      <span dir="ltr" className="text-2xs text-text-muted">{tenant.contact.phone}</span>
+                    </div>
+                  </td>
+                  <td className="hidden px-4 py-3 text-text-muted md:table-cell">{tenant.branches.length}</td>
                   <td className="px-4 py-3">
                     {tenant.paymentStatus ? (
                       <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} />

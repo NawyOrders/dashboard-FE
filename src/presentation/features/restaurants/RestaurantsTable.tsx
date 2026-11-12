@@ -83,7 +83,7 @@ export function RestaurantsTable({
   const selectedRows = rows.filter((t) => selected.has(t.id));
 
   return (
-    <Card>
+    <Card className="shadow-surface">
       <CardHeader className="flex-col gap-4 lg:flex-row lg:items-start">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold text-text">{title}</h2>

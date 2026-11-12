@@ -83,7 +83,7 @@ export function ContractsPerMonthChart({ buckets, loading }: ContractsPerMonthCh
   const max = Math.max(1, ...buckets.map((bucket) => bucket.count));
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col shadow-surface">
       <CardHeader className="items-center">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold text-text">{en.overview.chartTitle}</h2>

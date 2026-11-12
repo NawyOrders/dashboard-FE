@@ -51,7 +51,7 @@ export function EndingSoonTable({
 }: EndingSoonTableProps) {
   const days = OVERVIEW_ENDING_WITHIN_DAYS;
   return (
-    <Card>
+    <Card className="shadow-surface">
       <CardHeader className="items-center">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold text-text">

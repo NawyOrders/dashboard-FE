@@ -10,6 +10,10 @@ export default {
   theme: {
     boxShadow: {
       none: 'none',
+      // One elevation for page-level panels; nested items stay border-only.
+      // The tint is the text color at low opacity, so no new color enters the palette.
+      surface:
+        '0 1px 2px color-mix(in srgb, var(--text) 6%, transparent), 0 12px 32px color-mix(in srgb, var(--text) 7%, transparent)',
     },
     extend: {
       colors: {

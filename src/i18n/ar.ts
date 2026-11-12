@@ -147,8 +147,8 @@ export const ar = {
     notCompleted: 'لم يتم الدفع',
   },
   overview: {
-    greeting: 'سعداء برؤيتك',
-    subtitle: 'نظرة عامة على المطاعم والاشتراكات والتوصيل على مستوى المنصة.',
+    title: 'نظرة عامة',
+    subtitle: 'سعداء برؤيتك. نظرة عامة على المطاعم والاشتراكات والتوصيل على مستوى المنصة.',
     kpiTotal: 'إجمالي المطاعم',
     kpiActive: 'المطاعم النشطة',
     kpiActiveSubs: 'الاشتراكات النشطة',
@@ -365,6 +365,7 @@ export const ar = {
     businessName: 'الاسم التجاري',
     tenantId: 'معرّف المطعم',
     ownerEmail: 'بريد المالك',
+    owner: 'المالك',
     phone: 'الهاتف',
     branchCount: 'الفروع',
     payment: 'الدفع',

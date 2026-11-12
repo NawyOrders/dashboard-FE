@@ -145,8 +145,8 @@ export const en = {
     notCompleted: 'Payment not completed',
   },
   overview: {
-    greeting: 'Good to see you',
-    subtitle: 'Platform-wide overview of restaurants, subscriptions and delivery.',
+    title: 'Overview',
+    subtitle: 'Good to see you. Platform-wide overview of restaurants, subscriptions and delivery.',
     kpiTotal: 'Total Restaurants',
     kpiActive: 'Active Restaurants',
     kpiActiveSubs: 'Active Subscriptions',
@@ -364,6 +364,7 @@ export const en = {
     businessName: 'Business name',
     tenantId: 'Tenant ID',
     ownerEmail: 'Owner email',
+    owner: 'Owner',
     phone: 'Phone',
     branchCount: 'Branches',
     payment: 'Payment',

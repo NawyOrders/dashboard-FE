@@ -16,7 +16,7 @@ import { useDirectoryState } from './useDirectoryState';
 import { RestaurantToolbar } from './RestaurantToolbar';
 import { ActiveFilterChips } from './ActiveFilterChips';
 import { SelectionBar } from './SelectionBar';
-import { RestaurantCard, RestaurantRow } from './RestaurantRow';
+import { RestaurantRow } from './RestaurantRow';
 import { TableSkeleton } from './TableSkeleton';
 
 function csvColumns(): CsvColumn<Tenant>[] {
@@ -139,8 +139,8 @@ export function RestaurantsTable({
 
         {!query.isLoading && !query.isError && rows.length > 0 && (
           <>
-            <div className="hidden overflow-x-auto md:block">
-              <table className="w-full min-w-[1080px] border-collapse text-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[1180px] border-collapse text-sm">
                 <caption className="sr-only">{title}</caption>
                 <thead>
                   <tr className="border-b border-border text-2xs font-medium text-text-muted">
@@ -156,8 +156,8 @@ export function RestaurantsTable({
                         key={header}
                         scope="col"
                         className={cn(
-                          'whitespace-nowrap px-3 py-3 text-start',
-                          index === 0 && 'sticky start-12 z-10 min-w-[200px] bg-card pe-4',
+                          'whitespace-nowrap px-4 py-3 text-start',
+                          index === 0 && 'sticky start-12 z-10 min-w-[240px] bg-card pe-4',
                           index === headers.length - 1 && 'pe-4',
                         )}
                       >
@@ -178,16 +178,6 @@ export function RestaurantsTable({
                 </tbody>
               </table>
             </div>
-            <ul className="flex flex-col gap-3 pb-6 md:hidden">
-              {pageRows.map((tenant) => (
-                <RestaurantCard
-                  key={tenant.id}
-                  tenant={tenant}
-                  selected={selected.has(tenant.id)}
-                  onToggle={directory.toggleRow}
-                />
-              ))}
-            </ul>
             <Pagination
               page={directory.page}
               pageCount={directory.pageCount}

@@ -109,6 +109,9 @@ export const en = {
     channels: { web: 'Web', pwa: 'PWA' },
     platforms: { android: 'Android', ios: 'iOS' },
   },
+  site: {
+    statusInProgress: 'In progress',
+  },
   status: {
     restaurant: {
       active: 'Active',

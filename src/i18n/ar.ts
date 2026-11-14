@@ -111,6 +111,9 @@ export const ar = {
     channels: { web: 'ويب', pwa: 'PWA' },
     platforms: { android: 'Android', ios: 'iOS' },
   },
+  site: {
+    statusInProgress: 'قيد التجهيز',
+  },
   status: {
     restaurant: {
       active: 'نشط',

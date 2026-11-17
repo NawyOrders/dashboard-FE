@@ -1,8 +1,7 @@
 /**
  * Tenant provisioning contract (agent.md section 26).
  *
- * Approving an application creates a tenant with `POST /api/v1/tenants`. The dashboard
- * never stores the admin password: it is sent once in the request body and never logged.
+ * The dashboard never stores the admin password: it is sent once with the approve request.
  */
 
 /**

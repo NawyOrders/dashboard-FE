@@ -1,6 +1,7 @@
 import { Card, CardHeader } from '@/presentation/components/ui/Card';
 import { Checkbox } from '@/presentation/components/ui/Checkbox';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
+import { EmptyStateLink } from '@/presentation/components/shared/EmptyStateLink';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Pagination } from '@/presentation/components/ui/Pagination';
 import { en } from '@/presentation/i18n/en';
@@ -112,7 +113,7 @@ export function RestaurantsTable({
 
         {query.isError && (
           <div className="pb-6">
-            <ErrorState error={query.error} onRetry={() => query.refetch()} />
+            <ErrorState onRetry={() => query.refetch()} />
           </div>
         )}
 
@@ -132,6 +133,7 @@ export function RestaurantsTable({
               <EmptyState
                 title={en.restaurants.empty.title}
                 description={en.restaurants.empty.description}
+                action={<EmptyStateLink to="/applications">{en.restaurants.empty.action}</EmptyStateLink>}
               />
             )}
           </div>

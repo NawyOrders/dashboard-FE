@@ -86,6 +86,7 @@ export const en = {
     backToList: 'Back to list',
     somethingWentWrong: 'Something went wrong',
     errorTitle: 'Could not load data',
+    errorBody: 'Check your connection and try again. If the problem continues, reload the page.',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
     itemsSelected: (n: number) => `${n} item${n === 1 ? '' : 's'} selected`,
@@ -178,6 +179,8 @@ export const en = {
     latestSubtitle: (count: number) => `${count} most recently signed restaurants`,
     viewAll: 'View all',
     noContractsYet: 'No contracts yet.',
+    noContractsYetHint: 'Approve a restaurant application to sign the first contract.',
+    reviewApplications: 'Review applications',
     duration: 'Duration',
     contractDate: 'Contract date',
     endingTitle: (days: number) => `Subscriptions ending within ${days} days`,
@@ -186,6 +189,7 @@ export const en = {
     daysLeft: (days: number) => `${days} day${days === 1 ? '' : 's'} left`,
     renew: 'Renew',
     endingEmpty: (days: number) => `No subscriptions ending in the next ${days} days.`,
+    endingEmptyHint: 'Every active subscription renews after this window.',
     endingCheckFailed: 'Some subscriptions could not be checked.',
   },
   restaurants: {
@@ -221,6 +225,7 @@ export const en = {
     empty: {
       title: 'No restaurants yet',
       description: 'Approved restaurant tenants appear here.',
+      action: 'Review applications',
     },
     noResults: {
       title: 'No restaurants match your search or filters',
@@ -352,11 +357,18 @@ export const en = {
     subtitle: 'Review new restaurant registrations submitted for approval.',
     searchPlaceholder: 'Search applications by name or ID…',
     tableEmpty: 'No applications to review.',
-    tableEmptyHint: 'Approved requests are in Restaurants.',
+    tableEmptyHint: 'Approved requests move to Restaurants; new registrations appear here.',
+    viewRestaurants: 'View restaurants',
+    noResultsTitle: 'No applications match your search.',
+    noResultsDescription: 'Try a different restaurant name or owner email.',
+    clearSearch: 'Clear search',
     approve: 'Approve',
     approveSuccess: 'Application approved',
     approveUnknown: 'The request may have been approved. Refresh the list before trying again.',
     approveError: 'Could not approve the application.',
+    approveBlockedPayment: 'Approve is unavailable until "Payment completed" is checked.',
+    approveBlockedFields: (fields: string[]) =>
+      `Approve is unavailable until these required fields are filled: ${fields.join(', ')}.`,
     approveConfirmTitle: 'Approve application',
     approveConfirmBody: (name: string) =>
       `Approve ${name}? It will appear in the restaurants directory and the decision will be written to the activity log.`,
@@ -641,6 +653,10 @@ export const en = {
     status: 'Status',
     createdAt: 'Created',
     tableEmpty: 'No accounts match your search.',
+    noResultsHint: 'Try a different name or email.',
+    clearSearch: 'Clear search',
+    emptyTitle: 'No internal accounts yet.',
+    emptyDescription: 'Create an internal account so your team can sign in to this dashboard.',
     searchPlaceholder: 'Name or email',
     rolesTitle: 'Roles & permissions',
     rolesSubtitle: 'What each role can do in the dashboard.',
@@ -662,6 +678,8 @@ export const en = {
     tenantAccountsSubtitle:
       'The accounts of the restaurants. They sign in to the restaurant app, never to this dashboard.',
     tenantAccountsEmpty: 'No tenant accounts yet.',
+    tenantAccountsEmptyHint:
+      'Create an account for a restaurant so its staff can use the restaurant app.',
     createTenantAccount: 'Create tenant account',
     createTenantAccountTitle: 'Create tenant account',
     createTenantAccountSubtitle: 'Add an account to a restaurant and give it a role.',

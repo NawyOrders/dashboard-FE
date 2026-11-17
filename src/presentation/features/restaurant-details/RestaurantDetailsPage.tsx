@@ -32,7 +32,6 @@ function ActivityTab({ tenantId }: { tenantId: string }) {
         logs={activity.data ?? []}
         isLoading={activity.isLoading}
         isError={activity.isError}
-        error={activity.error}
         onRetry={() => activity.refetch()}
         emptyMessage={en.details.noActivity}
         showTarget={false}
@@ -60,12 +59,8 @@ export function RestaurantDetailsPage() {
       setEditOpen(false);
       toast({ title: en.details.tenantUpdated, variant: 'success' });
     },
-    onError: (error: Error) => {
-      toast({
-        title: en.details.tenantUpdateFailed,
-        description: error.message,
-        variant: 'error',
-      });
+    onError: () => {
+      toast({ title: en.details.tenantUpdateFailed, variant: 'error' });
     },
   });
 
@@ -96,11 +91,16 @@ export function RestaurantDetailsPage() {
   }
 
   if (tenant.isError || !tenant.data) {
+    // A missing record reads as "not found"; any other failure gets the generic message.
+    const notFound =
+      typeof tenant.error === 'object' &&
+      tenant.error !== null &&
+      (tenant.error as { status?: unknown }).status === 404;
     return (
       <div>
         <PageHeader title={en.details.title} />
         <ErrorState
-          error={tenant.error ?? new Error(en.details.notFound)}
+          message={notFound ? en.details.notFound : undefined}
           onRetry={() => tenant.refetch()}
         />
       </div>

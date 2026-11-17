@@ -3,6 +3,7 @@ import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
+import { EmptyStateLink } from '@/presentation/components/shared/EmptyStateLink';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
@@ -52,7 +53,7 @@ export function LatestContractsTable({
 
       <CardBody className="flex-1">
         {error !== undefined && error !== null ? (
-          <ErrorState error={error} onRetry={onRetry} />
+          <ErrorState onRetry={onRetry} />
         ) : loading ? (
           <div className="flex flex-col gap-2" aria-hidden="true">
             {Array.from({ length: count }, (_, index) => (
@@ -60,7 +61,11 @@ export function LatestContractsTable({
             ))}
           </div>
         ) : rows.length === 0 ? (
-          <EmptyState title={en.overview.noContractsYet} />
+          <EmptyState
+            title={en.overview.noContractsYet}
+            description={en.overview.noContractsYetHint}
+            action={<EmptyStateLink to="/applications">{en.overview.reviewApplications}</EmptyStateLink>}
+          />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] border-collapse text-sm">

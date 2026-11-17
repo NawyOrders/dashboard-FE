@@ -9,7 +9,6 @@ export interface ActivityLogTableProps {
   logs: ActivityLog[];
   isLoading?: boolean;
   isError?: boolean;
-  error?: unknown;
   onRetry?: () => void;
   emptyMessage?: string;
   showTarget?: boolean;
@@ -24,7 +23,6 @@ export function ActivityLogTable({
   logs,
   isLoading,
   isError,
-  error,
   onRetry,
   emptyMessage = en.activity.empty,
   showTarget = true,
@@ -42,7 +40,7 @@ export function ActivityLogTable({
   if (isError) {
     return (
       <div className="p-6">
-        <ErrorState error={error} onRetry={onRetry} />
+        <ErrorState onRetry={onRetry} />
       </div>
     );
   }

@@ -49,12 +49,8 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
       void queryClient.invalidateQueries({ queryKey: ['tenantProvisioning', tenant.id] });
       toast({ title: en.details.planActivated, variant: 'success' });
     },
-    onError: (error: Error) => {
-      toast({
-        title: en.details.planActivationFailed,
-        description: error.message,
-        variant: 'error',
-      });
+    onError: () => {
+      toast({ title: en.details.planActivationFailed, variant: 'error' });
     },
   });
 
@@ -160,7 +156,6 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
           logs={history}
           isLoading={activity.isLoading}
           isError={activity.isError}
-          error={activity.error}
           onRetry={() => activity.refetch()}
           emptyMessage={en.details.noActivity}
           showTarget={false}

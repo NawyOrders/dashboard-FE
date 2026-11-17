@@ -6,6 +6,7 @@ import { PermissionDenied } from '@/presentation/components/shared/PermissionDen
 import { Button } from '@/presentation/components/ui/Button';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
+import { EmptyStateLink } from '@/presentation/components/shared/EmptyStateLink';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { en } from '@/presentation/i18n/en';
@@ -80,14 +81,24 @@ export function ApplicationsPage() {
         <Skeleton className="mt-6 h-40 w-full" />
       ) : applicationsQuery.isError ? (
         <div className="mt-6">
-          <ErrorState error={applicationsQuery.error} onRetry={() => void applicationsQuery.refetch()} />
+          <ErrorState onRetry={() => void applicationsQuery.refetch()} />
         </div>
       ) : rows.length === 0 ? (
         <div className="mt-6">
-          <EmptyState
-            title={en.applications.tableEmpty}
-            description={en.applications.tableEmptyHint}
-          />
+          {search.trim() ? (
+            <EmptyState
+              title={en.applications.noResultsTitle}
+              description={en.applications.noResultsDescription}
+              actionLabel={en.applications.clearSearch}
+              onAction={() => setSearch('')}
+            />
+          ) : (
+            <EmptyState
+              title={en.applications.tableEmpty}
+              description={en.applications.tableEmptyHint}
+              action={<EmptyStateLink to="/restaurants">{en.applications.viewRestaurants}</EmptyStateLink>}
+            />
+          )}
         </div>
       ) : (
           <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card shadow-surface">

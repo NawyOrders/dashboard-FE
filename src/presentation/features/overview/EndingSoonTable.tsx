@@ -65,7 +65,7 @@ export function EndingSoonTable({
 
       <CardBody>
         {error !== undefined && error !== null ? (
-          <ErrorState error={error} onRetry={onRetry} />
+          <ErrorState onRetry={onRetry} />
         ) : (
           <>
             {failedCount > 0 && !loading && (
@@ -89,7 +89,10 @@ export function EndingSoonTable({
                 ))}
               </div>
             ) : entries.length === 0 ? (
-              <EmptyState title={en.overview.endingEmpty(days)} />
+              <EmptyState
+                title={en.overview.endingEmpty(days)}
+                description={en.overview.endingEmptyHint}
+              />
             ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-sm">

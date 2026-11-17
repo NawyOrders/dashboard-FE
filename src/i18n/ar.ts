@@ -87,6 +87,7 @@ export const ar = {
     backToList: 'العودة للقائمة',
     somethingWentWrong: 'حدث خطأ ما',
     errorTitle: 'تعذر تحميل البيانات',
+    errorBody: 'تحقّق من الاتصال وحاول مرة أخرى. إذا استمرت المشكلة، أعد تحميل الصفحة.',
     showPassword: 'إظهار كلمة المرور',
     hidePassword: 'إخفاء كلمة المرور',
     itemsSelected: (n: number) => `${n} عنصر محدد`,
@@ -181,6 +182,8 @@ export const ar = {
     latestSubtitle: (count: number) => `أحدث ${count} مطعمًا تم التعاقد معهم`,
     viewAll: 'عرض الكل',
     noContractsYet: 'لا توجد عقود بعد.',
+    noContractsYetHint: 'وافق على طلب تسجيل مطعم لتوقيع أول عقد.',
+    reviewApplications: 'مراجعة طلبات التسجيل',
     duration: 'المدة',
     contractDate: 'تاريخ العقد',
     endingTitle: (days: number) => `اشتراكات تنتهي خلال ${days} يومًا`,
@@ -189,6 +192,7 @@ export const ar = {
     daysLeft: (days: number) => `${days} يومًا متبقيًا`,
     renew: 'تجديد',
     endingEmpty: (days: number) => `لا توجد اشتراكات تنتهي خلال ${days} يومًا القادمة.`,
+    endingEmptyHint: 'كل الاشتراكات النشطة تتجدد بعد هذه الفترة.',
     endingCheckFailed: 'تعذر التحقق من بعض الاشتراكات.',
   },
   restaurants: {
@@ -224,6 +228,7 @@ export const ar = {
     empty: {
       title: 'لا توجد مطاعم بعد',
       description: 'تظهر هنا المطاعم المعتمدة.',
+      action: 'مراجعة طلبات التسجيل',
     },
     noResults: {
       title: 'لا توجد مطاعم مطابقة للبحث أو الفلاتر',
@@ -354,11 +359,18 @@ export const ar = {
     subtitle: 'راجع طلبات تسجيل المطاعم الجديدة المقدمة للموافقة.',
     searchPlaceholder: 'ابحث في طلبات التسجيل بالاسم أو المعرّف…',
     tableEmpty: 'لا توجد طلبات تسجيل للمراجعة.',
-    tableEmptyHint: 'الطلبات المعتمدة موجودة في صفحة المطاعم.',
+    tableEmptyHint: 'تنتقل الطلبات المعتمدة إلى صفحة المطاعم، وتظهر هنا الطلبات الجديدة.',
+    viewRestaurants: 'عرض المطاعم',
+    noResultsTitle: 'لا توجد طلبات تسجيل مطابقة للبحث.',
+    noResultsDescription: 'جرّب اسم مطعم أو بريد مالك آخر.',
+    clearSearch: 'مسح البحث',
     approve: 'موافقة',
     approveSuccess: 'تمت الموافقة على طلب التسجيل',
     approveUnknown: 'ربما تمت الموافقة على الطلب. حدّث القائمة قبل المحاولة مرة أخرى.',
     approveError: 'تعذرت الموافقة على طلب التسجيل.',
+    approveBlockedPayment: 'الموافقة غير متاحة حتى يتم تحديد "تم الدفع".',
+    approveBlockedFields: (fields: string[]) =>
+      `الموافقة غير متاحة حتى تُكمل هذه الحقول المطلوبة: ${fields.join('، ')}.`,
     approveConfirmTitle: 'الموافقة على طلب التسجيل',
     approveConfirmBody: (name: string) =>
       `الموافقة على ${name}؟ سيظهر في دليل المطاعم وسيُسجل القرار في سجل النشاط.`,
@@ -644,6 +656,10 @@ export const ar = {
     status: 'الحالة',
     createdAt: 'تاريخ الإنشاء',
     tableEmpty: 'لا توجد حسابات مطابقة للبحث.',
+    noResultsHint: 'جرّب اسمًا أو بريدًا إلكترونيًا آخر.',
+    clearSearch: 'مسح البحث',
+    emptyTitle: 'لا توجد حسابات داخلية بعد.',
+    emptyDescription: 'أنشئ حسابًا داخليًا ليتمكن فريقك من الدخول إلى لوحة التحكم.',
     searchPlaceholder: 'الاسم أو البريد الإلكتروني',
     rolesTitle: 'الأدوار والصلاحيات',
     rolesSubtitle: 'ما يمكن لكل دور فعله في لوحة التحكم.',
@@ -665,6 +681,8 @@ export const ar = {
     tenantAccountsSubtitle:
       'حسابات المطاعم. تسجل الدخول إلى تطبيق المطعم، وليس إلى لوحة التحكم.',
     tenantAccountsEmpty: 'لا توجد حسابات مطاعم بعد.',
+    tenantAccountsEmptyHint:
+      'أنشئ حسابًا لمطعم ليستخدمه فريق المطعم في تطبيق المطعم.',
     createTenantAccount: 'إنشاء حساب مطعم',
     createTenantAccountTitle: 'إنشاء حساب مطعم',
     createTenantAccountSubtitle: 'أضف حسابًا إلى مطعم وحدد دوره.',

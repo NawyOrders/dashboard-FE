@@ -50,10 +50,21 @@ export function TenantAccountsSection() {
           </div>
         ) : accountsQuery.isError ? (
           <div className="p-5">
-            <ErrorState error={accountsQuery.error} onRetry={() => void accountsQuery.refetch()} />
+            <ErrorState onRetry={() => void accountsQuery.refetch()} />
           </div>
         ) : rows.length === 0 ? (
-          <EmptyState title={en.accounts.tenantAccountsEmpty} />
+          <EmptyState
+            title={en.accounts.tenantAccountsEmpty}
+            description={en.accounts.tenantAccountsEmptyHint}
+            action={
+              canCreate ? (
+                <Button onClick={() => setDialogOpen(true)}>
+                  <Plus aria-hidden="true" className="size-4" />
+                  {en.accounts.createTenantAccount}
+                </Button>
+              ) : undefined
+            }
+          />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">

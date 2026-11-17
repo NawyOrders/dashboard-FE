@@ -102,7 +102,6 @@ export function ActivityLogsPage() {
           logs={pageRows}
           isLoading={query.isLoading}
           isError={query.isError}
-          error={query.error}
           onRetry={() => void query.refetch()}
         />
 

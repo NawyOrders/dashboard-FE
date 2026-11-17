@@ -94,8 +94,8 @@ export function CreateAccountDialog({ open, onClose }: CreateAccountDialogProps)
           reset();
           onClose();
         },
-        onError: (error: Error) => {
-          toast({ title: en.common.somethingWentWrong, description: error.message, variant: 'error' });
+        onError: () => {
+          toast({ title: en.common.somethingWentWrong, variant: 'error' });
         },
       },
     );

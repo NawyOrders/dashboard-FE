@@ -68,12 +68,8 @@ function ProvisioningCard({ tenant }: { tenant: Tenant }) {
       void queryClient.invalidateQueries({ queryKey: ['tenants'] });
       toast({ title: en.toasts.updated, variant: 'success' });
     },
-    onError: (error: Error) => {
-      toast({
-        title: en.applications.provisioning.retryFailed,
-        description: error.message,
-        variant: 'error',
-      });
+    onError: () => {
+      toast({ title: en.applications.provisioning.retryFailed, variant: 'error' });
     },
   });
 

@@ -34,7 +34,6 @@ export function AnalyticsPage() {
 
       {overviewQuery.isError || salesQuery.isError ? (
         <ErrorState
-          error={overviewQuery.error ?? salesQuery.error}
           onRetry={() => {
             if (overviewQuery.isError) void overviewQuery.refetch();
             if (salesQuery.isError) void salesQuery.refetch();

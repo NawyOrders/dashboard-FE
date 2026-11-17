@@ -85,10 +85,30 @@ export function AccountsPage() {
           </div>
         ) : accountsQuery.isError ? (
           <div className="p-5">
-            <ErrorState error={accountsQuery.error} onRetry={() => void accountsQuery.refetch()} />
+            <ErrorState onRetry={() => void accountsQuery.refetch()} />
           </div>
         ) : rows.length === 0 ? (
-          <EmptyState title={en.accounts.tableEmpty} />
+          search.trim() ? (
+            <EmptyState
+              title={en.accounts.tableEmpty}
+              description={en.accounts.noResultsHint}
+              actionLabel={en.accounts.clearSearch}
+              onAction={() => setSearch('')}
+            />
+          ) : (
+            <EmptyState
+              title={en.accounts.emptyTitle}
+              description={en.accounts.emptyDescription}
+              action={
+                canCreate ? (
+                  <Button onClick={() => setDialogOpen(true)}>
+                    <Plus aria-hidden="true" className="size-4" />
+                    {en.accounts.createAccount}
+                  </Button>
+                ) : undefined
+              }
+            />
+          )
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">

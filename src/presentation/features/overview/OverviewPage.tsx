@@ -10,7 +10,7 @@ import { KpiCard } from './KpiCard';
 import { OverviewAnalysis } from './OverviewAnalysis';
 
 export function OverviewPage() {
-  const { data, isLoading, isError, error, refetch } = useTenants();
+  const { data, isLoading, isError, refetch } = useTenants();
   const applicationsQuery = useApplications();
   const tenants = data ?? [];
 
@@ -30,7 +30,7 @@ export function OverviewPage() {
       />
 
       {isError ? (
-        <ErrorState error={error} onRetry={() => refetch()} />
+        <ErrorState onRetry={() => refetch()} />
       ) : (
         <>
           <Card className="mb-6 grid grid-cols-1 gap-px overflow-hidden bg-border shadow-surface sm:grid-cols-2 xl:grid-cols-5">

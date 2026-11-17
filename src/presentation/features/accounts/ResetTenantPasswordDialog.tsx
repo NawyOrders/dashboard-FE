@@ -66,8 +66,8 @@ export function ResetTenantPasswordDialog({
           toast({ title: en.accounts.tenantPasswordReset, variant: 'success' });
           close();
         },
-        onError: (error: Error) => {
-          toast({ title: en.common.somethingWentWrong, description: error.message, variant: 'error' });
+        onError: () => {
+          toast({ title: en.common.somethingWentWrong, variant: 'error' });
         },
       },
     );

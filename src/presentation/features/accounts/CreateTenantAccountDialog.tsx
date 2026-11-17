@@ -102,8 +102,8 @@ export function CreateTenantAccountDialog({ open, onClose }: CreateTenantAccount
           reset();
           onClose();
         },
-        onError: (error: Error) => {
-          toast({ title: en.common.somethingWentWrong, description: error.message, variant: 'error' });
+        onError: () => {
+          toast({ title: en.common.somethingWentWrong, variant: 'error' });
         },
       },
     );

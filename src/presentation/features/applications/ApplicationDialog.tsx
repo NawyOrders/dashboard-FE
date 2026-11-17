@@ -11,6 +11,7 @@ import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Input } from '@/presentation/components/ui/Input';
 import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
+import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { queryKeys, useApplication, useOffers } from '@/presentation/hooks/queries';
@@ -43,7 +44,9 @@ import { MenuViewDialog } from './MenuViewDialog';
 import { RestaurantForm } from '@/presentation/features/restaurant-form/RestaurantForm';
 import type { BranchExtra } from '@/presentation/features/restaurant-form/BranchesSection';
 import { FORM_GROUP_IDS } from '@/presentation/features/restaurant-form/form-groups';
+import { RESTAURANT_NAME_AR_FIELD } from '@/presentation/features/restaurant-form/form-model';
 import { useRestaurantFormState } from '@/presentation/features/restaurant-form/useRestaurantFormState';
+import { fieldLabel } from '@/presentation/features/restaurant-form/localized-schema';
 import { BRAND_COLOR_SLOTS } from '@/presentation/features/restaurant-form/brand-color-slots';
 import { PaletteDialog } from '@/presentation/features/restaurant-form/PaletteDialog';
 import type { PaletteSelection } from '@/presentation/features/restaurant-form/PaletteDialog';
@@ -194,7 +197,7 @@ function ApplicationDialogLoader({
           </Button>
         }
       >
-        <ErrorState error={details.error} onRetry={() => void details.refetch()} />
+        <ErrorState onRetry={() => void details.refetch()} />
       </Dialog>
     );
   }
@@ -473,17 +476,12 @@ function ApplicationDialogContent({
         setProvisioningTimedOut(false);
         setProvisioningDeadline(Date.now() + PROVISIONING_TIMEOUT_MS);
       }
-    } catch (error) {
-      toast({
-        title: en.applications.approveError,
-        ...(error instanceof Error && error.message ? { description: error.message } : {}),
-        variant: 'error',
-      });
+    } catch {
+      toast({ title: en.applications.approveError, variant: 'error' });
     } finally {
       setApproving(false);
     }
   }
-
   async function handleReject() {
     if (!user) return;
     const reason = rejectReason.trim();
@@ -497,12 +495,8 @@ function ApplicationDialogContent({
       toast({ title: en.applications.rejected, variant: 'success' });
       setShowRejectConfirm(false);
       onRejected();
-    } catch (error) {
-      toast({
-        title: en.applications.rejectFailed,
-        ...(error instanceof Error && error.message ? { description: error.message } : {}),
-        variant: 'error',
-      });
+    } catch {
+      toast({ title: en.applications.rejectFailed, variant: 'error' });
     } finally {
       setRejecting(false);
     }
@@ -558,6 +552,35 @@ function ApplicationDialogContent({
 
   const busy = approving || rejecting || provisioning !== null || saving;
 
+  // agent.md section 13: approve needs every required value and a completed payment.
+  // The reason is read on every render so it follows field edits and the language switch.
+  const isBlank = (value: string | undefined) => (value ?? '').trim() === '';
+  const missingRequiredLabels: string[] = [];
+  for (const step of schema.steps) {
+    for (const section of step.sections ?? []) {
+      for (const field of section.fields ?? []) {
+        if (field.required && isBlank(values.fields[field.key])) {
+          missingRequiredLabels.push(fieldLabel(field, 'restaurant'));
+        }
+      }
+    }
+    for (const field of step.itemFields ?? []) {
+      if (!field.required) continue;
+      if (values.branches.some((branch) => isBlank(branch.fields[field.key]))) {
+        missingRequiredLabels.push(fieldLabel(field, 'branch'));
+      }
+    }
+  }
+  if (isBlank(values.fields[RESTAURANT_NAME_AR_FIELD.key])) {
+    missingRequiredLabels.push(en.applications.restaurantNameAr);
+  }
+
+  const approveReason = !paid
+    ? en.applications.approveBlockedPayment
+    : missingRequiredLabels.length > 0
+      ? en.applications.approveBlockedFields(missingRequiredLabels)
+      : null;
+
   return (
     <>
       <Dialog
@@ -582,9 +605,32 @@ function ApplicationDialogContent({
               <Button variant="secondary" onClick={handleSave} disabled={busy || hasColorErrors}>
                 {saving ? en.applications.saving : en.applications.saveChanges}
               </Button>
-              <Button onClick={handleApprove} disabled={busy}>
-                {approving ? en.applications.approving : en.applications.approve}
-              </Button>
+              {approveReason ? (
+                <Tooltip
+                  id="approve-blocked-reason"
+                  label={approveReason}
+                  bubbleClassName="max-w-[280px] whitespace-normal text-start"
+                >
+                  <span
+                    tabIndex={0}
+                    aria-describedby="approve-blocked-reason"
+                    className="inline-flex cursor-not-allowed rounded-panel"
+                  >
+                    <Button
+                      onClick={handleApprove}
+                      disabled
+                      aria-describedby="approve-blocked-reason"
+                      className="pointer-events-none"
+                    >
+                      {en.applications.approve}
+                    </Button>
+                  </span>
+                </Tooltip>
+              ) : (
+                <Button onClick={handleApprove} disabled={busy}>
+                  {approving ? en.applications.approving : en.applications.approve}
+                </Button>
+              )}
             </>
           ) : (
             <Button variant="secondary" onClick={onClose}>

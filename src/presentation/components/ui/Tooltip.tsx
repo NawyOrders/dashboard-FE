@@ -7,10 +7,19 @@ export interface TooltipProps {
   side?: 'top' | 'bottom' | 'right';
   bubbleClassName?: string;
   className?: string;
+  /** Bubble id, so the trigger can point at it with `aria-describedby`. */
+  id?: string;
 }
 
 /** CSS-only tooltip triggered on hover and keyboard focus. */
-export function Tooltip({ label, children, side = 'top', bubbleClassName, className }: TooltipProps) {
+export function Tooltip({
+  label,
+  children,
+  side = 'top',
+  bubbleClassName,
+  className,
+  id,
+}: TooltipProps) {
   const position =
     side === 'top'
       ? 'bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2'
@@ -22,6 +31,7 @@ export function Tooltip({ label, children, side = 'top', bubbleClassName, classN
     <span className={cn('group relative inline-flex', className)}>
       {children}
       <span
+        id={id}
         role="tooltip"
         className={cn(
           'pointer-events-none absolute z-30 hidden max-w-xs whitespace-nowrap rounded-pill bg-text px-2 py-1 text-2xs text-white',

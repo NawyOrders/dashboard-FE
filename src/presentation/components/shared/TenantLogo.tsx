@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { cn } from '@/presentation/lib/cn';
+import { tenantInitials } from '@/presentation/lib/tenant-initials';
 import { tokens } from '@/presentation/theme/tokens';
 
 export interface TenantLogoProps {
   name: string;
+  /** Arabic name; its first two letters stand in when the English name is empty. */
+  nameAr?: string | null;
   color?: string;
   /** Readable logo URL; initials are shown while it is null or fails to load. */
   src?: string | null;
@@ -17,13 +20,9 @@ const SIZES = {
   lg: 'size-16 rounded-card text-xl',
 } as const;
 
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/).slice(0, 2);
-  return parts.map((part) => part[0] ?? '').join('').toUpperCase();
-}
-
 export function TenantLogo({
   name,
+  nameAr = null,
   color = tokens.colors.primary.DEFAULT,
   src = null,
   size = 'sm',
@@ -50,7 +49,7 @@ export function TenantLogo({
           onError={() => setFailedSrc(imageSrc)}
         />
       ) : (
-        initials(name)
+        tenantInitials(name, nameAr)
       )}
     </span>
   );

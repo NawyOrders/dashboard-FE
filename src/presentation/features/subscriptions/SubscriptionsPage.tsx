@@ -168,7 +168,11 @@ export function SubscriptionsPage() {
                     >
                       <td className="whitespace-nowrap px-6 py-4">
                         <span className="flex items-center gap-3">
-                          <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} />
+                          <TenantLogo
+                            name={tenant.restaurantName}
+                            nameAr={tenant.restaurantNameAr}
+                            color={tenant.brandColors.primary}
+                          />
                           <span className="min-w-0">
                             <RestaurantName
                               name={tenant.restaurantName}

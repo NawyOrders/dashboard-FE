@@ -41,7 +41,11 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
       </td>
       <td className={cn(stickyCell, 'start-12 min-w-[240px] pe-4')}>
         <div className="flex items-center gap-3">
-          <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} />
+          <TenantLogo
+            name={tenant.restaurantName}
+            nameAr={tenant.restaurantNameAr}
+            color={tenant.brandColors.primary}
+          />
           <div className="min-w-0">
             <button
               type="button"

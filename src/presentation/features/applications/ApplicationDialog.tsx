@@ -12,6 +12,7 @@ import { Input } from '@/presentation/components/ui/Input';
 import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
+import { tenantInitials } from '@/presentation/lib/tenant-initials';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { queryKeys, useApplication, useOffers } from '@/presentation/hooks/queries';
 import { useToast } from '@/presentation/hooks/useToast';
@@ -72,12 +73,6 @@ function provisioningHint(status: string): string {
   return en.applications.provisioning.pendingHint;
 }
 
-function logoInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean).slice(0, 2);
-  const value = parts.map((part) => part[0] ?? '').join('').toUpperCase();
-  return value === '' ? '—' : value;
-}
-
 /** HTTP status carried by an ApiError, without importing infrastructure into the view. */
 function httpStatusOf(error: unknown): number | null {
   if (typeof error !== 'object' || error === null || !('status' in error)) return null;
@@ -105,7 +100,15 @@ function slugMessage(problem: SlugProblem): string {
 }
 
 /** Logo preview: the asset URL when readable, otherwise a neutral initials placeholder. */
-function PreviewLogo({ name, src }: { name: string; src: string | null }) {
+function PreviewLogo({
+  name,
+  nameAr,
+  src,
+}: {
+  name: string;
+  nameAr?: string | null;
+  src: string | null;
+}) {
   if (src) {
     return (
       <img
@@ -115,12 +118,13 @@ function PreviewLogo({ name, src }: { name: string; src: string | null }) {
       />
     );
   }
+  const initials = tenantInitials(name, nameAr);
   return (
     <span
       aria-hidden="true"
       className="flex size-16 shrink-0 items-center justify-center rounded-card border border-border bg-bg-2 text-xl font-semibold text-text-muted"
     >
-      {logoInitials(name)}
+      {initials === '' ? '—' : initials}
     </span>
   );
 }
@@ -643,7 +647,11 @@ function ApplicationDialogContent({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[18rem_minmax(0,1fr)]">
           <aside className="flex flex-col gap-4 md:sticky md:top-0 md:self-start">
             <div className="flex w-full min-w-0 flex-col items-start gap-3 rounded-card border border-border bg-bg-2/50 p-4">
-              <PreviewLogo name={tenant.restaurantName} src={previewLogoSrc} />
+              <PreviewLogo
+                name={tenant.restaurantName}
+                nameAr={tenant.restaurantNameAr}
+                src={previewLogoSrc}
+              />
               <div className="flex min-w-0 flex-col gap-1">
                 <span dir="ltr" className="max-w-full break-words text-sm font-semibold text-text">
                   {tenant.restaurantName}

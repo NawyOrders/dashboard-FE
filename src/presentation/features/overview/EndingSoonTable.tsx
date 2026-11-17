@@ -121,7 +121,12 @@ export function EndingSoonTable({
                   <tr key={tenant.id} className="border-b border-border last:border-0">
                     <td className="whitespace-nowrap px-3 py-3">
                       <div className="flex items-center gap-2.5">
-                        <TenantLogo name={tenant.restaurantName} color={tenant.brandColors.primary} size="sm" />
+                        <TenantLogo
+                          name={tenant.restaurantName}
+                          nameAr={tenant.restaurantNameAr}
+                          color={tenant.brandColors.primary}
+                          size="sm"
+                        />
                         <Link
                           to={`/restaurants/${tenant.id}?tab=subscription`}
                           title={tenant.restaurantName}

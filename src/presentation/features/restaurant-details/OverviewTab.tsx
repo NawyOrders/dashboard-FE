@@ -139,6 +139,7 @@ export function OverviewTab({ tenant }: { tenant: Tenant }) {
           <div className="mb-4 flex items-center gap-4">
             <TenantLogo
               name={current.restaurantName}
+              nameAr={current.restaurantNameAr}
               color={current.brandColors.primary}
               src={current.logoUrl}
               size="lg"

@@ -34,6 +34,7 @@ export function DetailsHeader({ tenant, onEdit }: DetailsHeaderProps) {
         <div className="flex min-w-0 items-start gap-4">
           <TenantLogo
             name={tenant.restaurantName}
+            nameAr={tenant.restaurantNameAr}
             color={tenant.brandColors.primary}
             src={tenant.logoUrl}
             size="lg"

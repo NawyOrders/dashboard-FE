@@ -150,7 +150,7 @@ export function Dialog({
           {children}
         </div>
         {footer && (
-          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border p-6">
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 border-t border-border p-6">
             {footer}
           </div>
         )}

@@ -11,7 +11,6 @@ import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Input } from '@/presentation/components/ui/Input';
 import { PasswordInput } from '@/presentation/components/ui/PasswordInput';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
-import { Tooltip } from '@/presentation/components/ui/Tooltip';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { useCurrentUser } from '@/presentation/hooks/useCurrentUser';
 import { queryKeys, useApplication, useOffers } from '@/presentation/hooks/queries';
@@ -606,11 +605,7 @@ function ApplicationDialogContent({
                 {saving ? en.applications.saving : en.applications.saveChanges}
               </Button>
               {approveReason ? (
-                <Tooltip
-                  id="approve-blocked-reason"
-                  label={approveReason}
-                  bubbleClassName="max-w-[280px] whitespace-normal text-start"
-                >
+                <div className="flex flex-col items-stretch gap-1.5">
                   <span
                     tabIndex={0}
                     aria-describedby="approve-blocked-reason"
@@ -625,7 +620,13 @@ function ApplicationDialogContent({
                       {en.applications.approve}
                     </Button>
                   </span>
-                </Tooltip>
+                  <p
+                    id="approve-blocked-reason"
+                    className="max-w-[62ch] text-end text-xs leading-relaxed text-text-muted"
+                  >
+                    {approveReason}
+                  </p>
+                </div>
               ) : (
                 <Button onClick={handleApprove} disabled={busy}>
                   {approving ? en.applications.approving : en.applications.approve}

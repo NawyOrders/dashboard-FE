@@ -14,7 +14,7 @@ export function PermissionDenied({ action }: { action?: string }) {
         <ShieldAlert aria-hidden="true" className="size-8" />
       </div>
       <h1 className="text-xl font-semibold text-text">{en.permissions.deniedTitle}</h1>
-      <p className="max-w-md text-sm text-text-muted">
+      <p className="max-w-[62ch] text-pretty text-sm leading-relaxed text-text-muted">
         {en.permissions.deniedBody} {action ? `(${action})` : ''}
       </p>
       {user && (

@@ -26,7 +26,9 @@ export function EmptyState({
         {icon ?? <ClipboardList aria-hidden="true" className="size-7" />}
       </div>
       <h3 className="text-base font-semibold text-text">{title}</h3>
-      {description && <p className="max-w-sm text-sm text-text-muted">{description}</p>}
+      {description && (
+        <p className="max-w-[62ch] text-pretty text-sm leading-relaxed text-text-muted">{description}</p>
+      )}
       {action ? (
         <div className="mt-2">{action}</div>
       ) : (

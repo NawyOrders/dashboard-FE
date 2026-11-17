@@ -10,7 +10,8 @@ import { useApplications, useTenants } from '@/presentation/hooks/queries';
 import { cn } from '@/presentation/lib/cn';
 import { Badge } from '@/presentation/components/ui/Badge';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { setLocale, useLocale } from '@/i18n';
+import type { Locale } from '@/i18n';
 
 const ROUTE_TITLES: Record<string, keyof typeof en.nav> = {
   '/': 'overview',
@@ -24,6 +25,41 @@ const ROUTE_TITLES: Record<string, keyof typeof en.nav> = {
 };
 
 const MAX_SUGGESTIONS = 6;
+
+/** Lives only in the top bar; the selected locale is stored by `setLocale`. */
+function LanguageSwitcher() {
+  const locale = useLocale();
+  const options: { value: Locale; label: string }[] = [
+    { value: 'ar', label: en.language.arabic },
+    { value: 'en', label: en.language.english },
+  ];
+
+  return (
+    <div
+      role="group"
+      aria-label={en.language.label}
+      className="inline-flex items-center rounded-panel border border-border bg-card p-0.5"
+    >
+      {options.map((option) => {
+        const active = option.value === locale;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={active}
+            onClick={() => setLocale(option.value)}
+            className={cn(
+              'rounded-[6px] px-2 py-1 text-2xs font-medium transition-colors duration-150',
+              active ? 'bg-primary text-white' : 'text-text-muted hover:text-text',
+            )}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export interface TopBarProps {
   onMenuClick: () => void;

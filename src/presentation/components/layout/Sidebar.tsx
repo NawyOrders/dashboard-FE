@@ -67,7 +67,7 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
             onClick={onNavigate}
             className={({ isActive }) =>
               cn(
-                'group relative flex h-12 w-full items-center gap-3 rounded-panel px-3 text-sm font-medium transition-colors duration-150',
+                'group relative flex min-h-12 w-full items-center gap-3 rounded-panel px-3 py-2 text-sm font-medium transition-colors duration-150',
                 isActive
                   ? 'bg-bg-2 font-semibold text-text before:absolute before:inset-y-2 before:start-0 before:w-[3px] before:rounded-pill before:bg-primary'
                   : 'text-text-muted hover:bg-bg-2 hover:text-text',
@@ -77,8 +77,9 @@ function NavList({ variant, onNavigate }: { variant: SidebarVariant; onNavigate?
             <span className="shrink-0">{item.icon}</span>
             <span
               className={cn(
-                'whitespace-nowrap',
-                variant === 'drawer' ? 'min-w-0 flex-1 truncate' : 'hidden xl:inline',
+                variant === 'drawer'
+                  ? 'min-w-0 flex-1 whitespace-normal break-words'
+                  : 'hidden whitespace-nowrap xl:inline',
               )}
             >
               {label}

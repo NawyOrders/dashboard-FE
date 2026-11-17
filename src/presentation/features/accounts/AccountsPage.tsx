@@ -6,6 +6,7 @@ import { Button } from '@/presentation/components/ui/Button';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { en } from '@/presentation/i18n/en';
 import { formatDate } from '@/domain/rules/date';
@@ -110,8 +111,9 @@ export function AccountsPage() {
             />
           )
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-sm">
+          <>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[640px] border-collapse text-sm">
               <caption className="sr-only">{en.accounts.title}</caption>
               <thead>
                 <tr className="border-b border-border text-2xs font-medium text-text-muted">
@@ -138,8 +140,28 @@ export function AccountsPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+              </table>
+            </div>
+            <ul className="divide-y divide-border md:hidden">
+              {rows.map((account) => (
+                <li key={account.id}>
+                  <MobileRecordCard
+                    title={
+                      <span className="flex min-w-0 flex-col">
+                        <span className="break-words text-sm font-semibold text-text">{account.name}</span>
+                        <span dir="ltr" className="break-all text-2xs text-text-muted">{account.email}</span>
+                      </span>
+                    }
+                    status={<StatusPill meta={adminAccountStatusMeta(account.status)} />}
+                    fields={[
+                      { label: en.accounts.role, value: roleLabel(account.role) },
+                      { label: en.accounts.createdAt, value: formatDate(account.createdAt) },
+                    ]}
+                  />
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </div>
 

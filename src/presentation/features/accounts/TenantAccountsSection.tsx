@@ -4,6 +4,7 @@ import { Button } from '@/presentation/components/ui/Button';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { usePermission } from '@/presentation/hooks/usePermission';
 import { useTenantAccounts } from '@/presentation/hooks/queries';
 import { en } from '@/presentation/i18n/en';
@@ -66,8 +67,9 @@ export function TenantAccountsSection() {
             }
           />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-sm">
+          <>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[640px] border-collapse text-sm">
               <caption className="sr-only">{en.accounts.tenantAccountsTitle}</caption>
               <thead>
                 <tr className="border-b border-border text-2xs font-medium text-text-muted">
@@ -122,8 +124,46 @@ export function TenantAccountsSection() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+              </table>
+            </div>
+            <ul className="divide-y divide-border md:hidden">
+              {rows.map((account) => (
+                <li key={account.id}>
+                  <MobileRecordCard
+                    title={
+                      <span className="break-words text-sm font-semibold text-text">
+                        {account.restaurantName}
+                      </span>
+                    }
+                    fields={[
+                      { label: en.accounts.restaurantRole, value: tenantRoleLabel(account.restaurantRole) },
+                      {
+                        label: en.accounts.email,
+                        value: <span dir="ltr" className="break-all">{account.email}</span>,
+                      },
+                      { label: en.accounts.createdAt, value: formatDate(account.createdAt) },
+                    ]}
+                    actions={
+                      canResetPassword ? (
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() =>
+                            setResetTarget({
+                              id: account.id,
+                              label: `${account.email} — ${account.restaurantName}`,
+                            })
+                          }
+                        >
+                          {en.accounts.resetPassword}
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </div>
 

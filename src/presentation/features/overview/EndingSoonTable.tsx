@@ -9,6 +9,7 @@ import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
 import { OVERVIEW_ENDING_WITHIN_DAYS } from '@/config/policy';
@@ -94,7 +95,8 @@ export function EndingSoonTable({
                 description={en.overview.endingEmptyHint}
               />
             ) : (
-          <div className="overflow-x-auto">
+              <>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[760px] border-collapse text-sm">
               <caption className="sr-only">{en.overview.endingTitle(days)}</caption>
               <thead>
@@ -158,6 +160,51 @@ export function EndingSoonTable({
               </tbody>
             </table>
           </div>
+              <ul className="divide-y divide-border md:hidden">
+                {entries.map(({ tenant, daysRemaining }) => (
+                  <li key={tenant.id}>
+                    <MobileRecordCard
+                      leading={
+                        <TenantLogo
+                          name={tenant.restaurantName}
+                          nameAr={tenant.restaurantNameAr}
+                          color={tenant.brandColors.primary}
+                          size="sm"
+                        />
+                      }
+                      title={
+                        <Link
+                          to={`/restaurants/${tenant.id}?tab=subscription`}
+                          className="block min-w-0"
+                        >
+                          <RestaurantName
+                            name={tenant.restaurantName}
+                            nameAr={tenant.restaurantNameAr}
+                            primaryClassName="text-sm font-semibold text-text hover:text-primary"
+                            secondaryClassName="text-2xs text-text-muted"
+                          />
+                        </Link>
+                      }
+                      status={<StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />}
+                      fields={[
+                        {
+                          label: en.restaurants.columns.package,
+                          value: <PackagePill code={tenant.subscription.packageCode} />,
+                        },
+                        {
+                          label: en.restaurants.columns.expiryDate,
+                          value: formatDate(tenant.subscription.endDate),
+                        },
+                        {
+                          label: en.overview.daysRemainingColumn,
+                          value: <DaysRemaining days={daysRemaining} />,
+                        },
+                      ]}
+                    />
+                  </li>
+                ))}
+              </ul>
+              </>
             )}
           </>
         )}

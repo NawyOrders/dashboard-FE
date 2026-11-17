@@ -17,7 +17,7 @@ import { useDirectoryState } from './useDirectoryState';
 import { RestaurantToolbar } from './RestaurantToolbar';
 import { ActiveFilterChips } from './ActiveFilterChips';
 import { SelectionBar } from './SelectionBar';
-import { RestaurantRow } from './RestaurantRow';
+import { RestaurantCard, RestaurantRow } from './RestaurantRow';
 import { TableSkeleton } from './TableSkeleton';
 
 function csvColumns(): CsvColumn<Tenant>[] {
@@ -141,7 +141,7 @@ export function RestaurantsTable({
 
         {!query.isLoading && !query.isError && rows.length > 0 && (
           <>
-            <div className="overflow-x-auto">
+            <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[1180px] border-collapse text-sm">
                 <caption className="sr-only">{title}</caption>
                 <thead>
@@ -180,6 +180,17 @@ export function RestaurantsTable({
                 </tbody>
               </table>
             </div>
+            <ul className="divide-y divide-border rounded-card border border-border md:hidden">
+              {pageRows.map((tenant) => (
+                <li key={tenant.id}>
+                  <RestaurantCard
+                    tenant={tenant}
+                    selected={selected.has(tenant.id)}
+                    onToggle={directory.toggleRow}
+                  />
+                </li>
+              ))}
+            </ul>
             <Pagination
               page={directory.page}
               pageCount={directory.pageCount}

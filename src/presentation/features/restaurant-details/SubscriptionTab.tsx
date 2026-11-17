@@ -7,6 +7,7 @@ import { useActivity, queryKeys, useOffers } from '@/presentation/hooks/queries'
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { InfoList, InfoRow } from '@/presentation/components/shared/InfoList';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
@@ -109,7 +110,8 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
               {offersQuery.isLoading ? en.common.loading : en.common.notAvailable}
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+            <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[420px] border-collapse text-sm">
                 <caption className="sr-only">{en.details.referencePrices}</caption>
                 <thead>
@@ -146,6 +148,23 @@ export function SubscriptionTab({ tenant }: { tenant: Tenant }) {
                 </tbody>
               </table>
             </div>
+            <ul className="divide-y divide-border md:hidden">
+              {offerPackages.map((code) => (
+                <li key={code}>
+                  <MobileRecordCard
+                    title={<span className="text-sm font-semibold text-text">{packageName(code)}</span>}
+                    fields={offerDurations.map((months) => {
+                      const price = priceFromOffers(offers, code, months);
+                      return {
+                        label: en.packages.priceFor(months),
+                        value: price === null ? en.common.notAvailable : formatEgp(price),
+                      };
+                    })}
+                  />
+                </li>
+              ))}
+            </ul>
+            </>
           )}
         </CardBody>
       </Card>

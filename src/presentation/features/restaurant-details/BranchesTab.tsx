@@ -2,11 +2,18 @@ import { Card, CardBody, CardHeader } from '@/presentation/components/ui/Card';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { branchStatusMeta } from '@/presentation/lib/status';
 import { useTenantBranches } from '@/presentation/hooks/queries';
 import { INCLUDED_BRANCHES } from '@/config/policy';
 import { en } from '@/presentation/i18n/en';
-import type { Tenant } from '@/domain/entities';
+import type { Branch, Tenant } from '@/domain/entities';
+
+function formatHours(branch: Branch): string {
+  return branch.openTime && branch.closeTime
+    ? `${branch.workingDay ? `${branch.workingDay} ` : ''}${branch.openTime}–${branch.closeTime}`
+    : '—';
+}
 
 // WORKAROUND: remove when TenantDetailsResponse has requestId and branches. The tenant
 // endpoints do not return branches, so the tab reads them from the matching onboarding
@@ -47,7 +54,8 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
         ) : branches.length === 0 ? (
           <EmptyState title={en.details.noBranches} />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[760px] border-collapse text-sm">
               <caption className="sr-only">{en.create.branches.title}</caption>
               <thead>
@@ -80,9 +88,7 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
                     </td>
                     <td className="tabular whitespace-nowrap px-4 py-4 text-text-muted">{branch.phone}</td>
                     <td className="whitespace-nowrap px-4 py-4 text-text-muted">
-                      {branch.openTime && branch.closeTime
-                        ? `${branch.workingDay ? `${branch.workingDay} ` : ''}${branch.openTime}–${branch.closeTime}`
-                        : '—'}
+                      {formatHours(branch)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4">
                       <StatusPill meta={branchStatusMeta(branch.status)} />
@@ -92,6 +98,42 @@ export function BranchesTab({ tenant }: { tenant: Tenant }) {
               </tbody>
             </table>
           </div>
+          <ul className="divide-y divide-border md:hidden">
+            {branches.map((branch) => (
+              <li key={branch.id}>
+                <MobileRecordCard
+                  title={
+                    <span className="flex min-w-0 flex-col">
+                      <span dir="ltr" className="break-words text-sm font-semibold text-text">
+                        {branch.name}
+                      </span>
+                      {branch.nameAr ? (
+                        <span dir="rtl" className="text-2xs text-text-muted">{branch.nameAr}</span>
+                      ) : null}
+                    </span>
+                  }
+                  status={<StatusPill meta={branchStatusMeta(branch.status)} />}
+                  fields={[
+                    {
+                      label: en.create.branches.address,
+                      value: (
+                        <span className="flex flex-col">
+                          <span>{branch.address}</span>
+                          {branch.city ? <span className="text-2xs text-text-muted">{branch.city}</span> : null}
+                        </span>
+                      ),
+                    },
+                    {
+                      label: en.create.branches.phone,
+                      value: <span dir="ltr" className="break-all">{branch.phone}</span>,
+                    },
+                    { label: en.create.branches.hours, value: formatHours(branch) },
+                  ]}
+                />
+              </li>
+            ))}
+          </ul>
+          </>
         )}
       </CardBody>
     </Card>

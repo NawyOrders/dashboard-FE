@@ -9,6 +9,7 @@ import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { EmptyStateLink } from '@/presentation/components/shared/EmptyStateLink';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { StatusPill } from '@/presentation/components/ui/StatusPill';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { en } from '@/presentation/i18n/en';
 import { formatDateTime } from '@/domain/rules/date';
 import { usePermission } from '@/presentation/hooks/usePermission';
@@ -101,8 +102,9 @@ export function ApplicationsPage() {
           )}
         </div>
       ) : (
-          <div className="mt-6 overflow-x-auto rounded-card border border-border bg-card shadow-surface">
-          <table className="w-full text-sm">
+        <>
+          <div className="mt-6 hidden overflow-x-auto rounded-card border border-border bg-card shadow-surface md:block">
+            <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-start text-2xs font-medium text-text-muted">
                 <th className="px-4 py-3 text-start">{en.applications.restaurant}</th>
@@ -160,6 +162,59 @@ export function ApplicationsPage() {
             </tbody>
           </table>
         </div>
+        <ul className="mt-6 divide-y divide-border overflow-hidden rounded-card border border-border bg-card shadow-surface md:hidden">
+          {rows.map((tenant) => (
+            <li key={tenant.id}>
+              <MobileRecordCard
+                title={
+                  <div className="flex flex-col">
+                    <span dir="ltr" className="break-words text-sm font-semibold text-text">
+                      {tenant.restaurantName}
+                    </span>
+                    <span dir="rtl" className="text-2xs text-text-muted">
+                      {tenant.restaurantNameAr || en.common.notAvailable}
+                    </span>
+                  </div>
+                }
+                status={<StatusPill meta={restaurantStatusMeta(tenant.status)} />}
+                fields={[
+                  {
+                    label: en.applications.owner,
+                    value: (
+                      <span dir="ltr" className="flex flex-col">
+                        <span className="break-all">{tenant.contact.email}</span>
+                        <span className="text-2xs text-text-muted">{tenant.contact.phone}</span>
+                      </span>
+                    ),
+                  },
+                  {
+                    label: en.applications.branchCount,
+                    value: tenant.branches.length,
+                  },
+                  {
+                    label: en.applications.payment,
+                    value: tenant.paymentStatus ? (
+                      <StatusPill meta={paymentStatusMeta(tenant.paymentStatus)} />
+                    ) : (
+                      en.common.notAvailable
+                    ),
+                  },
+                  {
+                    label: en.applications.submittedAt,
+                    value: formatDateTime(tenant.submittedAtUtc ?? tenant.createdAt),
+                  },
+                ]}
+                actions={
+                  <Button size="sm" variant="secondary" onClick={() => setViewing(tenant)}>
+                    <Eye aria-hidden="true" className="size-4" />
+                    {en.applications.view}
+                  </Button>
+                }
+              />
+            </li>
+          ))}
+        </ul>
+        </>
       )}
 
       <ApplicationDialog

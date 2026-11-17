@@ -8,6 +8,7 @@ import { StatusPill } from '@/presentation/components/ui/StatusPill';
 import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
 import { OVERVIEW_LATEST_CONTRACTS_COUNT } from '@/config/policy';
@@ -67,7 +68,8 @@ export function LatestContractsTable({
             action={<EmptyStateLink to="/applications">{en.overview.reviewApplications}</EmptyStateLink>}
           />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[720px] border-collapse text-sm">
               <caption className="sr-only">{en.overview.latestTitle}</caption>
               <thead>
@@ -130,6 +132,56 @@ export function LatestContractsTable({
               </tbody>
             </table>
           </div>
+          <ul className="divide-y divide-border md:hidden">
+            {rows.map(({ tenant, packageCode, durationMonths, contractDate }) => (
+              <li key={tenant.id}>
+                <MobileRecordCard
+                  leading={
+                    <TenantLogo
+                      name={tenant.restaurantName}
+                      nameAr={tenant.restaurantNameAr}
+                      color={tenant.brandColors.primary}
+                      size="sm"
+                    />
+                  }
+                  title={
+                    <Link to={`/restaurants/${tenant.id}`} className="block min-w-0">
+                      <RestaurantName
+                        name={tenant.restaurantName}
+                        nameAr={tenant.restaurantNameAr}
+                        primaryClassName="text-sm font-semibold text-text hover:text-primary"
+                        secondaryClassName="text-2xs text-text-muted"
+                      />
+                    </Link>
+                  }
+                  status={<StatusPill meta={restaurantStatusMeta(tenant.status)} />}
+                  fields={[
+                    {
+                      label: en.restaurants.columns.package,
+                      value: packageCode ? (
+                        <PackagePill code={packageCode} />
+                      ) : (
+                        <span className="text-text-muted">{en.common.notAvailable}</span>
+                      ),
+                    },
+                    {
+                      label: en.overview.duration,
+                      value:
+                        durationMonths === null
+                          ? en.common.notAvailable
+                          : en.details.months(durationMonths),
+                    },
+                    { label: en.overview.contractDate, value: formatDate(contractDate) },
+                    {
+                      label: en.restaurants.columns.subscriptionStatus,
+                      value: <StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />,
+                    },
+                  ]}
+                />
+              </li>
+            ))}
+          </ul>
+          </>
         )}
       </CardBody>
     </Card>

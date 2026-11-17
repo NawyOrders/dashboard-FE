@@ -9,6 +9,7 @@ import { ChannelCell } from '@/presentation/components/shared/ChannelCell';
 import { AppsCell } from '@/presentation/components/shared/AppsCell';
 import { ExpiryDate } from '@/presentation/components/shared/ExpiryDate';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { restaurantStatusMeta, subscriptionStatusMeta } from '@/presentation/lib/status';
 import { formatDate } from '@/domain/rules/date';
 import { INCLUDED_BRANCHES } from '@/config/policy';
@@ -110,5 +111,94 @@ export function RestaurantRow({ tenant, selected, onToggle }: RestaurantRowProps
         />
       </td>
     </tr>
+  );
+}
+
+/** Stacked version of the row for the mobile table layout. */
+export function RestaurantCard({ tenant, selected, onToggle }: RestaurantRowProps) {
+  const navigate = useNavigate();
+  const openTab = (tab: string) => navigate(`/restaurants/${tenant.id}?tab=${tab}`);
+
+  return (
+    <MobileRecordCard
+      selected={selected}
+      leading={
+        <span className="flex shrink-0 items-center gap-2">
+          <Checkbox
+            checked={selected}
+            onChange={() => onToggle(tenant.id)}
+            aria-label={en.common.selectRestaurantRow(tenant.restaurantName)}
+          />
+          <TenantLogo
+            name={tenant.restaurantName}
+            nameAr={tenant.restaurantNameAr}
+            color={tenant.brandColors.primary}
+          />
+        </span>
+      }
+      title={
+        <button
+          type="button"
+          onClick={() => openTab('overview')}
+          className="block w-full min-w-0 text-start"
+        >
+          <RestaurantName
+            name={tenant.restaurantName}
+            nameAr={tenant.restaurantNameAr}
+            primaryClassName="text-sm font-semibold text-text hover:text-primary"
+            secondaryClassName="text-2xs text-text-muted"
+          />
+          <span className="mt-0.5 block truncate text-2xs text-text-muted">
+            {tenant.businessName}
+          </span>
+        </button>
+      }
+      status={<StatusPill meta={restaurantStatusMeta(tenant.status)} />}
+      fields={[
+        { label: en.restaurants.columns.package, value: <PackagePill code={tenant.subscription.packageCode} /> },
+        {
+          label: en.restaurants.columns.subscriptionStatus,
+          value: <StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />,
+        },
+        { label: en.restaurants.columns.startDate, value: formatDate(tenant.subscription.startDate) },
+        {
+          label: en.restaurants.columns.expiryDate,
+          value: <ExpiryDate endDate={tenant.subscription.endDate} />,
+        },
+        {
+          label: en.restaurants.columns.branches,
+          value: `${tenant.branches.length} / ${INCLUDED_BRANCHES}`,
+        },
+        {
+          label: en.restaurants.columns.website,
+          value: (
+            <ChannelCell websiteStatus={tenant.channels.websiteStatus} pwaStatus={tenant.channels.pwaStatus} />
+          ),
+        },
+        {
+          label: en.restaurants.columns.apps,
+          value: <AppsCell android={tenant.apps.android} ios={tenant.apps.ios} />,
+        },
+      ]}
+      actions={
+        <DropdownMenu
+          label={en.common.actionsFor(tenant.restaurantName)}
+          items={[
+            {
+              key: 'view',
+              label: en.common.viewDetails,
+              icon: <Eye aria-hidden="true" className="size-4" />,
+              onSelect: () => openTab('overview'),
+            },
+            {
+              key: 'activity',
+              label: en.common.activityLog,
+              icon: <ClipboardList aria-hidden="true" className="size-4" />,
+              onSelect: () => openTab('activity'),
+            },
+          ]}
+        />
+      }
+    />
   );
 }

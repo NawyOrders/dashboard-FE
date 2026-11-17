@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/presentation/components/shared/PageHeader';
 import { Card, CardHeader } from '@/presentation/components/ui/Card';
 import { Select } from '@/presentation/components/ui/Select';
@@ -9,6 +9,7 @@ import { PackagePill } from '@/presentation/components/shared/PackagePill';
 import { TenantLogo } from '@/presentation/components/shared/TenantLogo';
 import { RestaurantName } from '@/presentation/components/shared/RestaurantName';
 import { ExpiryDate } from '@/presentation/components/shared/ExpiryDate';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
@@ -146,7 +147,7 @@ export function SubscriptionsPage() {
 
         {query.isSuccess && pageRows.length > 0 && (
           <>
-            <div className="overflow-x-auto">
+            <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[900px] border-collapse text-sm">
                 <thead>
                   <tr className="border-y border-border text-start text-2xs font-medium text-text-muted">
@@ -206,6 +207,56 @@ export function SubscriptionsPage() {
                 </tbody>
               </table>
             </div>
+            <ul className="divide-y divide-border border-t border-border md:hidden">
+              {pageRows.map((tenant) => (
+                <li key={tenant.id}>
+                  <MobileRecordCard
+                    leading={
+                      <TenantLogo
+                        name={tenant.restaurantName}
+                        nameAr={tenant.restaurantNameAr}
+                        color={tenant.brandColors.primary}
+                      />
+                    }
+                    title={
+                      <Link
+                        to={`/restaurants/${tenant.id}?tab=subscription`}
+                        className="block min-w-0"
+                      >
+                        <RestaurantName
+                          name={tenant.restaurantName}
+                          nameAr={tenant.restaurantNameAr}
+                          primaryClassName="text-sm font-semibold text-text hover:text-primary"
+                          secondaryClassName="text-2xs text-text-muted"
+                        />
+                      </Link>
+                    }
+                    status={<StatusPill meta={subscriptionStatusMeta(tenant.subscription.status)} />}
+                    fields={[
+                      { label: en.restaurants.columns.package, value: <PackagePill code={tenant.subscription.packageCode} /> },
+                      {
+                        label: en.details.subscriptionDuration,
+                        value: en.details.months(tenant.subscription.durationMonths),
+                      },
+                      { label: en.details.subscriptionStart, value: formatDate(tenant.subscription.startDate) },
+                      {
+                        label: en.restaurants.columns.expiryDate,
+                        value: <ExpiryDate endDate={tenant.subscription.endDate} />,
+                      },
+                      {
+                        label: en.subscriptions.daysRemaining,
+                        value: (
+                          <DaysRemaining
+                            endDate={tenant.subscription.endDate}
+                            status={tenant.subscription.status}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </li>
+              ))}
+            </ul>
             <Pagination
               page={safePage}
               pageCount={pageCount}

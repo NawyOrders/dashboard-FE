@@ -3,6 +3,7 @@ import { formatDateTime } from '@/domain/rules/date';
 import { Skeleton } from '@/presentation/components/ui/Skeleton';
 import { EmptyState } from '@/presentation/components/ui/EmptyState';
 import { ErrorState } from '@/presentation/components/ui/ErrorState';
+import { MobileRecordCard } from '@/presentation/components/shared/MobileRecordCard';
 import type { ActivityLog } from '@/domain/entities';
 
 export interface ActivityLogTableProps {
@@ -50,8 +51,9 @@ export function ActivityLogTable({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[820px] border-collapse text-sm">
+    <>
+      <div className="hidden overflow-x-auto md:block">
+        <table className="w-full min-w-[820px] border-collapse text-sm">
         <caption className="sr-only">{en.activity.title}</caption>
         <thead>
           <tr className="border-y border-border text-2xs font-medium text-text-muted">
@@ -88,7 +90,37 @@ export function ActivityLogTable({
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+      <ul className="divide-y divide-border md:hidden">
+        {logs.map((log) => (
+          <li key={log.id}>
+            <MobileRecordCard
+              title={
+                <span className="flex min-w-0 flex-col">
+                  <span className="break-words text-sm font-semibold text-text">{log.actor.name}</span>
+                  <span className="text-2xs text-text-muted">
+                    {log.actor.role === 'super_admin' ? en.app.role : en.app.supportRole}
+                  </span>
+                </span>
+              }
+              status={
+                <span className="block max-w-[160px] text-end text-2xs font-medium text-text">
+                  {en.activity.actions[log.action]}
+                </span>
+              }
+              fields={[
+                { label: en.activity.columns.timestamp, value: formatDateTime(log.timestamp) },
+                ...(showTarget
+                  ? [{ label: en.activity.columns.target, value: log.target.label }]
+                  : []),
+                { label: en.activity.columns.previous, value: <ValueCell value={log.previousValue} /> },
+                { label: en.activity.columns.next, value: <ValueCell value={log.newValue} /> },
+              ]}
+            />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

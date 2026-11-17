@@ -71,7 +71,6 @@ export const en = {
     search: 'Search',
     all: 'All',
     none: 'None',
-    notTracked: 'Not tracked',
     notAvailable: '—',
     export: 'Export',
     exportCsv: 'Export CSV',
@@ -126,11 +125,6 @@ export const en = {
       expiring_soon: 'Expiring soon',
       expired: 'Expired',
       not_started: 'Not started',
-    },
-    channel: {
-      ready: 'Ready',
-      in_setup: 'In setup',
-      not_tracked: 'Not tracked',
     },
     app: {
       not_started: 'Not started',

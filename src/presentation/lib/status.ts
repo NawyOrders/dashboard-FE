@@ -45,27 +45,14 @@ export function branchStatusMeta(status: BranchStatus): StatusMeta {
   return { label: en.status.branch[status], tone: tones[status] };
 }
 
-/** `null` or `not_tracked` render as the neutral "Not tracked" pill. */
-export function channelStatusMeta(status: ChannelStatus | null): StatusMeta {
-  const value: ChannelStatus = status ?? 'not_tracked';
-  const tones: Record<ChannelStatus, Tone> = {
-    ready: 'success',
-    in_setup: 'warning',
-    not_tracked: 'neutral',
-  };
-  return { label: en.status.channel[value], tone: tones[value] };
+// Website, PWA and the mobile app share one pill until the backend returns these fields
+// (owner decision, agent.md section 30). Built per call so the live i18n proxy switches language.
+export function channelStatusMeta(_status: ChannelStatus | null): StatusMeta {
+  return { label: en.site.statusInProgress, tone: 'warning' };
 }
 
-/** `null` (not tracked / not entitled) renders as neutral "Not tracked". */
-export function appStatusMeta(status: AppStatus | null): StatusMeta {
-  const value: AppStatus = status ?? 'not_started';
-  const tones: Record<AppStatus, Tone> = {
-    not_started: 'neutral',
-    in_preparation: 'warning',
-    submitted_to_store: 'warning',
-    published: 'success',
-  };
-  return { label: en.status.app[value], tone: tones[value] };
+export function appStatusMeta(_status: AppStatus | null): StatusMeta {
+  return { label: en.site.statusInProgress, tone: 'warning' };
 }
 
 export function adminAccountStatusMeta(status: AccountStatus): StatusMeta {

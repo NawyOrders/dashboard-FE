@@ -15,11 +15,8 @@ function AppMini({ label, status }: { label: string; status: AppStatus | null })
   );
 }
 
-/** Mobile app statuses for Growth tenants; a dash for non-entitled tenants. */
+/** Mobile app statuses, shown for every tenant (never a dash). */
 export function AppsCell({ android, ios }: { android: AppStatus | null; ios: AppStatus | null }) {
-  if (android === null && ios === null) {
-    return <span className="text-text-muted">—</span>;
-  }
   return (
     <span className="flex flex-col gap-1">
       <AppMini label={en.common.platforms.android} status={android} />

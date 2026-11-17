@@ -16,7 +16,7 @@ export type BranchStatus = 'active' | 'pending' | 'inactive';
 
 export type SubscriptionStatus = 'active' | 'expiring_soon' | 'expired' | 'not_started';
 
-/** Website and PWA delivery status. `null` renders as "Not tracked". */
+/** Website and PWA delivery status. The UI shows the in-progress pill until the backend returns it. */
 export type ChannelStatus = 'ready' | 'in_setup' | 'not_tracked';
 
 /**

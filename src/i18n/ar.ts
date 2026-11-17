@@ -72,7 +72,6 @@ export const ar = {
     search: 'بحث',
     all: 'الكل',
     none: 'لا شيء',
-    notTracked: 'غير متتبع',
     notAvailable: '—',
     export: 'تصدير',
     exportCsv: 'تصدير CSV',
@@ -128,11 +127,6 @@ export const ar = {
       expiring_soon: 'ينتهي قريبًا',
       expired: 'منتهي',
       not_started: 'لم يبدأ',
-    },
-    channel: {
-      ready: 'جاهز',
-      in_setup: 'قيد الإعداد',
-      not_tracked: 'غير متتبع',
     },
     app: {
       not_started: 'لم يبدأ',

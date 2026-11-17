@@ -22,8 +22,7 @@ export const GRACE_PERIOD_DAYS: number | null = null;
 export const AUTO_SUSPEND_ON_EXPIRY = false;
 
 // OPEN DECISION: website/PWA/app status fields are not guaranteed in the data model.
-// ASSUMPTION: they are optional; when absent they render as "Not tracked".
-export const TREAT_NULL_CHANNEL_STATUS_AS_NOT_TRACKED = true;
+// ASSUMPTION: they are optional; the UI shows the in-progress pill until the backend returns them.
 
 // NW-247: the branch limit is 2 for EVERY package (owner decision), so the platform-wide
 // included-branch count is derived from the package rules and never drifts from them.

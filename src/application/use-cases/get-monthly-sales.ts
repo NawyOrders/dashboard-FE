@@ -5,8 +5,9 @@ import { OVERVIEW_CHART_MONTHS } from '@/config/policy';
 
 /**
  * Sales per calendar month for the last `OVERVIEW_CHART_MONTHS` months (zero months
- * included). ASSUMPTION: values come from the deterministic mock sales series — demo
- * figures only, never presented as real platform revenue (AH-239).
+ * included). Static/demo source: the deterministic mock sales series — demo figures only,
+ * never presented as real platform revenue (AH-239). API mode computes the same buckets
+ * from the paid onboarding requests (agent.md section 31).
  */
 export function makeGetMonthlySales(sales: SalesRepository, clock: Clock) {
   return function getMonthlySales(): SalesMonthBucket[] {

@@ -5,10 +5,12 @@ import type {
   OverviewEndingSoonResult,
   OverviewLatestContract,
 } from '@/application/dto';
+import type { Clock } from '@/application/ports';
 import { applyTenantQuery } from '@/application/use-cases';
 import { makeExtractMenu } from '@/application/use-cases/extract-menu';
 import { makeSuggestLogoPalette } from '@/application/use-cases/suggest-logo-palette';
 import {
+  OVERVIEW_CHART_MONTHS,
   OVERVIEW_ENDING_WITHIN_DAYS,
   OVERVIEW_LATEST_CONTRACTS_COUNT,
 } from '@/config/policy';
@@ -17,6 +19,7 @@ import {
   endingSoon,
   latestContractsByActivation,
 } from '@/domain/rules/overview';
+import { paidSalesPerMonth, type SalesMonthBucket } from '@/domain/rules/sales';
 import type {
   Branch,
   OnboardingRequestListItem,
@@ -49,6 +52,7 @@ export interface ApiAdapterOptions {
   /** Demo implementation for the endpoints the backend does not expose yet. */
   staticApi: Api;
   client: HttpClient;
+  clock: Clock;
 }
 
 /** Runs `map` over `items` with at most `limit` requests in flight. */
@@ -79,12 +83,12 @@ function isClearlyInactivePlan(status: string | null | undefined): boolean {
 
 /**
  * API data source (agent.md section 21). Applications, offers, the tenants list and
- * details, provisioning status, retry, plan activation, session refresh and the menu OCR
- * come from the backend. The screens below have no endpoint in the swagger and keep the
- * static adapter: internal users, tenant accounts, roles, activity logs, analytics charts
- * and KPI counts.
+ * details, provisioning status, retry, plan activation, session refresh, the menu OCR and
+ * monthly sales (from the paid onboarding requests) come from the backend. The screens
+ * below have no endpoint in the swagger and keep the static adapter: internal users,
+ * tenant accounts, roles, activity logs and KPI counts.
  */
-export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api {
+export function createApiAdapter({ staticApi, client, clock }: ApiAdapterOptions): Api {
   const onboarding = createOnboardingApi(client);
   const tenants = createTenantApi(client);
   const auth = createAuthApi(client);
@@ -378,6 +382,13 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
     },
 
     listOffers: () => onboarding.listOffers(),
+
+    // agent.md section 31: monthly sales are the agreedPrice of the paid onboarding
+    // requests, grouped by submittedAtUtc, over the last OVERVIEW_CHART_MONTHS months.
+    async getMonthlySales(): Promise<SalesMonthBucket[]> {
+      const requests = await readAllOnboardingRequests();
+      return paidSalesPerMonth(requests, clock.now(), OVERVIEW_CHART_MONTHS);
+    },
 
     async updateApplicationPayment(requestId, paid) {
       await onboarding.setPayment(requestId, paid);

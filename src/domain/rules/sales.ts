@@ -1,4 +1,4 @@
-import type { SalesRecord } from '@/domain/entities';
+import type { OnboardingRequestListItem, SalesRecord } from '@/domain/entities';
 import { parseIsoDate } from './date';
 
 /** A calendar month bucket used by the sales-per-month chart. */
@@ -20,12 +20,8 @@ function monthKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
-/**
- * Sum sales per calendar month for the last `months` months, oldest to newest.
- * Always returns exactly `months` buckets — months without records are shown as
- * zero, never hidden. ASSUMPTION: amounts are mock demo figures (AH-239).
- */
-export function salesPerMonth(records: SalesRecord[], now: Date, months: number): SalesMonthBucket[] {
+/** Exactly `months` empty buckets, oldest first, ending with the month of `now`. */
+function buildMonthBuckets(now: Date, months: number): SalesMonthBucket[] {
   const buckets: SalesMonthBucket[] = [];
   for (let offset = months - 1; offset >= 0; offset -= 1) {
     const cursor = new Date(now.getFullYear(), now.getMonth() - offset, 1);
@@ -37,7 +33,16 @@ export function salesPerMonth(records: SalesRecord[], now: Date, months: number)
       totalEgp: 0,
     });
   }
+  return buckets;
+}
 
+/**
+ * Sum sales per calendar month for the last `months` months, oldest to newest.
+ * Always returns exactly `months` buckets — months without records are shown as
+ * zero, never hidden. ASSUMPTION: amounts are mock demo figures (AH-239).
+ */
+export function salesPerMonth(records: SalesRecord[], now: Date, months: number): SalesMonthBucket[] {
+  const buckets = buildMonthBuckets(now, months);
   const byKey = new Map(buckets.map((bucket) => [bucket.key, bucket]));
   for (const record of records) {
     const date = parseIsoDate(record.date);
@@ -45,6 +50,32 @@ export function salesPerMonth(records: SalesRecord[], now: Date, months: number)
     const bucket = byKey.get(monthKey(date));
     if (!bucket) continue;
     bucket.totalEgp += record.amountEgp;
+  }
+
+  return buckets;
+}
+
+/**
+ * Monthly sales from onboarding requests (agent.md section 31): sum `agreedPrice` of the
+ * requests where `paid === true`, grouped by the UTC year-month of `submittedAtUtc`, for
+ * the last `months` months. Months without paid requests stay 0.
+ */
+export function paidSalesPerMonth(
+  requests: ReadonlyArray<
+    Pick<OnboardingRequestListItem, 'paid' | 'agreedPrice' | 'submittedAtUtc'>
+  >,
+  now: Date,
+  months: number,
+): SalesMonthBucket[] {
+  const buckets = buildMonthBuckets(now, months);
+  const byKey = new Map(buckets.map((bucket) => [bucket.key, bucket]));
+  for (const request of requests) {
+    if (request.paid !== true) continue;
+    const price = request.agreedPrice;
+    if (typeof price !== 'number' || !Number.isFinite(price)) continue;
+    const bucket = byKey.get(request.submittedAtUtc.slice(0, 7));
+    if (!bucket) continue;
+    bucket.totalEgp += price;
   }
 
   return buckets;

@@ -54,7 +54,7 @@ async function buildContainer(): Promise<Api> {
 
   if (env.VITE_DATA_SOURCE === 'api') {
     const client = createHttpClient({ baseUrl: env.VITE_API_BASE_URL });
-    const adapter = createApiAdapter({ staticApi, client });
+    const adapter = createApiAdapter({ staticApi, client, clock });
     const sessions = createSessionManager((refreshToken) => adapter.refreshSession(refreshToken));
     client.setUnauthorizedHandler(async () => {
       const session = await sessions.refresh();

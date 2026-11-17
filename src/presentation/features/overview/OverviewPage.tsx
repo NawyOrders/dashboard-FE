@@ -33,7 +33,7 @@ export function OverviewPage() {
         <ErrorState onRetry={() => refetch()} />
       ) : (
         <>
-          <Card className="mb-6 grid grid-cols-1 gap-px overflow-hidden bg-border shadow-surface sm:grid-cols-2 xl:grid-cols-5">
+          <Card className="mb-6 grid grid-cols-2 gap-px overflow-hidden bg-border shadow-surface xl:grid-cols-5">
             <KpiCard
               label={en.overview.kpiTotal}
               value={total}
@@ -70,6 +70,7 @@ export function OverviewPage() {
               tint="warning"
               loading={applicationsQuery.isLoading}
               caption={en.overview.kpiPendingApprovalCaption}
+              className="col-span-2 xl:col-span-1"
             />
           </Card>
 

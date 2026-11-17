@@ -18,12 +18,13 @@ export interface KpiCardProps {
   tint: Tint;
   caption?: string;
   loading?: boolean;
+  className?: string;
 }
 
 /** One cell of the overview operations strip; the strip draws the hairlines. */
-export function KpiCard({ label, value, icon, tint, caption, loading }: KpiCardProps) {
+export function KpiCard({ label, value, icon, tint, caption, loading, className }: KpiCardProps) {
   return (
-    <div className="flex min-w-0 flex-col justify-between gap-3 bg-card p-5">
+    <div className={cn('flex min-w-0 flex-col justify-between gap-3 bg-card p-4 sm:p-5', className)}>
       <div className="flex min-w-0 items-center gap-2">
         <span className={cn('shrink-0', TINTS[tint])}>{icon}</span>
         <p className="truncate text-xs font-medium text-text-muted">{label}</p>

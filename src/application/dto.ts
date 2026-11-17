@@ -283,7 +283,7 @@ export interface Api {
   /** `GET /api/v1/tenants/{tenantId}/provisioning-status`. */
   getTenantStatus(tenantId: string): Promise<TenantProvisioning>;
   /** `POST /api/v1/tenants/{tenantId}/retry` — retries a failed provisioning. */
-  retryTenant(tenantId: string, idempotencyKey: string): Promise<TenantProvisioning>;
+  retryTenant(tenantId: string): Promise<TenantProvisioning>;
   /** `PUT /api/v1/tenants/{tenantId}` — names and owner data, before provisioning only. */
   updateTenant(tenantId: string, input: UpdateTenantInput, actor: AdminUser): Promise<Tenant>;
   /** `POST /api/v1/tenants/{tenantId}/plan/activate` — Super Admin, details screen only. */

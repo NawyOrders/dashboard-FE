@@ -61,7 +61,7 @@ function ProvisioningCard({ tenant }: { tenant: Tenant }) {
   });
 
   const retry = useMutation({
-    mutationFn: () => api.retryTenant(tenant.id, crypto.randomUUID()),
+    mutationFn: () => api.retryTenant(tenant.id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['tenantProvisioning', tenant.id] });
       void queryClient.invalidateQueries({ queryKey: ['tenant', tenant.id] });

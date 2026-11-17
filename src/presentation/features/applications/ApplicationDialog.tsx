@@ -534,11 +534,9 @@ function ApplicationDialogContent({
 
   async function handleRetryProvisioning() {
     if (!provisioning || retrying) return;
-    // agent.md section 26: a new Idempotency-Key per attempt.
-    const idempotencyKey = crypto.randomUUID();
     setRetrying(true);
     try {
-      const next = await api.retryTenant(provisioning.tenantId, idempotencyKey);
+      const next = await api.retryTenant(provisioning.tenantId);
       setProvisioning(next);
       if (isTenantProvisioningFinal(next.status)) {
         setProvisioningDeadline(null);

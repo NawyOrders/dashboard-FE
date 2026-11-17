@@ -407,7 +407,7 @@ export function createApiAdapter({ staticApi, client }: ApiAdapterOptions): Api 
 
     getTenantStatus: (tenantId) => tenants.getProvisioningStatus(tenantId),
 
-    async retryTenant(tenantId, _idempotencyKey) {
+    async retryTenant(tenantId) {
       await tenants.retryTenant(tenantId);
       return tenants.getProvisioningStatus(tenantId);
     },

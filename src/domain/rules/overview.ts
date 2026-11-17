@@ -1,4 +1,4 @@
-import type { Tenant } from '@/domain/entities';
+import type { Tenant, TenantListItem } from '@/domain/entities';
 import { daysBetween, parseIsoDate } from './date';
 
 /** A calendar month bucket used by the contracts-per-month chart. */
@@ -32,6 +32,22 @@ function monthKey(date: Date): string {
  * shown as zero-height entries, never hidden.
  */
 export function contractsPerMonth(tenants: Tenant[], now: Date, months: number): MonthBucket[] {
+  const buckets = buildMonthBuckets(now, months);
+  const byKey = new Map(buckets.map((bucket) => [bucket.key, bucket]));
+  for (const tenant of tenants) {
+    const contractDate = parseIsoDate(tenant.subscription.startDate);
+    if (!contractDate) continue;
+    const bucket = byKey.get(monthKey(contractDate));
+    if (!bucket) continue;
+    bucket.count += 1;
+    bucket.restaurantNames.push(tenant.restaurantName);
+  }
+
+  return buckets;
+}
+
+/** Exactly `months` empty buckets, oldest first, ending with the month of `now`. */
+function buildMonthBuckets(now: Date, months: number): MonthBucket[] {
   const buckets: MonthBucket[] = [];
   for (let offset = months - 1; offset >= 0; offset -= 1) {
     const cursor = new Date(now.getFullYear(), now.getMonth() - offset, 1);
@@ -44,15 +60,35 @@ export function contractsPerMonth(tenants: Tenant[], now: Date, months: number):
       restaurantNames: [],
     });
   }
+  return buckets;
+}
 
+const ISO_DATE_KEY = /^\d{4}-(0[1-9]|1[0-2])/;
+
+/**
+ * Count live tenants per calendar month of their contract date (agent.md section 31), for
+ * the last `months` months, oldest to newest. The tenant list carries UTC timestamps
+ * instead of plan dates, so it is counted from `activatedAtUtc`/`createdAtUtc` directly.
+ */
+export function contractsPerMonthFromItems(
+  items: ReadonlyArray<
+    Pick<
+      TenantListItem,
+      'slug' | 'restaurantNameAr' | 'restaurantNameEn' | 'createdAtUtc' | 'activatedAtUtc'
+    >
+  >,
+  now: Date,
+  months: number,
+): MonthBucket[] {
+  const buckets = buildMonthBuckets(now, months);
   const byKey = new Map(buckets.map((bucket) => [bucket.key, bucket]));
-  for (const tenant of tenants) {
-    const contractDate = parseIsoDate(tenant.subscription.startDate);
-    if (!contractDate) continue;
-    const bucket = byKey.get(monthKey(contractDate));
+  for (const item of items) {
+    const date = item.activatedAtUtc ?? item.createdAtUtc;
+    if (!ISO_DATE_KEY.test(date)) continue;
+    const bucket = byKey.get(date.slice(0, 7));
     if (!bucket) continue;
     bucket.count += 1;
-    bucket.restaurantNames.push(tenant.restaurantName);
+    bucket.restaurantNames.push(item.restaurantNameEn ?? item.restaurantNameAr ?? item.slug ?? '');
   }
 
   return buckets;

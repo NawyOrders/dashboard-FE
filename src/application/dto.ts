@@ -162,7 +162,10 @@ export type LogoPaletteOutcome =
   | { status: 'failed'; errorCode: string | null; errorMessage: string | null }
   | { status: 'timeout' };
 
-/** Overview chart data that still comes from the static data source (agent.md §28). */
+/**
+ * The Overview/Analytics contracts-per-month chart. Static mode builds it from the demo
+ * repository; API mode counts the live tenant list (agent.md §31).
+ */
 export interface OverviewAnalysis {
   contractsPerMonth: MonthBucket[];
 }

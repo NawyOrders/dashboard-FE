@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type {
   Api,
   ListTenantsParams,
+  OverviewAnalysis,
   OverviewEndingSoonResult,
   OverviewLatestContract,
 } from '@/application/dto';
@@ -16,6 +17,7 @@ import {
 } from '@/config/policy';
 import {
   contractDate,
+  contractsPerMonthFromItems,
   endingSoon,
   latestContractsByActivation,
 } from '@/domain/rules/overview';
@@ -253,6 +255,15 @@ export function createApiAdapter({ staticApi, client, clock }: ApiAdapterOptions
     async listTenants(params?: ListTenantsParams): Promise<Tenant[]> {
       const items = await readAllTenants();
       return applyTenantQuery(items.map(mapTenantListItem), params);
+    },
+
+    // agent.md section 31: the contracts chart counts the live tenant list. The list is
+    // read once per scan here, the same paging `listTenants` uses.
+    async getOverviewAnalysis(): Promise<OverviewAnalysis> {
+      const items = await readAllTenants();
+      return {
+        contractsPerMonth: contractsPerMonthFromItems(items, clock.now(), OVERVIEW_CHART_MONTHS),
+      };
     },
 
     // The list is read once by `listTenants`; this method only asks for the plan details

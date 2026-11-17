@@ -5,18 +5,6 @@
  * never stores the admin password: it is sent once in the request body and never logged.
  */
 
-/** Body of `POST /api/v1/tenants`. */
-export interface CreateTenantRequest {
-  slug: string;
-  restaurantNameAr: string | null;
-  restaurantNameEn: string | null;
-  ownerFullName: string | null;
-  ownerEmail: string | null;
-  ownerPhone: string | null;
-  /** Admin password of the restaurant account; sent only in this request. */
-  ownerPassword: string;
-}
-
 /**
  * Provisioning state returned by the tenant create, status and retry endpoints.
  *

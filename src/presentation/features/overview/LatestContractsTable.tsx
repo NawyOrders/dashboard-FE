@@ -29,7 +29,6 @@ export function LatestContractsTable({
   const count = OVERVIEW_LATEST_CONTRACTS_COUNT;
   const headers = [
     en.restaurants.columns.restaurant,
-    en.restaurants.columns.tenantId,
     en.restaurants.columns.package,
     en.overview.duration,
     en.overview.contractDate,
@@ -94,9 +93,6 @@ export function LatestContractsTable({
                           />
                         </Link>
                       </div>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3">
-                      <span className="font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       {packageCode ? (

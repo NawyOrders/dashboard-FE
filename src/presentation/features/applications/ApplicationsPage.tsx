@@ -114,9 +114,6 @@ export function ApplicationsPage() {
                       <span dir="rtl" className="text-2xs text-text-muted">
                         {tenant.restaurantNameAr || en.common.notAvailable}
                       </span>
-                      <span dir="ltr" className="mt-1 font-mono text-micro text-text-muted">
-                        {tenant.tenantId}
-                      </span>
                     </div>
                   </td>
                   <td className="px-4 py-3">

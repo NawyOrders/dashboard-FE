@@ -191,9 +191,6 @@ export function TopBar({ onMenuClick }: TopBarProps) {
                       primaryClassName="text-sm"
                       secondaryClassName="text-2xs text-text-muted"
                     />
-                    <span className="shrink-0 font-mono text-xs text-text-muted">
-                      {tenant.tenantId}
-                    </span>
                   </button>
                 ))
               )}
@@ -247,9 +244,6 @@ export function TopBar({ onMenuClick }: TopBarProps) {
                       primaryClassName="text-sm"
                       secondaryClassName="text-2xs text-text-muted"
                     />
-                    <span className="shrink-0 font-mono text-xs text-text-muted">
-                      {application.tenantId}
-                    </span>
                   </button>
                 ))
               )}

@@ -176,7 +176,6 @@ export function SubscriptionsPage() {
                               primaryClassName="font-semibold text-text"
                               secondaryClassName="text-2xs text-text-muted"
                             />
-                            <span className="block font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                           </span>
                         </span>
                       </td>

@@ -467,7 +467,6 @@ function ApplicationDialogContent({
       });
       toast({
         title: en.applications.approveSuccess,
-        description: `${en.applications.tenantId}: ${result.tenantId}`,
         variant: 'success',
       });
       if (!isTenantProvisioningFinal(result.status)) {
@@ -610,7 +609,6 @@ function ApplicationDialogContent({
                 <span dir="ltr" className="break-all text-2xs text-text-muted">
                   {tenant.contact.email}
                 </span>
-                <span className="break-all font-mono text-2xs text-text-muted">{tenant.tenantId}</span>
                 <span className="text-2xs text-text-muted">
                   {en.applications.branchCount}: {tenant.branches.length}
                 </span>

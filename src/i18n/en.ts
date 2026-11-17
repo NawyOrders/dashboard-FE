@@ -208,7 +208,6 @@ export const en = {
     },
     columns: {
       restaurant: 'Restaurant',
-      tenantId: 'Tenant ID',
       package: 'Package',
       restaurantStatus: 'Restaurant status',
       subscriptionStatus: 'Subscription status',
@@ -364,7 +363,6 @@ export const en = {
     restaurant: 'Restaurant',
     restaurantNameAr: 'Arabic restaurant name',
     businessName: 'Business name',
-    tenantId: 'Tenant ID',
     ownerEmail: 'Owner email',
     owner: 'Owner',
     phone: 'Phone',

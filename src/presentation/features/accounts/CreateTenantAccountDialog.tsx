@@ -46,7 +46,7 @@ export function CreateTenantAccountDialog({ open, onClose }: CreateTenantAccount
     () =>
       (tenantsQuery.data ?? []).map((tenant) => ({
         value: tenant.id,
-        label: `${tenant.restaurantName} (${tenant.tenantId})`,
+        label: tenant.restaurantName,
       })),
     [tenantsQuery.data],
   );

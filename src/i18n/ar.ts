@@ -211,7 +211,6 @@ export const ar = {
     },
     columns: {
       restaurant: 'المطعم',
-      tenantId: 'معرّف المطعم',
       package: 'الباقة',
       restaurantStatus: 'حالة المطعم',
       subscriptionStatus: 'حالة الاشتراك',
@@ -366,7 +365,6 @@ export const ar = {
     restaurant: 'المطعم',
     restaurantNameAr: 'اسم المطعم بالعربية',
     businessName: 'الاسم التجاري',
-    tenantId: 'معرّف المطعم',
     ownerEmail: 'بريد المالك',
     owner: 'المالك',
     phone: 'الهاتف',

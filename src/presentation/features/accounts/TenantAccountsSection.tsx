@@ -84,7 +84,6 @@ export function TenantAccountsSection() {
                   <tr key={account.id} className="border-b border-border last:border-0">
                     <td className="px-5 py-4">
                       <span className="block font-medium text-text">{account.restaurantName}</span>
-                      <span className="block text-2xs text-text-muted">{account.tenantId}</span>
                     </td>
                     <td className="whitespace-nowrap px-5 py-4 text-text">
                       {tenantRoleLabel(account.restaurantRole)}

@@ -100,9 +100,6 @@ export function EndingSoonTable({
                     {en.restaurants.columns.restaurant}
                   </th>
                   <th scope="col" className="whitespace-nowrap px-3 py-3 text-start">
-                    {en.restaurants.columns.tenantId}
-                  </th>
-                  <th scope="col" className="whitespace-nowrap px-3 py-3 text-start">
                     {en.restaurants.columns.package}
                   </th>
                   <th scope="col" className="whitespace-nowrap px-3 py-3 text-start">
@@ -135,9 +132,6 @@ export function EndingSoonTable({
                           />
                         </Link>
                       </div>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-3">
-                      <span className="font-mono text-mono text-text-muted">{tenant.tenantId}</span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       <PackagePill code={tenant.subscription.packageCode} />
